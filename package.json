@@ -1,14 +1,15 @@
 {
   "name": "sanctuary-backend",
   "version": "1.0.0",
+  "description": "Backend for AI content generation and database interaction.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",
     "cors": "^2.8.5",
