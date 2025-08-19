@@ -2,7 +2,9 @@
 const express = require('express');
 const cors = require('cors');
 const OpenAI = require('openai'); // Use the v4 client
+const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
+const { sample_sermons } = require('./vars');
 require('dotenv').config();
 
 const app = express();
@@ -44,6 +46,7 @@ You will be provided with a starting point (like a scripture or topic) and a set
 
 ### 3. Oratorical Style
 - **oratoricalStyle:** [INSERT ORATORICAL STYLE HERE]
+- **Instruction:** You MUST use the sermon types from ### Sample Sermons ### as your primary style guide. For the "Selected Style" requested above, first locate the corresponding section in the instructions. Read the "Style Analysis" and then carefully study the "Full Sermon Example." Your generated sermon must emulate the tone, structure, rhetorical devices, and principles demonstrated in that example.
 - **Style Definitions (for your reference):**
     - **The Persuader (e.g., Charles Spurgeon):** Employ rich, descriptive language, practical illustrations from everyday life, and a passionate, persuasive, and direct tone.
     - **The Prophet (e.g., Dr. Martin Luther King, Jr.):** Use powerful rhetoric, parallelism, and repetition. Build the sermon towards a climactic and hopeful vision of redemption and justice.
@@ -67,6 +70,10 @@ You will be provided with a starting point (like a scripture or topic) and a set
 ### 7. Church Name
 - **churchName:** [INSERT CHURCH NAME HERE]
 - **Instruction:** Use the church name sparingly, only where it naturally fits into the sermon. Avoid overuse to maintain a focus on the message rather than the church itself.
+
+### Samples Sermons ###
+${sample_sermons}
+
 
 --- OUTPUT REQUIREMENTS ---
 
@@ -208,9 +215,49 @@ Provide the advice as a JSON object with two keys:
 - "advice_points": An array of actionable advice points (strings).
 `;
 
+// Add this to your index.js file alongside other prompts
+const daily_devotional_prompt = `
+# ROLE & GOAL
+You are a deeply spiritual and helpful Christian devotional writer for the "Sanctuary" app. Your primary goal is to generate a daily devotional that is personal, uplifting, and biblically sound. The devotional must be unique and not repeat themes or scriptures from previous devotionals.
+
+# INSTRUCTIONS
+You will be provided with a user's focus and improvement areas, along with a summary of their most recent devotionals to ensure new and fresh content.
+
+1.  **Select a Scripture:** Choose a single scripture passage that is highly relevant to the user's focus areas and is not present in the provided recent devotionals. The scripture should be referenced at the very beginning of the devotional.
+2.  **Devotional Content:** Write the main body of the devotional in a compassionate and encouraging tone.
+    * Explain the chosen scripture in a way that is easy to understand.
+    * Connect the scripture's message directly to the user's focus or improvement areas.
+    * Use Markdown for formatting, including bolding (**bold**), italics (*italics*), and paragraph breaks.
+    * Ensure the devotional has a clear flow, from explaining the scripture to its practical application.
+3.  **End with a Prayer:** Conclude the devotional with a "Prayer of the Day" that summarizes the devotional's message and is personal and specific to the user's needs.
+
+--- USER INPUT & CONTEXT ---
+
+-   **Focus Areas:** [INSERT FOCUS AREAS HERE]
+-   **Improvement Areas:** [INSERT IMPROVEMENT AREAS HERE]
+-   **Recent Devotionals (for context to avoid repetition):** [INSERT JSON ARRAY OF RECENT DEVOTIONALS HERE]
+
+--- OUTPUT REQUIREMENTS ---
+
+Your response must be a single JSON object. Ensure the output is ONLY the JSON object and nothing else.
+
+The JSON object must contain the following two keys:
+-   **"scripture"**: A string containing the scripture reference. Example: "2 Chronicles 20:2-3 (AMPC)".
+-   **"content"**: A string containing the complete devotional text, formatted with Markdown. This should include the main body and the concluding "Prayer of the Day".
+`;
+
+// Example of the JSON output:
+/*
+{
+  "scripture": "2 Chronicles 20:2-3 (AMPC)",
+  "content": "**A Call to Seek God**\n\nWhen King Jehoshaphat was faced with a great multitude coming against him, he didn't rely on his own strength. He was afraid, but his fear drove him to do something profound: he set himself to seek the Lord, and he proclaimed a fast throughout all Judah. This act was a powerful demonstration of his humility and a clear signal of his complete dependence on God.\n\nToday, you are working on *[user's focus area]*. It's easy to get overwhelmed and try to solve things on our own. But like Jehoshaphat, we are called to seek God with determination, treating it as our 'vital need.' This doesn't just mean a quick prayer; it's a dedicated effort to turn away from distractions and lean into His presence.\n\nGod promises that when we seek Him with all our hearts, we will find Him. Let this devotional be a reminder to seek God not only in moments of desperation but consistently, as a lifestyle. By doing so, you can find guidance and peace, preventing the need to become desperate in the first place.\n\n**Prayer of the Day:** Lord, help me to seek You with sincerity every day, not just in times of trouble. I earnestly desire to hear from You always. Teach me to diligently seek Your guidance in all things and at all times, amen."
+}
+*/
+
 // --- Helper function for making OpenAI API calls and parsing JSON ---
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
     try {
+       
         console.log(`Calling OpenAI model: ${model}`);
         const chatCompletion = await openai.chat.completions.create({
             model: model,
@@ -220,7 +267,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
             ],
             max_tokens: maxTokens,
             temperature: 0.7, // Adjust creativity
-            response_format: { type: responseFormatType }
+            response_format: { type: responseFormatType },
         });
 
         let generatedContent = chatCompletion.choices[0].message.content;
@@ -245,7 +292,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
 // Endpoint to initiate Daily Devotional generation
 app.post('/generate-devotional', async (req, res) => {
     try {
-        const { userId, focusAreas, improvementAreas } = req.body;
+        const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
         const generationDate = new Date().toISOString().split('T')[0];
 
         // 1. Create a placeholder in the database immediately
@@ -276,16 +323,17 @@ app.post('/generate-devotional', async (req, res) => {
         });
 
         // 3. Start AI generation in the background (after sending response)
-        const userPrompt = `Generate a daily Christian devotional personalized for the user.
+        const userPrompt = `
         Focus areas: ${focusAreas.join(', ')}.
         Improvement areas: ${improvementAreas.join(', ')}.
-        Ensure the tone is supportive and uplifting.`;
+        Recent devotionals: ${JSON.stringify(recentDevotionals)}
+        `;
 
         try {
             const generatedContent = await callOpenAIAndProcessResult(
-                'You are a helpful Christian devotional writer.',
+                daily_devotional_prompt,
                 userPrompt,
-                'gpt-4o', // Model for devotional
+                'gpt-5-mini', // Model for devotional
                 500, // Max tokens
                 "text" // Devotional expected as plain text
             );
@@ -323,14 +371,13 @@ app.post('/generate-devotional', async (req, res) => {
 app.post('/generate-sermon-by-topic', async (req, res) => {
     try {
         const { userId, topic, userProfile } = req.body;
-
+        console.log(userId, topic, userProfile);
         // 1. Create a placeholder in the database immediately
         const { data: newSermon, error: insertError } = await supabase
             .from('sermons')
             .insert({
                 user_id: userId,
                 title: `Generating Sermon: ${topic}`,
-                date_preached: new Date().toISOString().split('T')[0],
                 sermon_outline: 'Generating outline...',
                 sermon_body: 'Generating content...',
                 status: 'pending',
@@ -359,9 +406,10 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
             const generatedSermon = await callOpenAIAndProcessResult(
                 sermon_prompt,
                 userPrompt,
-                'gpt-4o', // Model for sermon
+                'gpt-5-mini', // Model for sermon
                 4000, // Max tokens
-                "json_object" // Sermon expected as JSON
+                "json_object", // Sermon expected as JSON
+                            
             );
 
             // Update the record with parsed content
@@ -375,6 +423,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
                     key_takeaways: generatedSermon.key_takeaways || null, // Assuming this is text, or stringified JSON
                     sermon_body: generatedSermon.sermon_body || null,
                     status: 'completed',
+                    user_id: userId, // Associate sermon with user
                     updated_at: new Date().toISOString(),
                 })
                 .eq('sermon_id', newSermon.sermon_id);
@@ -433,7 +482,7 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
             const generatedSermon = await callOpenAIAndProcessResult(
                 sermon_prompt,
                 userPrompt,
-                'gpt-4o',
+                'gpt-5-mini',
                 4000,
                 "json_object"
             );
@@ -509,7 +558,7 @@ app.post('/generate-bible-study', async (req, res) => {
             const generatedStudy = await callOpenAIAndProcessResult(
                 bible_study_prompt,
                 userPrompt,
-                'gpt-4o',
+                'gpt-5-mini',
                 5000,
                 "json_object"
             );
@@ -615,7 +664,7 @@ app.post('/generate-prayer', async (req, res) => {
             const generatedPrayer = await callOpenAIAndProcessResult(
                 daily_prayer_prompt,
                 userPrompt,
-                'gpt-4o',
+                'gpt-5-mini',
                 300, // Max tokens for prayer
                 "text"
             );
@@ -682,7 +731,7 @@ app.post('/generate-advice', async (req, res) => {
             const generatedAdvice = await callOpenAIAndProcessResult(
                 advice_guidance_prompt,
                 userPrompt,
-                'gpt-4o',
+                'gpt-5-mini',
                 700, // Max tokens for advice
                 "json_object"
             );
