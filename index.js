@@ -294,7 +294,7 @@ app.post('/generate-devotional', async (req, res) => {
     try {
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
         const generationDate = new Date().toISOString().split('T')[0];
-
+        console.log('generate-devotional', userId, focusAreas, improvementAreas, recentDevotionals);
         // 1. Create a placeholder in the database immediately
         const { data: newDevotional, error: insertError } = await supabase
             .from('daily_devotionals')
@@ -333,7 +333,7 @@ app.post('/generate-devotional', async (req, res) => {
             const generatedContent = await callOpenAIAndProcessResult(
                 daily_devotional_prompt,
                 userPrompt,
-                'gpt-5-mini', // Model for devotional
+                'gpt-4.1-2025-04-14', // Model for devotional
                 500, // Max tokens
                 "text" // Devotional expected as plain text
             );
@@ -406,7 +406,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
             const generatedSermon = await callOpenAIAndProcessResult(
                 sermon_prompt,
                 userPrompt,
-                'gpt-5-mini', // Model for sermon
+                'gpt-4.1-2025-04-14', // Model for sermon
                 4000, // Max tokens
                 "json_object", // Sermon expected as JSON
                             
@@ -482,7 +482,7 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
             const generatedSermon = await callOpenAIAndProcessResult(
                 sermon_prompt,
                 userPrompt,
-                'gpt-5-mini',
+                'gpt-4.1-2025-04-14',
                 4000,
                 "json_object"
             );
@@ -558,7 +558,7 @@ app.post('/generate-bible-study', async (req, res) => {
             const generatedStudy = await callOpenAIAndProcessResult(
                 bible_study_prompt,
                 userPrompt,
-                'gpt-5-mini',
+                'gpt-4.1-2025-04-14',
                 5000,
                 "json_object"
             );
@@ -664,7 +664,7 @@ app.post('/generate-prayer', async (req, res) => {
             const generatedPrayer = await callOpenAIAndProcessResult(
                 daily_prayer_prompt,
                 userPrompt,
-                'gpt-5-mini',
+                'gpt-4.1-2025-04-14',
                 300, // Max tokens for prayer
                 "text"
             );
@@ -731,7 +731,7 @@ app.post('/generate-advice', async (req, res) => {
             const generatedAdvice = await callOpenAIAndProcessResult(
                 advice_guidance_prompt,
                 userPrompt,
-                'gpt-5-mini',
+                'gpt-4.1-2025-04-14',
                 700, // Max tokens for advice
                 "json_object"
             );
@@ -809,7 +809,6 @@ app.get('/devotionals/:userId', async (req, res) => {
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false }); // Assuming created_at for ordering
-
     if (error) {
         console.error('Error fetching devotionals:', error);
         return res.status(500).json({ error: 'Failed to fetch devotionals.' });
