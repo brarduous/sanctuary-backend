@@ -229,7 +229,7 @@ You will be provided with a user's focus and improvement areas, along with a sum
     * Connect the scripture's message directly to the user's focus or improvement areas.
     * Use Markdown for formatting, including bolding (**bold**), italics (*italics*), and paragraph breaks.
     * Ensure the devotional has a clear flow, from explaining the scripture to its practical application.
-3.  **End with a Prayer:** Conclude the devotional with a "Prayer of the Day" that summarizes the devotional's message and is personal and specific to the user's needs.
+3.  **Compose a Prayer:** Include with the devotional object a "Daily Prayer" that summarizes the devotional's message and is personal and specific to the user's needs.
 
 --- USER INPUT & CONTEXT ---
 
@@ -243,14 +243,16 @@ Your response must be a single JSON object. Ensure the output is ONLY the JSON o
 
 The JSON object must contain the following two keys:
 -   **"scripture"**: A string containing the scripture reference. Example: "2 Chronicles 20:2-3 (AMPC)".
--   **"content"**: A string containing the complete devotional text, formatted with Markdown. This should include the main body and the concluding "Prayer of the Day".
+-   **"content"**: A string containing the complete devotional text, formatted with Markdown. This should include only the main body.
+-   **"daily_prayer"**: A string containing the prayer text.
 `;
 
 // Example of the JSON output:
 /*
 {
   "scripture": "2 Chronicles 20:2-3 (AMPC)",
-  "content": "**A Call to Seek God**\n\nWhen King Jehoshaphat was faced with a great multitude coming against him, he didn't rely on his own strength. He was afraid, but his fear drove him to do something profound: he set himself to seek the Lord, and he proclaimed a fast throughout all Judah. This act was a powerful demonstration of his humility and a clear signal of his complete dependence on God.\n\nToday, you are working on *[user's focus area]*. It's easy to get overwhelmed and try to solve things on our own. But like Jehoshaphat, we are called to seek God with determination, treating it as our 'vital need.' This doesn't just mean a quick prayer; it's a dedicated effort to turn away from distractions and lean into His presence.\n\nGod promises that when we seek Him with all our hearts, we will find Him. Let this devotional be a reminder to seek God not only in moments of desperation but consistently, as a lifestyle. By doing so, you can find guidance and peace, preventing the need to become desperate in the first place.\n\n**Prayer of the Day:** Lord, help me to seek You with sincerity every day, not just in times of trouble. I earnestly desire to hear from You always. Teach me to diligently seek Your guidance in all things and at all times, amen."
+  "content": "**A Call to Seek God**\n\nWhen King Jehoshaphat was faced with a great multitude coming against him, he didn't rely on his own strength. He was afraid, but his fear drove him to do something profound: he set himself to seek the Lord, and he proclaimed a fast throughout all Judah. This act was a powerful demonstration of his humility and a clear signal of his complete dependence on God.\n\nToday, you are working on *[user's focus area]*. It's easy to get overwhelmed and try to solve things on our own. But like Jehoshaphat, we are called to seek God with determination, treating it as our 'vital need.' This doesn't just mean a quick prayer; it's a dedicated effort to turn away from distractions and lean into His presence.\n\nGod promises that when we seek Him with all our hearts, we will find Him. Let this devotional be a reminder to seek God not only in moments of desperation but consistently, as a lifestyle. By doing so, you can find guidance and peace, preventing the need to become desperate in the first place.\n\n*"
+  "daily_prayer": "Lord, I come before You today with a heart that seeks Your presence. Help me to turn away from my distractions and focus on You as my vital need. Guide me and fill me with Your peace and wisdom. May I always remember that in seeking You, I find everything I truly need. In Jesus' name, Amen."
 }
 */
 
@@ -295,6 +297,7 @@ app.post('/generate-devotional', async (req, res) => {
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
         const generationDate = new Date().toISOString().split('T')[0];
         console.log('generate-devotional', userId, focusAreas, improvementAreas, recentDevotionals);
+        console.log('generate-devotional, and prayer');
         // 1. Create a placeholder in the database immediately
         const { data: newDevotional, error: insertError } = await supabase
             .from('daily_devotionals')
@@ -313,6 +316,24 @@ app.post('/generate-devotional', async (req, res) => {
         if (insertError) {
             console.error('Error creating placeholder devotional:', insertError);
             return res.status(500).json({ error: 'Failed to initiate devotional generation.' });
+        }
+        // 1-a. Create a placeholder for prayer in the daily_prayer table
+        const { data: newPrayer, error: insertPrayerError } = await supabase
+            .from('daily_prayers')
+            .insert({
+                user_id: userId,
+                generated_prayer: 'Generating prayer...',
+                status: 'pending', // Assuming you have a status column
+                date: generationDate,
+                went_through_guided_prayer: false,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            })
+            .select('prayer_id')
+            .single();
+        if (insertPrayerError) {
+            console.error('Error creating placeholder prayer:', insertPrayerError);
+            return res.status(500).json({ error: 'Failed to initiate prayer generation.' });
         }
 
         // 2. Return the placeholder ID to the frontend immediately
@@ -334,27 +355,46 @@ app.post('/generate-devotional', async (req, res) => {
                 daily_devotional_prompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14', // Model for devotional
-                500, // Max tokens
+                5000, // Max tokens
                 "text" // Devotional expected as plain text
             );
 
+            //parse generatedContent to json
+            const parsedContent = JSON.parse(generatedContent);
+            const { scripture, content, daily_prayer } = parsedContent;
             // Assuming the AI directly outputs the devotional text for the 'content' column
             const { error: updateError } = await supabase
                 .from('daily_devotionals')
                 .update({
-                    content: generatedContent,
+                    content: content,
+                    scripture: scripture,
                     status: 'completed',
                     updated_at: new Date().toISOString(),
                     // If AI also generates scripture, you'd parse and include it here
                 })
                 .eq('devotional_id', newDevotional.devotional_id);
-
+            
             if (updateError) {
                 console.error(`Error updating devotional record ${newDevotional.devotional_id}:`, updateError);
                 // Update status to 'failed' if update fails
                 await supabase.from('daily_devotionals').update({ status: 'failed' }).eq('devotional_id', newDevotional.devotional_id);
             } else {
                 console.log(`Devotional record ${newDevotional.devotional_id} successfully generated and updated.`);
+            }
+            // Now update the prayer record with the generated prayer
+            const { error: updatePrayerError } = await supabase
+
+                .from('daily_prayers')
+                .update({
+                    generated_prayer: daily_prayer,
+                    updated_at: new Date().toISOString(),
+                })
+                .eq('prayer_id', newPrayer.prayer_id);
+            if (updatePrayerError) {
+                console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
+                await supabase.from('daily_prayers').update({ prayer_text: 'Failed to generate prayer.' }).eq('prayer_id', newPrayer.prayer_id);
+            } else {
+                console.log(`Prayer record for devotional ${newDevotional.devotional_id} successfully generated and updated.`);
             }
         } catch (aiError) {
             console.error(`AI generation failed for devotional ${newDevotional.devotional_id}:`, aiError);
@@ -665,7 +705,7 @@ app.post('/generate-prayer', async (req, res) => {
                 daily_prayer_prompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
-                300, // Max tokens for prayer
+                4000, // Max tokens for prayer
                 "text"
             );
 
@@ -732,7 +772,7 @@ app.post('/generate-advice', async (req, res) => {
                 advice_guidance_prompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
-                700, // Max tokens for advice
+                4000, // Max tokens for advice
                 "json_object"
             );
 
