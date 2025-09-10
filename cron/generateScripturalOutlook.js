@@ -7,6 +7,7 @@ const xml2js = require('xml2js');
 
 // Initialize Supabase client for a Node.js environment
 // Replace with your Supabase URL and service role key
+require('dotenv').config();
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
@@ -148,3 +149,6 @@ async function generateAndSaveScripturalOutlook() {
 module.exports = {
   generateAndSaveScripturalOutlook
 };
+
+// If you want to run this script directly (for testing), uncomment the line below
+generateAndSaveScripturalOutlook();
