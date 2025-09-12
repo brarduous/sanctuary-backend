@@ -107,6 +107,7 @@ async function fetchTopNewsStories(limit = 5) {
             const title = item.title[0];
             const link = item.link[0];
             const description = item.description[0];
+            const thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
             const response = await axios.get(link, { maxRedirects: 5 });
             const html = await response.data;
 
@@ -124,7 +125,7 @@ async function fetchTopNewsStories(limit = 5) {
             const articleBody = paragraphText.join('\n\n');
             
             
-            const article = { title: title, url: link, body: articleBody, description: description };
+            const article = { title: title, url: link, thumbnail_url:thumbnail_url, body: articleBody, description: description };
              newsStories.push(article);
         };
         return await newsStories;
@@ -175,6 +176,7 @@ async function generateAndSaveScripturalOutlook() {
           article_url: article.url,
           article_title: article.title,
           article_body: article.body,
+          article_thumbnail_url: article.thumbnail_url,
           ai_outlook: aiResponse 
         };
         
