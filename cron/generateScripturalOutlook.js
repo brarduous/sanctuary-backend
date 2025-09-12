@@ -4,6 +4,7 @@
 const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
 const xml2js = require('xml2js');
+const cheerio = require('cheerio');
 
 // Initialize Supabase client for a Node.js environment
 // Replace with your Supabase URL and service role key
@@ -70,8 +71,13 @@ async function fetchTopNewsStories(limit = 3) {
             const title = item.title[0];
             const link = item.link[0];
             
-            // This is a placeholder. Scraping the full article body is complex.
-            const articleBody = "Placeholder article body for demonstration purposes. This content would be scraped from the original news article page.";
+            const response = axios.get(link, { maxRedirects: 5 });
+            const html = response.data;
+            const $ = cheerio.load(html);
+
+            // get all paragraphs and join them
+            const paragraphs = $('p').map((i, el) => $(el).text()).get();
+            const articleBody = paragraphs.join('\n\n');
 
             return { title, url: link, body: articleBody };
         });
