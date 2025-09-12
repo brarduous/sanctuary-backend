@@ -5,6 +5,12 @@ const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
 const xml2js = require('xml2js');
 const cheerio = require('cheerio');
+const OpenAI = require('openai'); // Use the v4 client
+require('dotenv').config();
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 // Initialize Supabase client for a Node.js environment
 // Replace with your Supabase URL and service role key
@@ -16,29 +22,54 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 // --- Backend API Functions ---
 
 // Placeholder for your AI generation function
-async function generateContent(endpoint, data) {
-    // This function should call your AI provider (e.g., OpenAI, Gemini)
-    // using the Node.js client library.
-    // For this example, we'll return a mock response.
-    console.log(`Calling AI endpoint: ${endpoint} with data:`, data);
-    return { 
-        ai_outlook: JSON.stringify({
-            mainMessage: "In a world of constant change and uncertainty, this story reminds us that our true hope is not found in temporary circumstances or human solutions, but in the unwavering promises of God.",
-            scriptureReference: "Hebrews 6:19",
-            reflectionQuestions: [
-                "Where are you placing your hope and trust in a world that is always in flux?",
-                "How can the promises of scripture provide a firm anchor for your soul in times of uncertainty?"
-            ],
-            closingPrayer: "Lord, help us to anchor our souls in You, our steadfast and faithful hope. Amen."
-        })
-    };
-}
+async function generateContent(systemPrompt, userPrompt) {
+    const generatedResponse = callOpenAIAndProcessResult(systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 5000, 'json_object');
+    // - **mainMessage**: A brief paragraph summarizing the spiritual takeaway or how this news story relates to a biblical principle.
+    // - **scriptureReference**: A single, relevant scripture reference (e.g., "Proverbs 3:5-6"). Do not include the full text of the scripture.
+    // - **reflectionQuestions**: A list of two to three brief, thought-provoking questions for personal reflection.
+    // - **closingPrayer**: A short, topical prayer related to the news event and the biblical principle you highlighted.
 
+  return generatedResponse;
+}
+// --- Helper function for making OpenAI API calls and parsing JSON ---
+async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
+    try {
+       
+        console.log(`Calling OpenAI model: ${model}`);
+        const chatCompletion = await openai.chat.completions.create({
+            model: model,
+            messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: userPrompt },
+            ],
+            max_tokens: maxTokens,
+            temperature: 0.7, // Adjust creativity
+            response_format: { type: responseFormatType },
+        });
+
+        let generatedContent = chatCompletion.choices[0].message.content;
+
+        if (responseFormatType === "json_object") {
+            try {
+                return JSON.parse(generatedContent);
+            } catch (jsonError) {
+                console.warn("Failed to parse AI response as JSON. Returning raw text.", jsonError);
+                return generatedContent; // Return raw text if parsing fails
+            }
+        }
+        return generatedContent; // Return raw text for 'text' format
+    } catch (error) {
+        console.error("Error during OpenAI API call:", error);
+        throw error;
+    }
+}
 // Function to save the outlook to the database
 async function saveScripturalOutlook(outlook) {
+  console.log('Saving scriptural outlook to the database...', outlook);
     const { data, error } = await supabase
         .from('scriptural_outlooks')
-        .insert([outlook]);
+        .insert([outlook])
+        .select();
 
     if (error) {
         console.error('Error saving scriptural outlook:', error);
@@ -50,8 +81,9 @@ async function saveScripturalOutlook(outlook) {
 // --- Main Cron Job Function ---
 
 // Updated to fetch the top 3 news stories
-async function fetchTopNewsStories(limit = 3) {
-    const rssFeedUrl = 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en';
+async function fetchTopNewsStories(limit = 5) {
+  console.log('Fetching top news stories...');
+    const rssFeedUrl = 'https://abcnews.go.com/abcnews/usheadlines';
 
     try {
         const response = await axios.get(rssFeedUrl);
@@ -60,29 +92,42 @@ async function fetchTopNewsStories(limit = 3) {
         const parser = new xml2js.Parser();
         const result = await parser.parseStringPromise(xml);
         
-        const items = result.rss.channel[0].item;
-        
+        const items = await result.rss.channel[0].item;
+        console.log(`Fetched ${items.length} articles from RSS feed.`);
         if (!items || items.length === 0) {
             console.error('No articles found in RSS feed.');
             return [];
         }
 
-        const newsStories = items.slice(0, limit).map(item => {
+        const newsStories =  []; 
+        const articles = await items.slice(0, limit);
+        for(let i=0; i<limit; i++) 
+          {
+            let item = items[i];
             const title = item.title[0];
             const link = item.link[0];
-            
-            const response = axios.get(link, { maxRedirects: 5 });
-            const html = response.data;
-            const $ = cheerio.load(html);
+            const description = item.description[0];
+            const response = await axios.get(link, { maxRedirects: 5 });
+            const html = await response.data;
 
+            const $ = await cheerio.load(html);
+
+            //console.log($('title').text());
+            //console.log($('meta[name="description"]').attr('content'));
             // get all paragraphs and join them
-            const paragraphs = $('p').map((i, el) => $(el).text()).get();
-            const articleBody = paragraphs.join('\n\n');
-
-            return { title, url: link, body: articleBody };
-        });
-
-        return newsStories;
+            const paragraphs = $('p');
+            const paragraphText = [];
+            paragraphs.each(
+              (i, el) => {
+                paragraphText.push( $(el).text() );
+              });
+            const articleBody = paragraphText.join('\n\n');
+            
+            
+            const article = { title: title, url: link, body: articleBody, description: description };
+             newsStories.push(article);
+        };
+        return await newsStories;
     } catch (err) {
         console.error('Error fetching and parsing RSS feed:', err);
         return [];
@@ -121,18 +166,16 @@ async function generateAndSaveScripturalOutlook() {
   
   // Iterate through each of the top articles
   for (const article of articles) {
-    const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}`;
-
+    const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\n\n`;
     try {
       // Call the AI function with the prompt and content for the current article
-      const aiResponse = await generateContent('/generate-outlook', { prompt: promptInput });
-      
-      if (aiResponse && aiResponse.ai_outlook) {
+      const aiResponse = await generateContent(scriptural_outlook_prompt, promptInput);
+      if (aiResponse) {
         const outlook = {
           article_url: article.url,
           article_title: article.title,
           article_body: article.body,
-          ai_outlook: JSON.parse(aiResponse.ai_outlook) // Assuming AI returns a JSON string
+          ai_outlook: aiResponse 
         };
         
         const savedData = await saveScripturalOutlook(outlook);
