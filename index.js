@@ -224,12 +224,13 @@ You are a deeply spiritual and helpful Christian devotional writer for the "Sanc
 You will be provided with a user's focus and improvement areas, along with a summary of their most recent devotionals to ensure new and fresh content.
 
 1.  **Select a Scripture:** Choose a single scripture passage that is highly relevant to the user's focus areas and is not present in the provided recent devotionals. The scripture should be referenced at the very beginning of the devotional.
-2.  **Devotional Content:** Write the main body of the devotional in a compassionate and encouraging tone.
+2.  **Title:** Create a compelling title that reflects the devotional's theme and scripture.
+3.  **Devotional Content:** Write the main body of the devotional in a compassionate and encouraging tone.
     * Explain the chosen scripture in a way that is easy to understand.
     * Connect the scripture's message directly to the user's focus or improvement areas.
     * Use Markdown for formatting, including bolding (**bold**), italics (*italics*), and paragraph breaks.
     * Ensure the devotional has a clear flow, from explaining the scripture to its practical application.
-3.  **Compose a Prayer:** Include with the devotional object a "Daily Prayer" that summarizes the devotional's message and is personal and specific to the user's needs.
+4.  **Compose a Prayer:** Include with the devotional object a "Daily Prayer" that summarizes the devotional's message and is personal and specific to the user's needs.
 
 --- USER INPUT & CONTEXT ---
 
@@ -242,6 +243,7 @@ You will be provided with a user's focus and improvement areas, along with a sum
 Your response must be a single JSON object. Ensure the output is ONLY the JSON object and nothing else.
 
 The JSON object must contain the following two keys:
+-   **"title"**: A string containing the title of the devotional.
 -   **"scripture"**: A string containing the scripture reference. Example: "2 Chronicles 20:2-3 (AMPC)".
 -   **"content"**: A string containing the complete devotional text, formatted with Markdown. This should include only the main body.
 -   **"daily_prayer"**: A string containing the prayer text.
@@ -250,6 +252,7 @@ The JSON object must contain the following two keys:
 // Example of the JSON output:
 /*
 {
+    "title": "Seeking God as Our Vital Need",
   "scripture": "2 Chronicles 20:2-3 (AMPC)",
   "content": "**A Call to Seek God**\n\nWhen King Jehoshaphat was faced with a great multitude coming against him, he didn't rely on his own strength. He was afraid, but his fear drove him to do something profound: he set himself to seek the Lord, and he proclaimed a fast throughout all Judah. This act was a powerful demonstration of his humility and a clear signal of his complete dependence on God.\n\nToday, you are working on *[user's focus area]*. It's easy to get overwhelmed and try to solve things on our own. But like Jehoshaphat, we are called to seek God with determination, treating it as our 'vital need.' This doesn't just mean a quick prayer; it's a dedicated effort to turn away from distractions and lean into His presence.\n\nGod promises that when we seek Him with all our hearts, we will find Him. Let this devotional be a reminder to seek God not only in moments of desperation but consistently, as a lifestyle. By doing so, you can find guidance and peace, preventing the need to become desperate in the first place.\n\n*"
   "daily_prayer": "Lord, I come before You today with a heart that seeks Your presence. Help me to turn away from my distractions and focus on You as my vital need. Guide me and fill me with Your peace and wisdom. May I always remember that in seeking You, I find everything I truly need. In Jesus' name, Amen."
@@ -361,11 +364,12 @@ app.post('/generate-devotional', async (req, res) => {
 
             //parse generatedContent to json
             const parsedContent = JSON.parse(generatedContent);
-            const { scripture, content, daily_prayer } = parsedContent;
+            const { title, scripture, content, daily_prayer } = parsedContent;
             // Assuming the AI directly outputs the devotional text for the 'content' column
             const { error: updateError } = await supabase
                 .from('daily_devotionals')
                 .update({
+                    title: title,
                     content: content,
                     scripture: scripture,
                     status: 'completed',
