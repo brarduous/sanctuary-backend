@@ -134,6 +134,15 @@ async function fetchTopNewsStories(limit = 5) {
         return [];
     }
 }
+// Daily News Synopsis Prompt
+const daily_news_synopsis_prompt = `
+# ROLE & GOAL
+You are a helpful theological assistant for a Christian app. Your primary task is to read a set of news articles, and generate a synopsis for AI to digest. This will be fed back into the AI to generate a daily or weekly summaries of the news through a biblical lens. This goal is summaritive, not analytical or opinionated.
+# INSTRUCTIONS
+You will be provided with the titles and bodies of several news articles. You MUST adhere to the following structure for your response.
+--- RESPONSE STRUCTURE ---
+- **summary**: A brief summary that's easy to digest by AI.
+Your final repsonse should be text only.`;
 
 // The AI prompt for generating the scriptural outlook
 const scriptural_outlook_prompt = `
@@ -155,7 +164,32 @@ Your final response should be a JSON object that strictly follows this structure
 Article Title: [INSERT_ARTICLE_TITLE]
 Article Body: [INSERT_ARTICLE_BODY]
 `;
-
+async function generateDailyNewsSynopsis(articles) {
+  console.log('Generating daily news synopsis...');
+  const combinedContent = articles.map((article, index) => {
+    return `Article ${index + 1} Title: ${article.title}\nArticle ${index + 1} Body: ${article.body}\nArticle ${index + 1} Description: ${article.description}\n\n`;
+  }).join('');
+  try {
+    const aiResponse = await callOpenAIAndProcessResult(daily_news_synopsis_prompt, combinedContent, 'gpt-4.1-2025-04-14', 5000, 'text');
+    //save response to supabase daily_news_synopses table with synopsis field
+    if (aiResponse) {
+      const { data, error } = await supabase
+        .from('daily_news_synopses')
+        .insert([{ synopsis: aiResponse }])
+        .select();
+      if (error) {
+        console.error('Error saving daily news synopsis:', error);
+      } else {
+        console.log('Successfully saved daily news synopsis:', data[0]);
+      }
+    } else {
+      console.error('AI response did not contain synopsis content.');
+    }
+  } catch (error) {
+    console.error('Error generating daily news synopsis:', error);
+    
+  }
+}
 async function generateAndSaveScripturalOutlook() {
   console.log('Starting scriptural outlook generation cron job...');
 
@@ -164,7 +198,7 @@ async function generateAndSaveScripturalOutlook() {
     console.error('Failed to get any news articles. Exiting.');
     return;
   }
-  
+  generateDailyNewsSynopsis(articles);
   // Iterate through each of the top articles
   for (const article of articles) {
     const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\n\n`;
