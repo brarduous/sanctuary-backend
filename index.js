@@ -293,7 +293,24 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
 }
 
 // --- API Endpoints ---
-
+//Endpoint to get news articles from scriptural_outlooks table of database
+app.get('/scriptural-outlooks', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('scriptural_outlooks')
+            .select('*')
+            .order('created_at', { ascending: false })
+            .limit(10); // Get the latest 10 articles
+        if (error) {
+            console.error('Error fetching scriptural outlooks:', error);
+            return res.status(500).json({ error: 'Failed to fetch scriptural outlooks.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /scriptural-outlooks:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
 // Endpoint to initiate Daily Devotional generation
 app.post('/generate-devotional', async (req, res) => {
     try {
