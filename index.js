@@ -923,6 +923,25 @@ app.get('/advice/:userId', async (req, res) => {
     }
     res.json(data);
 });
+//New Fetching Endpoint: Get Advice/Guidance by adviceId
+app.get('/advice/:userId/:adviceId', async (req, res) => {
+    
+    const { adviceId, userId } = req.params;
+    const { data, error } = await supabase
+        .from('advice_guidance')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('advice_id', adviceId)
+        .single();
+    if (error) {
+        console.error('Error fetching advice by ID:', error);
+        return res.status(500).json({ error: 'Failed to fetch advice by ID.' });
+    }
+    if (!data) {
+        return res.status(404).json({ error: 'Advice not found.' });
+    }
+    res.json(data);
+});
 
 
 const PORT = process.env.PORT || 3001;
