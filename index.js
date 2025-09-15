@@ -943,6 +943,50 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
     res.json(data);
 });
 
+// Example Node.js/Express route for a Supabase backend
+app.post('/api/log-activity', async (req, res) => {
+  const { userId, activityType } = req.body;
+
+  if (!userId || !activityType) {
+    return res.status(400).send('Missing user ID or activity type.');
+  }
+
+  // Check if a record for this user and activity type already exists for today
+  const { data: existingEntry, error: fetchError } = await supabase
+    .from('user_activities')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('activity_type', activityType)
+    .eq('activity_date', new Date().toISOString().split('T')[0]); // Use just the date
+
+  if (fetchError) {
+    console.error('Error checking for existing activity:', fetchError);
+    return res.status(500).send('Database error.');
+  }
+
+  if (existingEntry.length > 0) {
+    // Activity already logged for today, do nothing
+    return res.status(200).send('Activity already logged for today.');
+  }
+
+  // Log the new activity
+  const { data, error } = await supabase
+    .from('user_activities')
+    .insert([
+      {
+        user_id: userId,
+        activity_type: activityType,
+        activity_date: new Date().toISOString().split('T')[0],
+      },
+    ]);
+
+  if (error) {
+    console.error('Error logging user activity:', error);
+    return res.status(500).send('Failed to log activity.');
+  }
+
+  res.status(200).json({ message: 'Activity logged successfully.' });
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
