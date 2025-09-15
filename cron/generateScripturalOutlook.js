@@ -68,7 +68,8 @@ async function saveScripturalOutlook(outlook) {
   console.log('Saving scriptural outlook to the database...', outlook);
     const { data, error } = await supabase
         .from('scriptural_outlooks')
-        .insert([outlook])
+        .upsert([outlook], { onConflict: 'article_url' })
+       
         .select();
 
     if (error) {
