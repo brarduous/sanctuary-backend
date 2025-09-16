@@ -945,9 +945,9 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
 
 // Example Node.js/Express route for a Supabase backend
 app.post('/api/log-activity', async (req, res) => {
-  const { userId, activityType } = req.body;
+  const { userId, activityType, activityId } = req.body;
 
-  if (!userId || !activityType) {
+  if (!userId || !activityType || !activityId) {
     return res.status(400).send('Missing user ID or activity type.');
   }
 
@@ -977,6 +977,7 @@ app.post('/api/log-activity', async (req, res) => {
         user_id: userId,
         activity_type: activityType,
         activity_date: new Date().toISOString().split('T')[0],
+        activity_id: activityId,
       },
     ]);
 
@@ -986,6 +987,77 @@ app.post('/api/log-activity', async (req, res) => {
   }
 
   res.status(200).json({ message: 'Activity logged successfully.' });
+});
+
+// New API route to calculate and return the user's streak
+app.get('/api/streak/:userId/:activityType', async (req, res) => {
+  const { userId, activityType } = req.params;
+
+  if (!userId || !activityType) {
+    return res.status(400).send('Missing user ID or activity type.');
+  }
+
+  try {
+    const { data: activities, error } = await supabase
+      .from('user_activities')
+      .select('activity_date')
+      .eq('user_id', userId)
+      .eq('activity_type', activityType)
+      .order('activity_date', { ascending: false }); // Get most recent activities first
+
+    if (error) {
+      console.error('Error fetching activities for streak:', error);
+      return res.status(500).send('Database error.');
+    }
+
+    if (!activities || activities.length === 0) {
+      return res.status(200).json({ streak: 0 }); // No activities found, streak is 0
+    }
+
+    // Streak calculation logic
+    let streak = 0;
+    let today = new Date();
+    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate date comparison
+
+    // Check if the most recent activity was today. If not, the streak is 0.
+    const mostRecentDate = new Date(activities[0].activity_date);
+    if (mostRecentDate.getTime() === today.getTime()) {
+      streak = 1;
+    } else if (mostRecentDate.getTime() < today.getTime()) {
+        // Most recent activity was yesterday, streak starts at 1
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        if (mostRecentDate.getTime() === yesterday.getTime()) {
+          streak = 1;
+        } else {
+            return res.status(200).json({ streak: 0 }); // No activity yesterday or today, so streak is 0
+        }
+    }
+    
+    // Iterate through the rest of the activities
+    for (let i = 1; i < activities.length; i++) {
+        const currentDate = new Date(activities[i-1].activity_date);
+        const previousDate = new Date(activities[i].activity_date);
+
+        // Calculate the difference in days
+        const oneDay = 1000 * 60 * 60 * 24;
+        const diffInDays = Math.round((currentDate.getTime() - previousDate.getTime()) / oneDay);
+        
+        // If consecutive, increment the streak
+        if (diffInDays === 1) {
+            streak++;
+        } else {
+            // If the dates are not consecutive, the streak is broken
+            break;
+        }
+    }
+    
+    return res.status(200).json({ streak });
+
+  } catch (err) {
+    console.error('Error calculating streak:', err);
+    res.status(500).send('Server error.');
+  }
 });
 
 const PORT = process.env.PORT || 3001;
