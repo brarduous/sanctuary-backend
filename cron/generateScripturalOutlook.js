@@ -110,11 +110,11 @@ async function fetchTopNewsStories(limit = 10) {
             const title = item.title[0];
             const link = item.link[0];
             const description = item.description[0];
-            const thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
+            let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
             
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto(link, { waitUntil: 'networkidle2', timeout: 60000});
+            await page.goto(link, { waitUntil: 'networkidle2', timeout: 30000});
             const final_url = await page.url();
             await browser.close();
 
@@ -129,6 +129,16 @@ async function fetchTopNewsStories(limit = 10) {
 
             //console.log($('title').text());
             //console.log($('meta[name="description"]').attr('content'));
+
+            //get media image from meta tag if thumbnail_url is null
+            if(!thumbnail_url){
+              const metaImage = $('meta[property="og:image"]').attr('content') || $('meta[name="twitter:image"]').attr('content');
+              if(metaImage){
+                thumbnail_url = metaImage;
+              }
+              console.log(`Fetched thumbnail URL from meta tag: ${thumbnail_url}`);
+            }
+            
             // get all paragraphs and join them
             const paragraphs = $('p');
             const paragraphText = [];
@@ -171,7 +181,7 @@ You are a helpful theological assistant for a Christian app. Your primary task i
 You will be provided with the title and body of a news article. You MUST adhere to the following structure for your response.
 
 --- RESPONSE STRUCTURE ---
-- **mainMessage**: A brief paragraph summarizing the article followed by a brief paragraph summarizing the scriptural takeaway or how this news story stacks up against biblical truth.
+- **mainMessage**: A brief paragraph summarizing the article without spiritual analysis, followed by a brief paragraph summarizing the scriptural takeaway or how this news story stacks up against biblical truth.
 - **scriptureReference**: A single, relevant scripture reference (e.g., "Proverbs 3:5-6"). Do not include the full text of the scripture.
 - **reflectionQuestions**: A list of two to three brief, thought-provoking questions for personal reflection.
 - **closingPrayer**: A short, topical prayer related to the news event and biblical truth.
