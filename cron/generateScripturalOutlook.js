@@ -6,6 +6,8 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const cheerio = require('cheerio');
 const OpenAI = require('openai'); // Use the v4 client
+const puppeteer = require('puppeteer');
+
 require('dotenv').config();
 
 const openai = new OpenAI({
@@ -82,9 +84,9 @@ async function saveScripturalOutlook(outlook) {
 // --- Main Cron Job Function ---
 
 // Updated to fetch the top 3 news stories
-async function fetchTopNewsStories(limit = 5) {
+async function fetchTopNewsStories(limit = 10) {
   console.log('Fetching top news stories...');
-    const rssFeedUrl = 'https://abcnews.go.com/abcnews/usheadlines';
+    const rssFeedUrl = 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en';
 
     try {
         const response = await axios.get(rssFeedUrl);
@@ -109,7 +111,18 @@ async function fetchTopNewsStories(limit = 5) {
             const link = item.link[0];
             const description = item.description[0];
             const thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
-            const response = await axios.get(link, { maxRedirects: 5 });
+            
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
+            await page.goto(link, { waitUntil: 'networkidle2', timeout: 60000});
+            const final_url = await page.url();
+            await browser.close();
+
+
+            try{
+            const response = await axios.get(final_url);
+            //console.log(response);
+            console.log(`Fetched article content from: ${final_url}`);
             const html = await response.data;
 
             const $ = await cheerio.load(html);
@@ -126,8 +139,12 @@ async function fetchTopNewsStories(limit = 5) {
             const articleBody = paragraphText.join('\n\n');
             
             
-            const article = { title: title, url: link, thumbnail_url:thumbnail_url, body: articleBody, description: description };
+            const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description };
              newsStories.push(article);
+            }catch(err){
+              console.error(`Error fetching or parsing article at ${link}:`, err);
+              continue;
+            }
         };
         return await newsStories;
     } catch (err) {
@@ -154,10 +171,10 @@ You are a helpful theological assistant for a Christian app. Your primary task i
 You will be provided with the title and body of a news article. You MUST adhere to the following structure for your response.
 
 --- RESPONSE STRUCTURE ---
-- **mainMessage**: A brief paragraph summarizing the spiritual takeaway or how this news story relates to a biblical principle.
+- **mainMessage**: A brief paragraph summarizing the article followed by a brief paragraph summarizing the scriptural takeaway or how this news story stacks up against biblical truth.
 - **scriptureReference**: A single, relevant scripture reference (e.g., "Proverbs 3:5-6"). Do not include the full text of the scripture.
 - **reflectionQuestions**: A list of two to three brief, thought-provoking questions for personal reflection.
-- **closingPrayer**: A short, topical prayer related to the news event and the biblical principle you highlighted.
+- **closingPrayer**: A short, topical prayer related to the news event and biblical truth.
 
 Your final response should be a JSON object that strictly follows this structure.
 
