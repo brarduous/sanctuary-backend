@@ -943,7 +943,7 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
     res.json(data);
 });
 // Get user_profile by userId
-app.get('api/user-profile/:userId', async (req, res) => {
+app.get('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('user_profiles')
@@ -960,7 +960,7 @@ app.get('api/user-profile/:userId', async (req, res) => {
     res.json(data);
 });
 //save or update user_profile by userId
-app.post('api/user-profile/:userId', async (req, res) => {
+app.post('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const profileData = req.body; 
     const { data, error } = await supabase
@@ -975,7 +975,7 @@ app.post('api/user-profile/:userId', async (req, res) => {
 });
     
 // Example Node.js/Express route for a Supabase backend
-app.post('/api/log-activity', async (req, res) => {
+app.post('//log-activity', async (req, res) => {
   const { userId, activityType, activityId } = req.body;
 
   if (!userId || !activityType || !activityId) {
@@ -1021,7 +1021,7 @@ app.post('/api/log-activity', async (req, res) => {
 });
 
 // New API route to calculate and return the user's streak
-app.get('/api/streak/:userId/:activityType', async (req, res) => {
+app.get('//streak/:userId/:activityType', async (req, res) => {
   const { userId, activityType } = req.params;
 
   if (!userId || !activityType) {
