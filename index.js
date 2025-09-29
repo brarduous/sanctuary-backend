@@ -975,7 +975,7 @@ app.post('/user-profile/:userId', async (req, res) => {
 });
     
 // Example Node.js/Express route for a Supabase backend
-app.post('//log-activity', async (req, res) => {
+app.post('/log-activity', async (req, res) => {
   const { userId, activityType, activityId } = req.body;
 
   if (!userId || !activityType || !activityId) {
@@ -1021,7 +1021,7 @@ app.post('//log-activity', async (req, res) => {
 });
 
 // New API route to calculate and return the user's streak
-app.get('//streak/:userId/:activityType', async (req, res) => {
+app.get('/streak/:userId/:activityType', async (req, res) => {
   const { userId, activityType } = req.params;
 
   if (!userId || !activityType) {
