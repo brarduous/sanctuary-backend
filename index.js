@@ -943,7 +943,7 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
     res.json(data);
 });
 // Get user_profile by userId
-app.get('/user-profile/:userId', async (req, res) => {
+app.get('api/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('user_profiles')
@@ -960,7 +960,7 @@ app.get('/user-profile/:userId', async (req, res) => {
     res.json(data);
 });
 //save or update user_profile by userId
-app.post('/user-profile/:userId', async (req, res) => {
+app.post('api/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const profileData = req.body; 
     const { data, error } = await supabase
