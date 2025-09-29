@@ -942,7 +942,38 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
     }
     res.json(data);
 });
-
+// Get user_profile by userId
+app.get('/user-profile/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { data, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+    if (error) {
+        console.error('Error fetching user profile:', error);
+        return res.status(500).json({ error: 'Failed to fetch user profile.' });
+    }
+    if (!data) {
+        return res.status(404).json({ error: 'User profile not found.' });
+    }
+    res.json(data);
+});
+//save or update user_profile by userId
+app.post('/user-profile/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const profileData = req.body; 
+    const { data, error } = await supabase
+        .from('user_profiles')
+        .upsert(profileData)
+        .eq('user_id', userId);
+    if (error) {
+        console.error('Error saving or updating user profile:', error);
+        return res.status(500).json({ error: 'Failed to save or update user profile.' });
+    }
+    res.json(data);
+});
+    
 // Example Node.js/Express route for a Supabase backend
 app.post('/api/log-activity', async (req, res) => {
   const { userId, activityType, activityId } = req.body;
