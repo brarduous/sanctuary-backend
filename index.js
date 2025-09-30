@@ -1053,7 +1053,8 @@ app.get('/streak/:userId/:activityType', async (req, res) => {
 
     // Check if the most recent activity was today. If not, the streak is 0.
     const mostRecentDate = new Date(activities[0].activity_date);
-    if (mostRecentDate.getTime() === today.getTime()) {
+    //check and see if the most recent date was yesterday
+    if (mostRecentDate.getTime() === today.getTime() - 86400000) {
       streak = 1;
     } else if (mostRecentDate.getTime() < today.getTime()) {
         // Most recent activity was yesterday, streak starts at 1
