@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js"
   },
   "keywords": [],
