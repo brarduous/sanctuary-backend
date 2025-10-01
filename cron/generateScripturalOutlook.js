@@ -114,7 +114,7 @@ async function fetchTopNewsStories(limit = 10) {
             
             const browser = await puppeteer.launch();
             const page = await browser.newPage();
-            await page.goto(link, { waitUntil: 'networkidle2', timeout: 30000});
+            await page.goto(link, { waitUntil: 'networkidle2', timeout: 60000});
             const final_url = await page.url();
             await browser.close();
 
