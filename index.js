@@ -292,7 +292,22 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
         throw error;
     }
 }
-
+app.get('/app-options', async (req, res) =>{
+    try {
+        const { data, error } = await supabase
+            .from('app_options')
+            .select('*')
+            .order('created_at', { ascending: false })
+        if (error) {
+            console.error('Error fetching app option:', error);
+            return res.status(500).json({ error: 'Failed to fetch app options.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /app-options:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
 // --- API Endpoints ---
 //Endpoint to get news articles from scriptural_outlooks table of database
 app.get('/scriptural-outlooks', async (req, res) => {
