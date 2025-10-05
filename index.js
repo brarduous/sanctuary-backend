@@ -410,6 +410,7 @@ app.post('/generate-devotional', async (req, res) => {
                 .update({
                     generated_prayer: daily_prayer,
                     updated_at: new Date().toISOString(),
+                    status: 'completed'
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
             if (updatePrayerError) {
