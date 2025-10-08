@@ -311,12 +311,19 @@ app.get('/app-options', async (req, res) =>{
 // --- API Endpoints ---
 //Endpoint to get news articles from scriptural_outlooks table of database
 app.get('/scriptural-outlooks', async (req, res) => {
+
+    //receive params for page and limit
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
     try {
+        //fetch articles from supabase based on page and limit
         const { data, error } = await supabase
             .from('scriptural_outlooks')
             .select('*')
             .order('created_at', { ascending: false })
-            .limit(10); // Get the latest 10 articles
+            .range(offset, offset + limit - 1);
         if (error) {
             console.error('Error fetching scriptural outlooks:', error);
             return res.status(500).json({ error: 'Failed to fetch scriptural outlooks.' });
