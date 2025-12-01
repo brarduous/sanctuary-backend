@@ -309,6 +309,44 @@ app.get('/app-options', async (req, res) =>{
     }
 });
 // --- API Endpoints ---
+
+// New: Endpoint to fetch all canonical categories
+app.get('/categories', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .order('name', { ascending: true });
+        if (error) {
+            console.error('Error fetching categories:', error);
+            return res.status(500).json({ error: 'Failed to fetch categories.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /categories:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+// New: Endpoint to fetch all canonical topics
+app.get('/topics', async (req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('topics')
+            .select('*')
+            .order('name', { ascending: true });
+        if (error) {
+            console.error('Error fetching topics:', error);
+            return res.status(500).json({ error: 'Failed to fetch topics.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /topics:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+
 //Endpoint to get news articles from scriptural_outlooks table of database
 app.get('/scriptural-outlooks', async (req, res) => {
 
@@ -318,17 +356,39 @@ app.get('/scriptural-outlooks', async (req, res) => {
     const offset = (page - 1) * limit;
 
     try {
-        //fetch articles from supabase based on page and limit
+        // Fetch scriptural outlooks AND their related categories and topics 
+        // using the Foreign Table Linking syntax.
+        // This performs the necessary joins on outlook_categories and outlook_topics efficiently.
         const { data, error } = await supabase
             .from('scriptural_outlooks')
-            .select('*')
+            .select(`
+                *,
+                outlook_categories ( category_id, categories (id, name, description) ),
+                outlook_topics ( topic_id, topics (id, name, description) )
+            `)
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
+            
         if (error) {
             console.error('Error fetching scriptural outlooks:', error);
             return res.status(500).json({ error: 'Failed to fetch scriptural outlooks.' });
         }
-        res.json(data);
+        
+        // Map the results to a cleaner format for the frontend
+        const cleanedData = data.map(outlook => {
+            return {
+                ...outlook,
+                // Restructure categories array to just include category data
+                categories: outlook.outlook_categories.map(oc => oc.categories),
+                // Restructure topics array to just include topic data
+                topics: outlook.outlook_topics.map(ot => ot.topics),
+                // Remove the intermediary join table properties for cleanliness
+                outlook_categories: undefined, 
+                outlook_topics: undefined,
+            };
+        });
+
+        res.json(cleanedData);
     } catch (error) {
         console.error('Unhandled error in /scriptural-outlooks:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
