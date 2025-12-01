@@ -346,6 +346,28 @@ app.get('/topics', async (req, res) => {
     }
 });
 
+// --- GET Single Scriptural Outlook by ID ---
+app.get('/scriptural-outlooks/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Fetching scriptural outlook with ID:', id);
+    try {
+        const { data, error } = await supabase
+            .from('scriptural_outlooks')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            console.error('Error fetching article:', error);
+            return res.status(404).json({ error: 'Article not found' });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 //Endpoint to get news articles from scriptural_outlooks table of database
 app.get('/scriptural-outlooks', async (req, res) => {
