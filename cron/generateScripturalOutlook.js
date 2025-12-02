@@ -153,83 +153,117 @@ async function saveScripturalOutlook(outlook) {
 // Function to fetch the top 15 news stories (logic remains the same)
 async function fetchTopNewsStories(limit = 15) {
   console.log('Fetching top news stories...');
-    const rssFeedUrl = 'https://www.cbsnews.com/latest/rss/main';
+    const rssFeedUrls = [
+        'https://www.cbsnews.com/latest/rss/main',
+        'https://moxie.foxnews.com/google-publisher/latest.xml',
+        'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'
+    ];
+    
+    const newsStories = [];
+    const parser = new xml2js.Parser();
+    
+    // First, fetch all feeds and store their items
+    const feedItems = [];
+    for (const rssFeedUrl of rssFeedUrls) {
+        try {
+            console.log(`Fetching articles from: ${rssFeedUrl}`);
+            const response = await axios.get(rssFeedUrl);
+            const xml = response.data;
 
-    try {
-        const response = await axios.get(rssFeedUrl);
-        const xml = response.data;
-
-        const parser = new xml2js.Parser();
-        const result = await parser.parseStringPromise(xml);
-        
-        const items = await result.rss.channel[0].item;
-        console.log(`Fetched ${items.length} articles from RSS feed.`);
-        if (!items || items.length === 0) {
-            console.error('No articles found in RSS feed.');
-            return [];
+            const result = await parser.parseStringPromise(xml);
+            
+            const items = result.rss.channel[0].item;
+            console.log(`Fetched ${items.length} articles from RSS feed: ${rssFeedUrl}`);
+            if (!items || items.length === 0) {
+                console.warn(`No articles found in RSS feed: ${rssFeedUrl}`);
+                feedItems.push([]);
+            } else {
+                feedItems.push(items);
+            }
+        } catch (err) {
+            console.error(`Error fetching and parsing RSS feed ${rssFeedUrl}:`, err);
+            feedItems.push([]); // Add empty array for failed feeds
         }
-
-        const newsStories =  []; 
-        const articles = await items.slice(0, limit);
-        let i=0;
-        while(i<limit && i<items.length) 
-          {
-            let item = items[i];
-            const title = item.title[0];
-            const link = item.link[0];
-            const description = item.description[0];
-            let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
-            
-            // Note: Puppeteer setup remains the same as previously defined
-            const browser = await puppeteer.launch();
-            const page = await browser.newPage();
-            // Set a user agent to mimic a real browser to avoid being blocked
-            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-            await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
-           
-            const final_url = await page.url();
-            await browser.close();
-
-
-            try{
-            const response = await axios.get(final_url);
-            console.log(`Fetched article content from: ${final_url}`);
-            const html = await response.data;
-
-            const $ = await cheerio.load(html);
-
-            //get media image from meta tag if thumbnail_url is null
-            if(!thumbnail_url){
-              const metaImage = $('meta[property="og:image"]').attr('content') || $('meta[name="twitter:image"]').attr('content');
-              if(metaImage){
-                thumbnail_url = metaImage;
-              }
-              console.log(`Fetched thumbnail URL from meta tag: ${thumbnail_url}`);
-            }
-            
-            // get all paragraphs and join them
-            const paragraphs = $('p');
-            const paragraphText = [];
-            paragraphs.each(
-              (i, el) => {
-                paragraphText.push( $(el).text() );
-              });
-            const articleBody = paragraphText.join('\n\n');
-            
-            
-            const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description };
-             newsStories.push(article);
-             i++;
-            }catch(err){
-              console.error(`Error fetching or parsing article at ${link}:`);
-              continue;
-            }
-        };
-        return await newsStories;
-    } catch (err) {
-        console.error('Error fetching and parsing RSS feed:', err);
-        return [];
     }
+    
+    // Round-robin through feeds to get one article from each until limit is reached
+    let currentIndex = 0;
+    const feedIndices = feedItems.map(() => 0); // Track current position in each feed
+    
+    while (newsStories.length < limit) {
+        let allFeedsExhausted = true;
+        
+        // Try to get one article from each feed in round-robin fashion
+        for (let i = 0; i < feedItems.length && newsStories.length < limit; i++) {
+            const feedIndex = (currentIndex + i) % feedItems.length;
+            const items = feedItems[feedIndex];
+            const itemIndex = feedIndices[feedIndex];
+            
+            if (itemIndex < items.length) {
+                allFeedsExhausted = false;
+                const item = items[itemIndex];
+                feedIndices[feedIndex]++;
+                
+                const title = item.title[0];
+                const link = item.link[0];
+                console.log(`Processing article: ${title} - ${link}`);
+                const description = item.description? item.description[0] : '';
+                let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
+                
+                // Note: Puppeteer setup remains the same as previously defined
+                const browser = await puppeteer.launch();
+                const page = await browser.newPage();
+                // Set a user agent to mimic a real browser to avoid being blocked
+                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+                await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
+               
+                const final_url = await page.url();
+                await browser.close();
+
+                try{
+                    const response = await axios.get(final_url);
+                    console.log(`Fetched article content from: ${final_url}`);
+                    const html = await response.data;
+
+                    const $ = await cheerio.load(html);
+
+                    //get media image from meta tag if thumbnail_url is null
+                    if(!thumbnail_url){
+                      const metaImage = $('meta[property="og:image"]').attr('content') || $('meta[name="twitter:image"]').attr('content');
+                      if(metaImage){
+                        thumbnail_url = metaImage;
+                      }
+                      console.log(`Fetched thumbnail URL from meta tag: ${thumbnail_url}`);
+                    }
+                    
+                    // get all paragraphs and join them
+                    const paragraphs = $('p');
+                    const paragraphText = [];
+                    paragraphs.each(
+                      (i, el) => {
+                        paragraphText.push( $(el).text() );
+                      });
+                    const articleBody = paragraphText.join('\n\n');
+                    
+                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description };
+                    newsStories.push(article);
+                }catch(err){
+                  console.error(`Error fetching or parsing article at ${link}:`, err);
+                  continue;
+                }
+            }
+        }
+        
+        // If all feeds are exhausted, break out of the loop
+        if (allFeedsExhausted) {
+            break;
+        }
+        
+        currentIndex = (currentIndex + 1) % feedItems.length;
+    }
+    
+    console.log(`Total articles fetched: ${newsStories.length}`);
+    return newsStories;
 }
 // Daily News Synopsis Prompt
 const daily_news_synopsis_prompt = `
