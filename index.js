@@ -315,37 +315,97 @@ app.get('/categories', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('categories')
-            .select('*')
-            .order('name', { ascending: true });
+            .select('*, outlook_categories(count)')
+            //only fetch categories with at least one article
+            .gt('outlook_categories.count', 0);
+            
         if (error) {
             console.error('Error fetching categories:', error);
             return res.status(500).json({ error: 'Failed to fetch categories.' });
         }
-        res.json(data);
+
+        const sortedData = data.map(item => ({
+            ...item,
+            article_count: item.outlook_categories?.[0]?.count || 0,
+            outlook_categories: undefined
+        })).sort((a, b) => b.article_count - a.article_count);
+
+        res.json(sortedData);
     } catch (error) {
         console.error('Unhandled error in /categories:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+//New: Endpoint to fetch category by ID
+app.get('/categories/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Fetching category with ID:', id);
+    try {
+        const { data, error } = await supabase
+            .from('categories')
+            .select('*')
+            .eq('id', id)
+            .single();
 
+        if (error) {
+            console.error('Error fetching category:', error);
+            return res.status(404).json({ error: 'Category not found' });
+        }
+
+        res.json(data);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}); 
 // New: Endpoint to fetch all canonical topics
 app.get('/topics', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('topics')
-            .select('*')
-            .order('name', { ascending: true });
+            .select('*, outlook_topics(count)') 
+            //only fetch topics with at least one article
+            .gt('outlook_topics.count', 0);
+            
         if (error) {
             console.error('Error fetching topics:', error);
             return res.status(500).json({ error: 'Failed to fetch topics.' });
         }
-        res.json(data);
+
+        const sortedData = data.map(item => ({
+            ...item,
+            article_count: item.outlook_topics?.[0]?.count || 0,
+            outlook_topics: undefined
+        })).sort((a, b) => b.article_count - a.article_count);
+
+        res.json(sortedData);
     } catch (error) {
         console.error('Unhandled error in /topics:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+//New: Endpoint to fetch topic by ID
+app.get('/topics/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log('Fetching topic with ID:', id);
+    try {
+        const { data, error } = await supabase
+            .from('topics')
+            .select('*')
+            .eq('id', id)
+            .single();
+        if (error) {
+            console.error('Error fetching topic:', error);
+            return res.status(404).json({ error: 'Topic not found' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+    
 
+});
 // --- GET Single Scriptural Outlook by ID ---
 app.get('/scriptural-outlooks/:id', async (req, res) => {
     const { id } = req.params;
@@ -376,20 +436,38 @@ app.get('/scriptural-outlooks', async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    const topic_id = req.query.topic_id;
+    const category_id = req.query.category_id;
 
     try {
-        // Fetch scriptural outlooks AND their related categories and topics 
-        // using the Foreign Table Linking syntax.
-        // This performs the necessary joins on outlook_categories and outlook_topics efficiently.
-        const { data, error } = await supabase
+        // Construct the select query dynamically based on filters
+        // If filtering by a relation, we must use !inner to filter the parent rows
+        let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, name, description) )';
+        let outlookCategoriesSelect = 'outlook_categories ( category_id, categories (id, name, description) )';
+
+        if (topic_id) {
+            outlookTopicsSelect = 'outlook_topics!inner ( topic_id, topics (id, name, description) )';
+        }
+        if (category_id) {
+            outlookCategoriesSelect = 'outlook_categories!inner ( category_id, categories (id, name, description) )';
+        }
+
+        const selectQuery = `*, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
+
+        let query = supabase
             .from('scriptural_outlooks')
-            .select(`
-                *,
-                outlook_categories ( category_id, categories (id, name, description) ),
-                outlook_topics ( topic_id, topics (id, name, description) )
-            `)
+            .select(selectQuery)
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
+
+        if (topic_id) {
+            query = query.eq('outlook_topics.topic_id', topic_id);
+        }
+        if (category_id) {
+            query = query.eq('outlook_categories.category_id', category_id);
+        }
+            
+        const { data, error } = await query;
             
         if (error) {
             console.error('Error fetching scriptural outlooks:', error);
@@ -401,9 +479,9 @@ app.get('/scriptural-outlooks', async (req, res) => {
             return {
                 ...outlook,
                 // Restructure categories array to just include category data
-                categories: outlook.outlook_categories.map(oc => oc.categories),
+                categories: outlook.outlook_categories ? outlook.outlook_categories.map(oc => oc.categories) : [],
                 // Restructure topics array to just include topic data
-                topics: outlook.outlook_topics.map(ot => ot.topics),
+                topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
                 // Remove the intermediary join table properties for cleanliness
                 outlook_categories: undefined, 
                 outlook_topics: undefined,
@@ -416,6 +494,9 @@ app.get('/scriptural-outlooks', async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+
+
+
 // Endpoint to initiate Daily Devotional generation
 app.post('/generate-devotional', async (req, res) => {
     try {

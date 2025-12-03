@@ -200,8 +200,8 @@ async function saveScripturalOutlook(outlook) {
     return data;
 }
 
-// Function to fetch the top 15 news stories (logic remains the same)
-async function fetchTopNewsStories(limit = 1) {
+// Function to fetch the top 10 news stories (logic remains the same)
+async function fetchTopNewsStories(limit = 10) {
   console.log('Fetching top news stories...');
     const rssFeedUrls = [
         'https://www.cbsnews.com/latest/rss/main',
@@ -344,7 +344,7 @@ You are a helpful theological pastoral advisor for a Christian app. Your primary
 
 # INSTRUCTIONS
 You will be provided with the title and body of a news article, and a list of existing categories and topics.
-1.  **Categorization/Topic Selection**: Identify 1 to 3 categories and 1 to 5 topics that accurately describe the article. Use categories and topics from the existing lists provided if and only if they fit well.
+1.  **Categorization/Topic Selection**: Identify 1 to 3 categories and 1 to 5 topics that accurately describe the article. Use categories and topics from the existing lists provided if and only if they fit well. The category should be broad (e.g., "Politics", "Health", "Religion") while topics should be more specific, and the subject (person, place or thing) of the article (e.g., "Donald Trump", "COVID-19", "New York").
 2.  **Canonical Naming**: For each category or topic, check the provided lists. If the concept already exists (e.g., "President Trump" should map to "Trump"), use the *canonical existing name*. If the concept is truly new or significantly different, create a concise new name and provide a brief description.
 3.  **Synopsis**: Provide a thorough summary of the key points of the article without spiritual analysis.  
 4.  **Outlook**: Provide the Scriptural takeaway or how this news story stacks up against biblical truth. Use a critical approach, analyzing the intentions and impacts of the people and events described in the article through a biblical lens.
