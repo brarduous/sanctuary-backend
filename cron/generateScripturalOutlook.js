@@ -61,7 +61,7 @@ async function generateImage(prompt) {
             model: "dall-e-3",
             prompt: prompt,
             n: 1,
-            size: "1024x1024",
+            size: "10920x1080",
             response_format: "url", // We get a URL, then download it
         });
         console.log('Image generated:', response.data[0].url);
