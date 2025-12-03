@@ -53,6 +53,56 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     }
 }
 
+// Function to generate image using DALL-E 3
+async function generateImage(prompt) {
+    try {
+        console.log('Generating image with prompt:', prompt.substring(0, 50) + '...');
+        const response = await openai.images.generate({
+            model: "dall-e-3",
+            prompt: prompt,
+            n: 1,
+            size: "1024x1024",
+            response_format: "url", // We get a URL, then download it
+        });
+        console.log('Image generated:', response.data[0].url);
+        return response.data[0].url;
+    } catch (error) {
+        console.error("Error generating image:", error);
+        return null;
+    }
+}
+
+// Function to upload image from URL to Supabase Storage
+async function uploadImageToSupabase(imageUrl, bucketName, path) {
+    try {
+        // 1. Download image as ArrayBuffer
+        const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+        const buffer = Buffer.from(response.data, 'binary');
+
+        // 2. Upload to Supabase
+        const { data, error } = await supabase
+            .storage
+            .from(bucketName)
+            .upload(path, buffer, {
+                contentType: 'image/png',
+                upsert: true
+            });
+
+        if (error) throw error;
+
+        // 3. Get Public URL
+        const { data: publicData } = supabase
+            .storage
+            .from(bucketName)
+            .getPublicUrl(path);
+
+        return publicData.publicUrl;
+    } catch (error) {
+        console.error(`Error uploading image to Supabase (${path}):`, error);
+        return null;
+    }
+}
+
 // Function to fetch all existing topics and categories for the AI prompt
 async function fetchExistingTaxonomies() {
     const { data: topics, error: topicsError } = await supabase
@@ -151,12 +201,11 @@ async function saveScripturalOutlook(outlook) {
 }
 
 // Function to fetch the top 15 news stories (logic remains the same)
-async function fetchTopNewsStories(limit = 15) {
+async function fetchTopNewsStories(limit = 1) {
   console.log('Fetching top news stories...');
     const rssFeedUrls = [
         'https://www.cbsnews.com/latest/rss/main',
         'https://moxie.foxnews.com/google-publisher/latest.xml',
-        'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'
     ];
     
     const newsStories = [];
@@ -206,6 +255,19 @@ async function fetchTopNewsStories(limit = 15) {
                 
                 const title = item.title[0];
                 const link = item.link[0];
+
+                // Check if URL exists in DB to avoid expensive Puppeteer call
+                const { data: existingArticle } = await supabase
+                    .from('scriptural_outlooks')
+                    .select('id')
+                    .eq('article_url', link)
+                    .single();
+                
+                if (existingArticle) {
+                    console.log(`Skipping existing article (URL match): ${title}`);
+                    continue;
+                }
+
                 console.log(`Processing article: ${title} - ${link}`);
                 const description = item.description? item.description[0] : '';
                 let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
@@ -282,7 +344,7 @@ You are a helpful theological pastoral advisor for a Christian app. Your primary
 
 # INSTRUCTIONS
 You will be provided with the title and body of a news article, and a list of existing categories and topics.
-1.  **Categorization/Topic Selection**: Identify 1 to 3 categories and 1 to 5 topics that accurately describe the article.
+1.  **Categorization/Topic Selection**: Identify 1 to 3 categories and 1 to 5 topics that accurately describe the article. Use categories and topics from the existing lists provided if and only if they fit well.
 2.  **Canonical Naming**: For each category or topic, check the provided lists. If the concept already exists (e.g., "President Trump" should map to "Trump"), use the *canonical existing name*. If the concept is truly new or significantly different, create a concise new name and provide a brief description.
 3.  **Synopsis**: Provide a thorough summary of the key points of the article without spiritual analysis.  
 4.  **Outlook**: Provide the Scriptural takeaway or how this news story stacks up against biblical truth. Use a critical approach, analyzing the intentions and impacts of the people and events described in the article through a biblical lens.
@@ -298,20 +360,39 @@ Existing Topics: ${existingTopics.join(', ') || 'None'}
 Your final response should be a JSON object that strictly follows this structure.
 
 - **categories**: An array of 1 to 3 objects.
-    - **name**: The canonical category name (use an existing name from the list if possible).
-    - **description**: A brief description **only** if this is a genuinely *new* category not covered by the existing list, otherwise use null.
+    - **name**: The canonical category name.
+    - **description**: A brief description **only** if this is a genuinely *new* category.
 - **topics**: An array of 1 to 5 objects.
-    - **name**: The canonical topic name (use an existing name from the list if possible, e.g., use "Trump" instead of "President Trump").
-    - **description**: A brief description **only** if this is a genuinely *new* topic not covered by the existing list, otherwise use null.
-- **synopsis**: An overview of the key points of the article without spiritual analysis 
-- **outlook**: The Christian takeaway or how this news story stacks up against biblical truth.
-- **scriptureReference**: A single, relevant scripture reference, if applicable (e.g., "Proverbs 3:5-6"). Include, if possible, the full text of the scripture.
-- **reflectionQuestions**: A list of one to three brief, thought-provoking questions for personal reflection.
-- **closingPrayer**: A short, topical prayer related to the news event and biblical truth.
+    - **name**: The canonical topic name.
+    - **description**: A brief description **only** if this is a genuinely *new* topic.
+- **synopsis**: An overview of the key points of the article.
+- **outlook**: The Christian takeaway.
+- **scriptureReference**: A single, relevant scripture reference.
+- **reflectionQuestions**: A list of 1-3 questions.
+- **closingPrayer**: A short, topical prayer.
 
 --- USER INPUT ---
 Article Title: [INSERT_ARTICLE_TITLE]
 Article Body: [INSERT_ARTICLE_BODY]
+`;
+
+// Prompt for Taxonomy Breakdown and Image Generation
+const taxonomy_breakdown_prompt = `
+# ROLE
+You are a theological artist and analyst for a Christian News app.
+
+# TASK
+1.  **Analyze**: Consider the provided Topic or Category name and the synopses of recent articles associated with it.
+2.  **Breakdown**: Provide a "Current Scriptural Breakdown": How does this specific topic/category relate to current events (based on the provided synopses) and biblical truth right now? (2-3 sentences).
+3.  **Image Prompt**: Create a prompt for an image generation model (DALL-E) that represents this topic, influenced by the themes in the recent articles. 
+    * **Style**: Journalistic photograph. 
+    * **Constraint**: Do NOT include text in the image.
+
+# JSON OUTPUT STRUCTURE
+{
+  "scriptural_breakdown": "string",
+  "image_prompt": "string"
+}
 `;
 
 async function generateDailyNewsSynopsis(articles) {
@@ -340,6 +421,109 @@ async function generateDailyNewsSynopsis(articles) {
     
   }
 }
+
+// Function to process thresholds for taxonomies
+async function processTaxonomyThresholds(categoryIds, topicIds) {
+    console.log('Processing taxonomy thresholds...');
+    const bucketName = 'Sanctuary News Images'; // Ensure this bucket exists in Supabase Storage
+
+    // Helper to process a single type (category or topic)
+    const processItems = async (ids, type) => {
+        const table = type === 'category' ? 'categories' : 'topics';
+        const relationTable = type === 'category' ? 'outlook_categories' : 'outlook_topics';
+        const idColumn = type === 'category' ? 'category_id' : 'topic_id';
+
+        for (const id of ids) {
+            // 1. Count articles for this ID
+            const { count, error } = await supabase
+                .from(relationTable)
+                .select('*', { count: 'exact', head: true })
+                .eq(idColumn, id);
+            
+            if (error) {
+                console.error(`Error counting ${type} ${id}:`, error);
+                continue;
+            }
+
+            console.log(`${type} ${id} has count: ${count}`);
+
+            // 2. Threshold Check > 5
+            if (count > 5) {
+                // Fetch the name for the prompt
+                const { data: item } = await supabase.from(table).select('name').eq('id', id).single();
+                if (!item) continue;
+
+                console.log(`Threshold met for ${type}: ${item.name}. Generating spiritual assets...`);
+
+                // Fetch latest 5 articles' synopses
+                const { data: recentArticles, error: articlesError } = await supabase
+                    .from(relationTable)
+                    .select(`
+                        outlook_id,
+                        scriptural_outlooks (
+                            ai_outlook
+                        )
+                    `)
+                    .eq(idColumn, id)
+                    .order('id', { ascending: false })
+                    .limit(5);
+
+                if (articlesError) {
+                    console.error(`Error fetching recent articles for ${type} ${id}:`, articlesError);
+                    continue;
+                }
+
+                const synopses = recentArticles
+                    .map(r => r.scriptural_outlooks?.ai_outlook?.synopsis)
+                    .filter(s => s)
+                    .join('\n\n');
+
+                // 3. Generate Breakdown & Image Prompt
+                const aiResponse = await callOpenAIAndProcessResult(
+                    `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}\n` + taxonomy_breakdown_prompt, 
+                    `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}`, 
+                    'gpt-4.1-2025-04-14', 
+                    2000, 
+                    'json_object'
+                );
+
+                if (aiResponse && aiResponse.scriptural_breakdown && aiResponse.image_prompt) {
+                    // 4. Generate Image
+                    const imageUrl = await generateImage(aiResponse.image_prompt);
+                    
+                    if (imageUrl) {
+                        // 5. Upload to Supabase
+                        const storagePath = `taxonomy/${type}/${id}_${Date.now()}.png`;
+                        const publicUrl = await uploadImageToSupabase(imageUrl, bucketName, storagePath);
+
+                        if (publicUrl) {
+                            // 6. Update Database Record
+                            const { error: updateError } = await supabase
+                                .from(table)
+                                .update({
+                                    scriptural_breakdown: aiResponse.scriptural_breakdown,
+                                    image_url: publicUrl,
+                                    updated_at: new Date().toISOString()
+                                })
+                                .eq('id', id);
+                            
+                            if (updateError) {
+                                console.error(`Error updating ${type} ${id}:`, updateError);
+                            } else {
+                                console.log(`Successfully updated ${type} ${item.name} with new assets.`);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Process sets
+    if (categoryIds.size > 0) await processItems(categoryIds, 'category');
+    if (topicIds.size > 0) await processItems(topicIds, 'topic');
+}
+
 async function generateAndSaveScripturalOutlook() {
   console.log('Starting scriptural outlook generation cron job...');
 
@@ -354,8 +538,28 @@ async function generateAndSaveScripturalOutlook() {
   const existingTaxonomies = await fetchExistingTaxonomies();
   const outlookPrompt = scriptural_outlook_prompt(existingTaxonomies.categories, existingTaxonomies.topics);
 
+  // Sets to track which IDs we touched this run
+  const touchedCategoryIds = new Set();
+  const touchedTopicIds = new Set();
+
   // Iterate through each of the top articles
   for (const article of articles) {
+    // Check if article already exists in database
+    const { data: existingArticle, error: checkError } = await supabase
+        .from('scriptural_outlooks')
+        .select('id')
+        .eq('article_url', article.url)
+        .single();
+
+    if (checkError && checkError.code !== 'PGRST116') {
+        console.error(`Error checking for existing article ${article.url}:`, checkError);
+    }
+
+    if (existingArticle) {
+        console.log(`Article already exists in database, skipping: ${article.title}`);
+        continue;
+    }
+
     const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\n\n`;
     try {
       // Call the AI function with the prompt and content for the current article
@@ -388,6 +592,7 @@ async function generateAndSaveScripturalOutlook() {
                 const categoryId = await getOrCreateTaxonomy('categories', cat.name, cat.description);
                 if (categoryId) {
                     categoryRelations.push({ outlook_id: outlookId, category_id: categoryId });
+                    touchedCategoryIds.add(categoryId); // Track ID
                 }
             }
             if (categoryRelations.length > 0) {
@@ -405,6 +610,7 @@ async function generateAndSaveScripturalOutlook() {
                 const topicId = await getOrCreateTaxonomy('topics', tpc.name, tpc.description);
                 if (topicId) {
                     topicRelations.push({ outlook_id: outlookId, topic_id: topicId });
+                    touchedTopicIds.add(topicId); // Track ID
                 }
             }
             if (topicRelations.length > 0) {
@@ -424,6 +630,10 @@ async function generateAndSaveScripturalOutlook() {
       console.error('Error during AI content generation/saving:', error);
     }
   }
+
+  // After all articles are processed, check thresholds for touched taxonomies
+  await processTaxonomyThresholds(touchedCategoryIds, touchedTopicIds);
+  console.log('Cron job completed.');
 }
 
 // You can export this function to be used by your cron job scheduler
