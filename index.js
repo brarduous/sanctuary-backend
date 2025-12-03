@@ -1281,6 +1281,33 @@ app.get('/streak/:userId/:activityType', async (req, res) => {
   }
 });
 
+// New Endpoint: Contact Form
+app.post('/contact', async (req, res) => {
+    const { name, email, message } = req.body;
+
+    if (!name || !email || !message) {
+        return res.status(400).json({ error: 'Name, email, and message are required.' });
+    }
+
+    try {
+        const { data, error } = await supabase
+            .from('contact')
+            .insert([
+                { name, email, message, created_at: new Date().toISOString() }
+            ]);
+
+        if (error) {
+            console.error('Error saving contact:', error);
+            return res.status(500).json({ error: 'Failed to save contact message.' });
+        }
+
+        res.status(200).json({ message: 'Contact message saved successfully.' });
+    } catch (error) {
+        console.error('Unhandled error in /contact:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Backend server running on port ${PORT}`);
