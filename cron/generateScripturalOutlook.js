@@ -449,9 +449,18 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
 
             // 2. Threshold Check > 5
             if (count > 5) {
-                // Fetch the name for the prompt
-                const { data: item } = await supabase.from(table).select('name').eq('id', id).single();
+                // Fetch the name and updated_at for the prompt
+                const { data: item } = await supabase.from(table).select('name, updated_at').eq('id', id).single();
                 if (!item) continue;
+
+                // Check if updated within the last week
+                const oneWeekAgo = new Date();
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                
+                if (item.updated_at && new Date(item.updated_at) > oneWeekAgo) {
+                    console.log(`Taxonomy ${type} ${item.name} updated recently (within 7 days). Skipping asset generation.`);
+                    continue;
+                }
 
                 console.log(`Threshold met for ${type}: ${item.name}. Generating spiritual assets...`);
 
