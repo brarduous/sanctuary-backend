@@ -5,6 +5,7 @@ const OpenAI = require('openai'); // Use the v4 client
 const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 const { sample_sermons } = require('./vars');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -1300,7 +1301,7 @@ app.post('/contact', async (req, res) => {
             console.error('Error saving contact:', error);
             return res.status(500).json({ error: 'Failed to save contact message.' });
         }
-
+        
         res.status(200).json({ message: 'Contact message saved successfully.' });
     } catch (error) {
         console.error('Unhandled error in /contact:', error);
