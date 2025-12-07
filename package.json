@@ -7,7 +7,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "precron-outlook": "npx puppeteer browsers install chrome",
-    "cron-outlook": "node cron/generateScripturalOutlook.js"
+    "cron-outlook": "node cron/generateScripturalOutlook.js",
+    "cron-daily-news": "node cron/dailyNewsSynopsis.js"
   },
   "keywords": [],
   "author": "",

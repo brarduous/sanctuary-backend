@@ -61,7 +61,7 @@ async function generateImage(prompt) {
             model: "dall-e-3",
             prompt: prompt,
             n: 1,
-            size: "10920x1080",
+            size: "1792x1024",
             response_format: "url", // We get a URL, then download it
         });
         console.log('Image generated:', response.data[0].url);
@@ -185,6 +185,7 @@ async function saveScripturalOutlook(outlook) {
                 article_title: outlook.article_title,
                 article_body: outlook.article_body,
                 article_thumbnail_url: outlook.article_thumbnail_url,
+                publish_date: outlook.publish_date,
                 ai_outlook: outlook.ai_outlook // Full AI content including message, prayer, etc.
             }
         ])
@@ -270,6 +271,7 @@ async function fetchTopNewsStories(limit = 10) {
 
                 console.log(`Processing article: ${title} - ${link}`);
                 const description = item.description? item.description[0] : '';
+                const publish_date = item.pubDate ? item.pubDate[0] : null; // RSS pubDate
                 let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
                 
                 // Note: Puppeteer setup remains the same as previously defined
@@ -307,7 +309,7 @@ async function fetchTopNewsStories(limit = 10) {
                       });
                     const articleBody = paragraphText.join('\n\n');
                     
-                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description };
+                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description, publish_date };
                     newsStories.push(article);
                 }catch(err){
                   console.error(`Error fetching or parsing article at ${link}:`, err);
@@ -327,15 +329,7 @@ async function fetchTopNewsStories(limit = 10) {
     console.log(`Total articles fetched: ${newsStories.length}`);
     return newsStories;
 }
-// Daily News Synopsis Prompt
-const daily_news_synopsis_prompt = `
-# ROLE & GOAL
-You are a helpful theological assistant for a Christian app. Your primary task is to read a set of news articles, and generate a synopsis for AI to digest. This will be fed back into the AI to generate a daily or weekly summaries of the news through a biblical lens. This goal is summaritive, not analytical or opinionated.
-# INSTRUCTIONS
-You will be provided with the titles and bodies of several news articles. You MUST adhere to the following structure for your response.
---- RESPONSE STRUCTURE ---
-- **summary**: A brief summary that's easy to digest by AI.
-Your final repsonse should be text only.`;
+// Daily News Synopsis moved to cron/dailyNewsSynopsis.js
 
 // The updated AI prompt for generating the scriptural outlook
 const scriptural_outlook_prompt = (existingCategories, existingTopics) => `
@@ -395,32 +389,7 @@ You are a theological artist and analyst for a Christian News app.
 }
 `;
 
-async function generateDailyNewsSynopsis(articles) {
-  console.log('Generating daily news synopsis...');
-  const combinedContent = articles.map((article, index) => {
-    return `Article ${index + 1} Title: ${article.title}\nArticle ${index + 1} Body: ${article.body}\nArticle ${index + 1} Description: ${article.description}\n\n`;
-  }).join('');
-  try {
-    const aiResponse = await callOpenAIAndProcessResult(daily_news_synopsis_prompt, combinedContent, 'gpt-4.1-2025-04-14', 5000, 'text');
-    //save response to supabase daily_news_synopses table with synopsis field
-    if (aiResponse) {
-      const { data, error } = await supabase
-        .from('daily_news_synopses')
-        .insert([{ synopsis: aiResponse }])
-        .select();
-      if (error) {
-        console.error('Error saving daily news synopsis:', error);
-      } else {
-        console.log('Successfully saved daily news synopsis:', data[0]);
-      }
-    } else {
-      console.error('AI response did not contain synopsis content.');
-    }
-  } catch (error) {
-    console.error('Error generating daily news synopsis:', error);
-    
-  }
-}
+// generateDailyNewsSynopsis moved to cron/dailyNewsSynopsis.js
 
 // Function to process thresholds for taxonomies
 async function processTaxonomyThresholds(categoryIds, topicIds) {
@@ -541,7 +510,7 @@ async function generateAndSaveScripturalOutlook() {
     console.error('Failed to get any news articles. Exiting.');
     return;
   }
-  generateDailyNewsSynopsis(articles);
+    // Daily news synopsis generation moved to separate cron job.
   
   // Fetch all existing categories and topics for the AI prompt
   const existingTaxonomies = await fetchExistingTaxonomies();
@@ -582,6 +551,7 @@ async function generateAndSaveScripturalOutlook() {
             article_title: article.title,
             article_body: article.body,
             article_thumbnail_url: article.thumbnail_url,
+            publish_date: article.publish_date,
             ai_outlook: aiResponse // Full AI content
         };
 
