@@ -13,13 +13,21 @@ const daily_news_synopsis_prompt = `
 # ROLE & GOAL
 You are a journalistic writer. You provide clear, concise, and unbiased summaries of news events. Your goal is to create a comprehensive review of the most important news from the previous day. 
 This review should consider the emotional and societal impact of the events, as well as their factual content.
-The summary should be engaging and informative, and should read like a script for a podcast episode or a news video segment. 
+The summary should be engaging and informative, and should read like a script for a podcast episode or a news video segment.
 
 # INSTRUCTIONS
-You will be provided with the titles and bodies of several news articles. You MUST adhere to the following structure for your response.
---- RESPONSE STRUCTURE ---
-- **summary**: A concise summary of the key events from the articles provided, highlighting the most significant developments. This should wrap up with thoughts on the broader implications or potential future developments. It should also speak to the temperature of the day - the emotional tone and societal mood based on the events covered.
-Your final repsonse should be text only.`;
+You will be provided with the titles and bodies of several news articles. Respond ONLY with a valid JSON object using the following schema and no surrounding commentary.
+
+--- JSON RESPONSE SCHEMA ---
+{
+  "summary": "string - concise overview of key events and mood",
+  "scripture": "string - a single relevant scripture including reference and full verse text",
+  "prayer": "string - a short topical prayer related to the day"
+}
+
+# NOTES
+- The scripture should be directly quoted with its reference (e.g., "Philippians 4:6-7 - Do not be anxious..."), accurate to a common translation.
+- Keep the prayer brief, pastoral, and focused on themes from the day's summary.`;
 
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
   const chatCompletion = await openai.chat.completions.create({
@@ -33,6 +41,14 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     response_format: { type: responseFormatType },
   });
   const generatedContent = chatCompletion.choices[0].message.content;
+  if (responseFormatType === 'json_object') {
+    try {
+      return JSON.parse(generatedContent);
+    } catch (e) {
+      // Fall back to raw text if parsing fails
+      return { summary: generatedContent, scripture: null, prayer: null };
+    }
+  }
   return generatedContent;
 }
 
@@ -68,13 +84,20 @@ async function generateDailyNewsSynopsisFromLast24h() {
       combinedContent,
       'gpt-4.1-2025-04-14',
       5000,
-      'text'
+      'json_object'
     );
 
-    if (aiResponse) {
+    if (aiResponse && (aiResponse.summary || aiResponse.scripture || aiResponse.prayer)) {
+      const payload = {
+        synopsis: aiResponse.summary || null,
+        scripture: aiResponse.scripture || null,
+        prayer: aiResponse.prayer || null,
+        created_at: new Date().toISOString(),
+      };
+
       const { data, error: insertError } = await supabase
         .from('daily_news_synopses')
-        .insert([{ synopsis: aiResponse, created_at: new Date().toISOString() }])
+        .insert([payload])
         .select();
 
       if (insertError) {

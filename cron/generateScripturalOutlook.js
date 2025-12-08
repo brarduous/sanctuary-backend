@@ -292,6 +292,12 @@ async function fetchTopNewsStories(limit = 10) {
                 const title = item.title[0];
                 const link = item.link[0];
 
+                // Skip obvious video links early to avoid extra work
+                if ((link || '').toLowerCase().includes('/video/')) {
+                    console.log(`Skipping video article (link contains /video/): ${title}`);
+                    continue;
+                }
+
                 // Check if URL exists in DB to avoid expensive Puppeteer call
                 const { data: existingArticle } = await supabase
                     .from('scriptural_outlooks')
@@ -318,6 +324,12 @@ async function fetchTopNewsStories(limit = 10) {
                
                 const final_url = await page.url();
                 await browser.close();
+
+                // Skip if the resolved URL is a video page
+                if ((final_url || '').toLowerCase().includes('/video/')) {
+                    console.log(`Skipping video article (final URL contains /video/): ${title}`);
+                    continue;
+                }
 
                 try{
                     const response = await axios.get(final_url);
@@ -454,14 +466,14 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
             // 2. Threshold Check > 5
             if (count > 5) {
                 // Fetch the name and updated_at for the prompt
-                const { data: item } = await supabase.from(table).select('name, updated_at').eq('id', id).single();
+                const { data: item } = await supabase.from(table).select('name, updated_at, image_url').eq('id', id).single();
                 if (!item) continue;
 
                 // Check if updated within the last week
                 const oneWeekAgo = new Date();
                 oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
                 
-                if (item.updated_at && new Date(item.updated_at) > oneWeekAgo) {
+                if (item.image_url && item.updated_at && new Date(item.updated_at) > oneWeekAgo) {
                     console.log(`Taxonomy ${type} ${item.name} updated recently (within 7 days). Skipping asset generation.`);
                     continue;
                 }
