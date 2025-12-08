@@ -53,23 +53,25 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
 }
 
 async function generateDailyNewsSynopsisFromLast24h() {
-  console.log('Generating daily news synopsis from last 24h...');
-  // Calculate timestamp for 24 hours ago
-  const since = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+  console.log('Generating daily news synopsis from today so far');
+  // Calculate timestamp for today so far
+  const since = new Date();
+  since.setHours(0, 0, 0, 0);
+  const sinceISOString = since.toISOString();
 
-  // Fetch articles created in last 24 hours
+  // Fetch articles created in today so far
   const { data: outlooks, error } = await supabase
     .from('scriptural_outlooks')
     .select('article_title, article_body, ai_outlook, created_at')
-    .gte('created_at', since)
+    .gte('created_at', sinceISOString)
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Error fetching last 24h articles:', error);
+    console.error('Error fetching articles from today so far:', error);
     return;
   }
   if (!outlooks || outlooks.length === 0) {
-    console.log('No articles found in last 24 hours. Skipping synopsis.');
+    console.log('No articles found from today so far. Skipping synopsis.');
     return;
   }
 
