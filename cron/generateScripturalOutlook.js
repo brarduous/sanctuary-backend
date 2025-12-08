@@ -53,6 +53,38 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     }
 }
 
+function slugify(text) {
+    return (text || '')
+        .toString()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 120);
+}
+
+async function generateUniqueSlug(tableName, baseText) {
+    const base = slugify(baseText);
+    if (!base) return null;
+    let candidate = base;
+    let counter = 2;
+    while (true) {
+        const { data, error } = await supabase
+            .from(tableName)
+            .select('id')
+            .eq('slug', candidate)
+            .limit(1);
+        if (error) {
+            // If we cannot check, fallback to base
+            return candidate;
+        }
+        if (!data || data.length === 0) return candidate;
+        candidate = `${base}-${counter}`.slice(0, 120);
+        counter++;
+    }
+}
+
 // Function to generate image using DALL-E 3
 async function generateImage(prompt) {
     try {
@@ -144,6 +176,8 @@ async function getOrCreateTaxonomy(tableName, name, description) {
     if (description) {
         insertData.description = description;
     }
+    // Ensure unique slug for taxonomy
+    insertData.slug = await generateUniqueSlug(tableName, name);
 
     const { data: newTaxonomy, error: insertError } = await supabase
         .from(tableName)
@@ -186,6 +220,7 @@ async function saveScripturalOutlook(outlook) {
                 article_body: outlook.article_body,
                 article_thumbnail_url: outlook.article_thumbnail_url,
                 publish_date: outlook.publish_date,
+                slug: await generateUniqueSlug('scriptural_outlooks', outlook.article_title),
                 ai_outlook: outlook.ai_outlook // Full AI content including message, prayer, etc.
             }
         ])
@@ -378,9 +413,9 @@ You are a theological artist and analyst for a Christian News app.
 # TASK
 1.  **Analyze**: Consider the provided Topic or Category name and the synopses of recent articles associated with it.
 2.  **Breakdown**: Provide a "Current Scriptural Breakdown": How does this specific topic/category relate to current events (based on the provided synopses) and biblical truth right now? (2-3 sentences).
-3.  **Image Prompt**: Create a prompt for an image generation model (DALL-E) that represents this topic, influenced by the themes in the recent articles. 
-    * **Style**: Journalistic photograph. 
-    * **Constraint**: Do NOT include text in the image.
+3.  **Image Prompt**: Create a prompt for an image generation model (DALL-E) that represents this topic, influenced by the themes in the recent articles. If the image subject is a person, ensure the prompt captures their likeness accurately.
+    * **Style**: photorealistic Journalistic photograph, fit to be used as a news article image.  
+    * **Constraint**: no text should be added to the image whatsoever.
 
 # JSON OUTPUT STRUCTURE
 {

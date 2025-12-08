@@ -314,11 +314,11 @@ app.get('/app-options', async (req, res) =>{
 // New: Endpoint to fetch all canonical categories
 app.get('/categories', async (req, res) => {
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('categories')
-            .select('*, outlook_categories(count)')
-            //only fetch categories with at least one article
-            .gt('outlook_categories.count', 0);
+            .select('*, outlook_categories(count)');
+        
+        const { data, error } = await query;
             
         if (error) {
             console.error('Error fetching categories:', error);
@@ -342,17 +342,18 @@ app.get('/categories/:id', async (req, res) => {
     const { id } = req.params;
     console.log('Fetching category with ID:', id);
     try {
+        const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('categories')
             .select('*')
-            .eq('id', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
         if (error) {
             console.error('Error fetching category:', error);
             return res.status(404).json({ error: 'Category not found' });
         }
-
+        console.log('Fetched category data:', data);
         res.json(data);
     } catch (error) {
         console.error('Server error:', error);
@@ -362,11 +363,16 @@ app.get('/categories/:id', async (req, res) => {
 // New: Endpoint to fetch all canonical topics
 app.get('/topics', async (req, res) => {
     try {
-        const { data, error } = await supabase
+        const slug = req.query.slug;
+        let query = supabase
             .from('topics')
             .select('*, outlook_topics(count)') 
             //only fetch topics with at least one article
             .gt('outlook_topics.count', 0);
+        if (slug) {
+            query = query.eq('slug', slug);
+        }
+        const { data, error } = await query;
             
         if (error) {
             console.error('Error fetching topics:', error);
@@ -390,10 +396,11 @@ app.get('/topics/:id', async (req, res) => {
     const { id } = req.params;
     console.log('Fetching topic with ID:', id);
     try {
+        const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('topics')
             .select('*')
-            .eq('id', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
         if (error) {
             console.error('Error fetching topic:', error);
@@ -412,10 +419,11 @@ app.get('/scriptural-outlooks/:id', async (req, res) => {
     const { id } = req.params;
     console.log('Fetching scriptural outlook with ID:', id);
     try {
+        const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('scriptural_outlooks')
             .select('*')
-            .eq('id', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
         if (error) {
@@ -439,18 +447,27 @@ app.get('/scriptural-outlooks', async (req, res) => {
     const offset = (page - 1) * limit;
     const topic_id = req.query.topic_id;
     const category_id = req.query.category_id;
+    const topic_slug = req.query.topic_slug;
+    const category_slug = req.query.category_slug;
+    const topic = req.query.topic; // can be id or slug
+    const category = req.query.category; // can be id or slug
+
+    const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
+    const hasCategoryFilter = Boolean(category_id || category_slug || category);
+    const topicIsNumeric = topic && /^\d+$/.test(topic);
+    const categoryIsNumeric = category && /^\d+$/.test(category);
 
     try {
         // Construct the select query dynamically based on filters
         // If filtering by a relation, we must use !inner to filter the parent rows
-        let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, name, description) )';
-        let outlookCategoriesSelect = 'outlook_categories ( category_id, categories (id, name, description) )';
+        let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, slug, name, description) )';
+        let outlookCategoriesSelect = 'outlook_categories ( category_id, categories (id, slug, name, description) )';
 
-        if (topic_id) {
-            outlookTopicsSelect = 'outlook_topics!inner ( topic_id, topics (id, name, description) )';
+        if (hasTopicFilter) {
+            outlookTopicsSelect = 'outlook_topics!inner ( topic_id, topics (id, slug, name, description) )';
         }
-        if (category_id) {
-            outlookCategoriesSelect = 'outlook_categories!inner ( category_id, categories (id, name, description) )';
+        if (hasCategoryFilter) {
+            outlookCategoriesSelect = 'outlook_categories!inner ( category_id, categories (id, slug, name, description) )';
         }
 
         const selectQuery = `*, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
@@ -462,10 +479,32 @@ app.get('/scriptural-outlooks', async (req, res) => {
             .range(offset, offset + limit - 1);
 
         if (topic_id) {
-            query = query.eq('outlook_topics.topic_id', topic_id);
+            if (/^\d+$/.test(topic_id)) {
+                query = query.eq('outlook_topics.topic_id', topic_id);
+            } else {
+                // If a non-numeric topic_id is passed, treat it like a slug
+                query = query.eq('outlook_topics.topics.slug', topic_id);
+            }
+        } else if (topic_slug) {
+            query = query.eq('outlook_topics.topics.slug', topic_slug);
+        } else if (topic) {
+            query = topicIsNumeric
+                ? query.eq('outlook_topics.topic_id', topic)
+                : query.eq('outlook_topics.topics.slug', topic);
         }
         if (category_id) {
-            query = query.eq('outlook_categories.category_id', category_id);
+            if (/^\d+$/.test(category_id)) {
+                query = query.eq('outlook_categories.category_id', category_id);
+            } else {
+                // If a non-numeric category_id is passed, treat it like a slug
+                query = query.eq('outlook_categories.categories.slug', category_id);
+            }
+        } else if (category_slug) {
+            query = query.eq('outlook_categories.categories.slug', category_slug);
+        } else if (category) {
+            query = categoryIsNumeric
+                ? query.eq('outlook_categories.category_id', category)
+                : query.eq('outlook_categories.categories.slug', category);
         }
             
         const { data, error } = await query;
