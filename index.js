@@ -310,6 +310,60 @@ app.get('/app-options', async (req, res) =>{
     }
 });
 // --- API Endpoints ---
+// Search articles by relevance: title > body > synopsis
+app.get('/search', async (req, res) => {
+    try {
+        const q = (req.query.q || '').trim();
+        const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
+        console.log('Search query:', q, 'Limit:', limit);
+        if (!q) {
+            return res.status(400).json({ error: 'Query parameter `q` is required.' });
+        }
+
+        const pattern = `%${q}%`;
+        const { data, error } = await supabase
+            .from('scriptural_outlooks')
+            .select('id, article_title, article_url, article_thumbnail_url, created_at, publish_date, slug, ai_outlook, article_body')
+            .or(`article_title.ilike.${pattern},article_body.ilike.${pattern},ai_outlook->>synopsis.ilike.${pattern}`)
+            .limit(limit);
+
+        if (error) {
+            console.error('Search query error:', error);
+            return res.status(500).json({ error: 'Failed to search articles.' });
+        }
+
+        const term = q.toLowerCase();
+        const escapeRegExp = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const re = new RegExp(escapeRegExp(term), 'g');
+        const scoreFor = (text, weight) => {
+            if (!text) return 0;
+            const t = String(text).toLowerCase();
+            const matches = t.match(re) || [];
+            return matches.length * weight + (t.includes(term) ? weight : 0);
+        };
+
+        const ranked = (data || []).map((row) => {
+            const synopsis = row.ai_outlook && row.ai_outlook.synopsis ? row.ai_outlook.synopsis : '';
+            const titleScore = scoreFor(row.article_title, 6);
+            const bodyScore = scoreFor(row.article_body, 3);
+            const synopsisScore = scoreFor(synopsis, 2);
+            const totalScore = titleScore + bodyScore + synopsisScore;
+            return { ...row, _score: totalScore };
+        })
+        .filter(r => r._score > 0)
+        .sort((a, b) => {
+            if (b._score !== a._score) return b._score - a._score;
+            const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
+            const bd = b.publish_date ? new Date(b.publish_date).getTime() : 0;
+            return bd - ad;
+        });
+
+        return res.json({ query: q, count: ranked.length, results: ranked });
+    } catch (err) {
+        console.error('Search endpoint error:', err);
+        return res.status(500).json({ error: 'Unexpected error during search.' });
+    }
+});
 
 // New: Endpoint to fetch all canonical categories
 app.get('/categories', async (req, res) => {
