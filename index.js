@@ -1110,14 +1110,18 @@ app.post('/generate-advice', async (req, res) => {
 // --- Fetching Endpoints (for frontend to check status and retrieve completed content) ---
 // These endpoints directly query Supabase.
 
-// Fetch daily news synopses with optional limit and ordering
+// Fetch daily news synopses with optional limit and ordering, with optional query parameters for date range
 app.get('/daily-news-synopses', async (req, res) => {
     try {
         const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
+        const startDate = req.query.startDate;
+        const endDate = req.query.endDate;
         const order = (req.query.order || 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
         const { data, error } = await supabase
             .from('daily_news_synopses')
             .select('*')
+            .gte(startDate ? 'created_at' : 'created_at', startDate || '1970-01-01')
+            .lte(endDate ? 'created_at' : 'created_at', endDate || new Date().toISOString())
             .order('created_at', { ascending: order === 'asc' })
             .limit(limit);
 
@@ -1132,6 +1136,7 @@ app.get('/daily-news-synopses', async (req, res) => {
         return res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+
 
 app.get('/sermons/:userId', async (req, res) => {
     const { userId } = req.params;

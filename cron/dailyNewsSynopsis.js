@@ -11,17 +11,17 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const daily_news_synopsis_prompt = `
 # ROLE & GOAL
-You are a journalistic writer. You provide clear, concise, and unbiased summaries of news events. Your goal is to create a comprehensive review of the most important news from the previous day. 
+You are a journalistic writer. You provide clear, concise, and unbiased summaries of news events. Your goal is to create a comprehensive review of the most important news from the day. 
 This review should consider the emotional and societal impact of the events, as well as their factual content.
 The summary should be engaging and informative, and should read like a script for a podcast episode or a news video segment.
 
 # INSTRUCTIONS
-You will be provided with the titles and bodies of several news articles. Respond ONLY with a valid JSON object using the following schema and no surrounding commentary.
+You will be provided with the titles and bodies of several news articles for today. Respond ONLY with a valid JSON object using the following schema and no surrounding commentary.
 
 --- JSON RESPONSE SCHEMA ---
 {
-  "summary": "string - concise overview of key events and mood",
-  "scripture": "string - a single relevant scripture including reference and full verse text",
+  "summary": "string - concise overview of key events and mood. This is a summary of the news articles for today, so make sure the reference it in terms of today's day of the week, date, etc., and only where applicable.",
+  "scripture": "string - a single relevant scripture including reference and full verse text. please ensure the scripture is not repetitive of past synopses",
   "prayer": "string - a short topical prayer related to the day"
 }
 
