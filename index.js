@@ -709,6 +709,27 @@ app.post('/generate-devotional', async (req, res) => {
     }
 });
 
+//Endpoint to get Sermons by user id
+app.get('/sermons/:userId', async (req, res) => {
+    const { userId } = req.params;
+    console.log('Fetching sermons for user ID:', userId);
+    try {
+        const { data, error } = await supabase
+            .from('sermons')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching sermons:', error);
+            return res.status(500).json({ error: 'Failed to fetch sermons.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /sermons/:userId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
 // Endpoint to initiate Sermon generation by Topic
 app.post('/generate-sermon-by-topic', async (req, res) => {
     try {
@@ -860,6 +881,26 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
     }
 });
 
+//Endpoint to get Bible Studies by user id
+app.get('/bible-studies/:userId', async (req, res) => {
+    const { userId } = req.params;
+    console.log('Fetching bible studies for user ID:', userId);
+    try {
+        const { data, error } = await supabase  
+            .from('bible_studies')
+            .select('*')
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching bible studies:', error);
+            return res.status(500).json({ error: 'Failed to fetch bible studies.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /bible-studies/:userId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
 // Endpoint to initiate Bible Study generation
 app.post('/generate-bible-study', async (req, res) => {
     try {
