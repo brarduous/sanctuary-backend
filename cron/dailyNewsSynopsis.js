@@ -27,7 +27,9 @@ You will be provided with the titles and bodies of several news articles for tod
 
 # NOTES
 - The scripture should be directly quoted with its reference (e.g., "Philippians 4:6-7 - Do not be anxious..."), accurate to a common translation.
-- Keep the prayer brief, pastoral, and focused on themes from the day's summary.`;
+- Keep the prayer brief, pastoral, and focused on themes from the day's summary.
+- If referencing the date, use today's actual date. If you can't determine the date, exclude it from the text.
+- If referencing a public figure or event, ensure accuracy and neutrality.`;
 
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
   const chatCompletion = await openai.chat.completions.create({
