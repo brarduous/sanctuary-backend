@@ -649,7 +649,129 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
-z
+
+//Endpoint to get Bible Studies by user id
+app.get('/bible-studies/:userId', async (req, res) => {
+    const { userId } = req.params;
+    console.log('Fetching bible studies for user ID:', userId);
+    try {
+        const { data, error } = await supabase  
+            .from('bible_studies')
+            .select('*, bible_study_lessons(lesson_number)')
+            .eq('user_id', userId)            
+            .order('created_at', { ascending: false });
+        if (error) {
+            console.error('Error fetching bible studies:', error);
+            return res.status(500).json({ error: 'Failed to fetch bible studies.' });
+        }
+         
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /bible-studies/:userId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+//Endpoing to get a single Bible study by study id
+app.get('/bible-study/:studyId', async (req, res) => {
+    const { studyId } = req.params;
+    console.log('Fetching bible study with ID:', studyId);
+    try {
+        const isNumeric = /^\d+$/.test(studyId);
+        const { data, error } = await supabase
+            .from('bible_studies')
+            .select('*')
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'study_id' : 'slug', studyId)
+            .single();
+        if (error) {
+            console.error('Error fetching bible study:', error);
+            return res.status(404).json({ error: 'Bible study not found' });
+        }
+        //get lessons for this study and add to data
+        const { data: lessons, error: lessonsError } = await supabase
+            .from('bible_study_lessons')
+            .select('*')
+            .eq('study_id', studyId)
+            .order('lesson_number', { ascending: true });
+        if (lessonsError) {
+            console.error('Error fetching bible study lessons for detail:', lessonsError);
+            return res.status(500).json({ error: 'Failed to fetch bible study lessons for detail.' });
+        }
+        data.lessons = lessons;
+        res.json(data);
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+//endpoint to get Bible Study Lessons by study id
+app.get('/bible-study-lessons/:studyId', async (req, res) => {
+    const { studyId } = req.params;
+    console.log('Fetching bible study lessons for study ID:', studyId);
+    try {
+        const { data, error } = await supabase  
+            .from('bible_study_lessons')
+            .select('*')
+            .eq('study_id', studyId)
+            .order('lesson_number', { ascending: true });
+        if (error) {
+            console.error('Error fetching bible study lessons:', error);
+            return res.status(500).json({ error: 'Failed to fetch bible study lessons.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /bible-study-lessons/:studyId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+//Endpoint to get a single Bible Study Lesson by lesson id
+app.get('/bible-study-lessons/detail/:lessonId', async (req, res) => {
+    const { lessonId } = req.params;
+    console.log('Fetching bible study detail for lesson ID:', lessonId);
+    try {
+        const { data, error } = await supabase
+            .from('bible_study_lessons')
+            .select('*')
+            .eq('lesson_id', lessonId)
+            .single();
+        if (error) {
+            console.error('Error fetching bible study detail:', error);
+            return res.status(500).json({ error: 'Failed to fetch bible study detail.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /bible-studies/detail/:lessonId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+// upsert bible study lesson (create or update)
+app.post('/bible-study-lessons/:lessonId', async (req, res) => {
+    try {
+        const lessonData = req.body;
+        const {lessonId} = req.params;
+        console.log('Upserting bible study lesson:', lessonData);
+        const { data, error } = await supabase
+            .from('bible_study_lessons')
+            .upsert({
+                lesson_id: lessonId,
+                ...lessonData,
+                updated_at: new Date().toISOString(),
+            })
+            .select()
+            .single();
+        if (error) {
+            console.error('Error upserting bible study lesson:', error);
+            return res.status(500).json({ error: 'Failed to upsert bible study lesson.' });
+        }
+        res.json(data);
+    } catch (error) {
+        console.error('Unhandled error in /bible-study-lessons/:lessonId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
 // Endpoint to initiate Bible Study generation
 app.post('/generate-bible-study', async (req, res) => {
     try {
@@ -927,22 +1049,6 @@ app.get('/daily-news-synopses', async (req, res) => {
     }
 });
 
-
-app.get('/sermons/:userId', async (req, res) => {
-    const { userId } = req.params;
-    const { data, error } = await supabase
-        .from('sermons')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-    if (error) {
-        console.error('Error fetching sermons:', error);
-        return res.status(500).json({ error: 'Failed to fetch sermons.' });
-    }
-    res.json(data);
-});
-
 app.get('/sermon/:sermonId', async (req, res) => {
     const { sermonId } = req.params;
     const { data, error } = await supabase
@@ -976,20 +1082,6 @@ app.get('/devotionals/:userId', async (req, res) => {
     res.json(data);
 });
 
-app.get('/bible-studies/:userId', async (req, res) => {
-    const { userId } = req.params;
-    const { data, error } = await supabase
-        .from('bible_studies')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-    if (error) {
-        console.error('Error fetching bible studies:', error);
-        return res.status(500).json({ error: 'Failed to fetch bible studies.' });
-    }
-    res.json(data);
-});
 
 // New Fetching Endpoint: Get Daily Prayers for a user
 app.get('/prayers/:userId', async (req, res) => {
