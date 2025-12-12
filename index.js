@@ -487,6 +487,7 @@ app.get('/sermons/:userId', async (req, res) => {
             .from('sermons')
             .select('*')
             .eq('user_id', userId)
+            .neq('status', 'failed')
             .order('created_at', { ascending: false });
         if (error) {
             console.error('Error fetching sermons:', error);
@@ -659,6 +660,7 @@ app.get('/bible-studies/:userId', async (req, res) => {
             .from('bible_studies')
             .select('*, bible_study_lessons(lesson_number)')
             .eq('user_id', userId)            
+            .neq('status', 'failed')
             .order('created_at', { ascending: false });
         if (error) {
             console.error('Error fetching bible studies:', error);
