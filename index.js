@@ -15,8 +15,122 @@ const {
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
+// Initialize Stripe
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
 const app = express();
 app.use(cors());
+
+// Stripe Webhook Endpoint
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(
+            req.body, 
+            sig, 
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+    } catch (err) {
+        console.error(`Webhook signature verification failed: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the event
+    const session = event.data.object;
+
+    try {
+        if (event.type === 'checkout.session.completed') {
+            const subscription = await stripe.subscriptions.retrieve(session.subscription);
+            const userId = session.client_reference_id; // Ensure this is passed during checkout creation
+
+            // 1. Create Subscription Record
+            await supabase.from('subscriptions').insert({
+                id: subscription.id,
+                user_id: userId,
+                status: subscription.status,
+                price_id: subscription.items.data[0].price.id,
+                cancel_at_period_end: subscription.cancel_at_period_end,
+            });
+
+            // 2. Update Profile Tier
+            // Note: Your app uses 'user_profiles'. Ensure this matches your DB.
+            await supabase
+                .from('user_profiles') 
+                .update({ tier: 'pro' }) // Ensure you have a 'tier' column
+                .eq('user_id', userId);
+                
+            console.log(`User ${userId} upgraded to pro.`);
+        }
+
+        if (event.type === 'customer.subscription.updated') {
+            const subscription = event.data.object;
+            // Stripe doesn't always send client_reference_id on updates, 
+            // so we might need to look up the user by subscription ID if userId is missing.
+            
+            // Upsert ensures we update if exists, insert if not (though usually it exists)
+            const { error } = await supabase.from('subscriptions').upsert({
+                id: subscription.id,
+                status: subscription.status,
+                cancel_at_period_end: subscription.cancel_at_period_end,
+                // We might not have user_id easily here if it's not in metadata, 
+                // but upserting by ID usually preserves other fields if you don't overwrite them.
+                // Ideally, store user_id in Stripe metadata during checkout.
+            });
+            
+            if (error) console.error('Error updating subscription:', error);
+
+            // Handle Downgrades/Cancellations
+            if (['canceled', 'unpaid', 'past_due'].includes(subscription.status)) {
+                // Find the user associated with this subscription
+                const { data: subData } = await supabase
+                    .from('subscriptions')
+                    .select('user_id')
+                    .eq('id', subscription.id)
+                    .single();
+                
+                if (subData && subData.user_id) {
+                     await supabase
+                        .from('user_profiles')
+                        .update({ tier: 'free' })
+                        .eq('user_id', subData.user_id);
+                     console.log(`User ${subData.user_id} downgraded due to status: ${subscription.status}`);
+                }
+            }
+        }
+
+        if (event.type === 'customer.subscription.deleted') {
+            const subscription = event.data.object;
+            
+            await supabase
+                .from('subscriptions')
+                .update({ status: 'canceled' })
+                .eq('id', subscription.id);
+
+            const { data: subData } = await supabase
+                .from('subscriptions')
+                .select('user_id')
+                .eq('id', subscription.id)
+                .single();
+
+            if (subData && subData.user_id) {
+                await supabase
+                    .from('user_profiles')
+                    .update({ tier: 'free' })
+                    .eq('user_id', subData.user_id);
+            }
+        }
+    } catch (err) {
+        console.error('Error processing webhook event:', err);
+        // Return 200 anyway so Stripe doesn't keep retrying if it's a logic error on our end
+        return res.json({ received: true }); 
+    }
+
+    // Return a 200 response to acknowledge receipt of the event
+    res.json({ received: true });
+});
+
 app.use(express.json());
 
 // --- Supabase Client Initialization ---
