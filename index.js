@@ -533,7 +533,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
         });
 
         // 3. Start AI generation in the background
-        const userPrompt = 'Topic: ' + topic + '\nInclude Illustration: true\nGenerate the sermon based on this topic. You may select a relevant scripture passage to include in the "scripture" field of the JSON, or leave it null if no single passage is central.' + (userProfile && userProfile.sermon_preferences ? '\nUser Preferences: ' + JSON.stringify(userProfile.sermon_preferences) : '');
+        const userPrompt = 'Topic: ' + topic + '\nInclude Illustration: true\nGenerate the sermon based on this topic. You may select a relevant scripture passage to include in the "scripture" field of the JSON, or leave it null if no single passage is central.' + (userProfile && userProfile.sermon_preferences ? '\nUser Preferences: ' + JSON.stringify(userProfile.sermon_preferences) : '' + ' If the sermon generated does not have the length defined, please run int back through to expand or contract to meet the lenght prescriped.');
 
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
