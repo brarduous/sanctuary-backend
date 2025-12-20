@@ -304,8 +304,7 @@ app.get('/topics', async (req, res) => {
         let query = supabase
             .from('topics')
             .select('*, outlook_topics(count)') 
-            //only fetch topics with at least one article
-            .gt('outlook_topics.count', 0);
+            
         if (slug) {
             query = query.eq('slug', slug);
         }
