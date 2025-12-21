@@ -5,7 +5,7 @@ const OpenAI = require('openai'); // Use the v4 client
 const fs = require('fs');
 const { createClient } = require('@supabase/supabase-js');
 const { sample_sermons } = require('./vars');
-const { 
+const {
     sermon_prompt,
     bible_study_prompt,
     daily_prayer_prompt,
@@ -28,8 +28,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
     try {
         event = stripe.webhooks.constructEvent(
-            req.body, 
-            sig, 
+            req.body,
+            sig,
             process.env.STRIPE_WEBHOOK_SECRET
         );
     } catch (err) {
@@ -57,10 +57,10 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             // 2. Update Profile Tier
             // Note: Your app uses 'user_profiles'. Ensure this matches your DB.
             await supabase
-                .from('user_profiles') 
+                .from('user_profiles')
                 .update({ tier: 'pro' }) // Ensure you have a 'tier' column
                 .eq('user_id', userId);
-                
+
             console.log(`User ${userId} upgraded to pro.`);
         }
 
@@ -68,7 +68,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             const subscription = event.data.object;
             // Stripe doesn't always send client_reference_id on updates, 
             // so we might need to look up the user by subscription ID if userId is missing.
-            
+
             // Upsert ensures we update if exists, insert if not (though usually it exists)
             const { error } = await supabase.from('subscriptions').upsert({
                 id: subscription.id,
@@ -78,7 +78,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                 // but upserting by ID usually preserves other fields if you don't overwrite them.
                 // Ideally, store user_id in Stripe metadata during checkout.
             });
-            
+
             if (error) console.error('Error updating subscription:', error);
 
             // Handle Downgrades/Cancellations
@@ -89,20 +89,20 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
                     .select('user_id')
                     .eq('id', subscription.id)
                     .single();
-                
+
                 if (subData && subData.user_id) {
-                     await supabase
+                    await supabase
                         .from('user_profiles')
                         .update({ tier: 'free' })
                         .eq('user_id', subData.user_id);
-                     console.log(`User ${subData.user_id} downgraded due to status: ${subscription.status}`);
+                    console.log(`User ${subData.user_id} downgraded due to status: ${subscription.status}`);
                 }
             }
         }
 
         if (event.type === 'customer.subscription.deleted') {
             const subscription = event.data.object;
-            
+
             await supabase
                 .from('subscriptions')
                 .update({ status: 'canceled' })
@@ -124,7 +124,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     } catch (err) {
         console.error('Error processing webhook event:', err);
         // Return 200 anyway so Stripe doesn't keep retrying if it's a logic error on our end
-        return res.json({ received: true }); 
+        return res.json({ received: true });
     }
 
     // Return a 200 response to acknowledge receipt of the event
@@ -147,7 +147,7 @@ const openai = new OpenAI({
 // --- Helper function for making OpenAI API calls and parsing JSON ---
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
     try {
-       
+
         console.log(`Calling OpenAI model: ${model}`);
         const chatCompletion = await openai.chat.completions.create({
             model: model,
@@ -176,7 +176,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
         throw error;
     }
 }
-app.get('/app-options', async (req, res) =>{
+app.get('/app-options', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('app_options')
@@ -233,13 +233,13 @@ app.get('/search', async (req, res) => {
             const totalScore = titleScore + bodyScore + synopsisScore;
             return { ...row, _score: totalScore };
         })
-        .filter(r => r._score > 0)
-        .sort((a, b) => {
-            if (b._score !== a._score) return b._score - a._score;
-            const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
-            const bd = b.publish_date ? new Date(b.publish_date).getTime() : 0;
-            return bd - ad;
-        });
+            .filter(r => r._score > 0)
+            .sort((a, b) => {
+                if (b._score !== a._score) return b._score - a._score;
+                const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
+                const bd = b.publish_date ? new Date(b.publish_date).getTime() : 0;
+                return bd - ad;
+            });
 
         return res.json({ query: q, count: ranked.length, results: ranked });
     } catch (err) {
@@ -251,29 +251,41 @@ app.get('/search', async (req, res) => {
 // New: Endpoint to fetch all canonical categories
 app.get('/categories', async (req, res) => {
     try {
-        let query = supabase
-            .from('categories')
-            .select('*, outlook_categories(count)');
-        
-        const { data, error } = await query;
-            
-        if (error) {
-            console.error('Error fetching categories:', error);
-            return res.status(500).json({ error: 'Failed to fetch categories.' });
-        }
+        const days = 7;
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        const isoDate = startDate.toISOString();
 
-        const sortedData = data.map(item => ({
-            ...item,
-            article_count: item.outlook_categories?.[0]?.count || 0,
-            outlook_categories: undefined
-        })).sort((a, b) => b.article_count - a.article_count);
+        // 1. Get all categories
+        const { data: cats, error: catError } = await supabase.from('categories').select('*');
+        if (catError) throw catError;
 
-        res.json(sortedData);
+        // 2. Get recent counts by joining with scriptural_outlooks date
+        const { data: counts, error: countErr } = await supabase
+            .from('outlook_categories')
+            .select('category_id, scriptural_outlooks!inner(created_at)')
+            .gte('scriptural_outlooks.created_at', isoDate);
+
+        if (countErr) throw countErr;
+
+        // Aggregate counts in JS
+        const activityMap = {};
+        counts.forEach(c => {
+            activityMap[c.category_id] = (activityMap[c.category_id] || 0) + 1;
+        });
+
+        const result = cats.map(c => ({
+            ...c,
+            recent_article_count: activityMap[c.id] || 0
+        })).sort((a, b) => b.recent_article_count - a.recent_article_count);
+
+        res.json(result);
     } catch (error) {
-        console.error('Unhandled error in /categories:', error);
-        res.status(500).json({ error: 'An unexpected error occurred.' });
+        console.error('Error in /categories:', error);
+        res.status(500).json({ error: 'Failed to fetch categories.' });
     }
 });
+
 //New: Endpoint to fetch category by ID
 app.get('/categories/:id', async (req, res) => {
     const { id } = req.params;
@@ -283,7 +295,7 @@ app.get('/categories/:id', async (req, res) => {
         const { data, error } = await supabase
             .from('categories')
             .select('*')
-            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
         if (error) {
@@ -296,37 +308,43 @@ app.get('/categories/:id', async (req, res) => {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-}); 
+});
 // New: Endpoint to fetch all canonical topics
 app.get('/topics', async (req, res) => {
     try {
-        const slug = req.query.slug;
-        let query = supabase
-            .from('topics')
-            .select('*, outlook_topics(count)') 
-            
-        if (slug) {
-            query = query.eq('slug', slug);
-        }
-        const { data, error } = await query;
-            
-        if (error) {
-            console.error('Error fetching topics:', error);
-            return res.status(500).json({ error: 'Failed to fetch topics.' });
-        }
+        const days = 7;
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - days);
+        const isoDate = startDate.toISOString();
 
-        const sortedData = data.map(item => ({
-            ...item,
-            article_count: item.outlook_topics?.[0]?.count || 0,
-            outlook_topics: undefined
-        })).sort((a, b) => b.article_count - a.article_count);
+        const { data: topics, error: topError } = await supabase.from('topics').select('*');
+        if (topError) throw topError;
 
-        res.json(sortedData);
+        const { data: counts, error: countErr } = await supabase
+            .from('outlook_topics')
+            .select('topic_id, scriptural_outlooks!inner(created_at)')
+            .gte('scriptural_outlooks.created_at', isoDate);
+
+        if (countErr) throw countErr;
+
+        const activityMap = {};
+        counts.forEach(t => {
+            activityMap[t.topic_id] = (activityMap[t.topic_id] || 0) + 1;
+        });
+
+        const result = topics.map(t => ({
+            ...t,
+            recent_article_count: activityMap[t.id] || 0
+        })).sort((a, b) => b.recent_article_count - a.recent_article_count);
+
+        res.json(result);
     } catch (error) {
-        console.error('Unhandled error in /topics:', error);
-        res.status(500).json({ error: 'An unexpected error occurred.' });
+        console.error('Error in /topics:', error);
+        res.status(500).json({ error: 'Failed to fetch topics.' });
     }
 });
+
+
 //New: Endpoint to fetch topic by ID
 app.get('/topics/:id', async (req, res) => {
     const { id } = req.params;
@@ -336,7 +354,7 @@ app.get('/topics/:id', async (req, res) => {
         const { data, error } = await supabase
             .from('topics')
             .select('*')
-            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
         if (error) {
             console.error('Error fetching topic:', error);
@@ -347,7 +365,7 @@ app.get('/topics/:id', async (req, res) => {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-    
+
 
 });
 // --- GET Single Scriptural Outlook by ID ---
@@ -359,7 +377,7 @@ app.get('/scriptural-outlooks/:id', async (req, res) => {
         const { data, error } = await supabase
             .from('scriptural_outlooks')
             .select('*')
-            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
         if (error) {
@@ -442,14 +460,14 @@ app.get('/scriptural-outlooks', async (req, res) => {
                 ? query.eq('outlook_categories.category_id', category)
                 : query.eq('outlook_categories.categories.slug', category);
         }
-            
+
         const { data, error } = await query;
-            
+
         if (error) {
             console.error('Error fetching scriptural outlooks:', error);
             return res.status(500).json({ error: 'Failed to fetch scriptural outlooks.' });
         }
-        
+
         // Map the results to a cleaner format for the frontend
         const cleanedData = data.map(outlook => {
             return {
@@ -459,7 +477,7 @@ app.get('/scriptural-outlooks', async (req, res) => {
                 // Restructure topics array to just include topic data
                 topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
                 // Remove the intermediary join table properties for cleanliness
-                outlook_categories: undefined, 
+                outlook_categories: undefined,
                 outlook_topics: undefined,
             };
         });
@@ -556,7 +574,7 @@ app.post('/generate-devotional', async (req, res) => {
                     // If AI also generates scripture, you'd parse and include it here
                 })
                 .eq('devotional_id', newDevotional.devotional_id);
-            
+
             if (updateError) {
                 console.error(`Error updating devotional record ${newDevotional.devotional_id}:`, updateError);
                 // Update status to 'failed' if update fails
@@ -655,7 +673,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
                 'gpt-4.1-2025-04-14', // Model for sermon
                 4000, // Max tokens
                 "json_object", // Sermon expected as JSON
-                            
+
             );
 
             // Update the record with parsed content
@@ -769,17 +787,17 @@ app.get('/bible-studies/:userId', async (req, res) => {
     const { userId } = req.params;
     console.log('Fetching bible studies for user ID:', userId);
     try {
-        const { data, error } = await supabase  
+        const { data, error } = await supabase
             .from('bible_studies')
             .select('*, bible_study_lessons(lesson_number)')
-            .eq('user_id', userId)            
+            .eq('user_id', userId)
             .neq('status', 'failed')
             .order('created_at', { ascending: false });
         if (error) {
             console.error('Error fetching bible studies:', error);
             return res.status(500).json({ error: 'Failed to fetch bible studies.' });
         }
-         
+
         res.json(data);
     } catch (error) {
         console.error('Unhandled error in /bible-studies/:userId:', error);
@@ -796,7 +814,7 @@ app.get('/bible-study/:studyId', async (req, res) => {
         const { data, error } = await supabase
             .from('bible_studies')
             .select('*')
-            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'study_id' : 'slug', studyId)
+        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'study_id' : 'slug', studyId)
             .single();
         if (error) {
             console.error('Error fetching bible study:', error);
@@ -824,7 +842,7 @@ app.get('/bible-study-lessons/:studyId', async (req, res) => {
     const { studyId } = req.params;
     console.log('Fetching bible study lessons for study ID:', studyId);
     try {
-        const { data, error } = await supabase  
+        const { data, error } = await supabase
             .from('bible_study_lessons')
             .select('*')
             .eq('study_id', studyId)
@@ -865,7 +883,7 @@ app.get('/bible-study-lessons/detail/:lessonId', async (req, res) => {
 app.post('/bible-study-lessons/:lessonId', async (req, res) => {
     try {
         const lessonData = req.body;
-        const {lessonId} = req.params;
+        const { lessonId } = req.params;
         console.log('Upserting bible study lesson:', lessonData);
         const { data, error } = await supabase
             .from('bible_study_lessons')
@@ -1231,7 +1249,7 @@ app.get('/advice/:userId', async (req, res) => {
 });
 //New Fetching Endpoint: Get Advice/Guidance by adviceId
 app.get('/advice/:userId/:adviceId', async (req, res) => {
-    
+
     const { adviceId, userId } = req.params;
     const { data, error } = await supabase
         .from('advice_guidance')
@@ -1268,7 +1286,7 @@ app.get('/user-profile/:userId', async (req, res) => {
 //save or update user_profile by userId
 app.post('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
-    const profileData = req.body; 
+    const profileData = req.body;
     const { data, error } = await supabase
         .from('user_profiles')
         .upsert(profileData)
@@ -1279,125 +1297,125 @@ app.post('/user-profile/:userId', async (req, res) => {
     }
     res.json(data);
 });
-    
+
 // Example Node.js/Express route for a Supabase backend
 app.post('/log-activity', async (req, res) => {
-  const { userId, activityType, activityId } = req.body;
+    const { userId, activityType, activityId } = req.body;
 
-  if (!userId || !activityType || !activityId) {
-    return res.status(400).send('Missing user ID or activity type.');
-  }
+    if (!userId || !activityType || !activityId) {
+        return res.status(400).send('Missing user ID or activity type.');
+    }
 
-  // Check if a record for this user and activity type already exists for today
-  const { data: existingEntry, error: fetchError } = await supabase
-    .from('user_activities')
-    .select('id')
-    .eq('user_id', userId)
-    .eq('activity_type', activityType)
-    .eq('activity_date', new Date().toISOString().split('T')[0]); // Use just the date
+    // Check if a record for this user and activity type already exists for today
+    const { data: existingEntry, error: fetchError } = await supabase
+        .from('user_activities')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('activity_type', activityType)
+        .eq('activity_date', new Date().toISOString().split('T')[0]); // Use just the date
 
-  if (fetchError) {
-    console.error('Error checking for existing activity:', fetchError);
-    return res.status(500).send('Database error.');
-  }
+    if (fetchError) {
+        console.error('Error checking for existing activity:', fetchError);
+        return res.status(500).send('Database error.');
+    }
 
-  if (existingEntry.length > 0) {
-    // Activity already logged for today, do nothing
-    return res.status(200).send('Activity already logged for today.');
-  }
+    if (existingEntry.length > 0) {
+        // Activity already logged for today, do nothing
+        return res.status(200).send('Activity already logged for today.');
+    }
 
-  // Log the new activity
-  const { data, error } = await supabase
-    .from('user_activities')
-    .insert([
-      {
-        user_id: userId,
-        activity_type: activityType,
-        activity_date: new Date().toISOString().split('T')[0],
-        activity_id: activityId,
-      },
-    ]);
+    // Log the new activity
+    const { data, error } = await supabase
+        .from('user_activities')
+        .insert([
+            {
+                user_id: userId,
+                activity_type: activityType,
+                activity_date: new Date().toISOString().split('T')[0],
+                activity_id: activityId,
+            },
+        ]);
 
-  if (error) {
-    console.error('Error logging user activity:', error);
-    return res.status(500).send('Failed to log activity.');
-  }
+    if (error) {
+        console.error('Error logging user activity:', error);
+        return res.status(500).send('Failed to log activity.');
+    }
 
-  res.status(200).json({ message: 'Activity logged successfully.' });
+    res.status(200).json({ message: 'Activity logged successfully.' });
 });
 
 // New API route to calculate and return the user's streak
 app.get('/streak/:userId/:activityType', async (req, res) => {
-  const { userId, activityType } = req.params;
+    const { userId, activityType } = req.params;
 
-  if (!userId || !activityType) {
-    return res.status(400).send('Missing user ID or activity type.');
-  }
-
-  try {
-    const { data: activities, error } = await supabase
-      .from('user_activities')
-      .select('activity_date')
-      .eq('user_id', userId)
-      .eq('activity_type', activityType)
-      .order('activity_date', { ascending: false }); // Get most recent activities first
-
-    if (error) {
-      console.error('Error fetching activities for streak:', error);
-      return res.status(500).send('Database error.');
+    if (!userId || !activityType) {
+        return res.status(400).send('Missing user ID or activity type.');
     }
 
-    if (!activities || activities.length === 0) {
-      return res.status(200).json({ streak: 0 }); // No activities found, streak is 0
-    }
+    try {
+        const { data: activities, error } = await supabase
+            .from('user_activities')
+            .select('activity_date')
+            .eq('user_id', userId)
+            .eq('activity_type', activityType)
+            .order('activity_date', { ascending: false }); // Get most recent activities first
 
-    // Streak calculation logic
-    let streak = 0;
-    let today = new Date();
-    today.setHours(0, 0, 0, 0); // Set time to midnight for accurate date comparison
-
-    // Check if the most recent activity was today. If not, the streak is 0.
-    const mostRecentDate = new Date(activities[0].activity_date);
-    //check and see if the most recent date was yesterday
-    if (mostRecentDate.getTime() === today.getTime() - 86400000) {
-      streak = 1;
-    } 
-    //else if most recent date was two days ago 
-    else if (mostRecentDate.getTime() < today.getTime() - 172800000) {
-        // Most recent activity was yesterday, streak starts at 1
-        const yesterday = new Date(today);
-        yesterday.setDate(today.getDate() - 2);
-        if (mostRecentDate.getTime() === yesterday.getTime()) {
-          streak = 1;
-        } else {
-            return res.status(200).json({ streak: 0 }); // No activity yesterday or today, so streak is 0
+        if (error) {
+            console.error('Error fetching activities for streak:', error);
+            return res.status(500).send('Database error.');
         }
-    }
-    
-    // Iterate through the rest of the activities
-    for (let i = 1; i < activities.length; i++) {
-        const currentDate = new Date(activities[i-1].activity_date);
-        const previousDate = new Date(activities[i].activity_date);
 
-        // Calculate the difference in days
-        const oneDay = 1000 * 60 * 60 * 24;
-        const diffInDays = Math.round((currentDate.getTime() - previousDate.getTime()) / oneDay);
-        
-        // If consecutive, increment the streak
-        if (diffInDays === 1) {
-            streak++;
-        } else {
-            // If the dates are not consecutive, the streak is broken
-            break;
+        if (!activities || activities.length === 0) {
+            return res.status(200).json({ streak: 0 }); // No activities found, streak is 0
         }
-    }
-    
-    return res.status(200).json({ streak });
 
-  } catch (err) {
-    console.error('Error calculating streak:', err);
-    res.status(500).send('Server error.');
-  }
+        // Streak calculation logic
+        let streak = 0;
+        let today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to midnight for accurate date comparison
+
+        // Check if the most recent activity was today. If not, the streak is 0.
+        const mostRecentDate = new Date(activities[0].activity_date);
+        //check and see if the most recent date was yesterday
+        if (mostRecentDate.getTime() === today.getTime() - 86400000) {
+            streak = 1;
+        }
+        //else if most recent date was two days ago 
+        else if (mostRecentDate.getTime() < today.getTime() - 172800000) {
+            // Most recent activity was yesterday, streak starts at 1
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 2);
+            if (mostRecentDate.getTime() === yesterday.getTime()) {
+                streak = 1;
+            } else {
+                return res.status(200).json({ streak: 0 }); // No activity yesterday or today, so streak is 0
+            }
+        }
+
+        // Iterate through the rest of the activities
+        for (let i = 1; i < activities.length; i++) {
+            const currentDate = new Date(activities[i - 1].activity_date);
+            const previousDate = new Date(activities[i].activity_date);
+
+            // Calculate the difference in days
+            const oneDay = 1000 * 60 * 60 * 24;
+            const diffInDays = Math.round((currentDate.getTime() - previousDate.getTime()) / oneDay);
+
+            // If consecutive, increment the streak
+            if (diffInDays === 1) {
+                streak++;
+            } else {
+                // If the dates are not consecutive, the streak is broken
+                break;
+            }
+        }
+
+        return res.status(200).json({ streak });
+
+    } catch (err) {
+        console.error('Error calculating streak:', err);
+        res.status(500).send('Server error.');
+    }
 });
 
 // New Endpoint: Contact Form
@@ -1419,7 +1437,7 @@ app.post('/contact', async (req, res) => {
             console.error('Error saving contact:', error);
             return res.status(500).json({ error: 'Failed to save contact message.' });
         }
-        
+
         res.status(200).json({ message: 'Contact message saved successfully.' });
     } catch (error) {
         console.error('Unhandled error in /contact:', error);
