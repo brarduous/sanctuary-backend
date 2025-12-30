@@ -10,7 +10,9 @@ const {
     bible_study_prompt,
     daily_prayer_prompt,
     advice_guidance_prompt,
-    daily_devotional_prompt
+    daily_devotional_prompt,
+    generateTopicSermonPrompt,
+    generateScriptureSermonPrompt
 } = require('./prompts');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -630,7 +632,15 @@ app.get('/sermons/:userId', async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
-
+// Helper to get tuning notes
+async function getTuningNotes(userId) {
+  const { data } = await supabase
+    .from('user_profiles')
+    .select('ai_tuning_notes')
+    .eq('user_id', userId)
+    .single();
+  return data?.ai_tuning_notes || "";
+}
 // Endpoint to initiate Sermon generation by Topic
 app.post('/generate-sermon-by-topic', async (req, res) => {
     try {
@@ -668,7 +678,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
 
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
-                sermon_prompt,
+                generateTopicSermonPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14', // Model for sermon
                 4000, // Max tokens
@@ -744,7 +754,7 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
 
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
-                sermon_prompt,
+                generateScriptureSermonPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
                 4000,
@@ -1444,6 +1454,75 @@ app.post('/contact', async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+// Add this new endpoint to index.js
+
+app.post('/feedback', async (req, res) => {
+    const { userId, contentId, contentType, feedback } = req.body;
+    // feedback = { rating, positive, negative }
+
+    try {
+        // 1. Archive the raw feedback
+        const { error: insertError } = await supabase
+            .from('content_feedback')
+            .insert({
+                user_id: userId,
+                content_id: contentId,
+                content_type: contentType,
+                rating: feedback.rating,
+                what_worked: feedback.positive,
+                what_didnt_work: feedback.negative
+            });
+
+        if (insertError) throw insertError;
+
+        // 2. Fetch current tuning notes
+        const { data: profile } = await supabase
+            .from('user_profiles')
+            .select('ai_tuning_notes')
+            .eq('user_id', userId)
+            .single();
+
+        const currentNotes = profile?.ai_tuning_notes || "No specific tuning yet.";
+
+        // 3. AI Analysis: Generate new tuning instructions
+        const systemPrompt = `
+      You are an AI Optimization Engineer. 
+      Your goal is to maintain a concise set of "Style Instructions" for a user based on their feedback history.
+      
+      Current Instructions: "${currentNotes}"
+      
+      New Feedback:
+      - Rating: ${feedback.rating}/5
+      - Good: ${feedback.positive}
+      - Bad: ${feedback.negative}
+      
+      TASK: Write a new, consolidated set of instructions (max 3 sentences) that incorporates the new feedback.
+      If the feedback is positive (4-5 stars), reinforce the current style.
+      If negative, adjust strictly to fix the complaints.
+      Write ONLY the instructions.
+    `;
+
+        const completion = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [{ role: "system", content: systemPrompt }]
+        });
+
+        const newTuningNotes = completion.choices[0].message.content;
+
+        // 4. Update Profile
+        await supabase
+            .from('user_profiles')
+            .update({ ai_tuning_notes: newTuningNotes })
+            .eq('user_id', userId);
+
+        res.json({ success: true, newNotes: newTuningNotes });
+
+    } catch (error) {
+        console.error('Feedback Error:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

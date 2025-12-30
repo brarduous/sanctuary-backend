@@ -216,12 +216,54 @@ The JSON object must contain the following two keys:
 -   **"content"**: A string containing the complete devotional text, formatted with Markdown. This should include only the main body.
 -   **"daily_prayer"**: A string containing the prayer text.
 `;
+// Add a helper to format the tuning section
+const formatTuning = (notes) => {
+  if (!notes) return "";
+  return `
+    CRITICAL PERSONALIZATION INSTRUCTIONS:
+    The user has provided feedback on previous outputs. You MUST adjust your style as follows:
+    ${notes}
+    (These instructions override any conflicting standard guidelines below.)
+  `;
+};
 
+// Update existing functions to accept 'tuningNotes' as the last argument
+
+const generateTopicSermonPrompt = (topic, userProfile, tuningNotes = "") => {
+  return `
+    ${formatTuning(tuningNotes)}
+
+    ${sermon_prompt}
+    `;
+};
+
+const generateScriptureSermonPrompt = (scripture, userProfile, tuningNotes = "") => {
+  return `
+    ${formatTuning(tuningNotes)}
+
+    ${sermon_prompt}
+
+    
+  `;
+};
+
+// Do the same for Bible Studies
+const generateBibleStudyPrompt = (topic, method, length, tuningNotes = "") => {
+  return `
+    ${formatTuning(tuningNotes)}
+    
+    Create a ${length}-part Bible Study series on...
+    (Rest of your existing prompt...)
+  `;
+};
 module.exports = {
     sermon_prompt,
     bible_study_prompt,
     daily_prayer_prompt,
     advice_guidance_prompt,
     daily_devotional_prompt,
+    generateTopicSermonPrompt,
+    generateScriptureSermonPrompt,
+    generateBibleStudyPrompt
 };
 
