@@ -150,23 +150,21 @@ const openai = new OpenAI({
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
     try {
 
-        console.log(`Calling OpenAI model: ${model}`);
+        console.log("Calling OpenAI with prompt:", systemPrompt, userPrompt);
         const chatCompletion = await openai.chat.completions.create({
-            model: model,
+            model: 'gpt-5-nano',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt },
             ],
-            max_tokens: maxTokens,
-            temperature: 0.7, // Adjust creativity
             response_format: { type: responseFormatType },
         });
 
         let generatedContent = chatCompletion.choices[0].message.content;
-
+        console.log("AI Generated Content:", await generatedContent);
         if (responseFormatType === "json_object") {
             try {
-                return JSON.parse(generatedContent);
+                return JSON.parse(await generatedContent);
             } catch (jsonError) {
                 console.warn("Failed to parse AI response as JSON. Returning raw text.", jsonError);
                 return generatedContent; // Return raw text if parsing fails
@@ -676,14 +674,14 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
         // 3. Start AI generation in the background
         const userPrompt = 'Topic: ' + topic + '\nInclude Illustration: true\nGenerate the sermon based on this topic. You may select a relevant scripture passage to include in the "scripture" field of the JSON, or leave it null if no single passage is central.' + (userProfile && userProfile.sermon_preferences ? '\nUser Preferences: ' + JSON.stringify(userProfile.sermon_preferences) : '' + ' If the sermon generated does not have the length defined, please run int back through to expand or contract to meet the lenght prescriped.');
 
+        const systemPrompt =  generateTopicSermonPrompt(await getTuningNotes(userId));
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
-                generateTopicSermonPrompt,
+                await systemPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14', // Model for sermon
                 4000, // Max tokens
                 "json_object", // Sermon expected as JSON
-
             );
 
             // Update the record with parsed content
@@ -751,10 +749,10 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
         });
 
         const userPrompt = 'Scripture: ' + scripture + '\nInclude Illustration: true\nGenerate the sermon based on this scripture. ' + (userProfile && userProfile.sermon_preferences ? '\nUser Preferences: ' + JSON.stringify(userProfile.sermon_preferences) : '');
-
+        const systemPrompt = generateScriptureSermonPrompt(await getTuningNotes(userId));
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
-                generateScriptureSermonPrompt,
+                systemPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
                 4000,

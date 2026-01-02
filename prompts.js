@@ -229,7 +229,8 @@ const formatTuning = (notes) => {
 
 // Update existing functions to accept 'tuningNotes' as the last argument
 
-const generateTopicSermonPrompt = (topic, userProfile, tuningNotes = "") => {
+const generateTopicSermonPrompt = ( tuningNotes = "") => {
+    console.log('Generating Topic Sermon Prompt with tuning notes:', tuningNotes);
   return `
     ${formatTuning(tuningNotes)}
 
@@ -237,7 +238,7 @@ const generateTopicSermonPrompt = (topic, userProfile, tuningNotes = "") => {
     `;
 };
 
-const generateScriptureSermonPrompt = (scripture, userProfile, tuningNotes = "") => {
+const generateScriptureSermonPrompt = ( tuningNotes = "") => {
   return `
     ${formatTuning(tuningNotes)}
 
@@ -252,8 +253,7 @@ const generateBibleStudyPrompt = (topic, method, length, tuningNotes = "") => {
   return `
     ${formatTuning(tuningNotes)}
     
-    Create a ${length}-part Bible Study series on...
-    (Rest of your existing prompt...)
+    ${bible_study_prompt}
   `;
 };
 module.exports = {

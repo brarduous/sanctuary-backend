@@ -38,11 +38,10 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
     ],
-    max_tokens: maxTokens,
-    temperature: 0.7,
     response_format: { type: responseFormatType },
   });
   const generatedContent = chatCompletion.choices[0].message.content;
+  console.log('AI Generated Content:', generatedContent);
   if (responseFormatType === 'json_object') {
     try {
       return JSON.parse(generatedContent);
@@ -86,7 +85,7 @@ async function generateDailyNewsSynopsisFromLast24h() {
     const aiResponse = await callOpenAIAndProcessResult(
       daily_news_synopsis_prompt,
       combinedContent,
-      'gpt-4.1-2025-04-14',
+      'gpt-5-nano',
       5000,
       'json_object'
     );
