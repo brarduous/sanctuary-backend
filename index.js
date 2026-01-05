@@ -12,7 +12,8 @@ const {
     advice_guidance_prompt,
     daily_devotional_prompt,
     generateTopicSermonPrompt,
-    generateScriptureSermonPrompt
+    generateScriptureSermonPrompt,
+    generateBibleStudyPrompt
 } = require('./prompts');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
@@ -27,7 +28,6 @@ app.use(cors());
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
     const sig = req.headers['stripe-signature'];
     let event;
-
     try {
         event = stripe.webhooks.constructEvent(
             req.body,
@@ -42,6 +42,37 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     // Handle the event
     const session = event.data.object;
 
+    const userId = session.client_reference_id; // Ensure this is passed during checkout creation
+    //get email address for user from auth user table. Then cross reference whitelist table to see if user is whitelisted. If whitelisted
+    //bypass subscription handling, set user tier to pro directly.
+    const { data: authUser, error: authError } = await supabase
+        .from('auth.users')
+        .select('email')
+        .eq('id', userId)
+        .single();
+    if (authError) {
+        console.error('Error fetching auth user:', authError);
+        return res.status(500).json({ error: 'Failed to fetch user.' });
+    }
+    // Check if user is whitelisted
+    const { data: whitelistEntry, error: whitelistError } = await supabase
+        .from('whitelist')
+        .select('*')
+        .eq('email', authUser.email)
+        .single();
+    if (whitelistError && whitelistError.code !== 'PGRST116') {
+        console.error('Error checking whitelist:', whitelistError);
+        return res.status(500).json({ error: 'Failed to check whitelist.' });
+    }
+    if (whitelistEntry) {
+        // User is whitelisted, ensure their tier is set to pro
+        await supabase
+            .from('user_profiles')
+            .upsert({user_id: userId, tier: 'pro' })
+            .eq('user_id', userId);
+        console.log(`Whitelisted user ${userId} set to pro tier.`);
+        return res.json({ received: true });
+    }   
     try {
         if (event.type === 'checkout.session.completed') {
             const subscription = await stripe.subscriptions.retrieve(session.subscription);
@@ -948,7 +979,7 @@ app.post('/generate-bible-study', async (req, res) => {
 
         // 3. Start AI generation in the background
         const userPrompt = 'Topic: ' + topic + '\n Number of Lessons:' + length + '\n Bible Study Type: ' + method + '\n Include Illustration: true\n ';
-
+        //const systemPrompt = generateBibleStudyPrompt(await getTuningNotes(userId));
         try {
             const generatedStudy = await callOpenAIAndProcessResult(
                 bible_study_prompt,
@@ -1223,6 +1254,24 @@ app.get('/devotionals/:userId', async (req, res) => {
     res.json(data);
 });
 
+//get devotional by devotionalId
+app.get('/devotional/:userId/:devotionalId', async (req, res) => {
+    const { userId, devotionalId } = req.params;
+    const { data, error } = await supabase
+        .from('daily_devotionals')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('devotional_id', devotionalId)
+        .single();
+    if (error) {
+        console.error('Error fetching devotional by ID:', error);
+        return res.status(500).json({ error: 'Failed to fetch devotional by ID.' });
+    }
+    if (!data) {
+        return res.status(404).json({ error: 'Devotional not found.' });
+    }   
+    res.json(data);
+});
 
 // New Fetching Endpoint: Get Daily Prayers for a user
 app.get('/prayers/:userId', async (req, res) => {
@@ -1239,7 +1288,24 @@ app.get('/prayers/:userId', async (req, res) => {
     }
     res.json(data);
 });
-
+//get prayer by prayerId
+app.get('/prayer/:userId/:prayerId', async (req, res) => {
+    const { prayerId, userId } = req.params;
+    const { data, error } = await supabase
+        .from('daily_prayers')
+        .select('*')
+        .eq('user_id', userId)  
+        .eq('prayer_id', prayerId)
+        .single();
+    if (error) {
+        console.error('Error fetching prayer by ID:', error);
+        return res.status(500).json({ error: 'Failed to fetch prayer by ID.' });
+    }
+    if (!data) {
+        return res.status(404).json({ error: 'Prayer not found.' });
+    }
+    res.json(data);
+});
 // New Fetching Endpoint: Get Advice/Guidance for a user
 app.get('/advice/:userId', async (req, res) => {
     const { userId } = req.params;
@@ -1282,7 +1348,34 @@ app.get('/user-profile/:userId', async (req, res) => {
         .select('*')
         .eq('user_id', userId)
         .single();
+    //get email address from auth.users table
+    const authData = await supabase.auth.admin.getUserById(userId);
+    const user = authData.data.user;
+    console.log('Fetched user email for whitelist check:', user);
+    //check if user email is whitelisted, and update profile tielr to pro
+    const { data: whitelistEntry, error: whitelistError } = await supabase
+        .from('whitelist')
+        .select('*')
+        .eq('email', user.email)
+        .single();
+
+    if (whitelistError && whitelistError.code !== 'PGRST116') {
+        console.error('Error checking whitelist:', whitelistError);
+        return res.status(500).json({ error: 'Failed to check whitelist.' });
+    }
+    if (whitelistEntry) {
+        // User is whitelisted, ensure their tier is set to pro
+        const whitelistProfile = await supabase
+            .from('user_profiles')
+            .upsert({user_id: userId, tier: 'pro' })
+            .select('*')
+            .single();
+        console.log(`Whitelisted user ${userId} set to pro tier.`);
+        return res.status(200).json(whitelistProfile);
+    }
+    
     if (error) {
+    
         console.error('Error fetching user profile:', error);
         return res.status(500).json({ error: 'Failed to fetch user profile.' });
     }
@@ -1295,6 +1388,9 @@ app.get('/user-profile/:userId', async (req, res) => {
 app.post('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const profileData = req.body;
+    if(!profileData.user_id){
+        profileData.user_id = userId;
+    }
     const { data, error } = await supabase
         .from('user_profiles')
         .upsert(profileData)
@@ -1521,6 +1617,101 @@ app.post('/feedback', async (req, res) => {
     }
 });
 
+
+// GET Followed Categories
+app.get('/user-followed-categories/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const { data, error } = await supabase
+            .from('user_followed_categories')
+            .select('category_id')
+            .eq('user_id', userId);
+
+        if (error) throw error;
+        // Return simple array of IDs: [1, 2, 5]
+        res.json(data.map(row => row.category_id));
+    } catch (error) {
+        console.error('Error fetching followed categories:', error);
+        res.status(500).json({ error: 'Failed to fetch followed categories' });
+    }
+});
+
+// UPDATE Followed Categories (Bulk Replace)
+app.post('/user-followed-categories/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { categoryIds } = req.body; // Expects: { categoryIds: [1, 2, 3] }
+
+    try {
+        // 1. Delete existing relationships for this user
+        const { error: deleteError } = await supabase
+            .from('user_followed_categories')
+            .delete()
+            .eq('user_id', userId);
+        
+        if (deleteError) throw deleteError;
+
+        // 2. Insert new relationships (if any selected)
+        if (categoryIds && categoryIds.length > 0) {
+            const rows = categoryIds.map(id => ({ user_id: userId, category_id: id }));
+            const { error: insertError } = await supabase
+                .from('user_followed_categories')
+                .insert(rows);
+            
+            if (insertError) throw insertError;
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating followed categories:', error);
+        res.status(500).json({ error: 'Failed to update followed categories' });
+    }
+});
+
+// GET Followed Topics
+app.get('/user-followed-topics/:userId', async (req, res) => {
+    const { userId } = req.params;
+    try {
+        const { data, error } = await supabase
+            .from('user_followed_topics')
+            .select('topic_id')
+            .eq('user_id', userId);
+
+        if (error) throw error;
+        res.json(data.map(row => row.topic_id));
+    } catch (error) {
+        console.error('Error fetching followed topics:', error);
+        res.status(500).json({ error: 'Failed to fetch followed topics' });
+    }
+});
+
+// UPDATE Followed Topics (Bulk Replace)
+app.post('/user-followed-topics/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const { topicIds } = req.body; 
+
+    try {
+        const { error: deleteError } = await supabase
+            .from('user_followed_topics')
+            .delete()
+            .eq('user_id', userId);
+        
+        if (deleteError) throw deleteError;
+
+        if (topicIds && topicIds.length > 0) {
+            const rows = topicIds.map(id => ({ user_id: userId, topic_id: id }));
+            const { error: insertError } = await supabase
+                .from('user_followed_topics')
+                .insert(rows);
+            
+            if (insertError) throw insertError;
+        }
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error('Error updating followed topics:', error);
+        res.status(500).json({ error: 'Failed to update followed topics' });
+    }
+});
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
