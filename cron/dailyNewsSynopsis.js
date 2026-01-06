@@ -20,12 +20,13 @@ You will be provided with the titles and bodies of several news articles for tod
 
 --- JSON RESPONSE SCHEMA ---
 {
-  "summary": "string - concise overview of key events and mood. This is a summary of the news articles for today, so make sure the reference it in terms of today's day of the week, date, etc., and only where applicable.",
+  "synopsis": "string - concise overview of key events and mood. This is a summary of the news articles for today, so make sure the reference it in terms of today's day of the week, date, etc., and only where applicable.",
   "scripture": "string - a single relevant scripture including reference and full verse text. please ensure the scripture is not repetitive of past synopses",
   "prayer": "string - a short topical prayer related to the day"
 }
 
 # NOTES
+- Strictly adhere to the JSON schema provided above. Do not include any additional text or commentary outside of the JSON object.
 - The scripture should be directly quoted with its reference (e.g., "Philippians 4:6-7 - Do not be anxious..."), accurate to a common translation.
 - Keep the prayer brief, pastoral, and focused on themes from the day's summary.
 - Do not mention the date or day of the week in the summary. at most, refer to "today" or "this week".
@@ -90,14 +91,14 @@ async function generateDailyNewsSynopsisFromLast24h() {
       'json_object'
     );
 
-    if (aiResponse && (aiResponse.summary || aiResponse.scripture || aiResponse.prayer)) {
+    if (aiResponse && (aiResponse.synopsis || aiResponse.scripture || aiResponse.prayer)) {
       const payload = {
-        synopsis: aiResponse.summary || null,
+        synopsis: aiResponse.synopsis || null,
         scripture: aiResponse.scripture || null,
         prayer: aiResponse.prayer || null,
         created_at: new Date().toISOString(),
       };
-
+      console.log('Payload to be saved:', payload);
       const { data, error: insertError } = await supabase
         .from('daily_news_synopses')
         .insert([payload])
