@@ -68,11 +68,11 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         // User is whitelisted, ensure their tier is set to pro
         await supabase
             .from('user_profiles')
-            .upsert({user_id: userId, tier: 'pro' })
+            .upsert({ user_id: userId, tier: 'pro' })
             .eq('user_id', userId);
         console.log(`Whitelisted user ${userId} set to pro tier.`);
         return res.json({ received: true });
-    }   
+    }
     try {
         if (event.type === 'checkout.session.completed') {
             const subscription = await stripe.subscriptions.retrieve(session.subscription);
@@ -663,12 +663,12 @@ app.get('/sermons/:userId', async (req, res) => {
 });
 // Helper to get tuning notes
 async function getTuningNotes(userId) {
-  const { data } = await supabase
-    .from('user_profiles')
-    .select('ai_tuning_notes')
-    .eq('user_id', userId)
-    .single();
-  return data?.ai_tuning_notes || "";
+    const { data } = await supabase
+        .from('user_profiles')
+        .select('ai_tuning_notes')
+        .eq('user_id', userId)
+        .single();
+    return data?.ai_tuning_notes || "";
 }
 // Endpoint to initiate Sermon generation by Topic
 app.post('/generate-sermon-by-topic', async (req, res) => {
@@ -705,7 +705,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
         // 3. Start AI generation in the background
         const userPrompt = 'Topic: ' + topic + '\nInclude Illustration: true\nGenerate the sermon based on this topic. You may select a relevant scripture passage to include in the "scripture" field of the JSON, or leave it null if no single passage is central.' + (userProfile && userProfile.sermon_preferences ? '\nUser Preferences: ' + JSON.stringify(userProfile.sermon_preferences) : '' + ' If the sermon generated does not have the length defined, please run int back through to expand or contract to meet the lenght prescriped.');
 
-        const systemPrompt =  generateTopicSermonPrompt(await getTuningNotes(userId));
+        const systemPrompt = generateTopicSermonPrompt(await getTuningNotes(userId));
         try {
             const generatedSermon = await callOpenAIAndProcessResult(
                 await systemPrompt,
@@ -1269,10 +1269,40 @@ app.get('/devotional/:userId/:devotionalId', async (req, res) => {
     }
     if (!data) {
         return res.status(404).json({ error: 'Devotional not found.' });
-    }   
+    }
     res.json(data);
 });
+app.delete('/devotional/:devotionalId', async (req, res) => {
+    const { devotionalId } = req.params;
+    try {
+        const { error } = await supabase
+            .from('daily_devotionals')
+            .delete()
+            .eq('devotional_id', devotionalId);
 
+        if (error) throw error;
+        res.json({ message: 'Devotional deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting devotional:', error);
+        res.status(500).json({ error: 'Failed to delete devotional' });
+    }
+});
+
+app.delete('/prayer/:prayerId', async (req, res) => {
+    const { prayerId } = req.params;
+    try {
+        const { error } = await supabase
+            .from('daily_prayers')
+            .delete()
+            .eq('prayer_id', prayerId);
+
+        if (error) throw error;
+        res.json({ message: 'Prayer deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting prayer:', error);
+        res.status(500).json({ error: 'Failed to delete prayer' });
+    }
+});
 // New Fetching Endpoint: Get Daily Prayers for a user
 app.get('/prayers/:userId', async (req, res) => {
     const { userId } = req.params;
@@ -1294,7 +1324,7 @@ app.get('/prayer/:userId/:prayerId', async (req, res) => {
     const { data, error } = await supabase
         .from('daily_prayers')
         .select('*')
-        .eq('user_id', userId)  
+        .eq('user_id', userId)
         .eq('prayer_id', prayerId)
         .single();
     if (error) {
@@ -1340,6 +1370,23 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
     }
     res.json(data);
 });
+
+// DELETE Advice Endpoint
+app.delete('/advice/:adviceId', async (req, res) => {
+    const { adviceId } = req.params;
+    try {
+        const { error } = await supabase
+            .from('advice_guidance')
+            .delete()
+            .eq('advice_id', adviceId);
+
+        if (error) throw error;
+        res.json({ message: 'Advice deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting advice:', error);
+        res.status(500).json({ error: 'Failed to delete advice' });
+    }
+});
 // Get user_profile by userId
 app.get('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
@@ -1367,15 +1414,22 @@ app.get('/user-profile/:userId', async (req, res) => {
         // User is whitelisted, ensure their tier is set to pro
         const whitelistProfile = await supabase
             .from('user_profiles')
-            .upsert({user_id: userId, tier: 'pro' })
+            .upsert({ user_id: userId, tier: 'pro' })
             .select('*')
             .single();
         console.log(`Whitelisted user ${userId} set to pro tier.`);
         return res.status(200).json(whitelistProfile);
+    }else{
+        const nonWhitelistProfile = await supabase
+            .from('user_profiles')
+            .select('*')
+            .eq('user_id', userId)
+            .single();
+        return res.status(200).json(nonWhitelistProfile);
     }
-    
+
     if (error) {
-    
+
         console.error('Error fetching user profile:', error);
         return res.status(500).json({ error: 'Failed to fetch user profile.' });
     }
@@ -1388,7 +1442,7 @@ app.get('/user-profile/:userId', async (req, res) => {
 app.post('/user-profile/:userId', async (req, res) => {
     const { userId } = req.params;
     const profileData = req.body;
-    if(!profileData.user_id){
+    if (!profileData.user_id) {
         profileData.user_id = userId;
     }
     const { data, error } = await supabase
@@ -1647,7 +1701,7 @@ app.post('/user-followed-categories/:userId', async (req, res) => {
             .from('user_followed_categories')
             .delete()
             .eq('user_id', userId);
-        
+
         if (deleteError) throw deleteError;
 
         // 2. Insert new relationships (if any selected)
@@ -1656,7 +1710,7 @@ app.post('/user-followed-categories/:userId', async (req, res) => {
             const { error: insertError } = await supabase
                 .from('user_followed_categories')
                 .insert(rows);
-            
+
             if (insertError) throw insertError;
         }
 
@@ -1687,14 +1741,14 @@ app.get('/user-followed-topics/:userId', async (req, res) => {
 // UPDATE Followed Topics (Bulk Replace)
 app.post('/user-followed-topics/:userId', async (req, res) => {
     const { userId } = req.params;
-    const { topicIds } = req.body; 
+    const { topicIds } = req.body;
 
     try {
         const { error: deleteError } = await supabase
             .from('user_followed_topics')
             .delete()
             .eq('user_id', userId);
-        
+
         if (deleteError) throw deleteError;
 
         if (topicIds && topicIds.length > 0) {
@@ -1702,7 +1756,7 @@ app.post('/user-followed-topics/:userId', async (req, res) => {
             const { error: insertError } = await supabase
                 .from('user_followed_topics')
                 .insert(rows);
-            
+
             if (insertError) throw insertError;
         }
 
