@@ -432,13 +432,14 @@ app.get('/scriptural-outlooks', async (req, res) => {
     const offset = (page - 1) * limit;
     const topic_id = req.query.topic_id;
     const category_id = req.query.category_id;
+    const category_ids = req.query.category_ids; // comma separated list
     const topic_slug = req.query.topic_slug;
     const category_slug = req.query.category_slug;
     const topic = req.query.topic; // can be id or slug
     const category = req.query.category; // can be id or slug
 
     const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
-    const hasCategoryFilter = Boolean(category_id || category_slug || category);
+    const hasCategoryFilter = Boolean(category_id || category_slug || category );
     const topicIsNumeric = topic && /^\d+$/.test(topic);
     const categoryIsNumeric = category && /^\d+$/.test(category);
 
@@ -490,7 +491,11 @@ app.get('/scriptural-outlooks', async (req, res) => {
             query = categoryIsNumeric
                 ? query.eq('outlook_categories.category_id', category)
                 : query.eq('outlook_categories.categories.slug', category);
+        }else if (category_ids) {
+            const ids = category_ids.split(','); // Expecting "1,2,3"
+            query = query.in('category_id', ids);
         }
+
 
         const { data, error } = await query;
 
