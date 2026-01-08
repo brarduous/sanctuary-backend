@@ -16,6 +16,7 @@ const {
     generateBibleStudyPrompt
 } = require('./prompts');
 const nodemailer = require('nodemailer');
+const { log } = require('console');
 require('dotenv').config();
 
 // Initialize Stripe
@@ -439,7 +440,7 @@ app.get('/scriptural-outlooks', async (req, res) => {
     const category = req.query.category; // can be id or slug
 
     const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
-    const hasCategoryFilter = Boolean(category_id || category_slug || category );
+    const hasCategoryFilter = Boolean(category_id || category_slug || category);
     const topicIsNumeric = topic && /^\d+$/.test(topic);
     const categoryIsNumeric = category && /^\d+$/.test(category);
 
@@ -491,7 +492,7 @@ app.get('/scriptural-outlooks', async (req, res) => {
             query = categoryIsNumeric
                 ? query.eq('outlook_categories.category_id', category)
                 : query.eq('outlook_categories.categories.slug', category);
-        }else if (category_ids) {
+        } else if (category_ids) {
             const ids = category_ids.split(','); // Expecting "1,2,3"
             query = query.in('category_id', ids);
         }
@@ -530,6 +531,7 @@ app.get('/scriptural-outlooks', async (req, res) => {
 // Endpoint to initiate Daily Devotional generation
 app.post('/generate-devotional', async (req, res) => {
     try {
+        const startTime = Date.now();
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
         const generationDate = new Date().toISOString().split('T')[0];
         console.log('generate-devotional', userId, focusAreas, improvementAreas, recentDevotionals);
@@ -628,19 +630,25 @@ app.post('/generate-devotional', async (req, res) => {
                     status: 'completed'
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
+
+            const duration = Date.now() - start;
+            logEvent('info', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', {}, duration);
             if (updatePrayerError) {
                 console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
                 await supabase.from('daily_prayers').update({ prayer_text: 'Failed to generate prayer.' }).eq('prayer_id', newPrayer.prayer_id);
+                logEvent('error', 'backend', userId, 'generate_devotional', 'Failed to update prayer record', { error: updatePrayerError.message }, duration);
             } else {
                 console.log(`Prayer record for devotional ${newDevotional.devotional_id} successfully generated and updated.`);
             }
         } catch (aiError) {
             console.error(`AI generation failed for devotional ${newDevotional.devotional_id}:`, aiError);
             await supabase.from('daily_devotionals').update({ status: 'failed' }).eq('devotional_id', newDevotional.devotional_id);
+            logEvent('error', 'backend', userId, 'generate_devotional', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
         }
 
     } catch (error) {
         console.error('Unhandled error in /generate-devotional:', error);
+        logEvent('error', 'backend', null, 'generate_devotional', 'Unhandled error', { error: error.message }, 0);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
@@ -678,6 +686,7 @@ async function getTuningNotes(userId) {
 // Endpoint to initiate Sermon generation by Topic
 app.post('/generate-sermon-by-topic', async (req, res) => {
     try {
+        const startTime = Date.now();
         const { userId, topic, userProfile } = req.body;
         console.log(userId, topic, userProfile);
         // 1. Create a placeholder in the database immediately
@@ -735,27 +744,32 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
                     updated_at: new Date().toISOString(),
                 })
                 .eq('sermon_id', newSermon.sermon_id);
-
+                const duration = Date.now() - startTime;
             if (updateError) {
                 console.error(`Error updating sermon record ${newSermon.sermon_id}:`, updateError);
                 await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+                logEvent('error', 'backend', userId, 'generate_sermon_by_topic', 'Failed to update sermon record', { error: updateError.message }, duration);
             } else {
                 console.log(`Sermon record ${newSermon.sermon_id} successfully generated and updated.`);
+                logEvent('info', 'backend', userId, 'generate_sermon_by_topic', 'Successfully generated sermon', {}, duration);
             }
         } catch (aiError) {
             console.error(`AI generation failed for sermon ${newSermon.sermon_id}:`, aiError);
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            logEvent('error', 'backend', userId, 'generate_sermon_by_topic', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
         }
 
     } catch (error) {
         console.error('Unhandled error in /generate-sermon-by-topic:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
+        logEvent('error', 'backend', null, 'generate_sermon_by_topic', 'Unhandled error', { error: error.message }, 0);
     }
 });
 
 // Endpoint to initiate Sermon generation by Scripture
 app.post('/generate-sermon-by-scripture', async (req, res) => {
     try {
+        const startTime = Date.now();
         const { userId, scripture, userProfile } = req.body;
 
         const { data: newSermon, error: insertError } = await supabase
@@ -808,21 +822,25 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
                     updated_at: new Date().toISOString(),
                 })
                 .eq('sermon_id', newSermon.sermon_id);
-
+                const duration = Date.now() - startTime;
             if (updateError) {
                 console.error(`Error updating sermon record ${newSermon.sermon_id}:`, updateError);
                 await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+                logEvent('error', 'backend', userId, 'generate_sermon_by_scripture', 'Failed to update sermon record', { error: updateError.message }, duration);
             } else {
                 console.log(`Sermon record ${newSermon.sermon_id} successfully generated and updated.`);
+                logEvent('info', 'backend', userId, 'generate_sermon_by_scripture', 'Successfully generated sermon', {}, duration);
             }
         } catch (aiError) {
             console.error(`AI generation failed for sermon ${newSermon.sermon_id}:`, aiError);
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            logEvent('error', 'backend', userId, 'generate_sermon_by_scripture', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
         }
 
     } catch (error) {
         console.error('Unhandled error in /generate-sermon-by-scripture:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
+        logEvent('error', 'backend', null, 'generate_sermon_by_scripture', 'Unhandled error', { error: error.message }, 0);
     }
 });
 
@@ -953,7 +971,7 @@ app.post('/bible-study-lessons/:lessonId', async (req, res) => {
 app.post('/generate-bible-study', async (req, res) => {
     try {
         const { userId, topic, length, method } = req.body;
-
+        const startTime = Date.now();
         // 1. Create a placeholder in the `bible_studies` table immediately
         const { data: newStudy, error: insertStudyError } = await supabase
             .from('bible_studies')
@@ -1006,10 +1024,11 @@ app.post('/generate-bible-study', async (req, res) => {
                     updated_at: new Date().toISOString(),
                 })
                 .eq('study_id', newStudy.study_id);
-
+                const duration = Date.now() - startTime;
             if (updateStudyError) {
                 console.error(`Error updating bible_studies record ${newStudy.study_id}:`, updateStudyError);
                 await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
+                logEvent('error', 'backend', userId, 'generate_bible_study', 'Failed to update bible_studies record', { error: updateStudyError.message }, duration);
                 return; // Stop here if parent update fails
             }
 
@@ -1037,21 +1056,26 @@ app.post('/generate-bible-study', async (req, res) => {
                             updated_at: new Date().toISOString(),
                         });
                     if (insertLessonError) {
+                        logEvent('error', 'backend', userId, 'generate_bible_study', `Failed to insert bible_study_lesson for study ${newStudy.study_id}`, { error: insertLessonError.message }, Date.now() - startTime);
                         console.error(`Error inserting bible_study_lesson for study ${newStudy.study_id}:`, insertLessonError);
                         // Consider rolling back parent study status to failed or partial
                     }
                 }
+                logEvent('info', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', {}, duration);
                 console.log(`Bible study ${newStudy.study_id} and its lessons successfully generated and updated.`);
             } else {
+                logEvent('error', 'backend', userId, 'generate_bible_study', `No 'studies' array found in generated Bible study for ID ${newStudy.study_id}`, {}, Date.now() - startTime);
                 console.warn(`No 'studies' array found in generated Bible study for ID ${newStudy.study_id}.`);
             }
 
         } catch (aiError) {
+            logEvent('error', 'backend', userId, 'generate_bible_study', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for Bible study ${newStudy.study_id}:`, aiError);
             await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
         }
 
     } catch (error) {
+        logEvent('error', 'backend', null, 'generate_bible_study', 'Unhandled error', { error: error.message }, 0);
         console.error('Unhandled error in /generate-bible-study:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
@@ -1060,6 +1084,7 @@ app.post('/generate-bible-study', async (req, res) => {
 // New Endpoint: Generate Daily Prayer
 app.post('/generate-prayer', async (req, res) => {
     try {
+        const startTime = Date.now();
         const { userId, focusAreas, improvementAreas } = req.body;
         const prayerDate = new Date().toISOString().split('T')[0];
 
@@ -1108,19 +1133,23 @@ app.post('/generate-prayer', async (req, res) => {
                     updated_at: new Date().toISOString(),
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
-
+                const duration = Date.now() - startTime;    
             if (updateError) {
                 console.error(`Error updating prayer record ${newPrayer.prayer_id}:`, updateError);
                 await supabase.from('daily_prayers').update({ status: 'failed' }).eq('prayer_id', newPrayer.prayer_id);
+                logEvent('error', 'backend', userId, 'generate_prayer', 'Failed to update prayer record', { error: updateError.message }, duration);
             } else {
+                logEvent('info', 'backend', userId, 'generate_prayer', 'Successfully generated prayer', {}, duration);
                 console.log(`Prayer record ${newPrayer.prayer_id} successfully generated and updated.`);
             }
         } catch (aiError) {
+            logEvent('error', 'backend', userId, 'generate_prayer', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for prayer ${newPrayer.prayer_id}:`, aiError);
             await supabase.from('daily_prayers').update({ status: 'failed' }).eq('prayer_id', newPrayer.prayer_id);
         }
 
     } catch (error) {
+        logEvent('error', 'backend', null, 'generate_prayer', 'Unhandled error', { error: error.message }, 0);
         console.error('Unhandled error in /generate-prayer:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
@@ -1129,6 +1158,7 @@ app.post('/generate-prayer', async (req, res) => {
 // New Endpoint: Generate Advice/Guidance
 app.post('/generate-advice', async (req, res) => {
     try {
+        const startTime = Date.now();
         const { userId, situation } = req.body;
 
         // 1. Create placeholder
@@ -1177,19 +1207,23 @@ app.post('/generate-advice', async (req, res) => {
                     updated_at: new Date().toISOString(),
                 })
                 .eq('advice_id', newAdvice.advice_id);
-
+                const duration = Date.now() - startTime;
             if (updateError) {
+                logEvent('error', 'backend', userId, 'generate_advice', 'Failed to update advice record', { error: updateError.message }, duration);
                 console.error(`Error updating advice record ${newAdvice.advice_id}:`, updateError);
                 await supabase.from('advice_guidance').update({ status: 'failed' }).eq('advice_id', newAdvice.advice_id);
             } else {
+                logEvent('info', 'backend', userId, 'generate_advice', 'Successfully generated advice', {}, duration);
                 console.log(`Advice record ${newAdvice.advice_id} successfully generated and updated.`);
             }
         } catch (aiError) {
+            logEvent('error', 'backend', userId, 'generate_advice', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for advice ${newAdvice.advice_id}:`, aiError);
             await supabase.from('advice_guidance').update({ status: 'failed' }).eq('advice_id', newAdvice.advice_id);
         }
 
     } catch (error) {
+        logEvent('error', 'backend', null, 'generate_advice', 'Unhandled error', { error: error.message }, 0);
         console.error('Unhandled error in /generate-advice:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
@@ -1424,7 +1458,7 @@ app.get('/user-profile/:userId', async (req, res) => {
             .single();
         console.log(`Whitelisted user ${userId} set to pro tier.`);
         return res.status(200).json(whitelistProfile);
-    }else{
+    } else {
         const nonWhitelistProfile = await supabase
             .from('user_profiles')
             .select('*')
@@ -1770,6 +1804,68 @@ app.post('/user-followed-topics/:userId', async (req, res) => {
         console.error('Error updating followed topics:', error);
         res.status(500).json({ error: 'Failed to update followed topics' });
     }
+});
+
+// 1. UPDATE logEvent signature
+const logEvent = async (level, source, userId, action, message, details = {}, duration = null) => {
+    try {
+        const timestamp = new Date().toISOString();
+        // Include duration in console log for immediate visibility
+        const durationStr = duration ? ` (${duration}ms)` : '';
+        console.log(`[${timestamp}] [${level.toUpperCase()}] [${source}] ${message}${durationStr}`);
+
+        await supabase.from('system_logs').insert({
+            level,
+            source,
+            user_id: userId || null,
+            action,
+            message,
+            details,
+            duration_ms: duration // <--- New Field
+        });
+    } catch (err) {
+        console.error('FAILED TO LOG TO DB:', err);
+    }
+};
+
+// 2. UPDATE Middleware to log duration properly
+app.use(async (req, res, next) => {
+    const start = Date.now();
+    const userId = req.headers['x-user-id'] || null;
+
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        const level = res.statusCode >= 400 ? 'error' : 'info';
+
+        logEvent(
+            level,
+            'backend',
+            userId,
+            'http_request',
+            `${req.method} ${req.originalUrl} - ${res.statusCode}`,
+            { ip: req.ip },
+            duration // <--- Pass duration here
+        );
+    });
+
+    next();
+});
+
+// 3. UPDATE /log Endpoint (for Frontend)
+app.post('/log', async (req, res) => {
+    const { level, action, message, details, userId, duration } = req.body;
+
+    await logEvent(
+        level || 'info',
+        'frontend',
+        userId,
+        action || 'client_event',
+        message,
+        details,
+        duration // <--- Pass duration here
+    );
+
+    res.status(200).send({ received: true });
 });
 
 const PORT = process.env.PORT || 3001;
