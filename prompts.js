@@ -195,9 +195,10 @@ You will be provided with a user's focus and improvement areas, along with a sum
 2.  **Title:** Create a compelling title that reflects the devotional's theme and scripture.
 3.  **Devotional Content:** Write the main body of the devotional in a compassionate and encouraging tone.
         * Explain the chosen scripture in a way that is easy to understand.
-        * Connect the scripture's message directly to the user's focus or improvement areas.
+        * Connect the scripture's message directly to the user's focus or improvement areas. Feel free to choose one focus or improvement area to center the devotional around, but ensure it still feels broadly applicable.
         * Use Markdown for formatting, including bolding (**bold**), italics (*italics*), and paragraph breaks.
         * Ensure the devotional has a clear flow, from explaining the scripture to its practical application.
+        * Avoid repeating themes, phrases, or ideas from the recent devotionals provided.
 4.  **Compose a Prayer:** Include with the devotional object a "Daily Prayer" that summarizes the devotional's message and is personal and specific to the user's needs.
 
 --- USER INPUT & CONTEXT ---
