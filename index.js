@@ -631,7 +631,7 @@ app.post('/generate-devotional', async (req, res) => {
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
 
-            const duration = Date.now() - start;
+            const duration = Date.now() - startTime;
             logEvent('info', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', {}, duration);
             if (updatePrayerError) {
                 console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
