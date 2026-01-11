@@ -209,11 +209,11 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
     }
 
     try {
-        // 1. Checkout Completed
-        if (event.type === 'checkout.session.completed') {
+        // 1. Subscription Created via Checkout
+        if (event.type === 'customer.subscription.created') {
             const subscription = await stripeLayperson.subscriptions.retrieve(session.subscription);
             const userId = session.client_reference_id;
-
+            console.log('Processing Layperson customer.subscription.created for user:', userId);
             // Log to shared subscriptions table (optional, but good for history)
             await supabase.from('subscriptions').insert({
                 id: subscription.id,
@@ -223,7 +223,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
                 cancel_at_period_end: subscription.cancel_at_period_end,
                 // You might want to add a 'type': 'layperson' column to this table later if you share it
             });
-
+            console.log('Inserted subscription record for Layperson user:', userId);
             // UPDATE PROFILE: Write to 'subscription_tier'
             await supabase
                 .from('user_profiles')
