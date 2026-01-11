@@ -25,6 +25,7 @@ require('dotenv').config();
 
 // Initialize Stripe
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
 
 const app = express();
 app.use(cors());
@@ -178,7 +179,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
 
     try {
         // USE THE NEW SECRET SPECIFIC TO THIS ENDPOINT
-        event = stripe.webhooks.constructEvent(
+        event = stripeLayperson.webhooks.constructEvent(
             req.body,
             sig,
             process.env.STRIPE_WEBHOOK_SECRET_LAYPERSON 
@@ -210,7 +211,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
     try {
         // 1. Checkout Completed
         if (event.type === 'checkout.session.completed') {
-            const subscription = await stripe.subscriptions.retrieve(session.subscription);
+            const subscription = await stripeLayperson.subscriptions.retrieve(session.subscription);
             const userId = session.client_reference_id;
 
             // Log to shared subscriptions table (optional, but good for history)
@@ -1635,7 +1636,7 @@ app.get('/user-profile/:userId', async (req, res) => {
     //get email address from auth.users table
     const authData = await supabase.auth.admin.getUserById(userId);
     const user = authData.data.user;
-    console.log('Fetched user email for whitelist check:', user);
+    // console.log('Fetched user email for whitelist check:', user);
     //check if user email is whitelisted, and update profile tielr to pro
     const { data: whitelistEntry, error: whitelistError } = await supabase
         .from('whitelist')
@@ -2064,6 +2065,37 @@ app.post('/log', async (req, res) => {
     );
 
     res.status(200).send({ received: true });
+});
+
+// --- NEW: Create Stripe Checkout Session ---
+app.post('/create-checkout-session', async (req, res) => {
+    const { userId, email } = req.body; // Pass email to pre-fill Stripe form
+
+    try {
+        const session = await stripeLayperson.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [
+                {
+                    // Replace with your actual Stripe Price ID (e.g., price_12345...)
+                    // You can also put this in .env as STRIPE_PRICE_ID_PRO
+                    price: process.env.STRIPE_PRICE_ID_PRO, 
+                    quantity: 1,
+                },
+            ],
+            mode: 'subscription',
+            // IMPORTANT: This links the payment to the user in your DB
+            client_reference_id: userId, 
+            customer_email: email, // Optional: Pre-fills email for better UX
+            // Redirect URLs (Update with your actual production domain)
+            success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?success=true`,
+            cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?canceled=true`,
+        });
+
+        res.json({ url: session.url });
+    } catch (error) {
+        console.error('Error creating checkout session:', error);
+        res.status(500).json({ error: 'Failed to create checkout session' });
+    }
 });
 
 const PORT = process.env.PORT || 3001;
