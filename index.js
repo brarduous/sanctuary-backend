@@ -17,6 +17,10 @@ const {
 } = require('./prompts');
 const nodemailer = require('nodemailer');
 const { log } = require('console');
+
+// Add this near your other constants
+const FREE_TIER_ADVICE_LIMIT = 1; // 1 advice per month for free users
+
 require('dotenv').config();
 
 // Initialize Stripe
@@ -162,6 +166,137 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     }
 
     // Return a 200 response to acknowledge receipt of the event
+    res.json({ received: true });
+});
+
+
+// --- NEW: Layperson Webhook Endpoint ---
+// Handles subscriptions for the Layperson App (writing to 'subscription_tier')
+app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async (req, res) => {
+    const sig = req.headers['stripe-signature'];
+    let event;
+
+    try {
+        // USE THE NEW SECRET SPECIFIC TO THIS ENDPOINT
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET_LAYPERSON 
+        );
+    } catch (err) {
+        console.error(`Layperson Webhook signature verification failed: ${err.message}`);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    const session = event.data.object;
+
+    // Optional: Whitelist Check for Layperson (if you want to keep this feature)
+    if (session.client_reference_id) {
+        const userId = session.client_reference_id;
+        const { data: authUser } = await supabase.from('auth.users').select('email').eq('id', userId).single();
+        if (authUser) {
+             const { data: whitelistEntry } = await supabase.from('whitelist').select('*').eq('email', authUser.email).single();
+             if (whitelistEntry) {
+                 await supabase.from('user_profiles').upsert({ 
+                     user_id: userId, 
+                     subscription_tier: 'pro' // Writing to NEW column
+                 });
+                 console.log(`Whitelisted Layperson user ${userId} set to pro.`);
+                 return res.json({ received: true });
+             }
+        }
+    }
+
+    try {
+        // 1. Checkout Completed
+        if (event.type === 'checkout.session.completed') {
+            const subscription = await stripe.subscriptions.retrieve(session.subscription);
+            const userId = session.client_reference_id;
+
+            // Log to shared subscriptions table (optional, but good for history)
+            await supabase.from('subscriptions').insert({
+                id: subscription.id,
+                user_id: userId,
+                status: subscription.status,
+                price_id: subscription.items.data[0].price.id,
+                cancel_at_period_end: subscription.cancel_at_period_end,
+                // You might want to add a 'type': 'layperson' column to this table later if you share it
+            });
+
+            // UPDATE PROFILE: Write to 'subscription_tier'
+            await supabase
+                .from('user_profiles')
+                .update({ 
+                    subscription_tier: 'pro',
+                    stripe_customer_id: session.customer,
+                    stripe_subscription_id: subscription.id
+                }) 
+                .eq('user_id', userId);
+
+            console.log(`Layperson User ${userId} upgraded to pro.`);
+        }
+
+        // 2. Subscription Updated (Renewals, Cancellations, Payment Failures)
+        if (event.type === 'customer.subscription.updated') {
+            const subscription = event.data.object;
+            
+            // Sync subscriptions table
+            await supabase.from('subscriptions').upsert({
+                id: subscription.id,
+                status: subscription.status,
+                cancel_at_period_end: subscription.cancel_at_period_end,
+            });
+
+            // Logic: 'active' or 'trialing' = PRO. Everything else = FREE.
+            const shouldBePro = ['active', 'trialing'].includes(subscription.status);
+            const newTier = shouldBePro ? 'pro' : 'free';
+
+            // Find user by subscription ID (since client_reference_id isn't always in update events)
+            const { data: subData } = await supabase
+                .from('subscriptions')
+                .select('user_id')
+                .eq('id', subscription.id)
+                .single();
+
+            if (subData && subData.user_id) {
+                await supabase
+                    .from('user_profiles')
+                    .update({ subscription_tier: newTier }) // Writing to NEW column
+                    .eq('user_id', subData.user_id);
+                
+                console.log(`Layperson User ${subData.user_id} subscription updated to: ${newTier}`);
+            }
+        }
+
+        // 3. Subscription Deleted (Immediate Cancellation)
+        if (event.type === 'customer.subscription.deleted') {
+            const subscription = event.data.object;
+
+            await supabase
+                .from('subscriptions')
+                .update({ status: 'canceled' })
+                .eq('id', subscription.id);
+
+            const { data: subData } = await supabase
+                .from('subscriptions')
+                .select('user_id')
+                .eq('id', subscription.id)
+                .single();
+
+            if (subData && subData.user_id) {
+                await supabase
+                    .from('user_profiles')
+                    .update({ subscription_tier: 'free' }) // Reset to free
+                    .eq('user_id', subData.user_id);
+                
+                console.log(`Layperson User ${subData.user_id} downgraded to free (Subscription deleted)`);
+            }
+        }
+    } catch (err) {
+        console.error('Error processing Layperson webhook:', err);
+        return res.json({ received: true }); 
+    }
+
     res.json({ received: true });
 });
 
@@ -1155,20 +1290,67 @@ app.post('/generate-prayer', async (req, res) => {
     }
 });
 
-// New Endpoint: Generate Advice/Guidance
+// Updated Endpoint: Generate Advice/Guidance with Freemium Checks
 app.post('/generate-advice', async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, situation } = req.body;
 
-        // 1. Create placeholder
+        // --- 1. FREEMIUM CHECK START ---
+        
+        // Fetch user profile to check tier and usage
+        const { data: profile, error: profileError } = await supabase
+            .from('user_profiles')
+            .select('subscription_tier, advice_usage_count, advice_reset_date')
+            .eq('user_id', userId)
+            .single();
+
+        if (profileError) {
+            console.error('Error fetching profile for quota check:', profileError);
+            return res.status(500).json({ error: 'Failed to verify subscription status.' });
+        }
+
+        const isFree = profile.subscription_tier === 'free';
+        
+        // Logic to Reset Quota (Monthly)
+        const now = new Date();
+        const lastReset = new Date(profile.advice_reset_date || 0); // Default to epoch if null
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+        // If last reset was more than a month ago, reset the count
+        if (lastReset < oneMonthAgo) {
+            await supabase
+                .from('user_profiles')
+                .update({ 
+                    advice_usage_count: 0, 
+                    advice_reset_date: now.toISOString() 
+                })
+                .eq('user_id', userId);
+            
+            // Update local variable so we don't block them immediately
+            profile.advice_usage_count = 0;
+        }
+
+        // BLOCK if limit reached
+        if (isFree && profile.advice_usage_count >= FREE_TIER_ADVICE_LIMIT) {
+            return res.status(403).json({ 
+                error: 'Free limit reached', 
+                code: 'UPGRADE_REQUIRED',
+                message: 'You have used your free advice for this month. Upgrade to Pro for unlimited guidance.' 
+            });
+        }
+        // --- FREEMIUM CHECK END ---
+
+
+        // 2. Create placeholder (Existing Code)
         const { data: newAdvice, error: insertError } = await supabase
             .from('advice_guidance')
             .insert({
                 user_id: userId,
                 situation: situation,
-                advice_points: 'Generating advice...', // Placeholder
-                status: 'pending', // IMPORTANT: Assumes 'status' column exists
+                advice_points: 'Generating advice...', 
+                status: 'pending', 
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
             })
@@ -1186,43 +1368,59 @@ app.post('/generate-advice', async (req, res) => {
             status: 'pending'
         });
 
-        // 3. Start AI generation in background
+        // 3. Start AI generation (Existing Code)
         const userPrompt = `Situation: ${situation}`;
         try {
             const generatedAdvice = await callOpenAIAndProcessResult(
                 advice_guidance_prompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
-                4000, // Max tokens for advice
+                4000, 
                 "json_object"
             );
 
-            // The AI output is a JSON with 'situation_summary' and 'advice_points'
+            // Update advice content
             const { error: updateError } = await supabase
                 .from('advice_guidance')
                 .update({
-                    situation: generatedAdvice.situation_summary || situation, // Update situation with AI summary
-                    advice_points: JSON.stringify(generatedAdvice.advice_points || []), // Store array as JSON string or JSONB if column is JSONB
+                    situation: generatedAdvice.situation_summary || situation, 
+                    advice_points: JSON.stringify(generatedAdvice.advice_points || []), 
                     status: 'completed',
                     updated_at: new Date().toISOString(),
                 })
                 .eq('advice_id', newAdvice.advice_id);
-                const duration = Date.now() - startTime;
+            
+            const duration = Date.now() - startTime;
+
             if (updateError) {
                 logEvent('error', 'backend', userId, 'generate_advice', 'Failed to update advice record', { error: updateError.message }, duration);
                 console.error(`Error updating advice record ${newAdvice.advice_id}:`, updateError);
                 await supabase.from('advice_guidance').update({ status: 'failed' }).eq('advice_id', newAdvice.advice_id);
             } else {
+                // --- 4. INCREMENT USAGE (NEW) ---
+                if (isFree) {
+                    // We increment the count we fetched earlier
+                    const newCount = (profile.advice_usage_count || 0) + 1;
+                    await supabase
+                        .from('user_profiles')
+                        .update({ advice_usage_count: newCount })
+                        .eq('user_id', userId);
+                    console.log(`Incremented advice usage for user ${userId} to ${newCount}`);
+                }
+                // -------------------------------
+
                 logEvent('info', 'backend', userId, 'generate_advice', 'Successfully generated advice', {}, duration);
                 console.log(`Advice record ${newAdvice.advice_id} successfully generated and updated.`);
             }
         } catch (aiError) {
+            // ... (Existing Error Handling) ...
             logEvent('error', 'backend', userId, 'generate_advice', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for advice ${newAdvice.advice_id}:`, aiError);
             await supabase.from('advice_guidance').update({ status: 'failed' }).eq('advice_id', newAdvice.advice_id);
         }
 
     } catch (error) {
+        // ... (Existing Error Handling) ...
         logEvent('error', 'backend', null, 'generate_advice', 'Unhandled error', { error: error.message }, 0);
         console.error('Unhandled error in /generate-advice:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
