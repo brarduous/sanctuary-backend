@@ -1652,7 +1652,7 @@ app.get('/user-profile/:userId', async (req, res) => {
         // User is whitelisted, ensure their tier is set to pro
         const whitelistProfile = await supabase
             .from('user_profiles')
-            .upsert({ user_id: userId, tier: 'pro' })
+            .upsert({ user_id: userId, tier: 'pro', subscription_tier: 'pro' })
             .select('*')
             .single();
         console.log(`Whitelisted user ${userId} set to pro tier.`);
@@ -2067,29 +2067,35 @@ app.post('/log', async (req, res) => {
     res.status(200).send({ received: true });
 });
 
-// --- NEW: Create Stripe Checkout Session ---
+// --- NEW: Create Stripe Checkout Session (Updated for Trials) ---
 app.post('/create-checkout-session', async (req, res) => {
-    const { userId, email } = req.body; // Pass email to pre-fill Stripe form
+    const { userId, email, isTrial } = req.body; // Accept isTrial flag
 
     try {
-        const session = await stripeLayperson.checkout.sessions.create({
+        const sessionConfig = {
             payment_method_types: ['card'],
             line_items: [
                 {
-                    // Replace with your actual Stripe Price ID (e.g., price_12345...)
-                    // You can also put this in .env as STRIPE_PRICE_ID_PRO
                     price: process.env.STRIPE_PRICE_ID_PRO, 
                     quantity: 1,
                 },
             ],
             mode: 'subscription',
-            // IMPORTANT: This links the payment to the user in your DB
-            client_reference_id: userId, 
-            customer_email: email, // Optional: Pre-fills email for better UX
-            // Redirect URLs (Update with your actual production domain)
-            success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?success=true`,
-            cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/profile?canceled=true`,
-        });
+            client_reference_id: userId,
+            customer_email: email,
+            // Use different redirect for onboarding success vs profile upgrade
+            success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/home?success=true`,
+            cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/home?canceled=true`,
+        };
+
+        // Add Trial Logic
+        if (isTrial) {
+            sessionConfig.subscription_data = {
+                trial_period_days: 7
+            };
+        }
+
+        const session = await stripeLayperson.checkout.sessions.create(sessionConfig);
 
         res.json({ url: session.url });
     } catch (error) {
