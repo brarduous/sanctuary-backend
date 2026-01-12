@@ -18,7 +18,8 @@ const {
 const nodemailer = require('nodemailer');
 const { log } = require('console');
 
-// Add this near your other constants
+
+
 const FREE_TIER_ADVICE_LIMIT = 1; // 1 advice per month for free users
 
 require('dotenv').config();
@@ -29,6 +30,8 @@ const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSO
 
 const app = express();
 app.use(cors());
+
+
 
 // Stripe Webhook Endpoint
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
@@ -308,6 +311,36 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
+// --- AUTH MIDDLEWARE ---
+const authenticateUser = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Missing Authorization header' });
+  }
+
+  // Extract token: "Bearer eyJhbG..." -> "eyJhbG..."
+  const token = authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Malformed Authorization header' });
+  }
+
+  // Verify token with Supabase
+  const { data: { user }, error } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    console.error("Auth Error:", error?.message);
+    return res.status(401).json({ error: 'Invalid or expired token' });
+  }
+
+  // SUCCESS: Attach the user object to the request
+  // Now, in your routes, use req.user.id instead of req.body.userId
+  req.user = user;
+  next();
+};
+
+
 // --- OpenAI Client Initialization ---
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -344,7 +377,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
         throw error;
     }
 }
-app.get('/app-options', async (req, res) => {
+app.get('/app-options', authenticateUser, async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('app_options')
@@ -362,7 +395,7 @@ app.get('/app-options', async (req, res) => {
 });
 // --- API Endpoints ---
 // Search articles by relevance: title > body > synopsis
-app.get('/search', async (req, res) => {
+app.get('/search', authenticateUser, async (req, res) => {
     try {
         const q = (req.query.q || '').trim();
         const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
@@ -455,7 +488,7 @@ app.get('/categories', async (req, res) => {
 });
 
 //New: Endpoint to fetch category by ID
-app.get('/categories/:id', async (req, res) => {
+app.get('/categories/:id', authenticateUser, async (req, res) => {
     const { id } = req.params;
     console.log('Fetching category with ID:', id);
     try {
@@ -514,7 +547,7 @@ app.get('/topics', async (req, res) => {
 
 
 //New: Endpoint to fetch topic by ID
-app.get('/topics/:id', async (req, res) => {
+app.get('/topics/:id', authenticateUser, async (req, res) => {
     const { id } = req.params;
     console.log('Fetching topic with ID:', id);
     try {
@@ -537,7 +570,7 @@ app.get('/topics/:id', async (req, res) => {
 
 });
 // --- GET Single Scriptural Outlook by ID ---
-app.get('/scriptural-outlooks/:id', async (req, res) => {
+app.get('/scriptural-outlooks/:id', authenticateUser, async (req, res) => {
     const { id } = req.params;
     console.log('Fetching scriptural outlook with ID:', id);
     try {
@@ -561,7 +594,7 @@ app.get('/scriptural-outlooks/:id', async (req, res) => {
 });
 
 //Endpoint to get news articles from scriptural_outlooks table of database
-app.get('/scriptural-outlooks', async (req, res) => {
+app.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
 
     //receive params for page and limit
     const page = parseInt(req.query.page) || 1;
@@ -665,7 +698,7 @@ app.get('/scriptural-outlooks', async (req, res) => {
 
 
 // Endpoint to initiate Daily Devotional generation
-app.post('/generate-devotional', async (req, res) => {
+app.post('/generate-devotional', authenticateUser, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
@@ -790,7 +823,7 @@ app.post('/generate-devotional', async (req, res) => {
 });
 
 //Endpoint to get Sermons by user id
-app.get('/sermons/:userId', async (req, res) => {
+app.get('/sermons/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     console.log('Fetching sermons for user ID:', userId);
     try {
@@ -820,7 +853,7 @@ async function getTuningNotes(userId) {
     return data?.ai_tuning_notes || "";
 }
 // Endpoint to initiate Sermon generation by Topic
-app.post('/generate-sermon-by-topic', async (req, res) => {
+app.post('/generate-sermon-by-topic', authenticateUser, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, topic, userProfile } = req.body;
@@ -903,7 +936,7 @@ app.post('/generate-sermon-by-topic', async (req, res) => {
 });
 
 // Endpoint to initiate Sermon generation by Scripture
-app.post('/generate-sermon-by-scripture', async (req, res) => {
+app.post('/generate-sermon-by-scripture', authenticateUser, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, scripture, userProfile } = req.body;
@@ -981,7 +1014,7 @@ app.post('/generate-sermon-by-scripture', async (req, res) => {
 });
 
 //Endpoint to get Bible Studies by user id
-app.get('/bible-studies/:userId', async (req, res) => {
+app.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     console.log('Fetching bible studies for user ID:', userId);
     try {
@@ -1004,7 +1037,7 @@ app.get('/bible-studies/:userId', async (req, res) => {
 });
 
 //Endpoing to get a single Bible study by study id
-app.get('/bible-study/:studyId', async (req, res) => {
+app.get('/bible-study/:studyId', authenticateUser, async (req, res) => {
     const { studyId } = req.params;
     console.log('Fetching bible study with ID:', studyId);
     try {
@@ -1036,7 +1069,7 @@ app.get('/bible-study/:studyId', async (req, res) => {
     }
 });
 //endpoint to get Bible Study Lessons by study id
-app.get('/bible-study-lessons/:studyId', async (req, res) => {
+app.get('/bible-study-lessons/:studyId', authenticateUser, async (req, res) => {
     const { studyId } = req.params;
     console.log('Fetching bible study lessons for study ID:', studyId);
     try {
@@ -1057,7 +1090,7 @@ app.get('/bible-study-lessons/:studyId', async (req, res) => {
 });
 
 //Endpoint to get a single Bible Study Lesson by lesson id
-app.get('/bible-study-lessons/detail/:lessonId', async (req, res) => {
+app.get('/bible-study-lessons/detail/:lessonId', authenticateUser, async (req, res) => {
     const { lessonId } = req.params;
     console.log('Fetching bible study detail for lesson ID:', lessonId);
     try {
@@ -1078,7 +1111,7 @@ app.get('/bible-study-lessons/detail/:lessonId', async (req, res) => {
 });
 
 // upsert bible study lesson (create or update)
-app.post('/bible-study-lessons/:lessonId', async (req, res) => {
+app.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res) => {
     try {
         const lessonData = req.body;
         const { lessonId } = req.params;
@@ -1104,7 +1137,7 @@ app.post('/bible-study-lessons/:lessonId', async (req, res) => {
 });
 
 // Endpoint to initiate Bible Study generation
-app.post('/generate-bible-study', async (req, res) => {
+app.post('/generate-bible-study', authenticateUser, async (req, res) => {
     try {
         const { userId, topic, length, method } = req.body;
         const startTime = Date.now();
@@ -1218,7 +1251,7 @@ app.post('/generate-bible-study', async (req, res) => {
 });
 
 // New Endpoint: Generate Daily Prayer
-app.post('/generate-prayer', async (req, res) => {
+app.post('/generate-prayer', authenticateUser, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, focusAreas, improvementAreas } = req.body;
@@ -1292,7 +1325,7 @@ app.post('/generate-prayer', async (req, res) => {
 });
 
 // Updated Endpoint: Generate Advice/Guidance with Freemium Checks
-app.post('/generate-advice', async (req, res) => {
+app.post('/generate-advice', authenticateUser, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, situation } = req.body;
@@ -1459,7 +1492,7 @@ app.get('/daily-news-synopses', async (req, res) => {
     }
 });
 
-app.get('/sermon/:sermonId', async (req, res) => {
+app.get('/sermon/:sermonId', authenticateUser, async (req, res) => {
     const { sermonId } = req.params;
     const { data, error } = await supabase
         .from('sermons')
@@ -1478,7 +1511,7 @@ app.get('/sermon/:sermonId', async (req, res) => {
 });
 
 
-app.get('/devotionals/:userId', async (req, res) => {
+app.get('/devotionals/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('daily_devotionals')
@@ -1493,7 +1526,7 @@ app.get('/devotionals/:userId', async (req, res) => {
 });
 
 //get devotional by devotionalId
-app.get('/devotional/:userId/:devotionalId', async (req, res) => {
+app.get('/devotional/:userId/:devotionalId', authenticateUser, async (req, res) => {
     const { userId, devotionalId } = req.params;
     const { data, error } = await supabase
         .from('daily_devotionals')
@@ -1510,7 +1543,7 @@ app.get('/devotional/:userId/:devotionalId', async (req, res) => {
     }
     res.json(data);
 });
-app.delete('/devotional/:devotionalId', async (req, res) => {
+app.delete('/devotional/:devotionalId', authenticateUser, async (req, res) => {
     const { devotionalId } = req.params;
     try {
         const { error } = await supabase
@@ -1526,7 +1559,7 @@ app.delete('/devotional/:devotionalId', async (req, res) => {
     }
 });
 
-app.delete('/prayer/:prayerId', async (req, res) => {
+app.delete('/prayer/:prayerId', authenticateUser,    async (req, res) => {
     const { prayerId } = req.params;
     try {
         const { error } = await supabase
@@ -1542,7 +1575,7 @@ app.delete('/prayer/:prayerId', async (req, res) => {
     }
 });
 // New Fetching Endpoint: Get Daily Prayers for a user
-app.get('/prayers/:userId', async (req, res) => {
+app.get('/prayers/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('daily_prayers')
@@ -1557,7 +1590,7 @@ app.get('/prayers/:userId', async (req, res) => {
     res.json(data);
 });
 //get prayer by prayerId
-app.get('/prayer/:userId/:prayerId', async (req, res) => {
+app.get('/prayer/:userId/:prayerId', authenticateUser, async (req, res) => {
     const { prayerId, userId } = req.params;
     const { data, error } = await supabase
         .from('daily_prayers')
@@ -1575,7 +1608,7 @@ app.get('/prayer/:userId/:prayerId', async (req, res) => {
     res.json(data);
 });
 // New Fetching Endpoint: Get Advice/Guidance for a user
-app.get('/advice/:userId', async (req, res) => {
+app.get('/advice/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('advice_guidance')
@@ -1590,7 +1623,7 @@ app.get('/advice/:userId', async (req, res) => {
     res.json(data);
 });
 //New Fetching Endpoint: Get Advice/Guidance by adviceId
-app.get('/advice/:userId/:adviceId', async (req, res) => {
+app.get('/advice/:userId/:adviceId', authenticateUser, async (req, res) => {
 
     const { adviceId, userId } = req.params;
     const { data, error } = await supabase
@@ -1610,7 +1643,7 @@ app.get('/advice/:userId/:adviceId', async (req, res) => {
 });
 
 // DELETE Advice Endpoint
-app.delete('/advice/:adviceId', async (req, res) => {
+app.delete('/advice/:adviceId', authenticateUser, async (req, res) => {
     const { adviceId } = req.params;
     try {
         const { error } = await supabase
@@ -1626,7 +1659,7 @@ app.delete('/advice/:adviceId', async (req, res) => {
     }
 });
 // Get user_profile by userId
-app.get('/user-profile/:userId', async (req, res) => {
+app.get('/user-profile/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('user_profiles')
@@ -1677,7 +1710,7 @@ app.get('/user-profile/:userId', async (req, res) => {
     res.json(data);
 });
 //save or update user_profile by userId
-app.post('/user-profile/:userId', async (req, res) => {
+app.post('/user-profile/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const profileData = req.body;
     if (!profileData.user_id) {
@@ -1842,7 +1875,7 @@ app.post('/contact', async (req, res) => {
 });
 // Add this new endpoint to index.js
 
-app.post('/feedback', async (req, res) => {
+app.post('/feedback', authenticateUser, async (req, res) => {
     const { userId, contentId, contentType, feedback } = req.body;
     // feedback = { rating, positive, negative }
 
@@ -1911,7 +1944,7 @@ app.post('/feedback', async (req, res) => {
 
 
 // GET Followed Categories
-app.get('/user-followed-categories/:userId', async (req, res) => {
+app.get('/user-followed-categories/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     try {
         const { data, error } = await supabase
@@ -1929,7 +1962,7 @@ app.get('/user-followed-categories/:userId', async (req, res) => {
 });
 
 // UPDATE Followed Categories (Bulk Replace)
-app.post('/user-followed-categories/:userId', async (req, res) => {
+app.post('/user-followed-categories/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { categoryIds } = req.body; // Expects: { categoryIds: [1, 2, 3] }
 
@@ -1960,7 +1993,7 @@ app.post('/user-followed-categories/:userId', async (req, res) => {
 });
 
 // GET Followed Topics
-app.get('/user-followed-topics/:userId', async (req, res) => {
+app.get('/user-followed-topics/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     try {
         const { data, error } = await supabase
@@ -1977,7 +2010,7 @@ app.get('/user-followed-topics/:userId', async (req, res) => {
 });
 
 // UPDATE Followed Topics (Bulk Replace)
-app.post('/user-followed-topics/:userId', async (req, res) => {
+app.post('/user-followed-topics/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
     const { topicIds } = req.body;
 
@@ -2068,7 +2101,7 @@ app.post('/log', async (req, res) => {
 });
 
 // --- NEW: Create Stripe Checkout Session (Updated for Trials) ---
-app.post('/create-checkout-session', async (req, res) => {
+app.post('/create-checkout-session', authenticateUser,async (req, res) => {
     const { userId, email, isTrial } = req.body; // Accept isTrial flag
 
     try {
