@@ -236,10 +236,11 @@ async function saveScripturalOutlook(outlook) {
     return data;
 }
 
-// Function to fetch the top 10 news stories (logic remains the same)
-async function fetchTopNewsStories(limit = 10) {
+// Function to fetch the top 6 news stories (logic remains the same)
+async function fetchTopNewsStories(limit = 6) {
   console.log('Fetching top news stories...');
     const rssFeedUrls = [
+        'https://feeds.npr.org/1001/rss.xml',
         'https://www.cbsnews.com/latest/rss/main',
         'https://moxie.foxnews.com/google-publisher/latest.xml',
     ];
