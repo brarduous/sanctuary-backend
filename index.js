@@ -1467,6 +1467,7 @@ app.post('/generate-advice', authenticateUser, async (req, res) => {
 
 // Fetch daily news synopses with optional limit and ordering, with optional query parameters for date range
 app.get('/daily-news-synopses', async (req, res) => {
+    const startTime = Date.now();
     try {
         const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
         const startDate = req.query.startDate;
@@ -1482,9 +1483,10 @@ app.get('/daily-news-synopses', async (req, res) => {
 
         if (error) {
             console.error('Error fetching daily news synopses:', error);
+            logEvent('error', 'backend', null, 'daily_news_synopses', 'Failed to fetch daily news synopses', { error: error.message }, Date.now() - startTime);
             return res.status(500).json({ error: 'Failed to fetch daily news synopses.' });
         }
-
+        logEvent('info', 'backend', null, 'daily_news_synopses', 'Successfully fetched daily news synopses', {}, Date.now() - startTime);
         return res.json(data);
     } catch (err) {
         console.error('Unhandled error in /daily-news-synopses:', err);
