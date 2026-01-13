@@ -57,7 +57,7 @@ const corsOptions = {
         const allowedDomainPattern = /^https?:\/\/([a-z0-9-]+\.)?sanctuaryapp\.us$/;
 
         // 3. Check Origin
-        if (origin.includes('sanctuaryapp.us') ) {
+        if (allowedDomainPattern.test(origin)) {
             return callback(null, true); // Allowed Production Domain
         }
         
