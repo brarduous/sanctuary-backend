@@ -8,7 +8,9 @@
     "dev": "nodemon index.js",
     "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js",
-    "cron-daily-news": "node cron/dailyNewsSynopsis.js"
+    "cron-daily-news": "node cron/dailyNewsSynopsis.js",
+    "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
+    "cron-general-devotionals": "node cron/generateGeneralDevotionals.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
     "nodemailer": "^7.0.11",
     "nodemon": "^3.1.11",
     "openai": "^5.10.1",

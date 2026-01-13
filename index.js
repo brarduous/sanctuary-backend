@@ -1,5 +1,6 @@
 // index.js
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const cors = require('cors');
 const OpenAI = require('openai'); // Use the v4 client
 const fs = require('fs');
@@ -18,7 +19,21 @@ const {
 const nodemailer = require('nodemailer');
 const { log } = require('console');
 
+const aiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, 
+    message: { error: 'Too many AI requests. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
 
+// 2. General Limiter for other reads (cheap)
+// Limit: 100 requests per 15 minutes
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, 
+    max: 100,
+    message: { error: 'Too many requests. Please slow down.' }
+});
 
 const FREE_TIER_ADVICE_LIMIT = 1; // 1 advice per month for free users
 
@@ -627,7 +642,6 @@ app.get('/scriptural-outlooks/:id', authenticateUser, async (req, res) => {
 
 //Endpoint to get news articles from scriptural_outlooks table of database
 app.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
-
     //receive params for page and limit
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -646,6 +660,7 @@ app.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
     const categoryIsNumeric = category && /^\d+$/.test(category);
 
     try {
+        const startTime = Date.now();
         // Construct the select query dynamically based on filters
         // If filtering by a relation, we must use !inner to filter the parent rows
         let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, slug, name, description) )';
@@ -719,10 +734,12 @@ app.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
                 outlook_topics: undefined,
             };
         });
-
+        const duration = Date.now() - startTime;
+        logEvent('info', 'backend', req.user.id, 'fetch_scriptural_outlooks', 'Fetched scriptural outlooks', { page, limit, topic_id, category_id }, duration);
         res.json(cleanedData);
     } catch (error) {
         console.error('Unhandled error in /scriptural-outlooks:', error);
+        logEvent('error', 'backend', req.user.id, 'fetch_scriptural_outlooks', 'Error fetching scriptural outlooks', { error: error.message }, Date.now() - startTime);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
@@ -730,7 +747,7 @@ app.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
 
 
 // Endpoint to initiate Daily Devotional generation
-app.post('/generate-devotional', authenticateUser, async (req, res) => {
+app.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
@@ -885,7 +902,7 @@ async function getTuningNotes(userId) {
     return data?.ai_tuning_notes || "";
 }
 // Endpoint to initiate Sermon generation by Topic
-app.post('/generate-sermon-by-topic', authenticateUser, async (req, res) => {
+app.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, topic, userProfile } = req.body;
@@ -968,7 +985,7 @@ app.post('/generate-sermon-by-topic', authenticateUser, async (req, res) => {
 });
 
 // Endpoint to initiate Sermon generation by Scripture
-app.post('/generate-sermon-by-scripture', authenticateUser, async (req, res) => {
+app.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, scripture, userProfile } = req.body;
@@ -1169,7 +1186,7 @@ app.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res) =>
 });
 
 // Endpoint to initiate Bible Study generation
-app.post('/generate-bible-study', authenticateUser, async (req, res) => {
+app.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const { userId, topic, length, method } = req.body;
         const startTime = Date.now();
@@ -1283,7 +1300,7 @@ app.post('/generate-bible-study', authenticateUser, async (req, res) => {
 });
 
 // New Endpoint: Generate Daily Prayer
-app.post('/generate-prayer', authenticateUser, async (req, res) => {
+app.post('/generate-prayer', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, focusAreas, improvementAreas } = req.body;
@@ -1357,7 +1374,7 @@ app.post('/generate-prayer', authenticateUser, async (req, res) => {
 });
 
 // Updated Endpoint: Generate Advice/Guidance with Freemium Checks
-app.post('/generate-advice', authenticateUser, async (req, res) => {
+app.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, situation } = req.body;
