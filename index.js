@@ -1693,20 +1693,38 @@ app.get('/advice/:userId/:adviceId', authenticateUser, async (req, res) => {
     res.json(data);
 });
 
-// DELETE Advice Endpoint
+// DELETE ADVICE (AND CLEANUP FAVORITES)
 app.delete('/advice/:adviceId', authenticateUser, async (req, res) => {
     const { adviceId } = req.params;
+    const userId = req.user.id; // From auth middleware
+
     try {
-        const { error } = await supabase
-            .from('advice_guidance')
+        // 1. Remove from Favorites/Saved Items first
+        // (Replace 'user_favorites' with your actual table name, e.g., 'saved_items')
+        const { error: favError } = await supabase
+            .from('user_favorites') 
             .delete()
-            .eq('advice_id', adviceId);
+            .eq('item_id', adviceId); // Delete ALL favorites for this item, regardless of user
+        
+        if (favError) {
+            console.warn(`[Cleanup] Failed to remove favorites for advice ${adviceId}:`, favError.message);
+            // We continue anyway because we want to delete the advice
+        }
+
+        // 2. Delete the Advice Item
+        const { error } = await supabase
+            .from('advice')
+            .delete()
+            .eq('id', adviceId)
+            .eq('user_id', userId); // Security: Ensure they own the advice
 
         if (error) throw error;
-        res.json({ message: 'Advice deleted successfully' });
+
+        res.status(200).json({ success: true });
+
     } catch (error) {
-        console.error('Error deleting advice:', error);
-        res.status(500).json({ error: 'Failed to delete advice' });
+        console.error("Delete Error:", error.message);
+        res.status(500).json({ error: "Failed to delete advice." });
     }
 });
 // Get user_profile by userId
