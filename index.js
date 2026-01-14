@@ -46,30 +46,28 @@ const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSO
 const app = express();
 
 // --- SECURE CORS CONFIGURATION ---
+const allowedOrigins = [
+    'https://sanctuaryapp.us',
+    'https://www.sanctuaryapp.us',
+    'https://beta.sanctuaryapp.us',
+    'https://staging.sanctuaryapp.us',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:5173'
+];
+
 const corsOptions = {
     origin: function (origin, callback) {
-        // 1. Allow requests with no origin (like mobile apps, curl, or server-to-server)
+        // Allow requests with no origin (like mobile apps, curl, server-to-server)
         if (!origin) return callback(null, true);
 
-        // 2. Define allowed patterns
-        // Matches "https://your-domain.com" AND "https://ANYTHING.your-domain.com"
-        // TODO: REPLACE 'your-domain.com' with your actual production root domain
-        const allowedDomainPattern = /^https?:\/\/([a-z0-9-]+\.)?sanctuaryapp\.us$/;
-
-        // 3. Check Origin
-        if (allowedDomainPattern.test(origin)) {
-            return callback(null, true); // Allowed Production Domain
-        }
-        
-        // 4. Allow Localhost (only in development)
-        // Check if origin includes localhost or 127.0.0.1
-        if (origin.match(/https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/)) {
+        if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         }
 
-        // 5. Block everything else
         console.warn(`Blocked CORS request from: ${origin}`);
-        callback(new Error('Not allowed by CORS'));
+        return callback(new Error('Not allowed by CORS'));
     },
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
