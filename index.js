@@ -51,6 +51,8 @@ const allowedOrigins = [
     'https://www.sanctuaryapp.us',
     'https://beta.sanctuaryapp.us',
     'https://staging.sanctuaryapp.us',
+    'https://clergy.sanctuaryapp.us',
+    'https://staging-clergy.sanctuaryapp.us',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
     'http://localhost:5173',
