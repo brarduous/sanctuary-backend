@@ -27,6 +27,34 @@ router.get('/sermons/:userId', authenticateUser, async (req, res) => {
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
+//Endpoint to save Sermons by user id
+router.post('/sermons/:sermonId', authenticateUser, async (req, res) => {
+    const { sermonId } = req.params;
+    const sermonData = req.body;
+    console.log('Saving sermon for sermon ID:', sermonId, sermonData);
+    try {
+        const { data, error } = await supabase
+            .from('sermons')
+            .update({
+                title: sermonData.title,
+                sermon_body: sermonData.sermon_body,
+                updated_at: new Date().toISOString(),
+            })
+            .eq('sermon_id', sermonId)
+            .select('*')
+            .single();
+
+        if (error) {
+            console.error('Error saving sermon:', error);
+            return res.status(500).json({ error: 'Failed to save sermon.' });
+        }
+
+        res.status(201).json(data);
+    } catch (error) {
+        console.error('Unhandled error in POST /sermons/:userId:', error);
+        res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
 
 // Endpoint to initiate Sermon generation by Topic
 router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req, res) => {
