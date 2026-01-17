@@ -257,6 +257,17 @@ const generateBibleStudyPrompt = (topic, method, length, tuningNotes = "") => {
     ${bible_study_prompt}
   `;
 };
+
+// Add this to your existing prompts.js export
+const community_prayer_prompt = `
+You are a compassionate Christian moderator. Your task is to process a prayer request.
+1. ANONYMIZE: Remove specific names (replace with "a loved one", "my friend", "J"), locations, or identifiable details.
+2. MODERATE: Ensure it contains no hate speech, political vitriol, or explicit content. Ensure it appears to be a genuine prayer request.
+3. FORMAT: Keep it brief (under 280 chars if possible).
+4. OUTPUT JSON: { "status": "approved" | "rejected", "anonymized_text": "..." }
+`;
+
+
 module.exports = {
     sermon_prompt,
     bible_study_prompt,
@@ -265,6 +276,7 @@ module.exports = {
     daily_devotional_prompt,
     generateTopicSermonPrompt,
     generateScriptureSermonPrompt,
-    generateBibleStudyPrompt
+    generateBibleStudyPrompt,
+    community_prayer_prompt
 };
 

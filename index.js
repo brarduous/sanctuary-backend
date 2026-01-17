@@ -351,6 +351,7 @@ const prayersRouter = require('./routes/prayers');
 const adviceRouter = require('./routes/advice');
 const newsRouter = require('./routes/news');
 const userRouter = require('./routes/user');
+const communityRouter = require('./routes/community');
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -360,6 +361,7 @@ app.use('/', prayersRouter);
 app.use('/', adviceRouter);
 app.use('/', newsRouter);
 app.use('/', userRouter);
+app.use('/', communityRouter); 
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
