@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
-const { callOpenAIAndProcessResult } = require('../utils/helpers');
+const { callOpenAIAndProcessResult, logEvent } = require('../utils/helpers');
 const { community_prayer_prompt } = require('../prompts');
 const { getCommunityPrayerPrompt } = require('../prompts');
 // 1. Submit a Prayer Request
@@ -51,7 +51,7 @@ router.post('/community/request', authenticateUser, async (req, res) => {
 
         // Increment usage
         await supabase.from('user_profiles').update({ community_requests_count: currentCount + 1 }).eq('user_id', userId);
-
+        logEvent('ai', 'backend', userId, 'submit_community_prayer', `Submitted community prayer with status: ${status}`, {tokens: aiResponse.tokens}, 0);
         res.json({ success: true, status, prayer: data });
 
     } catch (err) {
@@ -89,6 +89,7 @@ router.get('/community/pray-for-others', authenticateUser, async (req, res) => {
 
     // Pick random
     const randomPrayer = candidates[Math.floor(Math.random() * candidates.length)];
+    logEvent('info', 'backend', userId, 'fetch_community_prayer', 'Fetched a random community prayer to pray for', {}, 0);
     res.json(randomPrayer);
 });
 
@@ -109,7 +110,7 @@ router.post('/community/pray/:prayerId', authenticateUser, async (req, res) => {
     // We will use a raw SQL call or just a fetch-update pattern
     const { data: prayer } = await supabase.from('community_prayers').select('prayer_count').eq('id', prayerId).single();
     await supabase.from('community_prayers').update({ prayer_count: (prayer.prayer_count || 0) + 1 }).eq('id', prayerId);
-
+    logEvent('info', 'backend', userId, 'pray_for_community_prayer', `Prayed for community prayer ${prayerId}`, {}, 0);
     res.json({ success: true });
 });
 
@@ -123,7 +124,7 @@ router.get('/community/stats', authenticateUser, async (req, res) => {
         .eq('user_id', userId);
 
     const totalPrayedForYou = data.reduce((sum, row) => sum + (row.prayer_count || 0), 0);
-
+    logEvent('info', 'backend', userId, 'fetch_community_stats', 'Fetched community prayer stats', {}, 0);
     res.json({ totalPrayedForYou });
 });
 

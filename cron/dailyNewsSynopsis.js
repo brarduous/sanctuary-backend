@@ -4,6 +4,7 @@ const OpenAI = require('openai');
 require('dotenv').config();
 
 const {getDailyNewsSynopsisPrompt} = require('../prompts');
+const { logEvent } = require('../utils/helpers');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
@@ -20,19 +21,21 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     response_format: { type: responseFormatType },
   });
   const generatedContent = chatCompletion.choices[0].message.content;
+  generatedContent.tokens = chatCompletion.usage.total_tokens;
   console.log('AI Generated Content:', generatedContent);
   if (responseFormatType === 'json_object') {
     try {
       return JSON.parse(generatedContent);
     } catch (e) {
       // Fall back to raw text if parsing fails
-      return { summary: generatedContent, scripture: null, prayer: null };
+      return { summary: generatedContent, scripture: null, prayer: null, tokens: chatCompletion.usage.total_tokens };
     }
   }
   return generatedContent;
 }
 
 async function generateDailyNewsSynopsisFromLast24h() {
+  const startTime = Date.now();
   console.log('Generating daily news synopsis from today so far');
   // Calculate timestamp for today so far
   const since = new Date();
@@ -48,6 +51,7 @@ async function generateDailyNewsSynopsisFromLast24h() {
 
   if (error) {
     console.error('Error fetching articles from today so far:', error);
+    logEvent('error', 'backend', null, 'fetch_daily_news_synopsis', 'Failed to fetch articles from today so far', { error: error.message }, Date.now() - startTime);
     return;
   }
   if (!outlooks || outlooks.length === 0) {
@@ -85,13 +89,17 @@ async function generateDailyNewsSynopsisFromLast24h() {
 
       if (insertError) {
         console.error('Error saving daily news synopsis:', insertError);
+        logEvent('error', 'backend', null, 'save_daily_news_synopsis', 'Failed to save daily news synopsis', { error: insertError.message }, Date.now() - startTime);
       } else {
+        logEvent('ai', 'backend', null, 'save_daily_news_synopsis', 'Successfully saved daily news synopsis', {tokens: aiResponse.tokens}, Date.now() - startTime);
         console.log('Successfully saved daily news synopsis:', data?.[0]);
       }
     } else {
+      logEvent('error', 'backend', null, 'generate_daily_news_synopsis', 'AI response missing synopsis content', {}, Date.now() - startTime);
       console.error('AI response did not contain synopsis content.');
     }
   } catch (err) {
+    logEvent('error', 'backend', null, 'generate_daily_news_synopsis', 'Error generating daily news synopsis', { error: err.message }, Date.now() - startTime); 
     console.error('Error generating daily news synopsis:', err);
   }
 }

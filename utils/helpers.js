@@ -39,6 +39,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
         });
 
         let generatedContent = chatCompletion.choices[0].message.content;
+        generatedContent.tokens = chatCompletion.usage.total_tokens;
         console.log("AI Generated Content:", await generatedContent);
         if (responseFormatType === "json_object") {
             try {

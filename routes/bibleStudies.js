@@ -224,7 +224,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                         // Consider rolling back parent study status to failed or partial
                     }
                 }
-                logEvent('info', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', {}, duration);
+                logEvent('ai', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', {tokens: generatedStudy.tokens}, duration);
                 console.log(`Bible study ${newStudy.study_id} and its lessons successfully generated and updated.`);
             } else {
                 logEvent('error', 'backend', userId, 'generate_bible_study', `No 'studies' array found in generated Bible study for ID ${newStudy.study_id}`, {}, Date.now() - startTime);

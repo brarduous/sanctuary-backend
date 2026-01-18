@@ -128,7 +128,7 @@ router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) =>
                 }
                 // -------------------------------
 
-                logEvent('info', 'backend', userId, 'generate_advice', 'Successfully generated advice', {}, duration);
+                logEvent('ai', 'backend', userId, 'generate_advice', 'Successfully generated advice', {tokens: generatedAdvice.tokens}, duration);
                 console.log(`Advice record ${newAdvice.advice_id} successfully generated and updated.`);
             }
         } catch (aiError) {

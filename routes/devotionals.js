@@ -111,7 +111,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 .eq('prayer_id', newPrayer.prayer_id);
 
             const duration = Date.now() - startTime;
-            logEvent('info', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', {}, duration);
+            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', {tokens: generatedContent.tokens}, duration);
             if (updatePrayerError) {
                 console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
                 await supabase.from('daily_prayers').update({ prayer_text: 'Failed to generate prayer.' }).eq('prayer_id', newPrayer.prayer_id);
@@ -141,6 +141,7 @@ router.get('/devotionals/:userId', authenticateUser, async (req, res) => {
         .order('created_at', { ascending: false }); // Assuming created_at for ordering
     if (error) {
         console.error('Error fetching devotionals:', error);
+        logEvent('error', 'backend', userId, 'fetch_devotionals', 'Failed to fetch devotionals', { error: error.message }, 0);
         return res.status(500).json({ error: 'Failed to fetch devotionals.' });
     }
     res.json(data);
@@ -148,6 +149,7 @@ router.get('/devotionals/:userId', authenticateUser, async (req, res) => {
 
 //get devotional by devotionalId
 router.get('/devotional/:userId/:devotionalId', authenticateUser, async (req, res) => {
+    const startTime = Date.now();
     const { userId, devotionalId } = req.params;
     const { data, error } = await supabase
         .from('daily_devotionals')
@@ -162,6 +164,7 @@ router.get('/devotional/:userId/:devotionalId', authenticateUser, async (req, re
     if (!data) {
         return res.status(404).json({ error: 'Devotional not found.' });
     }
+    logEvent('info', 'backend', userId, 'fetch_devotional_by_id', `Fetched devotional ${devotionalId}`, {}, Date.now() - startTime);
     res.json(data);
 });
 
@@ -174,6 +177,7 @@ router.delete('/devotional/:devotionalId', authenticateUser, async (req, res) =>
             .eq('devotional_id', devotionalId);
 
         if (error) throw error;
+        logEvent('info', 'backend', req.user.id, 'delete_devotional', `Deleted devotional ${devotionalId}`, {}, 0);
         res.json({ message: 'Devotional deleted successfully' });
     } catch (error) {
         console.error('Error deleting devotional:', error);

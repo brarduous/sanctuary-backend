@@ -2,6 +2,7 @@
 require('dotenv').config(); // Make sure this points to your .env file
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
+const { logEvent } = require('../utils/helpers');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -36,6 +37,7 @@ Prayer: Lord, help me see myself through Your eyes. Replace my fear and insecuri
 `;
 
 const generateWeeklyBatch = async () => {
+  const startTime = Date.now();
   try {
     // 1. Fetch the next unused theme from your syllabus
     const { data: theme, error: themeError } = await supabase
@@ -128,9 +130,10 @@ const generateWeeklyBatch = async () => {
       .eq('week_number', theme.week_number);
 
     console.log(`✅ Success! Week ${theme.week_number} content generated and saved.`);
-
+    logEvent('ai', 'backend', null, 'generate_general_devotionals', 'Successfully generated weekly batch of devotionals', {tokens: completion.usage.total_tokens}, Date.now() - startTime);
   } catch (err) {
     console.error("💥 Script failed:", err);
+    logEvent('error', 'backend', null, 'generate_general_devotionals', 'Failed to generate weekly batch of devotionals', { error: err.message }, Date.now() - startTime);
   }
 };
 

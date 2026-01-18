@@ -124,7 +124,7 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 logEvent('error', 'backend', userId, 'generate_sermon_by_topic', 'Failed to update sermon record', { error: updateError.message }, duration);
             } else {
                 console.log(`Sermon record ${newSermon.sermon_id} successfully generated and updated.`);
-                logEvent('info', 'backend', userId, 'generate_sermon_by_topic', 'Successfully generated sermon', {}, duration);
+                logEvent('ai', 'backend', userId, 'generate_sermon_by_topic', 'Successfully generated sermon', {tokens: generatedSermon.tokens}, duration);
             }
         } catch (aiError) {
             console.error(`AI generation failed for sermon ${newSermon.sermon_id}:`, aiError);
@@ -202,7 +202,7 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 logEvent('error', 'backend', userId, 'generate_sermon_by_scripture', 'Failed to update sermon record', { error: updateError.message }, duration);
             } else {
                 console.log(`Sermon record ${newSermon.sermon_id} successfully generated and updated.`);
-                logEvent('info', 'backend', userId, 'generate_sermon_by_scripture', 'Successfully generated sermon', {}, duration);
+                logEvent('ai', 'backend', userId, 'generate_sermon_by_scripture', 'Successfully generated sermon', {tokens: generatedSermon.tokens}, duration);
             }
         } catch (aiError) {
             console.error(`AI generation failed for sermon ${newSermon.sermon_id}:`, aiError);
@@ -227,11 +227,14 @@ router.get('/sermon/:sermonId', authenticateUser, async (req, res) => {
 
     if (error) {
         console.error('Error fetching sermon:', error);
+        logEvent('error', 'backend', req.user.id, 'fetch_sermon_by_id', `Failed to fetch sermon ${sermonId}`, { error: error.message }, 0);
         return res.status(500).json({ error: 'Failed to fetch sermon.' });
     }
     if (!data) {
+        logEvent('error', 'backend', req.user.id, 'fetch_sermon_by_id', `Sermon ${sermonId} not found`, {}, 0);
         return res.status(404).json({ error: 'Sermon not found.' });
     }
+    logEvent('info', 'backend', req.user.id, 'fetch_sermon_by_id', `Fetched sermon ${sermonId}`, {}, 0);
     res.json(data);
 });
 

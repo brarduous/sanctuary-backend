@@ -7,6 +7,7 @@ const xml2js = require('xml2js');
 const cheerio = require('cheerio');
 const OpenAI = require('openai'); // Use the v4 client
 const puppeteer = require('puppeteer');
+const { logEvent } = require('../utils/helpers');
 
 require('dotenv').config();
 
@@ -37,7 +38,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
         });
 
         let generatedContent = chatCompletion.choices[0].message.content;
-
+        generatedContent.tokens = chatCompletion.usage.total_tokens;
         if (responseFormatType === "json_object") {
             try {
                 return JSON.parse(generatedContent);
@@ -87,6 +88,7 @@ async function generateUniqueSlug(tableName, baseText) {
 
 // Function to generate image using DALL-E 3
 async function generateImage(prompt) {
+    const startTime = Date.now();
     try {
         console.log('Generating image with prompt:', prompt.substring(0, 50) + '...');
         const response = await openai.images.generate({
@@ -97,9 +99,11 @@ async function generateImage(prompt) {
             response_format: "url", // We get a URL, then download it
         });
         console.log('Image generated:', response.data[0].url);
+        logEvent('ai', 'backend', null, 'generate_scriptural_outlook', 'Successfully generated image', {tokens: response.data[0].tokens}, Date.now() - startTime);
         return response.data[0].url;
     } catch (error) {
         console.error("Error generating image:", error);
+        logEvent('error', 'backend', null, 'generate_scriptural_outlook', 'Error generating image', { error: error.message }, Date.now() - startTime);  
         return null;
     }
 }
@@ -239,6 +243,7 @@ async function saveScripturalOutlook(outlook) {
 // Function to fetch the top 6 news stories (logic remains the same)
 async function fetchTopNewsStories(limit = 6) {
   console.log('Fetching top news stories...');
+  const startTime = Date.now();
     const rssFeedUrls = [
         'https://feeds.npr.org/1001/rss.xml',
         'https://www.cbsnews.com/latest/rss/main',
@@ -375,6 +380,7 @@ async function fetchTopNewsStories(limit = 6) {
     }
     
     console.log(`Total articles fetched: ${newsStories.length}`);
+    logEvent('info', 'backend', null, 'fetch_top_news_stories', `Fetched ${newsStories.length} articles`, {}, Date.now() - startTime);
     return newsStories;
 }
 // Daily News Synopsis moved to cron/dailyNewsSynopsis.js
@@ -554,7 +560,7 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
 
 async function generateAndSaveScripturalOutlook() {
   console.log('Starting scriptural outlook generation cron job...');
-
+    const startTime = Date.now();
   const articles = await fetchTopNewsStories();
   if (articles.length === 0) {
     console.error('Failed to get any news articles. Exiting.');
@@ -651,19 +657,21 @@ async function generateAndSaveScripturalOutlook() {
         }
 
         console.log(`Successfully processed outlook and taxonomies for: ${article.title}`);
+        logEvent('ai', 'backend', null, 'generate_scriptural_outlook', `Processed article: ${article.title}`, { tokens: aiResponse.tokens }, Date.now() - startTime);
         
       } else {
         console.error('AI response did not contain expected JSON structure.');
       }
     } catch (error) {
       console.error('Error during AI content generation/saving:', error);
+      logEvent('error', 'backend', null, 'generate_scriptural_outlook', 'Error during AI content generation/saving', { error: error.message }, Date.now() - startTime);
     }
   }
 
   // After all articles are processed, check thresholds for touched taxonomies
   await processTaxonomyThresholds(touchedCategoryIds, touchedTopicIds);
   console.log('Cron job completed.');
-}
+  logEvent('info', 'backend', null, 'generate_scriptural_outlook', 'Cron job completed successfully', {}, Date.now() - startTime);
 
 // You can export this function to be used by your cron job scheduler
 module.exports = {

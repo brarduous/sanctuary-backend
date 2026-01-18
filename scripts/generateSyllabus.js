@@ -2,11 +2,13 @@
 require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
+const { logEvent } = require('../utils/helpers');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const generateSyllabus = async () => {
+  const startTime = Date.now();
   const prompt = `
     Act as a wise, unbiased theologian. 
     Create a 52-week devotional curriculum for laypeople.
@@ -40,8 +42,13 @@ const generateSyllabus = async () => {
 
   const { error } = await supabase.from('devotional_themes').upsert(rows);
   
-  if (error) console.error("Error saving syllabus:", error);
-  else console.log("Success! 52 weeks of topics generated.");
+  if (error) {
+    console.error("Error saving syllabus:", error);
+    logEvent('error', 'backend', null, 'generate_syllabus', 'Failed to save syllabus', { error: error.message }, Date.now() - startTime);
+  } else {
+    console.log("Success! 52 weeks of topics generated.");
+    logEvent('ai', 'backend', null, 'generate_syllabus', 'Successfully generated syllabus', {tokens: completion.usage.total_tokens}, Date.now() - startTime);
+  }
 };
 
 generateSyllabus();
