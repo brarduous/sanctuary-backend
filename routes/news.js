@@ -2,10 +2,11 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
+const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
 
 // Search articles by relevance: title > body > synopsis
-router.get('/search', authenticateUser, async (req, res) => {
+router.get('/search', optionalAuth, async (req, res) => {
     try {
         const q = (req.query.q || '').trim();
         const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
@@ -98,7 +99,7 @@ router.get('/categories', async (req, res) => {
 });
 
 //New: Endpoint to fetch category by ID
-router.get('/categories/:id', authenticateUser, async (req, res) => {
+router.get('/categories/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
     console.log('Fetching category with ID:', id);
     try {
@@ -157,7 +158,7 @@ router.get('/topics', async (req, res) => {
 
 
 //New: Endpoint to fetch topic by ID
-router.get('/topics/:id', authenticateUser, async (req, res) => {
+router.get('/topics/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
     console.log('Fetching topic with ID:', id);
     try {
@@ -180,7 +181,7 @@ router.get('/topics/:id', authenticateUser, async (req, res) => {
 
 });
 // --- GET Single Scriptural Outlook by ID ---
-router.get('/scriptural-outlooks/:id', authenticateUser, async (req, res) => {
+router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
     const { id } = req.params;
     console.log('Fetching scriptural outlook with ID:', id);
     try {
@@ -204,7 +205,7 @@ router.get('/scriptural-outlooks/:id', authenticateUser, async (req, res) => {
 });
 
 //Endpoint to get news articles from scriptural_outlooks table of database
-router.get('/scriptural-outlooks', authenticateUser, async (req, res) => {
+router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
     //receive params for page and limit
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
