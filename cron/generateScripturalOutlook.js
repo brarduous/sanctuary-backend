@@ -671,7 +671,7 @@ async function generateAndSaveScripturalOutlook() {
   // After all articles are processed, check thresholds for touched taxonomies
   await processTaxonomyThresholds(touchedCategoryIds, touchedTopicIds);
   console.log('Cron job completed.');
-  logEvent('info', 'backend', null, 'generate_scriptural_outlook', 'Cron job completed successfully', {}, Date.now() - startTime);
+}
 
 // You can export this function to be used by your cron job scheduler
 module.exports = {
