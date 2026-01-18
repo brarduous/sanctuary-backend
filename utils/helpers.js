@@ -15,7 +15,8 @@ const logEvent = async (level, source, userId, action, message, details = {}, du
             action,
             message,
             details,
-            duration_ms: duration 
+            duration_ms: duration ,
+            is_local: process.env.NODE_ENV === 'development'
         });
     } catch (err) {
         console.error('FAILED TO LOG TO DB:', err);
