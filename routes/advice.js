@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
-const { advice_guidance_prompt } = require('../prompts');
+const { getAdviceGuidancePrompt } = require('../prompts');
 
 const FREE_TIER_ADVICE_LIMIT = 1; // 1 advice per month for free users
 
@@ -87,10 +87,11 @@ router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) =>
         });
 
         // 3. Start AI generation (Existing Code)
-        const userPrompt = `Situation: ${situation}`;
+        const systemPrompt = await getAdviceGuidancePrompt();
+        const userPrompt = `Situation: ${situation}`;   
         try {
             const generatedAdvice = await callOpenAIAndProcessResult(
-                advice_guidance_prompt,
+                systemPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
                 4000, 

@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
-const { daily_devotional_prompt } = require('../prompts');
+const { getDailyDevotionalPrompt } = require('../prompts');
 
 //Endpoint to initiate Daily Devotional generation
 router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res) => {
@@ -67,8 +67,9 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         `;
 
         try {
+            const systemPrompt = await getDailyDevotionalPrompt();
             const generatedContent = await callOpenAIAndProcessResult(
-                daily_devotional_prompt,
+                systemPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14', // Model for devotional
                 5000, // Max tokens

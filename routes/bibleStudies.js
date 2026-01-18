@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
-const { bible_study_prompt } = require('../prompts');
+const { generateBibleStudyPrompt } = require('../prompts');
 
 //Endpoint to get Bible Studies by user id
 router.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
@@ -165,6 +165,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
         // 3. Start AI generation in the background
         const userPrompt = 'Topic: ' + topic + '\n Number of Lessons:' + length + '\n Bible Study Type: ' + method + '\n Include Illustration: true\n ';
         //const systemPrompt = generateBibleStudyPrompt(await getTuningNotes(userId));
+        const bible_study_prompt = await generateBibleStudyPrompt();
         try {
             const generatedStudy = await callOpenAIAndProcessResult(
                 bible_study_prompt,

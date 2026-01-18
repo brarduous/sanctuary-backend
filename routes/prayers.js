@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
-const { daily_prayer_prompt } = require('../prompts');
+const { getDailyPrayerPrompt } = require('../prompts');
 
 // New Endpoint: Generate Daily Prayer
 router.post('/generate-prayer', authenticateUser, aiLimiter, async (req, res) => {
@@ -42,8 +42,9 @@ router.post('/generate-prayer', authenticateUser, aiLimiter, async (req, res) =>
         // 3. Start AI generation in background
         const userPrompt = `Focus Areas: ${focusAreas.join(', ')}\nImprovement Areas: ${improvementAreas.join(', ')}`;
         try {
+            const systemPrompt = await getDailyPrayerPrompt();
             const generatedPrayer = await callOpenAIAndProcessResult(
-                daily_prayer_prompt,
+                systemPrompt,
                 userPrompt,
                 'gpt-4.1-2025-04-14',
                 4000, // Max tokens for prayer

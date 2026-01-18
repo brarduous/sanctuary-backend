@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 const { callOpenAIAndProcessResult } = require('../utils/helpers');
 const { community_prayer_prompt } = require('../prompts');
-
+const { getCommunityPrayerPrompt } = require('../prompts');
 // 1. Submit a Prayer Request
 router.post('/community/request', authenticateUser, async (req, res) => {
     const { userId, content } = req.body;
@@ -13,7 +13,7 @@ router.post('/community/request', authenticateUser, async (req, res) => {
         // A. Check Limits (1 per week for Free)
         const { data: profile } = await supabase.from('user_profiles').select('*').eq('user_id', userId).single();
         const isFree = profile.subscription_tier === 'free';
-        
+
         // Reset logic (Weekly)
         const now = new Date();
         const lastReset = new Date(profile.community_requests_reset_date || 0);
@@ -28,10 +28,10 @@ router.post('/community/request', authenticateUser, async (req, res) => {
         if (isFree && currentCount >= 1) {
             return res.status(403).json({ error: 'Weekly limit reached. Upgrade to Pro to share more requests.' });
         }
-
+        const systemPrompt = await getCommunityPrayerPrompt();
         // B. AI Processing
         const aiResponse = await callOpenAIAndProcessResult(
-            community_prayer_prompt,
+            systemPrompt,
             `Request: "${content}"`,
             'gpt-4o-mini', // Fast & cheap
             500,
@@ -69,7 +69,7 @@ router.get('/community/pray-for-others', authenticateUser, async (req, res) => {
         .from('community_prayer_interactions')
         .select('prayer_id')
         .eq('praying_user_id', userId);
-    
+
     const ignoreIds = interactions.map(i => i.prayer_id);
     ignoreIds.push('00000000-0000-0000-0000-000000000000'); // Dummy UUID to prevent SQL syntax error if empty
 
@@ -116,14 +116,14 @@ router.post('/community/pray/:prayerId', authenticateUser, async (req, res) => {
 // 4. Get User Stats (For "X prayed for you")
 router.get('/community/stats', authenticateUser, async (req, res) => {
     const userId = req.user.id;
-    
+
     const { data } = await supabase
         .from('community_prayers')
         .select('prayer_count')
         .eq('user_id', userId);
-    
+
     const totalPrayedForYou = data.reduce((sum, row) => sum + (row.prayer_count || 0), 0);
-    
+
     res.json({ totalPrayedForYou });
 });
 
