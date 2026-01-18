@@ -6,6 +6,8 @@ require('dotenv').config();
 const supabase = require('./config/supabase');
 const { logEvent } = require('./utils/helpers');
 
+const adminRouter = require('./routes/admin'); // <--- Add this
+
 // Initialize Stripe (needed for webhooks)
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
@@ -19,6 +21,7 @@ const allowedOrigins = [
     'https://beta.sanctuaryapp.us',
     'https://staging.sanctuaryapp.us',
     'https://clergy.sanctuaryapp.us',
+    'https://admin.sanctuaryapp.us',
     'https://staging-clergy.sanctuaryapp.us',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
@@ -45,7 +48,6 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
 
 
 // Stripe Webhook Endpoint
@@ -363,6 +365,7 @@ app.use('/', adviceRouter);
 app.use('/', newsRouter);
 app.use('/', userRouter);
 app.use('/', communityRouter); 
+app.use('/admin', adminRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

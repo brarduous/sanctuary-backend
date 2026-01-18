@@ -96,7 +96,7 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
 
 // Example Node.js/Express route for a Supabase backend
 router.post('/log-activity', async (req, res) => {
-    const { userId, activityType, activityId } = req.body;
+    const { userId, activityType, activityId, description } = req.body;
 
     if (!userId || !activityType || !activityId) {
         return res.status(400).send('Missing user ID or activity type.');
@@ -129,6 +129,7 @@ router.post('/log-activity', async (req, res) => {
                 activity_type: activityType,
                 activity_date: new Date().toISOString().split('T')[0],
                 activity_id: activityId,
+                description: description || null,
             },
         ]);
 
