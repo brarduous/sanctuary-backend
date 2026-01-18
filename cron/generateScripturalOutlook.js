@@ -455,7 +455,9 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
             const { count, error } = await supabase
                 .from(relationTable)
                 .select('*', { count: 'exact', head: true })
-                .eq(idColumn, id);
+                .eq(idColumn, id)
+                //and created_at within last 30 days
+                .gte('created_at', new Date(Date.now() - 15*24*60*60*1000).toISOString());
             
             if (error) {
                 console.error(`Error counting ${type} ${id}:`, error);
@@ -464,8 +466,8 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
 
             console.log(`${type} ${id} has count: ${count}`);
 
-            // 2. Threshold Check > 5
-            if (count > 5) {
+            // 2. Threshold Check > 10
+            if (count > 10) {
                 // Fetch the name and updated_at for the prompt
                 const { data: item } = await supabase.from(table).select('name, updated_at, image_url').eq('id', id).single();
                 if (!item) continue;
