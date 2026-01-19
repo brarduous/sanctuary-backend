@@ -299,11 +299,11 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
             };
         });
         const duration = Date.now() - startTime;
-        logEvent('info', 'backend', req.user.id, 'fetch_scriptural_outlooks', 'Fetched scriptural outlooks', { page, limit, topic_id, category_id }, duration);
+        logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched scriptural outlooks', { page, limit, topic_id, category_id }, duration);
         res.json(cleanedData);
     } catch (error) {
         console.error('Unhandled error in /scriptural-outlooks:', error);
-        logEvent('error', 'backend', req.user.id, 'fetch_scriptural_outlooks', 'Error fetching scriptural outlooks', { error: error.message }, Date.now() - startTime);
+        logEvent('error', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Error fetching scriptural outlooks', { error: error.message }, Date.now() - startTime);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
@@ -326,10 +326,10 @@ router.get('/daily-news-synopses', async (req, res) => {
 
         if (error) {
             console.error('Error fetching daily news synopses:', error);
-            logEvent('error', 'backend', null, 'daily_news_synopses', 'Failed to fetch daily news synopses', { error: error.message }, Date.now() - startTime);
+            logEvent('error', 'backend', req.user?.id ?? null, 'daily_news_synopses', 'Failed to fetch daily news synopses', { error: error.message }, Date.now() - startTime);
             return res.status(500).json({ error: 'Failed to fetch daily news synopses.' });
         }
-        logEvent('info', 'backend', null, 'daily_news_synopses', 'Successfully fetched daily news synopses', {}, Date.now() - startTime);
+        logEvent('info', 'backend', req.user?.id ?? null, 'daily_news_synopses', 'Successfully fetched daily news synopses', {}, Date.now() - startTime);
         return res.json(data);
     } catch (err) {
         console.error('Unhandled error in /daily-news-synopses:', err);
