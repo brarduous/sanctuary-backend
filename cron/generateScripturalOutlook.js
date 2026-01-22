@@ -92,7 +92,7 @@ async function generateImage(prompt) {
     try {
         console.log('Generating image with prompt:', prompt.substring(0, 50) + '...');
         const response = await openai.images.generate({
-            model: "dall-e-3",
+            model: "gpt-image-1-mini",
             prompt: prompt,
             n: 1,
             size: "1792x1024",
