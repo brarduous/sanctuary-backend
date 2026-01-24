@@ -98,9 +98,6 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
 router.post('/log-activity', async (req, res) => {
     const { userId, activityType, activityId, description } = req.body;
 
-    if (!userId || !activityType || !activityId) {
-        return res.status(400).send('Missing user ID or activity type.');
-    }
 
     if(userId === 'anonymous'){
         //set user id to null for anonymous users
