@@ -96,7 +96,7 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
 
 // Example Node.js/Express route for a Supabase backend
 router.post('/log-activity', async (req, res) => {
-    const { userId, activityType, activityId, description } = req.body;
+    let { userId, activityType, activityId, description } = req.body;
 
 
     if(userId === 'anonymous'){
