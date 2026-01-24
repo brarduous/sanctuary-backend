@@ -102,6 +102,10 @@ router.post('/log-activity', async (req, res) => {
         return res.status(400).send('Missing user ID or activity type.');
     }
 
+    if(userId === 'anonymous'){
+        //set user id to null for anonymous users
+        userId = null;
+    }
     // Check if a record for this user and activity type already exists for today
     const { data: existingEntry, error: fetchError } = await supabase
         .from('user_activities')
@@ -115,10 +119,10 @@ router.post('/log-activity', async (req, res) => {
         return res.status(500).send('Database error.');
     }
 
-    if (existingEntry.length > 0) {
-        // Activity already logged for today, do nothing
-        return res.status(200).send('Activity already logged for today.');
-    }
+    // if (existingEntry.length > 0) {
+    //     // Activity already logged for today, do nothing
+    //     return res.status(200).send('Activity already logged for today.');
+    // }
 
     // Log the new activity
     const { data, error } = await supabase
