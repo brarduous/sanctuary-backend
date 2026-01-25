@@ -385,44 +385,25 @@ async function fetchTopNewsStories(limit = 6) {
 }
 // Daily News Synopsis moved to cron/dailyNewsSynopsis.js
 
-// The updated AI prompt for generating the scriptural outlook
-const scriptural_outlook_prompt = (existingCategories, existingTopics) => `
-# ROLE & GOAL
-You are a helpful theological pastoral advisor for a Christian app. Your primary task is to read a news article and generate an insightful and unflinchingly honest outlook on it through the lens of scripture. Your goal is to provide a spiritual perspective to help the user understand how to view the news through the lens of scripture and christian virtues. But through the lens of scripture, this should be a gauge of the news stories' scriptural temperature. How does the article stack up against biblical truth?
+// Function to fetch the scriptural outlook prompt from Supabase
+async function getScripturalOutlookPrompt() {
+    const { data, error } = await supabase
+        .from('system_prompts')
+        .select('content')
+        .eq('key', 'news_generator')
+        .single();
 
-# INSTRUCTIONS
-You will be provided with the title and body of a news article, and a list of existing categories and topics.
-1.  **Categorization/Topic Selection**: Identify 1 to 3 categories and 1 to 5 topics that accurately describe the article. Use categories and topics from the existing lists provided if and only if they fit well. The category should be broad (e.g., "Politics", "Health", "Religion") while topics should be more specific, and the subject (person, place or thing) of the article (e.g., "Donald Trump", "COVID-19", "New York").
-2.  **Canonical Naming**: For each category or topic, check the provided lists. If the concept already exists (e.g., "President Trump" should map to "Trump"), use the *canonical existing name*. If the concept is truly new or significantly different, create a concise new name and provide a brief description.
-3.  **Synopsis**: Provide a thorough summary of the key points of the article without spiritual analysis.  
-4.  **Outlook**: Provide the Scriptural takeaway or how this news story stacks up against biblical truth. Use a critical approach, analyzing the intentions and impacts of the people and events described in the article through a biblical lens.
-5. **Scripture Reference**: Provide a single, relevant scripture reference that ties into the main message, if applicable (e.g., "Proverbs 3:5-6"). Include, if possible, the full text of the scripture.
-6. **Reflection Questions**: Provide 1 to 3 brief, thought-provoking questions for personal reflection based on the article and its scriptural implications.
-7. **Closing Prayer**: Write a short, topical prayer related to the news event and biblical truth.
+    if (error) {
+        console.error('Error fetching news_generator prompt from system_prompts:', error);
+        throw new Error('Failed to fetch system prompt');
+    }
 
---- EXISTING TAXONOMY CONTEXT ---
-Existing Categories: ${existingCategories.join(', ') || 'None'}
-Existing Topics: ${existingTopics.join(', ') || 'None'}
+    if (!data || !data.content) {
+        throw new Error('news_generator prompt not found in system_prompts table');
+    }
 
---- JSON OUTPUT STRUCTURE ---
-Your final response should be a JSON object that strictly follows this structure.
-
-- **categories**: An array of 1 to 3 objects.
-    - **name**: The canonical category name.
-    - **description**: A brief description **only** if this is a genuinely *new* category.
-- **topics**: An array of 1 to 5 objects.
-    - **name**: The canonical topic name.
-    - **description**: A brief description **only** if this is a genuinely *new* topic.
-- **synopsis**: An overview of the key points of the article.
-- **outlook**: The Christian takeaway.
-- **scriptureReference**: A single, relevant scripture reference.
-- **reflectionQuestions**: A list of 1-3 questions.
-- **closingPrayer**: A short, topical prayer.
-
---- USER INPUT ---
-Article Title: [INSERT_ARTICLE_TITLE]
-Article Body: [INSERT_ARTICLE_BODY]
-`;
+    return data.content;
+}
 
 // Prompt for Taxonomy Breakdown and Image Generation
 const taxonomy_breakdown_prompt = `
@@ -570,7 +551,9 @@ async function generateAndSaveScripturalOutlook() {
   
   // Fetch all existing categories and topics for the AI prompt
   const existingTaxonomies = await fetchExistingTaxonomies();
-  const outlookPrompt = scriptural_outlook_prompt(existingTaxonomies.categories, existingTaxonomies.topics);
+  
+  // Fetch the prompt from Supabase
+  const outlookPrompt = await getScripturalOutlookPrompt();
 
   // Sets to track which IDs we touched this run
   const touchedCategoryIds = new Set();
@@ -593,8 +576,8 @@ async function generateAndSaveScripturalOutlook() {
         console.log(`Article already exists in database, skipping: ${article.title}`);
         continue;
     }
-
-    const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\n\n`;
+existingTaxonomies.categories, existingTaxonomies.topics
+    const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\nExisting Topics: ${existingTaxonomies.categories}\nExisting Topics: ${existingTaxonomies.topics}`;
     try {
       // Call the AI function with the prompt and content for the current article
       const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-4.1-2025-04-14', 5000, 'json_object');
