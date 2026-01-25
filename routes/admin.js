@@ -436,4 +436,22 @@ router.patch('/prayers/:id', async (req, res) => {
     }
 });
 
+router.get('/prompts/:key/evaluation', async (req, res) => {
+    const { key } = req.params;
+    try {
+        const { data, error } = await supabase
+            .from('prompt_evaluations')
+            .select('*')
+            .eq('prompt_key', key)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (error && error.code !== 'PGRST116') throw error;
+        res.json(data || null);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to fetch evaluation' });
+    }
+});
+
 module.exports = router;

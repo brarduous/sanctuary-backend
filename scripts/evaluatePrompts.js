@@ -90,7 +90,7 @@ async function evaluate() {
             1. Grade the overall QUALITY of the generated samples (A-F). Consider consistency and theological depth.
             2. Grade the SYSTEM PROMPT (A-F). Does it successfully guide the AI across multiple attempts?
             3. Provide a combined CRITIQUE. 
-            4. Suggest a BETTER PROMPT to improve quality and consistency.
+            4. Suggest a BETTER PROMPT to improve quality and consistency. It must include the key elements from the original prompt, especially the return format to ensure that the output is always as expected.
 
             Return ONLY a valid JSON object:
             {
