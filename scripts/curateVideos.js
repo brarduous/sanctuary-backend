@@ -11,8 +11,8 @@ async function curateVideos() {
     .select('name, options')
     .in('name', ['focus_areas', 'improvement_areas']);
 
-  const masterFocus = optionsData?.find(o => o.name === 'focus_areas')?.options || [];
-  const masterImprovement = optionsData?.find(o => o.name === 'improvement_areas')?.options || [];
+  const masterFocus = optionsData?.find(o => o.name === 'focus_areas')?.options.map(opt => opt.title) || [];
+  const masterImprovement = optionsData?.find(o => o.name === 'improvement_areas')?.options.map(opt => opt.title) || [];
 
   // 2. Fetch Channels to scan
   const { data: channels } = await supabase.from('youtube_channels').select('*');
@@ -30,7 +30,7 @@ async function curateVideos() {
 
       // 4. Fetch the recent videos from that playlist
       const playlistRes = await fetch(
-        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylistId}&maxResults=100&key=${YT_KEY}`
+        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet,contentDetails&playlistId=${uploadsPlaylistId}&maxResults=300&key=${YT_KEY}`
       );
       const playlistData = await playlistRes.json();
 
