@@ -5,6 +5,8 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt } = require('../prompts');
+const { google } = require('googleapis');
+const youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });
 
 //Endpoint to initiate Daily Devotional generation
 router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res) => {
@@ -78,7 +80,34 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
 
             //parse generatedContent to json
             const parsedContent = JSON.parse(generatedContent);
-            const { title, scripture, content, daily_prayer } = parsedContent;
+            const { title, scripture, content, daily_prayer, song_search_query } = parsedContent;
+
+            let songData = {};
+            if (song_search_query) {
+                try {
+
+                    const youtubeResponse = await youtube.search.list({
+                        part: 'snippet',
+                        q: song_search_query,
+                        type: 'video',
+                        videoCategoriId: '10',
+                        maxResults: 1,
+                    });
+
+                    const video = youtubeResponse.data.items[0];
+                    if (video) {
+                        songData = {
+                            song_title: video.snippet.title,
+                            song_video_id: video.id.videoId,
+                            song_url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+                            song_thumbnail: video.snippet.thumbnails?.high?.url || null,
+                            song_channel: video.snippet.channelTitle || null,
+                        };
+                    }
+                } catch (youtubeError) {
+                    console.error('Error fetching song from YouTube:', youtubeError);
+                }
+            }
             // Assuming the AI directly outputs the devotional text for the 'content' column
             const { error: updateError } = await supabase
                 .from('daily_devotionals')
@@ -88,6 +117,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                     scripture: scripture,
                     status: 'completed',
                     updated_at: new Date().toISOString(),
+                    ...songData
                     // If AI also generates scripture, you'd parse and include it here
                 })
                 .eq('devotional_id', newDevotional.devotional_id);
@@ -111,7 +141,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 .eq('prayer_id', newPrayer.prayer_id);
 
             const duration = Date.now() - startTime;
-            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', {tokens: generatedContent.tokens}, duration);
+            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', { tokens: generatedContent.tokens }, duration);
             if (updatePrayerError) {
                 console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
                 await supabase.from('daily_prayers').update({ prayer_text: 'Failed to generate prayer.' }).eq('prayer_id', newPrayer.prayer_id);
