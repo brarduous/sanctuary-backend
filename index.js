@@ -88,7 +88,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             .select('*')
             .eq('email', authUser.email)
             .single();
-        
+
         if (whitelistEntry) {
             // User is whitelisted, ensure their tier is set to pro
             await supabase
@@ -99,7 +99,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             return res.json({ received: true });
         }
     }
-    
+
     try {
         if (event.type === 'checkout.session.completed') {
             const subscription = await stripe.subscriptions.retrieve(session.subscription);
@@ -203,7 +203,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
         event = stripeLayperson.webhooks.constructEvent(
             req.body,
             sig,
-            process.env.STRIPE_WEBHOOK_SECRET_LAYPERSON 
+            process.env.STRIPE_WEBHOOK_SECRET_LAYPERSON
         );
     } catch (err) {
         console.error(`Layperson Webhook signature verification failed: ${err.message}`);
@@ -217,15 +217,15 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
         const userId = session.client_reference_id;
         const { data: authUser } = await supabase.from('auth.users').select('email').eq('id', userId).single();
         if (authUser) {
-             const { data: whitelistEntry } = await supabase.from('whitelist').select('*').eq('email', authUser.email).single();
-             if (whitelistEntry) {
-                 await supabase.from('user_profiles').upsert({ 
-                     user_id: userId, 
-                     subscription_tier: 'pro' // Writing to NEW column
-                 });
-                 console.log(`Whitelisted Layperson user ${userId} set to pro.`);
-                 return res.json({ received: true });
-             }
+            const { data: whitelistEntry } = await supabase.from('whitelist').select('*').eq('email', authUser.email).single();
+            if (whitelistEntry) {
+                await supabase.from('user_profiles').upsert({
+                    user_id: userId,
+                    subscription_tier: 'pro' // Writing to NEW column
+                });
+                console.log(`Whitelisted Layperson user ${userId} set to pro.`);
+                return res.json({ received: true });
+            }
         }
     }
 
@@ -248,11 +248,11 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
             // UPDATE PROFILE: Write to 'subscription_tier'
             await supabase
                 .from('user_profiles')
-                .update({ 
+                .update({
                     subscription_tier: 'pro',
                     stripe_customer_id: session.customer,
                     stripe_subscription_id: subscription.id
-                }) 
+                })
                 .eq('user_id', userId);
 
             console.log(`Layperson User ${userId} upgraded to pro.`);
@@ -261,7 +261,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
         // 2. Subscription Updated (Renewals, Cancellations, Payment Failures)
         if (event.type === 'customer.subscription.updated') {
             const subscription = event.data.object;
-            
+
             // Sync subscriptions table
             await supabase.from('subscriptions').upsert({
                 id: subscription.id,
@@ -285,7 +285,7 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
                     .from('user_profiles')
                     .update({ subscription_tier: newTier }) // Writing to NEW column
                     .eq('user_id', subData.user_id);
-                
+
                 console.log(`Layperson User ${subData.user_id} subscription updated to: ${newTier}`);
             }
         }
@@ -310,13 +310,13 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
                     .from('user_profiles')
                     .update({ subscription_tier: 'free' }) // Reset to free
                     .eq('user_id', subData.user_id);
-                
+
                 console.log(`Layperson User ${subData.user_id} downgraded to free (Subscription deleted)`);
             }
         }
     } catch (err) {
         console.error('Error processing Layperson webhook:', err);
-        return res.json({ received: true }); 
+        return res.json({ received: true });
     }
 
     res.json({ received: true });
@@ -358,7 +358,8 @@ const userRouter = require('./routes/user');
 const communityRouter = require('./routes/community');
 const videoRoutes = require('./routes/videos');
 const musicRoutes = require('./routes/music');
-
+const transcribeRouter = require('./routes/transcribe'); // [!code ++]
+const aiRouter = require('./routes/ai');
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -368,10 +369,12 @@ app.use('/', prayersRouter);
 app.use('/', adviceRouter);
 app.use('/', newsRouter);
 app.use('/', userRouter);
-app.use('/', communityRouter); 
+app.use('/', communityRouter);
 app.use('/admin', adminRouter);
 app.use('/', videoRoutes);
 app.use('/api/music', musicRoutes);
+app.use('/api', transcribeRouter);
+app.use('/api/ai', aiRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

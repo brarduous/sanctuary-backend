@@ -38,6 +38,7 @@ router.post('/sermons/:sermonId', authenticateUser, async (req, res) => {
             .update({
                 title: sermonData.title,
                 sermon_body: sermonData.sermon_body,
+                tags: sermonData.tags,
                 updated_at: new Date().toISOString(),
             })
             .eq('sermon_id', sermonId)
