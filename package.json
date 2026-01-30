@@ -10,7 +10,8 @@
     "cron-outlook": "node cron/generateScripturalOutlook.js",
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
-    "cron-general-devotionals": "node cron/generateGeneralDevotionals.js"
+    "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
+    "curate-music-library": "node scripts/curateMusicLibrary.js"
   },
   "keywords": [],
   "author": "",
