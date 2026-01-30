@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
-const pdf = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 const mammoth = require('mammoth');
 const OpenAI = require('openai');
 
@@ -17,7 +17,8 @@ router.post('/analyze-style', upload.array('files', 5), async (req, res) => {
     for (const file of req.files) {
       const buffer = fs.readFileSync(file.path);
       if (file.mimetype === 'application/pdf') {
-        const data = await pdf(buffer);
+        const parser = new PDFParse(new Uint8Array(buffer));
+        const data = await parser.getText();
         combinedText += data.text + "\n\n";
       } else if (file.mimetype.includes('wordprocessing')) { // docx
         const result = await mammoth.extractRawText({ path: file.path });
@@ -42,16 +43,17 @@ router.post('/analyze-style', upload.array('files', 5), async (req, res) => {
         "customSystemPrompt": "string (A system instruction to an AI to write exactly like this person)"
       }
 
-      Text Sample: ${combinedText.substring(0, 15000)} 
+      Text Sample: ${combinedText} 
     `;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
-      messages: [{ role: "system", content: "You are a Homiletics Expert." }, { role: "user", content: prompt }],
+      messages: [{ role: "system", content: "You are a Homiletics Expert. You are tasked with analyzing the sermon text sample to understand the preaching style." }, { role: "user", content: prompt }],
       response_format: { type: "json_object" }
     });
 
     const result = JSON.parse(completion.choices[0].message.content);
+    console.log('Analysis Result:', result);
     res.json(result);
 
   } catch (error) {

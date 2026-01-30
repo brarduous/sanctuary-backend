@@ -360,6 +360,7 @@ const videoRoutes = require('./routes/videos');
 const musicRoutes = require('./routes/music');
 const transcribeRouter = require('./routes/transcribe'); // [!code ++]
 const aiRouter = require('./routes/ai');
+const analysisRouter = require('./routes/analysis'); // [!code ++]
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -375,6 +376,7 @@ app.use('/', videoRoutes);
 app.use('/api/music', musicRoutes);
 app.use('/api', transcribeRouter);
 app.use('/api/ai', aiRouter);
+app.use('/', analysisRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
