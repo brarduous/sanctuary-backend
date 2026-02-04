@@ -14,6 +14,17 @@ router.get('/recommended', auth, async (req, res) => {
   try {
     const userId = req.user.id;
 
+    if(!userId) {
+      //get random videos if no user id
+      const { data: randomVideos, error: randomError } = await supabase
+        .from('recommended_videos')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false })
+        .limit(10);
+      if (randomError) throw randomError;
+      return res.json(randomVideos);
+    }
     // 1. Get User Profile
     const { data: profile, error: profileError } = await supabase
       .from('user_profiles')
