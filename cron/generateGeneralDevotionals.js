@@ -62,6 +62,9 @@ const generateWeeklyBatch = async () => {
       Task: Write 7 Daily Devotionals for the theme: "${theme.theme_title}".
       Focus Scripture Area: ${theme.scripture_focus}.
       
+      Use the Focus Scripture Area as an anchor for the content, but each day's devotional should be unique and use a different scripture verse. 
+      The scripture verse used each day will become the verse of the day in the app for that day.
+      
       CRITICAL STYLE GUIDE:
       ${STYLE_EXAMPLES}
       
@@ -71,17 +74,20 @@ const generateWeeklyBatch = async () => {
       - Length: Matches the examples provided (approx 250-300 words).
       
       OUTPUT FORMAT (JSON Array):
-      [
-        {
-          "day_offset": 0, // 0 = Monday, 1 = Tuesday...
-          "title": "Title String",
-          "scripture_reference": "Book Chapter:Verse",
-          "scripture_text": "Full text of the verse (KJV or ESV)",
-          "content": "The devotional body text...",
-          "prayer": "A 2-sentence prayer...",
-          "topics": ["Tag1", "Tag2"]
-        }
-      ]
+      {
+      devotionals:
+        [
+          {
+            "day_offset": 0, // 0 = Monday, 1 = Tuesday...
+            "title": "Title String",
+            "scripture_reference": "Book Chapter:Verse",
+            "scripture_text": "Full text of the verse (KJV or ESV)",
+            "content": "The devotional body text...",
+            "prayer": "A 2-sentence prayer...",
+            "topics": ["Tag1", "Tag2"]
+          }
+        ]
+      }
     `;
 
     // 3. Call OpenAI
@@ -91,8 +97,11 @@ const generateWeeklyBatch = async () => {
       response_format: { type: "json_object" }
     });
 
+    console.log("🤖 AI response received. Processing...", completion.choices[0].message);
     const result = JSON.parse(completion.choices[0].message.content);
-    const entries = result.entries || result.days || result; // Handle potential JSON key variance
+    console.log("✅ AI response parsed successfully.", result);
+
+    const entries = result.entries || result.days || result.devotionals || result.daily_devotionals || result; // Handle potential JSON key variance
 
     if (!Array.isArray(entries)) throw new Error("AI did not return an array.");
 
