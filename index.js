@@ -361,6 +361,8 @@ const musicRoutes = require('./routes/music');
 const transcribeRouter = require('./routes/transcribe'); // [!code ++]
 const aiRouter = require('./routes/ai');
 const analysisRouter = require('./routes/analysis'); // [!code ++]
+const congregationsRouter = require('./routes/congregations'); // <--- Add this
+const messagesRouter = require('./routes/messages'); // <--- Add this
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -377,6 +379,8 @@ app.use('/api/music', musicRoutes);
 app.use('/api', transcribeRouter);
 app.use('/api/ai', aiRouter);
 app.use('/', analysisRouter);
+app.use('/api/congregations', congregationsRouter);
+app.use('/api/messages', messagesRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -29,7 +29,7 @@ router.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
     }
 });
 
-//Endpoing to get a single Bible study by study id
+//Endpoint to get a single Bible study by study id
 router.get('/bible-study/:studyId', authenticateUser, async (req, res) => {
     const { studyId } = req.params;
     console.log('Fetching bible study with ID:', studyId);
@@ -61,7 +61,8 @@ router.get('/bible-study/:studyId', authenticateUser, async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-//endpoint to get Bible Study Lessons by study id
+
+//Endpoint to get Bible Study Lessons by study id
 router.get('/bible-study-lessons/:studyId', authenticateUser, async (req, res) => {
     const { studyId } = req.params;
     console.log('Fetching bible study lessons for study ID:', studyId);
@@ -103,7 +104,7 @@ router.get('/bible-study-lessons/detail/:lessonId', authenticateUser, async (req
     }
 });
 
-// upsert bible study lesson (create or update)
+// Upsert bible study lesson (create or update)
 router.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res) => {
     try {
         const lessonData = req.body;
@@ -126,6 +127,32 @@ router.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res)
     } catch (error) {
         console.error('Unhandled error in /bible-study-lessons/:lessonId:', error);
         res.status(500).json({ error: 'An unexpected error occurred.' });
+    }
+});
+
+// NEW: Endpoint to update the parent Bible Study (e.g., publishing)
+router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
+    try {
+        const { studyId } = req.params;
+        const { is_published, congregation_id } = req.body;
+        
+        const payload = { updated_at: new Date().toISOString() };
+        if (is_published !== undefined) payload.is_published = is_published;
+        if (congregation_id !== undefined) payload.congregation_id = congregation_id;
+
+        const { data, error } = await supabase
+            .from('bible_studies')
+            .update(payload)
+            .eq('study_id', studyId)
+            .select()
+            .single();
+
+        if (error) throw error;
+        
+        res.json(data);
+    } catch (error) {
+        console.error('Error updating bible study:', error);
+        res.status(500).json({ error: 'Failed to update bible study.' });
     }
 });
 
@@ -164,7 +191,6 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
 
         // 3. Start AI generation in the background
         const userPrompt = 'Topic: ' + topic + '\n Number of Lessons:' + length + '\n Bible Study Type: ' + method + '\n Include Illustration: true\n ';
-        //const systemPrompt = generateBibleStudyPrompt(await getTuningNotes(userId));
         const bible_study_prompt = await generateBibleStudyPrompt();
         try {
             const generatedStudy = await callOpenAIAndProcessResult(
@@ -201,7 +227,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                     const { error: insertLessonError } = await supabase
                         .from('bible_study_lessons')
                         .insert({
-                            study_id: newStudy.study_id, // Link to parent study
+                            study_id: newStudy.study_id, 
                             lesson_number: lesson.lesson_number,
                             title: lesson.title,
                             scripture: lesson.scripture || null,
@@ -213,15 +239,14 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                             discussion_starters: lesson.discussion_starters || null,
                             application_sidebar: lesson.application_sidebar || null,
                             conclusion: lesson.conclusion || null,
-                            reflection_questions: lesson.reflection_questions || null, // Assuming this is also present in AI output
-                            user_id: userId, // Associate lesson with user
+                            reflection_questions: lesson.reflection_questions || null, 
+                            user_id: userId, 
                             created_at: new Date().toISOString(),
                             updated_at: new Date().toISOString(),
                         });
                     if (insertLessonError) {
                         logEvent('error', 'backend', userId, 'generate_bible_study', `Failed to insert bible_study_lesson for study ${newStudy.study_id}`, { error: insertLessonError.message }, Date.now() - startTime);
                         console.error(`Error inserting bible_study_lesson for study ${newStudy.study_id}:`, insertLessonError);
-                        // Consider rolling back parent study status to failed or partial
                     }
                 }
                 logEvent('ai', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', {tokens: generatedStudy.tokens}, duration);
