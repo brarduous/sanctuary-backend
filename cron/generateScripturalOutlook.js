@@ -295,7 +295,7 @@ async function saveScripturalOutlook(outlook) {
 }
 
 // Function to fetch the top 6 news stories (logic remains the same)
-async function fetchTopNewsStories(limit = 2) {
+async function fetchTopNewsStories(limit = 24) {
   console.log('Fetching top news stories...');
   const startTime = Date.now();
     const rssFeedUrls = [
