@@ -6,6 +6,7 @@ const axios = require('axios');
 const xml2js = require('xml2js');
 const cheerio = require('cheerio');
 const OpenAI = require('openai'); // Use the v4 client
+const { GoogleGenAI } = require('@google/genai');
 const puppeteer = require('puppeteer');
 const { logEvent } = require('../utils/helpers');
 
@@ -13,6 +14,10 @@ require('dotenv').config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
+});
+
+const gemini = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
 });
 
 // Initialize Supabase client for a Node.js environment
@@ -86,21 +91,54 @@ async function generateUniqueSlug(tableName, baseText) {
     }
 }
 
-// Function to generate image using DALL-E 3
+// Function to generate image using Gemini
 async function generateImage(prompt) {
     const startTime = Date.now();
     try {
         console.log('Generating image with prompt:', prompt.substring(0, 50) + '...');
-        const response = await openai.images.generate({
-            model: "gpt-image-1-mini",
-            prompt: prompt,
-            n: 1,
-            size: "1792x1024",
-            response_format: "url", // We get a URL, then download it
+        const response = await gemini.models.generateContent({
+            model: "gemini-2.5-flash-image",
+            contents: [
+                {
+                    role: 'user',
+                    parts: [{ text: prompt }],
+                }
+            ],
         });
-        console.log('Image generated:', response.data[0].url);
-        logEvent('ai', 'backend', null, 'generate_scriptural_outlook', 'Successfully generated image', {tokens: response.data[0].tokens}, Date.now() - startTime);
-        return response.data[0].url;
+
+        const parts = response?.candidates?.[0]?.content?.parts || response?.content?.parts || [];
+        let imageUrl = null;
+        let imageBase64 = null;
+        let imageMimeType = null;
+
+        for (const part of parts) {
+            if (part?.inlineData?.data) {
+                imageBase64 = part.inlineData.data;
+                imageMimeType = part.inlineData.mimeType || 'image/png';
+                break;
+            }
+            if (part?.fileData?.fileUri) {
+                imageUrl = part.fileData.fileUri;
+                imageMimeType = part.fileData.mimeType || null;
+                break;
+            }
+        }
+
+        if (!imageUrl && !imageBase64) {
+            throw new Error('Gemini response did not include image data.');
+        }
+
+        console.log('Image generated:', imageUrl ? imageUrl : 'inline data');
+        logEvent(
+            'ai',
+            'backend',
+            null,
+            'generate_scriptural_outlook',
+            'Successfully generated image',
+            { tokens: response?.usageMetadata?.totalTokenCount },
+            Date.now() - startTime
+        );
+        return { url: imageUrl, base64: imageBase64, mimeType: imageMimeType };
     } catch (error) {
         console.error("Error generating image:", error);
         logEvent('error', 'backend', null, 'generate_scriptural_outlook', 'Error generating image', { error: error.message }, Date.now() - startTime);  
@@ -108,19 +146,35 @@ async function generateImage(prompt) {
     }
 }
 
-// Function to upload image from URL to Supabase Storage
-async function uploadImageToSupabase(imageUrl, bucketName, path) {
+// Function to upload image from URL or base64 to Supabase Storage
+async function uploadImageToSupabase(imageInput, bucketName, path) {
     try {
-        // 1. Download image as ArrayBuffer
-        const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-        const buffer = Buffer.from(response.data, 'binary');
+        let buffer = null;
+        let contentType = 'image/png';
+
+        if (typeof imageInput === 'string') {
+            const response = await axios.get(imageInput, { responseType: 'arraybuffer' });
+            buffer = Buffer.from(response.data, 'binary');
+            contentType = response.headers?.['content-type'] || contentType;
+        } else if (imageInput && imageInput.base64) {
+            buffer = Buffer.from(imageInput.base64, 'base64');
+            contentType = imageInput.mimeType || contentType;
+        } else if (imageInput && imageInput.url) {
+            const response = await axios.get(imageInput.url, { responseType: 'arraybuffer' });
+            buffer = Buffer.from(response.data, 'binary');
+            contentType = response.headers?.['content-type'] || imageInput.mimeType || contentType;
+        }
+
+        if (!buffer) {
+            throw new Error('No image data provided for upload.');
+        }
 
         // 2. Upload to Supabase
         const { data, error } = await supabase
             .storage
             .from(bucketName)
             .upload(path, buffer, {
-                contentType: 'image/png',
+                contentType: contentType,
                 upsert: true
             });
 
@@ -241,7 +295,7 @@ async function saveScripturalOutlook(outlook) {
 }
 
 // Function to fetch the top 6 news stories (logic remains the same)
-async function fetchTopNewsStories(limit = 6) {
+async function fetchTopNewsStories(limit = 2) {
   console.log('Fetching top news stories...');
   const startTime = Date.now();
     const rssFeedUrls = [
@@ -414,7 +468,7 @@ You are a theological artist and analyst for a Christian News app.
 1.  **Analyze**: Consider the provided Topic or Category name and the synopses of recent articles associated with it.
 2.  **Breakdown**: Provide a "Current Scriptural Breakdown": How does this specific topic/category relate to current events (based on the provided synopses) and biblical truth right now? (2-3 sentences).
 3.  **Image Prompt**: Create a prompt for an image generation model (DALL-E) that represents this topic, influenced by the themes in the recent articles. If the image subject is a person, ensure the prompt captures their likeness accurately.
-    * **Style**: photorealistic Journalistic photograph, fit to be used as a news article image.  
+    * **Style**: photorealistic Journalistic photograph, fit to be used as a news article image. If using a real person, feel free to change the style to more of a satirical approach where they can be more like a political cartoon.  
     * **Constraint**: no text should be added to the image whatsoever.
 
 # JSON OUTPUT STRUCTURE
@@ -504,12 +558,12 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
 
                 if (aiResponse && aiResponse.scriptural_breakdown && aiResponse.image_prompt) {
                     // 4. Generate Image
-                    const imageUrl = await generateImage(aiResponse.image_prompt);
+                    const imageResult = await generateImage(aiResponse.image_prompt);
                     
-                    if (imageUrl) {
+                    if (imageResult) {
                         // 5. Upload to Supabase
                         const storagePath = `taxonomy/${type}/${id}_${Date.now()}.png`;
-                        const publicUrl = await uploadImageToSupabase(imageUrl, bucketName, storagePath);
+                        const publicUrl = await uploadImageToSupabase(imageResult, bucketName, storagePath);
 
                         if (publicUrl) {
                             // 6. Update Database Record
