@@ -380,7 +380,7 @@ app.use('/api', transcribeRouter);
 app.use('/api/ai', aiRouter);
 app.use('/', analysisRouter);
 app.use('/api/congregations', congregationsRouter);
-app.use('/api/messages', messagesRouter);
+app.use('/messages', messagesRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
