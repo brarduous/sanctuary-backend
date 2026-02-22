@@ -5,6 +5,7 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { generateBibleStudyPrompt } = require('../prompts');
+const { sendPushToCongregation } = require('../utils/push');
 
 //Endpoint to get Bible Studies by user id
 router.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
@@ -149,6 +150,16 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
 
         if (error) throw error;
         
+        //send push notification to congregation if study is now published
+        if (is_published === true && congregation_id) {
+            sendPushToCongregation(
+                congregation_id,
+                "New Church Curriculum 📖",
+                `A new Bible Study is available: "${data.title}"`,
+                { route: `/(tabs)/church` }
+            );
+        }
+
         res.json(data);
     } catch (error) {
         console.error('Error updating bible study:', error);

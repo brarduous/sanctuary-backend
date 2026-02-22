@@ -99,4 +99,45 @@ router.post('/', authenticateUser, async (req, res) => {
   }
 });
 
+// GET: Fetch published content for a specific congregation (For Layperson App)
+router.get('/:congregationId/content', authenticateUser, async (req, res) => {
+  try {
+    const { congregationId } = req.params;
+
+    // 1. Get Church details
+    const { data: church, error: churchErr } = await supabase
+      .from('congregations')
+      .select('*')
+      .eq('congregation_id', congregationId)
+      .single();
+    
+    if (churchErr) throw churchErr;
+
+    // 2. Get Published Studies (Bypasses RLS because backend uses secure client)
+    const { data: studies, error: studiesErr } = await supabase
+      .from('bible_studies')
+      .select('*')
+      .eq('congregation_id', congregationId)
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    // 3. Get Published Messages
+    const { data: messages, error: messagesErr } = await supabase
+      .from('pastoral_messages')
+      .select('*')
+      .eq('congregation_id', congregationId)
+      .eq('is_published', true)
+      .order('created_at', { ascending: false });
+
+    res.json({
+      church,
+      studies: studies || [],
+      messages: messages || []
+    });
+  } catch (error) {
+    console.error('[Congregations API] Error fetching church content:', error);
+    res.status(500).json({ error: 'Failed to fetch church content' });
+  }
+});
+
 module.exports = router;

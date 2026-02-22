@@ -3,6 +3,7 @@ const router = express.Router();
 const Mux = require('@mux/mux-node');
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
+const { sendPushToCongregation } = require('../utils/push');
 
 // Initialize Mux (You'll need to add these to your backend .env file)
 const mux = new Mux({
@@ -38,7 +39,7 @@ router.post('/save-message', authenticateUser, async (req, res) => {
   try {
     // We check Mux to get the actual Asset ID associated with this upload
     const upload = await mux.video.uploads.retrieve(uploadId);
-    
+
     if (upload.status !== 'asset_created' && upload.status !== 'waiting') {
       return res.status(400).json({ error: 'Video has not finished processing' });
     }
@@ -59,7 +60,12 @@ router.post('/save-message', authenticateUser, async (req, res) => {
       .single();
 
     if (error) throw error;
-
+    sendPushToCongregation(
+      congregationId,
+      "New Pastoral Update 🎥",
+      `Your pastor just posted a new ${messageType.replace('_', ' ')}: "${title}"`,
+      { route: '/(tabs)/church' } // Deep linking data so tapping the notification opens the church tab
+    );
     res.json(data);
   } catch (error) {
     console.error('Save message error:', error);
