@@ -84,6 +84,11 @@ const getDailyNewsSynopsisPrompt = async () => {
     return await fetchPrompt('daily_news_synopsis');
 };
 
+const generateSermonSeriesOutlinePrompt = async (tuningNotes = "") => {
+    const basePrompt = await fetchPrompt('sermon_series_outline_generator');
+    return `${formatTuning(tuningNotes)}\n\n${basePrompt}`;
+};
+
 module.exports = {
     generateTopicSermonPrompt,
     generateScriptureSermonPrompt,
@@ -92,5 +97,6 @@ module.exports = {
     getAdviceGuidancePrompt,
     getDailyDevotionalPrompt,
     getCommunityPrayerPrompt,
-    getDailyNewsSynopsisPrompt
+    getDailyNewsSynopsisPrompt,
+    generateSermonSeriesOutlinePrompt
 };
