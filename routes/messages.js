@@ -73,4 +73,21 @@ router.post('/save-message', authenticateUser, async (req, res) => {
   }
 });
 
+router.get('/detail/:messageId', authenticateUser, async (req, res) => {
+  try {
+    const { messageId } = req.params;
+    const { data, error } = await supabase
+      .from('pastoral_messages')
+      .select('*')
+      .eq('message_id', messageId)
+      .single();
+
+    if (error) throw error;
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching message details:', error);
+    res.status(500).json({ error: 'Failed to fetch message details' });
+  }
+});
+
 module.exports = router;
