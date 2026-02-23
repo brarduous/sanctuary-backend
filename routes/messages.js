@@ -43,8 +43,13 @@ router.post('/save-message', authenticateUser, async (req, res) => {
     if (upload.status !== 'asset_created' && upload.status !== 'waiting') {
       return res.status(400).json({ error: 'Video has not finished processing' });
     }
-
+    console.log('Mux upload details:', upload);
     const assetId = upload.asset_id;
+    
+    //get the playback id from the asset id via api call to mux
+    const asset = await mux.video.assets.retrieve(assetId);
+    const playbackId = asset.playback_ids.find(p => p.policy === 'public').id;
+    console.log('Playback ID:', playbackId);
 
     // Save to your Database
     const { data, error } = await supabase
@@ -52,6 +57,7 @@ router.post('/save-message', authenticateUser, async (req, res) => {
       .insert({
         congregation_id: congregationId,
         video_asset_id: assetId,
+        video_playback_id: playbackId,
         title: title,
         message_type: messageType,
         is_published: true
