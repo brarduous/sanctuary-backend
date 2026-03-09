@@ -5,15 +5,16 @@ const authenticateUser = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
 
-// Search articles by relevance: title > body > synopsis
+// --- 1. SEARCH ARTICLES ---
+// Optimized: Fetches article_body for scoring, but strips it before sending to client to save bandwidth.
 router.get('/search', optionalAuth, async (req, res) => {
+    const startTime = Date.now();
     try {
         const q = (req.query.q || '').trim();
         const limit = Math.min(parseInt(req.query.limit || '50', 10) || 50, 200);
         console.log('Search query:', q, 'Limit:', limit);
-        if (!q) {
-            return res.status(400).json({ error: 'Query parameter `q` is required.' });
-        }
+        
+        if (!q) return res.status(400).json({ error: 'Query parameter `q` is required.' });
 
         const pattern = `%${q}%`;
         const { data, error } = await supabase
@@ -42,17 +43,21 @@ router.get('/search', optionalAuth, async (req, res) => {
             const titleScore = scoreFor(row.article_title, 6);
             const bodyScore = scoreFor(row.article_body, 3);
             const synopsisScore = scoreFor(synopsis, 2);
-            const totalScore = titleScore + bodyScore + synopsisScore;
-            return { ...row, _score: totalScore };
+            
+            // OPTIMIZATION: Delete the massive article_body before sending over the network
+            delete row.article_body; 
+            
+            return { ...row, _score: (titleScore + bodyScore + synopsisScore) };
         })
-            .filter(r => r._score > 0)
-            .sort((a, b) => {
-                if (b._score !== a._score) return b._score - a._score;
-                const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
-                const bd = b.publish_date ? new Date(b.publish_date).getTime() : 0;
-                return bd - ad;
-            });
+        .filter(r => r._score > 0)
+        .sort((a, b) => {
+            if (b._score !== a._score) return b._score - a._score;
+            const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
+            const bd = b.publish_date ? new Date(b.publish_date).getTime() : 0;
+            return bd - ad;
+        });
 
+        logEvent('info', 'backend', req.user?.id ?? null, 'search_articles', `Searched for: ${q}`, { count: ranked.length }, Date.now() - startTime);
         return res.json({ query: q, count: ranked.length, results: ranked });
     } catch (err) {
         console.error('Search endpoint error:', err);
@@ -60,7 +65,7 @@ router.get('/search', optionalAuth, async (req, res) => {
     }
 });
 
-// New: Endpoint to fetch all canonical categories
+// --- 2. GET ALL CATEGORIES (WITH RECENT COUNTS) ---
 router.get('/categories', async (req, res) => {
     try {
         const days = 7;
@@ -68,11 +73,10 @@ router.get('/categories', async (req, res) => {
         startDate.setDate(startDate.getDate() - days);
         const isoDate = startDate.toISOString();
 
-        // 1. Get all categories
         const { data: cats, error: catError } = await supabase.from('categories').select('*');
         if (catError) throw catError;
 
-        // 2. Get recent counts by joining with scriptural_outlooks date
+        // Optimized: Only select what's needed for the count
         const { data: counts, error: countErr } = await supabase
             .from('outlook_categories')
             .select('category_id, scriptural_outlooks!inner(created_at)')
@@ -80,7 +84,6 @@ router.get('/categories', async (req, res) => {
 
         if (countErr) throw countErr;
 
-        // Aggregate counts in JS
         const activityMap = {};
         counts.forEach(c => {
             activityMap[c.category_id] = (activityMap[c.category_id] || 0) + 1;
@@ -98,30 +101,26 @@ router.get('/categories', async (req, res) => {
     }
 });
 
-//New: Endpoint to fetch category by ID
+// --- 3. GET SINGLE CATEGORY ---
 router.get('/categories/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
-    console.log('Fetching category with ID:', id);
     try {
         const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('categories')
             .select('*')
-        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
-        if (error) {
-            console.error('Error fetching category:', error);
-            return res.status(404).json({ error: 'Category not found' });
-        }
-        console.log('Fetched category data:', data);
+        if (error) return res.status(404).json({ error: 'Category not found' });
         res.json(data);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-// New: Endpoint to fetch all canonical topics
+
+// --- 4. GET ALL TOPICS (WITH RECENT COUNTS) ---
 router.get('/topics', async (req, res) => {
     try {
         const days = 7;
@@ -156,47 +155,38 @@ router.get('/topics', async (req, res) => {
     }
 });
 
-
-//New: Endpoint to fetch topic by ID
+// --- 5. GET SINGLE TOPIC ---
 router.get('/topics/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
-    console.log('Fetching topic with ID:', id);
     try {
         const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('topics')
             .select('*')
-        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
-        if (error) {
-            console.error('Error fetching topic:', error);
-            return res.status(404).json({ error: 'Topic not found' });
-        }
+            
+        if (error) return res.status(404).json({ error: 'Topic not found' });
         res.json(data);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-
-
 });
-// --- GET Single Scriptural Outlook by ID ---
+
+// --- 6. GET SINGLE SCRIPTURAL OUTLOOK (FULL DETAIL) ---
+// This is the ONLY route that should select '*' because it needs the full article_body
 router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
     const { id } = req.params;
-    console.log('Fetching scriptural outlook with ID:', id);
     try {
         const isNumeric = /^\d+$/.test(id);
         const { data, error } = await supabase
             .from('scriptural_outlooks')
             .select('*')
-        [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
 
-        if (error) {
-            console.error('Error fetching article:', error);
-            return res.status(404).json({ error: 'Article not found' });
-        }
-
+        if (error) return res.status(404).json({ error: 'Article not found' });
         res.json(data);
     } catch (error) {
         console.error('Server error:', error);
@@ -204,19 +194,25 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
     }
 });
 
-//Endpoint to get news articles from scriptural_outlooks table of database
+// --- 7. GET ALL SCRIPTURAL OUTLOOKS (LIST/FEED VIEW) ---
+// HIGHLY OPTIMIZED: Uses targeted selects, explicit dates, and prevents full table scans on inner joins.
 router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
-    //receive params for page and limit
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
+    
+    // Date Filters
+    const startDate = req.query.startDate;
+    const endDate = req.query.endDate;
+
+    // Taxonomy Filters
     const topic_id = req.query.topic_id;
     const category_id = req.query.category_id;
-    const category_ids = req.query.category_ids; // comma separated list
+    const category_ids = req.query.category_ids; 
     const topic_slug = req.query.topic_slug;
     const category_slug = req.query.category_slug;
-    const topic = req.query.topic; // can be id or slug
-    const category = req.query.category; // can be id or slug
+    const topic = req.query.topic; 
+    const category = req.query.category; 
 
     const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
     const hasCategoryFilter = Boolean(category_id || category_slug || category);
@@ -225,8 +221,8 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
     try {
         const startTime = Date.now();
-        // Construct the select query dynamically based on filters
-        // If filtering by a relation, we must use !inner to filter the parent rows
+        
+        // Dynamically build relationship queries based on whether we are filtering by them
         let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, slug, name, description) )';
         let outlookCategoriesSelect = 'outlook_categories ( category_id, categories (id, slug, name, description) )';
 
@@ -237,7 +233,9 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
             outlookCategoriesSelect = 'outlook_categories!inner ( category_id, categories (id, slug, name, description) )';
         }
 
-        const selectQuery = `*, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
+        // OPTIMIZATION: Explicitly exclude `article_body` from the list view
+        const baseColumns = 'id, article_title, article_url, article_thumbnail_url, created_at, publish_date, slug, ai_outlook';
+        const selectQuery = `${baseColumns}, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
 
         let query = supabase
             .from('scriptural_outlooks')
@@ -245,70 +243,56 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
 
+        // Apply Date Filters
+        if (startDate) query = query.gte('created_at', startDate);
+        if (endDate) query = query.lte('created_at', endDate);
+
+        // Apply Topic Filters
         if (topic_id) {
-            if (/^\d+$/.test(topic_id)) {
-                query = query.eq('outlook_topics.topic_id', topic_id);
-            } else {
-                // If a non-numeric topic_id is passed, treat it like a slug
-                query = query.eq('outlook_topics.topics.slug', topic_id);
-            }
+            query = /^\d+$/.test(topic_id) 
+                ? query.eq('outlook_topics.topic_id', topic_id) 
+                : query.eq('outlook_topics.topics.slug', topic_id);
         } else if (topic_slug) {
             query = query.eq('outlook_topics.topics.slug', topic_slug);
         } else if (topic) {
-            query = topicIsNumeric
-                ? query.eq('outlook_topics.topic_id', topic)
-                : query.eq('outlook_topics.topics.slug', topic);
+            query = topicIsNumeric ? query.eq('outlook_topics.topic_id', topic) : query.eq('outlook_topics.topics.slug', topic);
         }
+        
+        // Apply Category Filters
         if (category_id) {
-            if (/^\d+$/.test(category_id)) {
-                query = query.eq('outlook_categories.category_id', category_id);
-            } else {
-                // If a non-numeric category_id is passed, treat it like a slug
-                query = query.eq('outlook_categories.categories.slug', category_id);
-            }
+            query = /^\d+$/.test(category_id) 
+                ? query.eq('outlook_categories.category_id', category_id) 
+                : query.eq('outlook_categories.categories.slug', category_id);
         } else if (category_slug) {
             query = query.eq('outlook_categories.categories.slug', category_slug);
         } else if (category) {
-            query = categoryIsNumeric
-                ? query.eq('outlook_categories.category_id', category)
-                : query.eq('outlook_categories.categories.slug', category);
+            query = categoryIsNumeric ? query.eq('outlook_categories.category_id', category) : query.eq('outlook_categories.categories.slug', category);
         } else if (category_ids) {
-            const ids = category_ids.split(','); // Expecting "1,2,3"
-            query = query.in('category_id', ids);
+            query = query.in('outlook_categories.category_id', category_ids.split(','));
         }
-
 
         const { data, error } = await query;
 
-        if (error) {
-            console.error('Error fetching scriptural outlooks:', error);
-            return res.status(500).json({ error: 'Failed to fetch scriptural outlooks.' });
-        }
+        if (error) throw error;
 
-        // Map the results to a cleaner format for the frontend
-        const cleanedData = data.map(outlook => {
-            return {
-                ...outlook,
-                // Restructure categories array to just include category data
-                categories: outlook.outlook_categories ? outlook.outlook_categories.map(oc => oc.categories) : [],
-                // Restructure topics array to just include topic data
-                topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
-                // Remove the intermediary join table properties for cleanliness
-                outlook_categories: undefined,
-                outlook_topics: undefined,
-            };
-        });
-        const duration = Date.now() - startTime;
-        logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched scriptural outlooks', { page, limit, topic_id, category_id }, duration);
+        // Clean up nested Supabase formatting
+        const cleanedData = data.map(outlook => ({
+            ...outlook,
+            categories: outlook.outlook_categories ? outlook.outlook_categories.map(oc => oc.categories) : [],
+            topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
+            outlook_categories: undefined,
+            outlook_topics: undefined,
+        }));
+        
+        logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched outlooks list', { page, limit, hasTopicFilter, hasCategoryFilter }, Date.now() - startTime);
         res.json(cleanedData);
     } catch (error) {
         console.error('Unhandled error in /scriptural-outlooks:', error);
-        logEvent('error', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Error fetching scriptural outlooks', { error: error.message }, Date.now() - startTime);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
 
-// Fetch daily news synopses with optional limit and ordering, with optional query parameters for date range
+// --- 8. GET DAILY NEWS SYNOPSES ---
 router.get('/daily-news-synopses', async (req, res) => {
     const startTime = Date.now();
     try {
@@ -316,20 +300,18 @@ router.get('/daily-news-synopses', async (req, res) => {
         const startDate = req.query.startDate;
         const endDate = req.query.endDate;
         const order = (req.query.order || 'desc').toLowerCase() === 'asc' ? 'asc' : 'desc';
+        
         const { data, error } = await supabase
             .from('daily_news_synopses')
             .select('*')
-            .gte(startDate ? 'created_at' : 'created_at', startDate || '1970-01-01')
-            .lte(endDate ? 'created_at' : 'created_at', endDate || new Date().toISOString())
+            .gte('created_at', startDate || '1970-01-01')
+            .lte('created_at', endDate || new Date().toISOString())
             .order('created_at', { ascending: order === 'asc' })
             .limit(limit);
 
-        if (error) {
-            console.error('Error fetching daily news synopses:', error);
-            logEvent('error', 'backend', req.user?.id ?? null, 'daily_news_synopses', 'Failed to fetch daily news synopses', { error: error.message }, Date.now() - startTime);
-            return res.status(500).json({ error: 'Failed to fetch daily news synopses.' });
-        }
-        logEvent('info', 'backend', req.user?.id ?? null, 'daily_news_synopses', 'Successfully fetched daily news synopses', {}, Date.now() - startTime);
+        if (error) throw error;
+
+        logEvent('info', 'backend', req.user?.id ?? null, 'daily_news_synopses', 'Fetched daily news', {}, Date.now() - startTime);
         return res.json(data);
     } catch (err) {
         console.error('Unhandled error in /daily-news-synopses:', err);
