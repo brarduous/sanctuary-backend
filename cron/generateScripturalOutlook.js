@@ -37,8 +37,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt },
             ],
-            max_tokens: maxTokens,
-            temperature: 0.7, // Adjust creativity
+            max_completion_tokens: maxTokens,
             response_format: { type: responseFormatType },
         });
 
@@ -271,7 +270,7 @@ async function saveScripturalOutlook(outlook) {
     // We only upsert the core outlook data here, relationships are handled separately
     const { data, error } = await supabase
         .from('scriptural_outlooks')
-        .insert([
+        .upsert([
             {
                 article_url: outlook.article_url,
                 article_title: outlook.article_title,
@@ -551,7 +550,7 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
                 const aiResponse = await callOpenAIAndProcessResult(
                     `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}\n` + taxonomy_breakdown_prompt, 
                     `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}`, 
-                    'gpt-4.1-2025-04-14', 
+                    'gpt-5-mini', 
                     2000, 
                     'json_object'
                 );
@@ -634,20 +633,20 @@ existingTaxonomies.categories, existingTaxonomies.topics
     const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\nExisting Topics: ${existingTaxonomies.categories}\nExisting Topics: ${existingTaxonomies.topics}`;
     try {
       // Call the AI function with the prompt and content for the current article
-      const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-4.1-2025-04-14', 5000, 'json_object');
+      const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 5000, 'json_object');
       
       if (aiResponse && typeof aiResponse === 'object') {
         
         // 1. Save the core outlook and get its ID
         const outlook = {
+            article_title: aiResponse.title,
             article_url: article.url,
-            article_title: article.title,
             article_body: article.body,
             article_thumbnail_url: article.thumbnail_url,
             publish_date: article.publish_date,
             ai_outlook: aiResponse // Full AI content
         };
-
+        console.log('AI response processed for article:', article.title, aiResponse);
         const savedOutlook = await saveScripturalOutlook(outlook);
 
         if (!savedOutlook) {
