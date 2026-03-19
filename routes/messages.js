@@ -34,30 +34,27 @@ router.post('/upload-url', authenticateUser, async (req, res) => {
 
 // 2. Save the final message to Supabase
 router.post('/save-message', authenticateUser, async (req, res) => {
-  const { uploadId, title, messageType, congregationId } = req.body;
+ const { uploadId, title, messageType, congregationId, messageBody } = req.body;
 
   try {
-    // We check Mux to get the actual Asset ID associated with this upload
-    const upload = await mux.video.uploads.retrieve(uploadId);
+    let assetId = null;
+    let playbackId = null;
 
-    if (upload.status !== 'asset_created' && upload.status !== 'waiting') {
-      return res.status(400).json({ error: 'Video has not finished processing' });
+    // Only process Mux logic if an uploadId (video) was provided
+    if (uploadId) {
+        const upload = await mux.video.uploads.retrieve(uploadId);
+        assetId = upload.asset_id; 
+        const asset = await mux.video.assets.retrieve(assetId);
+        playbackId = asset.playback_ids[0].id; 
     }
-    console.log('Mux upload details:', upload);
-    const assetId = upload.asset_id;
-    
-    //get the playback id from the asset id via api call to mux
-    const asset = await mux.video.assets.retrieve(assetId);
-    const playbackId = asset.playback_ids.find(p => p.policy === 'public').id;
-    console.log('Playback ID:', playbackId);
 
-    // Save to your Database
     const { data, error } = await supabase
       .from('pastoral_messages')
       .insert({
         congregation_id: congregationId,
         video_asset_id: assetId,
         video_playback_id: playbackId,
+        message_body: messageBody || null, // Save the rich text!
         title: title,
         message_type: messageType,
         is_published: true
