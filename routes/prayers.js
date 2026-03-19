@@ -130,4 +130,119 @@ router.get('/prayer/:userId/:prayerId', authenticateUser, async (req, res) => {
     res.json(data);
 });
 
+// POST: Submit a new community prayer request
+router.post('/request', authenticateUser, async (req, res) => {
+    const { requestText, visibility, congregationId } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const { data, error } = await supabase
+            .from('prayer_requests')
+            .insert({
+                user_id: userId,
+                congregation_id: congregationId || null,
+                request_text: requestText,
+                visibility: visibility // 'public_anonymous', 'congregation', or 'pastor'
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+        res.status(201).json(data);
+    } catch (error) {
+        console.error('Error submitting prayer:', error);
+        res.status(500).json({ error: 'Failed to submit prayer.' });
+    }
+});
+
+// GET: Fetch Prayer Feed for Mobile App (Respects Visibility Rules)
+router.get('/feed', authenticateUser, async (req, res) => {
+    const { congregationId } = req.query; // Pass the user's congregation if they have one
+
+    try {
+        let query = supabase
+            .from('prayer_requests')
+            .select('id, request_text, visibility, created_at, user_id, user_profiles(first_name, last_name, avatar_url)')
+            .order('created_at', { ascending: false })
+            .limit(50);
+
+        if (congregationId) {
+            // User IS in a church: See Public + Their Congregation's prayers
+            query = query.or(`visibility.eq.public_anonymous,and(visibility.eq.congregation,congregation_id.eq.${congregationId})`);
+        } else {
+            // User IS NOT in a church: See ONLY Public prayers
+            query = query.eq('visibility', 'public_anonymous');
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        // SANITIZE: Strip names from public_anonymous requests!
+        const sanitizedData = data.map(prayer => {
+            if (prayer.visibility === 'public_anonymous') {
+                return { ...prayer, user_id: null, user_profiles: null, author_name: 'Anonymous' };
+            }
+            return { ...prayer, author_name: `${prayer.user_profiles?.first_name} ${prayer.user_profiles?.last_name}` };
+        });
+
+        res.json(sanitizedData);
+    } catch (error) {
+        console.error('Error fetching prayer feed:', error);
+        res.status(500).json({ error: 'Failed to fetch prayers.' });
+    }
+});
+
+// GET: Fetch a random prayer (Prioritizes local congregation, falls back to public)
+router.get('/random', authenticateUser, async (req, res) => {
+    const { congregationId } = req.query;
+
+    try {
+        let selectedPrayer = null;
+
+        // 1. Try to get a congregational prayer first (if user is in a church)
+        if (congregationId && congregationId !== 'null' && congregationId !== 'undefined') {
+            const { data: congPrayers, error: congErr } = await supabase
+                .from('prayer_requests')
+                .select('id, request_text, visibility, created_at, user_profiles(first_name, last_name)')
+                .eq('congregation_id', congregationId)
+                .eq('visibility', 'congregation')
+                .order('created_at', { ascending: false })
+                .limit(20); // Pull from the 20 most recent
+
+            if (!congErr && congPrayers && congPrayers.length > 0) {
+                selectedPrayer = congPrayers[Math.floor(Math.random() * congPrayers.length)];
+                selectedPrayer.author_name = `${selectedPrayer.user_profiles?.first_name} ${selectedPrayer.user_profiles?.last_name}`;
+            }
+        }
+
+        // 2. Fallback: If no congregational prayer found (or user isn't in a church), get a public one
+        if (!selectedPrayer) {
+            const { data: publicPrayers, error: pubErr } = await supabase
+                .from('prayer_requests')
+                .select('id, request_text, visibility, created_at')
+                .eq('visibility', 'public_anonymous')
+                .order('created_at', { ascending: false })
+                .limit(50); // Pull from the 50 most recent global prayers
+
+            if (!pubErr && publicPrayers && publicPrayers.length > 0) {
+                selectedPrayer = publicPrayers[Math.floor(Math.random() * publicPrayers.length)];
+                selectedPrayer.author_name = 'Anonymous';
+            }
+        }
+
+        // 3. Handle Edge Case: Literally zero prayers in the database
+        if (!selectedPrayer) {
+            return res.status(404).json({ error: 'No prayer requests available right now.' });
+        }
+
+        // Clean up the payload
+        delete selectedPrayer.user_profiles; 
+        res.json(selectedPrayer);
+
+    } catch (error) {
+        console.error('Error fetching random prayer:', error);
+        res.status(500).json({ error: 'Failed to fetch a random prayer.' });
+    }
+});
+
 module.exports = router;

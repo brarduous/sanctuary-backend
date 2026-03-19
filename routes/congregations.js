@@ -140,4 +140,21 @@ router.get('/:congregationId/content', authenticateUser, async (req, res) => {
   }
 });
 
+// DELETE: Allow a user to leave their current congregation
+router.delete('/leave', authenticateUser, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { error } = await supabase
+            .from('congregation_members')
+            .delete()
+            .eq('user_id', userId);
+
+        if (error) throw error;
+        res.json({ message: 'Successfully left the congregation.' });
+    } catch (error) {
+        console.error('[Congregations API] Error leaving:', error);
+        res.status(500).json({ error: 'Failed to leave congregation.' });
+    }
+});
+
 module.exports = router;

@@ -74,7 +74,7 @@ router.get('/recommended', auth, async (req, res) => {
     });
 
     // 4. Return Top 10
-    res.json(scoredVideos.slice(0, 10));
+    res.json(scoredVideos.slice(0, 10).sort((a, b) => new Date(b.created_at) - new Date(a.created_at))); // Final sort by newest first
 
   } catch (error) {
     console.error('[Videos API] Error:', error.message);
