@@ -243,6 +243,45 @@ router.get('/random', authenticateUser, async (req, res) => {
         console.error('Error fetching random prayer:', error);
         res.status(500).json({ error: 'Failed to fetch a random prayer.' });
     }
+
+});
+
+
+// GET: Fetch ALL prayers for a Pastor's Inbox
+router.get('/admin/:congregationId', authenticateUser, async (req, res) => {
+    try {
+        // Fetch all prayers for this church, regardless of visibility tier
+        const { data, error } = await supabase
+            .from('prayer_requests')
+            .select(`
+                id, request_text, visibility, created_at, user_id,
+                profiles:user_id(first_name, last_name, email)
+            `)
+            .eq('congregation_id', req.params.congregationId)
+            .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        // Format the names cleanly
+        const formattedData = data.map(prayer => {
+            const firstName = prayer.profiles?.first_name || 'Unknown';
+            const lastName = prayer.profiles?.last_name || 'User';
+            
+            return {
+                ...prayer,
+                author_name: prayer.visibility === 'public_anonymous' 
+                    ? 'Anonymous' // Keep it visually anonymous in the UI
+                    : `${firstName} ${lastName}`,
+                author_email: prayer.profiles?.email || null,
+                profiles: undefined // Clean up payload
+            };
+        });
+
+        res.json(formattedData);
+    } catch (error) {
+        console.error('Error fetching admin prayers:', error);
+        res.status(500).json({ error: 'Failed to fetch prayer inbox.' });
+    }
 });
 
 module.exports = router;
