@@ -64,7 +64,6 @@ You MUST anchor your devotional on this exact message today.
 
 === USER PROFILE ===
 Adapt the application of today's core message for this specific person:
-- Name: ${userData.first_name || 'The User'}
 - Focus Areas: ${userData.focusAreas?.join(', ') || 'General spiritual growth'}
 - Improvement Areas: ${userData.improvementAreas?.join(', ') || 'None specified'}
 - Pastoral/Background Notes: ${userData.pastoral_notes || 'None available.'}
