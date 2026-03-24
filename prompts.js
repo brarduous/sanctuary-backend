@@ -48,6 +48,36 @@ const formatTuning = (notes) => {
 };
 
 // --- EXPORTED GENERATORS (Now Async) ---
+const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuningNotes = "") => {
+    const basePrompt = await fetchPrompt('daily_devotional_generator'); // Your base JSON instructions
+    
+    return `
+${formatTuning(tuningNotes)}
+${basePrompt}
+
+=== TODAY'S CHURCH CURRICULUM ===
+You MUST anchor your devotional on this exact message today. 
+- Title: ${generalDevoData.title}
+- Scripture: ${generalDevoData.scripture_reference}
+- Scripture Text: ${generalDevoData.scripture_text || 'Use the reference above.'}
+- Core Message: ${generalDevoData.content}
+
+=== USER PROFILE ===
+Adapt the application of today's core message for this specific person:
+- Name: ${userData.first_name || 'The User'}
+- Focus Areas: ${userData.focusAreas?.join(', ') || 'General spiritual growth'}
+- Improvement Areas: ${userData.improvementAreas?.join(', ') || 'None specified'}
+- Pastoral/Background Notes: ${userData.pastoral_notes || 'None available.'}
+
+=== INSTRUCTIONS ===
+1. Keep the EXACT same Title and Scripture Reference as the Church Curriculum.
+2. Rewrite the "Core Message" to speak directly to the user (use their name, "you", etc.).
+3. Weave their "Focus Areas", "Improvement Areas", and "Background Notes" into the application of the scripture. 
+4. Provide a personalized prayer based on their struggles/focus areas and today's scripture.
+5. Provide a relevant song search query for YouTube.
+OUTPUT MUST BE A VALID JSON OBJECT matching the keys: title, scripture, content, daily_prayer, song_search_query.
+`;
+};
 
 const generateTopicSermonPrompt = async (tuningNotes = "") => {
     const basePrompt = await fetchPrompt('sermon_generator');
@@ -90,6 +120,7 @@ const generateSermonSeriesOutlinePrompt = async (tuningNotes = "") => {
 };
 
 module.exports = {
+    getPersonalizedDevotionalPrompt,
     generateTopicSermonPrompt,
     generateScriptureSermonPrompt,
     generateBibleStudyPrompt,

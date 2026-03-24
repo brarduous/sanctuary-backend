@@ -14,34 +14,48 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         const startTime = Date.now();
         const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
         const generationDate = new Date().toISOString().split('T')[0];
-        console.log('generate-devotional', userId, focusAreas, improvementAreas, recentDevotionals);
-        console.log('generate-devotional, and prayer');
-        // 1. Create a placeholder in the database immediately
+        
+        // 1. Fetch Today's General Devotional (Curriculum)
+        // We use .lte and .order to safely get the most recent one if today's isn't published yet
+        const { data: generalDevo, error: devoErr } = await supabase
+            .from('general_devotionals')
+            .select('*')
+            .lte('date', generationDate)
+            .order('date', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (devoErr || !generalDevo) {
+            console.error("No general devotional found to base curriculum on.", devoErr);
+            return res.status(400).json({ error: 'Daily curriculum not available yet. Please try again later.' });
+        }
+
+        // 2. Fetch User's CRM Profile for deep personalization
+        const { data: userProfile } = await supabase
+            .from('church_crm_profiles')
+            .select('first_name, last_name') // Add pastoral_notes here if your schema links them directly!
+            .eq('user_id', userId)
+            .single();
+
+        // 3. Create placeholders in the database
         const { data: newDevotional, error: insertError } = await supabase
             .from('daily_devotionals')
             .insert({
                 user_id: userId,
-                // Assuming 'content' or another field is the primary AI output placeholder
                 content: 'Generating devotional...',
-                status: 'pending', // IMPORTANT: This assumes you have a 'status' column
-                // scripture: null, // Placeholder if scripture is a separate output from AI
-                created_at: new Date().toISOString(), // Ensure created_at is set
-                updated_at: new Date().toISOString(), // Ensure updated_at is set
+                status: 'pending',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
             })
             .select('devotional_id')
             .single();
 
-        if (insertError) {
-            console.error('Error creating placeholder devotional:', insertError);
-            return res.status(500).json({ error: 'Failed to initiate devotional generation.' });
-        }
-        // 1-a. Create a placeholder for prayer in the daily_prayer table
         const { data: newPrayer, error: insertPrayerError } = await supabase
             .from('daily_prayers')
             .insert({
                 user_id: userId,
                 generated_prayer: 'Generating prayer...',
-                status: 'pending', // Assuming you have a status column
+                status: 'pending',
                 date: generationDate,
                 went_through_guided_prayer: false,
                 created_at: new Date().toISOString(),
@@ -49,48 +63,59 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             })
             .select('prayer_id')
             .single();
-        if (insertPrayerError) {
-            console.error('Error creating placeholder prayer:', insertPrayerError);
-            return res.status(500).json({ error: 'Failed to initiate prayer generation.' });
+
+        if (insertError || insertPrayerError) {
+            return res.status(500).json({ error: 'Failed to initiate generation.' });
         }
 
-        // 2. Return the placeholder ID to the frontend immediately
+        // 4. Return placeholder IDs to the frontend immediately
         res.status(202).json({
             message: 'Devotional generation initiated.',
             devotionalId: newDevotional.devotional_id,
             status: 'pending'
         });
 
-        // 3. Start AI generation in the background (after sending response)
-        const userPrompt = `
-        Focus areas: ${focusAreas.join(', ')}.
-        Improvement areas: ${improvementAreas.join(', ')}.
-        Recent devotionals: ${JSON.stringify(recentDevotionals)}
-        `;
+        // 5. Start AI generation in the background
+        const userData = {
+            first_name: userProfile?.first_name || '',
+            focusAreas: focusAreas || [],
+            improvementAreas: improvementAreas || [],
+            // You can fetch pastoral notes and inject them here to give the AI pastoral context!
+        };
 
         try {
-            const systemPrompt = await getDailyDevotionalPrompt();
+            // Use the new dynamic prompt!
+            const systemPrompt = await getPersonalizedDevotionalPrompt(userData, generalDevo);
+            
+            // Note: Keep user prompt simple since the system prompt now holds the context
+            const userPrompt = `Please write today's personalized devotional.`;
+
             const generatedContent = await callOpenAIAndProcessResult(
                 systemPrompt,
                 userPrompt,
-                'gpt-4.1-2025-04-14', // Model for devotional
-                5000, // Max tokens
-                "text" // Devotional expected as plain text
+                'gpt-4o', // Consider bumping to gpt-4o for complex JSON adherence
+                5000, 
+                "json_object" // Using JSON mode ensures we reliably get the fields we need
             );
 
-            //parse generatedContent to json
-            const parsedContent = JSON.parse(generatedContent);
+            // parse generatedContent to json
+            let parsedContent;
+            if (typeof generatedContent === 'string') {
+                parsedContent = JSON.parse(generatedContent);
+            } else {
+                parsedContent = generatedContent; // In case your helper already parsed it
+            }
+
             const { title, scripture, content, daily_prayer, song_search_query } = parsedContent;
 
             let songData = {};
             if (song_search_query) {
                 try {
-
                     const youtubeResponse = await youtube.search.list({
                         part: 'snippet',
-                        q: song_search_query,
+                        q: song_search_query + ' worship lyric video', // Better search query targeting
                         type: 'video',
-                        videoCategoriId: '10',
+                        videoCategoryId: '10', // Music
                         maxResults: 1,
                     });
 
@@ -108,30 +133,22 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                     console.error('Error fetching song from YouTube:', youtubeError);
                 }
             }
-            // Assuming the AI directly outputs the devotional text for the 'content' column
-            const { error: updateError } = await supabase
+
+            // Update devotional record
+            await supabase
                 .from('daily_devotionals')
                 .update({
-                    title: title,
+                    title: title || generalDevo.title, // Fallback to curriculum
                     content: content,
-                    scripture: scripture,
+                    scripture: scripture || generalDevo.scripture_reference,
                     status: 'completed',
                     updated_at: new Date().toISOString(),
                     ...songData
-                    // If AI also generates scripture, you'd parse and include it here
                 })
                 .eq('devotional_id', newDevotional.devotional_id);
 
-            if (updateError) {
-                console.error(`Error updating devotional record ${newDevotional.devotional_id}:`, updateError);
-                // Update status to 'failed' if update fails
-                await supabase.from('daily_devotionals').update({ status: 'failed' }).eq('devotional_id', newDevotional.devotional_id);
-            } else {
-                console.log(`Devotional record ${newDevotional.devotional_id} successfully generated and updated.`);
-            }
-            // Now update the prayer record with the generated prayer
-            const { error: updatePrayerError } = await supabase
-
+            // Update prayer record
+            await supabase
                 .from('daily_prayers')
                 .update({
                     generated_prayer: daily_prayer,
@@ -140,24 +157,16 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
 
-            const duration = Date.now() - startTime;
-            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated devotional', { tokens: generatedContent.tokens }, duration);
-            if (updatePrayerError) {
-                console.error(`Error updating prayer record for devotional ${newDevotional.devotional_id}:`, updatePrayerError);
-                await supabase.from('daily_prayers').update({ prayer_text: 'Failed to generate prayer.' }).eq('prayer_id', newPrayer.prayer_id);
-                logEvent('error', 'backend', userId, 'generate_devotional', 'Failed to update prayer record', { error: updatePrayerError.message }, duration);
-            } else {
-                console.log(`Prayer record for devotional ${newDevotional.devotional_id} successfully generated and updated.`);
-            }
+            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated personalized curriculum devotional', { tokens: generatedContent.tokens }, Date.now() - startTime);
+
         } catch (aiError) {
             console.error(`AI generation failed for devotional ${newDevotional.devotional_id}:`, aiError);
             await supabase.from('daily_devotionals').update({ status: 'failed' }).eq('devotional_id', newDevotional.devotional_id);
-            logEvent('error', 'backend', userId, 'generate_devotional', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
+            await supabase.from('daily_prayers').update({ status: 'failed' }).eq('prayer_id', newPrayer.prayer_id);
         }
 
     } catch (error) {
         console.error('Unhandled error in /generate-devotional:', error);
-        logEvent('error', 'backend', null, 'generate_devotional', 'Unhandled error', { error: error.message }, 0);
         res.status(500).json({ error: 'An unexpected error occurred.' });
     }
 });
