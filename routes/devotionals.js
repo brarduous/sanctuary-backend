@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
-const { getDailyDevotionalPrompt } = require('../prompts');
+const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
 const { google } = require('googleapis');
 const youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });
 
