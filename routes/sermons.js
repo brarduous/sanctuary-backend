@@ -6,6 +6,91 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult, getTuningNotes } = require('../utils/helpers');
 const { generateTopicSermonPrompt, generateScriptureSermonPrompt, generateSermonSeriesOutlinePrompt } = require('../prompts');
 
+const ALLOWED_CONTENT_FORMATS = ['sermon', 'sermonette', 'podcast_episode', 'youtube_video'];
+const ALLOWED_DISTRIBUTION_CHANNELS = ['pulpit', 'podcast', 'youtube', 'multi'];
+const ALLOWED_SERIES_FORMATS = ['standard', 'short_form'];
+
+const normalizeContentFormat = (value) => {
+    if (!value || typeof value !== 'string') return 'sermon';
+    const normalized = value.trim().toLowerCase();
+    return normalized.length === 0 ? 'sermon' : normalized;
+};
+
+const normalizeDistributionChannel = (value, contentFormat) => {
+    if (value && typeof value === 'string' && value.trim().length > 0) {
+        return value.trim().toLowerCase();
+    }
+
+    if (contentFormat === 'podcast_episode') return 'podcast';
+    if (contentFormat === 'youtube_video' || contentFormat === 'sermonette') return 'youtube';
+    return 'pulpit';
+};
+
+const normalizeSeriesFormat = (value) => {
+    if (!value || typeof value !== 'string') return 'standard';
+    const normalized = value.trim().toLowerCase();
+    return normalized.length === 0 ? 'standard' : normalized;
+};
+
+const parseTargetDuration = (value) => {
+    if (value === undefined || value === null || value === '') return null;
+    const parsed = Number(value);
+    if (!Number.isInteger(parsed)) return { error: 'targetDurationMin must be an integer.' };
+    if (parsed < 1 || parsed > 240) return { error: 'targetDurationMin must be between 1 and 240.' };
+    return { value: parsed };
+};
+
+const buildFormatInstructions = ({ contentFormat, targetDurationMin, distributionChannel }) => {
+    const durationLine = targetDurationMin
+        ? `Target Length: approximately ${targetDurationMin} minutes.`
+        : 'Target Length: choose a sensible length for the requested format.';
+
+    return `\n\nOUTPUT FORMAT REQUIREMENTS:\n- Content Format: ${contentFormat}\n- Distribution Channel: ${distributionChannel}\n- ${durationLine}\n- Keep structure, tone, and pacing appropriate for this format and channel.`;
+};
+
+const sanitizeSermonUpdatePayload = (body) => {
+    const errors = [];
+    const payload = { ...body };
+
+    if (Object.prototype.hasOwnProperty.call(body, 'content_format')) {
+        const contentFormat = normalizeContentFormat(body.content_format);
+        if (!ALLOWED_CONTENT_FORMATS.includes(contentFormat)) {
+            errors.push(`content_format must be one of: ${ALLOWED_CONTENT_FORMATS.join(', ')}`);
+        } else {
+            payload.content_format = contentFormat;
+        }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, 'distribution_channel')) {
+        const distributionChannel = body.distribution_channel ? String(body.distribution_channel).trim().toLowerCase() : '';
+        if (!ALLOWED_DISTRIBUTION_CHANNELS.includes(distributionChannel)) {
+            errors.push(`distribution_channel must be one of: ${ALLOWED_DISTRIBUTION_CHANNELS.join(', ')}`);
+        } else {
+            payload.distribution_channel = distributionChannel;
+        }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, 'target_duration_min')) {
+        const parsed = parseTargetDuration(body.target_duration_min);
+        if (parsed && parsed.error) {
+            errors.push(parsed.error.replace('targetDurationMin', 'target_duration_min'));
+        } else {
+            payload.target_duration_min = parsed ? parsed.value : null;
+        }
+    }
+
+    if (Object.prototype.hasOwnProperty.call(body, 'actual_duration_min')) {
+        const parsed = parseTargetDuration(body.actual_duration_min);
+        if (parsed && parsed.error) {
+            errors.push(parsed.error.replace('targetDurationMin', 'actual_duration_min'));
+        } else {
+            payload.actual_duration_min = parsed ? parsed.value : null;
+        }
+    }
+
+    return { payload, errors };
+};
+
 const getStylePrompts = (userProfile) => {
     let instructions = "";
     if (userProfile && userProfile.sermon_preferences) {
@@ -29,8 +114,18 @@ const getStylePrompts = (userProfile) => {
 // --- Series Endpoints ---
 router.get('/sermons/series/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
+    const seriesFormat = req.query.seriesFormat ? normalizeSeriesFormat(req.query.seriesFormat) : null;
+
+    if (seriesFormat && !ALLOWED_SERIES_FORMATS.includes(seriesFormat)) {
+        return res.status(400).json({ error: `seriesFormat must be one of: ${ALLOWED_SERIES_FORMATS.join(', ')}` });
+    }
+
     try {
-        const { data, error } = await supabase.from('sermon_series').select('*').eq('user_id', userId).order('created_at', { ascending: false });
+        let query = supabase.from('sermon_series').select('*').eq('user_id', userId);
+        if (seriesFormat) {
+            query = query.eq('series_format', seriesFormat);
+        }
+        const { data, error } = await query.order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data);
     } catch (error) {
@@ -40,8 +135,19 @@ router.get('/sermons/series/:userId', authenticateUser, async (req, res) => {
 
 router.post('/series', authenticateUser, async (req, res) => {
     try {
-        const { series_name, description } = req.body;
-        const { data, error } = await supabase.from('sermon_series').insert({ user_id: req.user.id, series_name, description }).select().single();
+        const { series_name, description, seriesFormat } = req.body;
+        const normalizedSeriesFormat = normalizeSeriesFormat(seriesFormat);
+
+        if (!ALLOWED_SERIES_FORMATS.includes(normalizedSeriesFormat)) {
+            return res.status(400).json({ error: `seriesFormat must be one of: ${ALLOWED_SERIES_FORMATS.join(', ')}` });
+        }
+
+        const { data, error } = await supabase.from('sermon_series').insert({
+            user_id: req.user.id,
+            series_name,
+            description,
+            series_format: normalizedSeriesFormat,
+        }).select().single();
         if (error) throw error;
         res.status(201).json(data);
     } catch (error) {
@@ -70,14 +176,34 @@ router.get('/sermons/series/:seriesId/details', authenticateUser, async (req, re
 // --- NEW: Deep Generation Sermon Series Flow ---
 router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, res) => {
     try {
-        const { userId, topic, details, numberOfSermons, userProfile } = req.body;
+        const { userId, topic, details, numberOfSermons, userProfile, contentFormat, targetDurationMin, distributionChannel, seriesFormat } = req.body;
         const startTime = Date.now();
+
+        const normalizedContentFormat = normalizeContentFormat(contentFormat);
+        const normalizedDistributionChannel = normalizeDistributionChannel(distributionChannel, normalizedContentFormat);
+        const normalizedSeriesFormat = normalizeSeriesFormat(seriesFormat);
+        const parsedDuration = parseTargetDuration(targetDurationMin);
+
+        if (!ALLOWED_CONTENT_FORMATS.includes(normalizedContentFormat)) {
+            return res.status(400).json({ error: `contentFormat must be one of: ${ALLOWED_CONTENT_FORMATS.join(', ')}` });
+        }
+        if (!ALLOWED_DISTRIBUTION_CHANNELS.includes(normalizedDistributionChannel)) {
+            return res.status(400).json({ error: `distributionChannel must be one of: ${ALLOWED_DISTRIBUTION_CHANNELS.join(', ')}` });
+        }
+        if (!ALLOWED_SERIES_FORMATS.includes(normalizedSeriesFormat)) {
+            return res.status(400).json({ error: `seriesFormat must be one of: ${ALLOWED_SERIES_FORMATS.join(', ')}` });
+        }
+        if (parsedDuration && parsedDuration.error) {
+            return res.status(400).json({ error: parsedDuration.error });
+        }
+        const safeDuration = parsedDuration ? parsedDuration.value : null;
 
         // 1. Create a Placeholder Series immediately
         const { data: newSeries, error: insertError } = await supabase.from('sermon_series').insert({
             user_id: userId,
             series_name: `Generating Series: ${topic}`,
             description: 'Drafting curriculum outline...',
+            series_format: normalizedSeriesFormat,
         }).select().single();
         if (insertError) throw insertError;
 
@@ -86,7 +212,7 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
 
         // 3. Background Process: Outline Generation
         const styleInstructions = getStylePrompts(userProfile);
-        const outlinePrompt = `Topic: ${topic}\nAdditional Context: ${details}\nNumber of Sermons: ${numberOfSermons}\n\nCreate a cohesive sermon series outline. Return a JSON object with 'series_name', 'description', and a 'sermons' array containing 'title' and 'scripture' for each sermon.`;
+        const outlinePrompt = `Topic: ${topic}\nAdditional Context: ${details}\nNumber of Sermons: ${numberOfSermons}\nSeries Format: ${normalizedSeriesFormat}\nContent Format: ${normalizedContentFormat}\nDistribution Channel: ${normalizedDistributionChannel}\nTarget Duration (minutes): ${safeDuration || 'auto'}\n\nCreate a cohesive sermon series outline. Return a JSON object with 'series_name', 'description', and a 'sermons' array containing 'title' and 'scripture' for each sermon.`;
         const systemPromptOutline = await generateSermonSeriesOutlinePrompt(await getTuningNotes(userId));
 
         try {
@@ -109,11 +235,14 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                     series_id: newSeries.series_id,
                     title: `${i+1}. ${sermonOutline.title}`, // Number the title
                     sermon_body: 'Generating deep content...',
-                    status: 'pending'
+                    status: 'pending',
+                    content_format: normalizedContentFormat,
+                    target_duration_min: safeDuration,
+                    distribution_channel: normalizedDistributionChannel,
                 }).select().single();
 
                 // Generate the individual sermon deeply
-                const sermonUserPrompt = `Series Topic: ${topic}\nSermon Title: ${sermonOutline.title}\nScripture: ${sermonOutline.scripture}\nInclude Illustration: true\n\nGenerate this specific sermon.\n${styleInstructions}`;
+                const sermonUserPrompt = `Series Topic: ${topic}\nSermon Title: ${sermonOutline.title}\nScripture: ${sermonOutline.scripture}\nInclude Illustration: true\n\nGenerate this specific sermon.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
                 const sermonSystemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
                 try {
@@ -125,7 +254,10 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         sermon_outline: generatedSermon.sermon_outline,
                         key_takeaways: generatedSermon.key_takeaways,
                         sermon_body: generatedSermon.sermon_body,
-                        status: 'completed'
+                        status: 'completed',
+                        content_format: normalizedContentFormat,
+                        target_duration_min: safeDuration,
+                        distribution_channel: normalizedDistributionChannel,
                     }).eq('sermon_id', sermonRecord.sermon_id);
                 } catch (sermonErr) {
                     await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', sermonRecord.sermon_id);
@@ -141,8 +273,30 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
 
 // --- Standard Sermon Endpoints ---
 router.get('/sermons/:userId', authenticateUser, async (req, res) => {
+    const contentFormat = req.query.contentFormat ? normalizeContentFormat(req.query.contentFormat) : null;
+    const distributionChannel = req.query.distributionChannel ? String(req.query.distributionChannel).trim().toLowerCase() : null;
+    const seriesId = req.query.seriesId || null;
+
+    if (contentFormat && !ALLOWED_CONTENT_FORMATS.includes(contentFormat)) {
+        return res.status(400).json({ error: `contentFormat must be one of: ${ALLOWED_CONTENT_FORMATS.join(', ')}` });
+    }
+    if (distributionChannel && !ALLOWED_DISTRIBUTION_CHANNELS.includes(distributionChannel)) {
+        return res.status(400).json({ error: `distributionChannel must be one of: ${ALLOWED_DISTRIBUTION_CHANNELS.join(', ')}` });
+    }
+
     try {
-        const { data, error } = await supabase.from('sermons').select('*').eq('user_id', req.params.userId).neq('status', 'failed').order('created_at', { ascending: false });
+        let query = supabase.from('sermons').select('*').eq('user_id', req.params.userId).neq('status', 'failed');
+        if (contentFormat) {
+            query = query.eq('content_format', contentFormat);
+        }
+        if (distributionChannel) {
+            query = query.eq('distribution_channel', distributionChannel);
+        }
+        if (seriesId) {
+            query = query.eq('series_id', seriesId);
+        }
+
+        const { data, error } = await query.order('created_at', { ascending: false });
         if (error) throw error;
         res.json(data);
     } catch (error) {
@@ -159,7 +313,12 @@ router.get('/sermon/:sermonId', authenticateUser, async (req, res) => {
 
 router.post('/sermons/:sermonId', authenticateUser, async (req, res) => {
     try {
-        const { data, error } = await supabase.from('sermons').update({ ...req.body, updated_at: new Date().toISOString() }).eq('sermon_id', req.params.sermonId).select('*').single();
+        const { payload, errors } = sanitizeSermonUpdatePayload(req.body);
+        if (errors.length > 0) {
+            return res.status(400).json({ error: errors.join(' ') });
+        }
+
+        const { data, error } = await supabase.from('sermons').update({ ...payload, updated_at: new Date().toISOString() }).eq('sermon_id', req.params.sermonId).select('*').single();
         if (error) throw error;
         res.status(201).json(data);
     } catch (error) {
@@ -171,7 +330,22 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
     // Keep your existing generate-sermon-by-topic code here verbatim
     try {
         const startTime = Date.now();
-        const { userId, topic, userProfile, seriesId } = req.body; 
+        const { userId, topic, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+
+        const normalizedContentFormat = normalizeContentFormat(contentFormat);
+        const normalizedDistributionChannel = normalizeDistributionChannel(distributionChannel, normalizedContentFormat);
+        const parsedDuration = parseTargetDuration(targetDurationMin);
+
+        if (!ALLOWED_CONTENT_FORMATS.includes(normalizedContentFormat)) {
+            return res.status(400).json({ error: `contentFormat must be one of: ${ALLOWED_CONTENT_FORMATS.join(', ')}` });
+        }
+        if (!ALLOWED_DISTRIBUTION_CHANNELS.includes(normalizedDistributionChannel)) {
+            return res.status(400).json({ error: `distributionChannel must be one of: ${ALLOWED_DISTRIBUTION_CHANNELS.join(', ')}` });
+        }
+        if (parsedDuration && parsedDuration.error) {
+            return res.status(400).json({ error: parsedDuration.error });
+        }
+        const safeDuration = parsedDuration ? parsedDuration.value : null;
 
         const { data: newSermon, error: insertError } = await supabase
             .from('sermons')
@@ -182,6 +356,9 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 sermon_outline: 'Generating outline...',
                 sermon_body: 'Generating content...',
                 status: 'pending',
+                content_format: normalizedContentFormat,
+                target_duration_min: safeDuration,
+                distribution_channel: normalizedDistributionChannel,
             })
             .select('sermon_id')
             .single();
@@ -190,7 +367,7 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const styleInstructions = getStylePrompts(userProfile);
-        const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.\n${styleInstructions}`;
+    const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
         const systemPrompt = generateTopicSermonPrompt(await getTuningNotes(userId));
 
         try {
@@ -203,6 +380,9 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 key_takeaways: generatedSermon.key_takeaways || null,
                 sermon_body: generatedSermon.sermon_body || null,
                 status: 'completed',
+                content_format: normalizedContentFormat,
+                target_duration_min: safeDuration,
+                distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
@@ -214,7 +394,22 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
     // Keep your existing generate-sermon-by-scripture code here verbatim
     try {
         const startTime = Date.now();
-        const { userId, scripture, userProfile, seriesId } = req.body; 
+        const { userId, scripture, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+
+        const normalizedContentFormat = normalizeContentFormat(contentFormat);
+        const normalizedDistributionChannel = normalizeDistributionChannel(distributionChannel, normalizedContentFormat);
+        const parsedDuration = parseTargetDuration(targetDurationMin);
+
+        if (!ALLOWED_CONTENT_FORMATS.includes(normalizedContentFormat)) {
+            return res.status(400).json({ error: `contentFormat must be one of: ${ALLOWED_CONTENT_FORMATS.join(', ')}` });
+        }
+        if (!ALLOWED_DISTRIBUTION_CHANNELS.includes(normalizedDistributionChannel)) {
+            return res.status(400).json({ error: `distributionChannel must be one of: ${ALLOWED_DISTRIBUTION_CHANNELS.join(', ')}` });
+        }
+        if (parsedDuration && parsedDuration.error) {
+            return res.status(400).json({ error: parsedDuration.error });
+        }
+        const safeDuration = parsedDuration ? parsedDuration.value : null;
 
         const { data: newSermon, error: insertError } = await supabase
             .from('sermons')
@@ -225,6 +420,9 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 sermon_outline: 'Generating outline...',
                 sermon_body: 'Generating content...',
                 status: 'pending',
+                content_format: normalizedContentFormat,
+                target_duration_min: safeDuration,
+                distribution_channel: normalizedDistributionChannel,
             })
             .select('sermon_id')
             .single();
@@ -233,7 +431,7 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const styleInstructions = getStylePrompts(userProfile);
-        const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.\n${styleInstructions}`;
+    const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
         const systemPrompt = generateScriptureSermonPrompt(await getTuningNotes(userId));
 
         try {
@@ -246,6 +444,9 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 key_takeaways: generatedSermon.key_takeaways || null,
                 sermon_body: generatedSermon.sermon_body || null,
                 status: 'completed',
+                content_format: normalizedContentFormat,
+                target_duration_min: safeDuration,
+                distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
