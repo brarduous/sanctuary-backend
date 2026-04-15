@@ -70,9 +70,9 @@ Adapt the application of today's core message for this specific person:
 
 === INSTRUCTIONS ===
 1. Keep the EXACT same Title and Scripture Reference as the Church Curriculum.
-2. Rewrite the "Core Message" to speak directly to the user (use their name, "you", etc.).
+2. Rewrite the "Core Message" to speak directly to the user.
 3. Weave their "Focus Areas", "Improvement Areas", and "Background Notes" into the application of the scripture. 
-4. Provide a personalized prayer based on their struggles/focus areas and today's scripture.
+4. Provide a personalized prayer based on their struggles/focus areas and today's scripture. This prayer should be from the lips of the user to God.
 5. Provide a relevant song search query for YouTube.
 OUTPUT MUST BE A VALID JSON OBJECT matching the keys: title, scripture, content, daily_prayer, song_search_query.
 `;
