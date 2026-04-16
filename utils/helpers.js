@@ -27,10 +27,8 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     try {
 
         console.log("Calling OpenAI with prompt:", systemPrompt, userPrompt);
-        // Note: The original code hardcoded 'gpt-5-nano' here, ignoring the 'model' parameter.
-        // Preserving original behavior during refactor.
         const chatCompletion = await openai.chat.completions.create({
-            model: 'gpt-5-nano', 
+            model: model || 'gpt-5-nano',
             messages: [
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt },
@@ -38,12 +36,17 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
             response_format: { type: responseFormatType },
         });
 
-        let generatedContent = chatCompletion.choices[0].message.content;
-        generatedContent.tokens = chatCompletion.usage.total_tokens;
-        console.log("AI Generated Content:", await generatedContent);
+        const generatedContent = chatCompletion.choices?.[0]?.message?.content || '';
+        const totalTokens = chatCompletion.usage?.total_tokens || null;
+        console.log("AI Generated Content:", generatedContent);
+
         if (responseFormatType === "json_object") {
             try {
-                return JSON.parse(await generatedContent);
+                const parsed = JSON.parse(generatedContent);
+                if (parsed && typeof parsed === 'object' && totalTokens !== null) {
+                    parsed.tokens = totalTokens;
+                }
+                return parsed;
             } catch (jsonError) {
                 console.warn("Failed to parse AI response as JSON. Returning raw text.", jsonError);
                 return generatedContent; // Return raw text if parsing fails

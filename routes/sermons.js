@@ -40,12 +40,110 @@ const parseTargetDuration = (value) => {
     return { value: parsed };
 };
 
+const countWords = (text = '') => {
+    if (!text || typeof text !== 'string') return 0;
+    const words = text.trim().match(/\S+/g);
+    return words ? words.length : 0;
+};
+
+const getSpeechRateWpm = ({ contentFormat, distributionChannel }) => {
+    if (contentFormat === 'podcast_episode' || distributionChannel === 'podcast') return 150;
+    if (contentFormat === 'youtube_video' || contentFormat === 'sermonette' || distributionChannel === 'youtube') return 140;
+    return 130;
+};
+
+const getWordBudget = ({ targetDurationMin, contentFormat, distributionChannel }) => {
+    if (!targetDurationMin) return null;
+    const speechRateWpm = getSpeechRateWpm({ contentFormat, distributionChannel });
+    const targetWords = targetDurationMin * speechRateWpm;
+    const minWords = Math.max(60, Math.floor(targetWords * 0.9));
+    const maxWords = Math.ceil(targetWords * 1.1);
+
+    return {
+        speechRateWpm,
+        targetWords,
+        minWords,
+        maxWords,
+    };
+};
+
+const estimateDurationMin = (wordCount, speechRateWpm) => {
+    if (!wordCount || !speechRateWpm) return null;
+    return Math.max(1, Math.round(wordCount / speechRateWpm));
+};
+
 const buildFormatInstructions = ({ contentFormat, targetDurationMin, distributionChannel }) => {
+    const wordBudget = getWordBudget({ targetDurationMin, contentFormat, distributionChannel });
     const durationLine = targetDurationMin
         ? `Target Length: approximately ${targetDurationMin} minutes.`
         : 'Target Length: choose a sensible length for the requested format.';
 
-    return `\n\nOUTPUT FORMAT REQUIREMENTS:\n- Content Format: ${contentFormat}\n- Distribution Channel: ${distributionChannel}\n- ${durationLine}\n- Keep structure, tone, and pacing appropriate for this format and channel.`;
+    const wordLine = wordBudget
+        ? `- Word Count Constraint: sermon_body MUST be between ${wordBudget.minWords} and ${wordBudget.maxWords} words (target ~${wordBudget.targetWords}).`
+        : '- Word Count Constraint: choose a natural word count for the requested format.';
+
+    return `\n\nOUTPUT FORMAT REQUIREMENTS:\n- Content Format: ${contentFormat}\n- Distribution Channel: ${distributionChannel}\n- ${durationLine}\n${wordLine}\n- Keep structure, tone, and pacing appropriate for this format and channel.\n- Return valid JSON only and ensure sermon_body meets the word constraint when provided.`;
+};
+
+const enforceLengthWithRewrite = async ({
+    generatedSermon,
+    systemPrompt,
+    contentFormat,
+    distributionChannel,
+    targetDurationMin,
+    contextLabel,
+}) => {
+    const budget = getWordBudget({ targetDurationMin, contentFormat, distributionChannel });
+    let currentSermon = generatedSermon || {};
+
+    if (!budget || !currentSermon.sermon_body) {
+        const fallbackWordCount = countWords(currentSermon.sermon_body || '');
+        return {
+            sermon: currentSermon,
+            wordCount: fallbackWordCount,
+            estimatedDurationMin: budget ? estimateDurationMin(fallbackWordCount, budget.speechRateWpm) : null,
+        };
+    }
+
+    for (let attempt = 1; attempt <= 2; attempt++) {
+        const currentWordCount = countWords(currentSermon.sermon_body || '');
+        const isWithinRange = currentWordCount >= budget.minWords && currentWordCount <= budget.maxWords;
+        if (isWithinRange) {
+            return {
+                sermon: currentSermon,
+                wordCount: currentWordCount,
+                estimatedDurationMin: estimateDurationMin(currentWordCount, budget.speechRateWpm),
+            };
+        }
+
+        const rewritePrompt = `${contextLabel}\n\nYou are given a generated sermon JSON that is outside the required word count.\nRevise the JSON so sermon_body is strictly between ${budget.minWords} and ${budget.maxWords} words.\nCurrent word count: ${currentWordCount}.\nPreserve biblical accuracy, main points, and tone while expanding or compressing as needed.\n\nReturn a full valid JSON object with these keys:\n- title\n- scripture\n- illustration\n- sermon_outline\n- key_takeaways\n- sermon_body\n\nCurrent sermon JSON:\n${JSON.stringify(currentSermon)}`;
+
+        try {
+            const revised = await callOpenAIAndProcessResult(
+                systemPrompt,
+                rewritePrompt,
+                'gpt-4.1-2025-04-14',
+                4000,
+                'json_object'
+            );
+
+            if (revised && typeof revised === 'object') {
+                currentSermon = {
+                    ...currentSermon,
+                    ...revised,
+                };
+            }
+        } catch (error) {
+            break;
+        }
+    }
+
+    const finalWordCount = countWords(currentSermon.sermon_body || '');
+    return {
+        sermon: currentSermon,
+        wordCount: finalWordCount,
+        estimatedDurationMin: estimateDurationMin(finalWordCount, budget.speechRateWpm),
+    };
 };
 
 const sanitizeSermonUpdatePayload = (body) => {
@@ -247,16 +345,26 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
 
                 try {
                     const generatedSermon = await callOpenAIAndProcessResult(sermonSystemPrompt, sermonUserPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+                    const lengthManaged = await enforceLengthWithRewrite({
+                        generatedSermon,
+                        systemPrompt: sermonSystemPrompt,
+                        contentFormat: normalizedContentFormat,
+                        distributionChannel: normalizedDistributionChannel,
+                        targetDurationMin: safeDuration,
+                        contextLabel: `Series Topic: ${topic} | Sermon Title: ${sermonOutline.title} | Scripture: ${sermonOutline.scripture || 'N/A'}`,
+                    });
+
                     await supabase.from('sermons').update({
-                        title: generatedSermon.title || sermonOutline.title,
-                        scripture: generatedSermon.scripture || sermonOutline.scripture,
-                        illustration: generatedSermon.illustration,
-                        sermon_outline: generatedSermon.sermon_outline,
-                        key_takeaways: generatedSermon.key_takeaways,
-                        sermon_body: generatedSermon.sermon_body,
+                        title: lengthManaged.sermon.title || sermonOutline.title,
+                        scripture: lengthManaged.sermon.scripture || sermonOutline.scripture,
+                        illustration: lengthManaged.sermon.illustration,
+                        sermon_outline: lengthManaged.sermon.sermon_outline,
+                        key_takeaways: lengthManaged.sermon.key_takeaways,
+                        sermon_body: lengthManaged.sermon.sermon_body,
                         status: 'completed',
                         content_format: normalizedContentFormat,
                         target_duration_min: safeDuration,
+                        actual_duration_min: lengthManaged.estimatedDurationMin,
                         distribution_channel: normalizedDistributionChannel,
                     }).eq('sermon_id', sermonRecord.sermon_id);
                 } catch (sermonErr) {
@@ -367,21 +475,31 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const styleInstructions = getStylePrompts(userProfile);
-    const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
-        const systemPrompt = generateTopicSermonPrompt(await getTuningNotes(userId));
+        const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
+        const systemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generatedSermon = await callOpenAIAndProcessResult(await systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const generatedSermon = await callOpenAIAndProcessResult(systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const lengthManaged = await enforceLengthWithRewrite({
+                generatedSermon,
+                systemPrompt,
+                contentFormat: normalizedContentFormat,
+                distributionChannel: normalizedDistributionChannel,
+                targetDurationMin: safeDuration,
+                contextLabel: `Topic: ${topic}`,
+            });
+
             await supabase.from('sermons').update({
-                title: generatedSermon.title || `Sermon on ${topic}`,
-                scripture: generatedSermon.scripture || null,
-                illustration: generatedSermon.illustration || null,
-                sermon_outline: generatedSermon.sermon_outline || null,
-                key_takeaways: generatedSermon.key_takeaways || null,
-                sermon_body: generatedSermon.sermon_body || null,
+                title: lengthManaged.sermon.title || `Sermon on ${topic}`,
+                scripture: lengthManaged.sermon.scripture || null,
+                illustration: lengthManaged.sermon.illustration || null,
+                sermon_outline: lengthManaged.sermon.sermon_outline || null,
+                key_takeaways: lengthManaged.sermon.key_takeaways || null,
+                sermon_body: lengthManaged.sermon.sermon_body || null,
                 status: 'completed',
                 content_format: normalizedContentFormat,
                 target_duration_min: safeDuration,
+                actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
         } catch (aiError) {
@@ -431,21 +549,31 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const styleInstructions = getStylePrompts(userProfile);
-    const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
-        const systemPrompt = generateScriptureSermonPrompt(await getTuningNotes(userId));
+        const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
+        const systemPrompt = await generateScriptureSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generatedSermon = await callOpenAIAndProcessResult(await systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const generatedSermon = await callOpenAIAndProcessResult(systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const lengthManaged = await enforceLengthWithRewrite({
+                generatedSermon,
+                systemPrompt,
+                contentFormat: normalizedContentFormat,
+                distributionChannel: normalizedDistributionChannel,
+                targetDurationMin: safeDuration,
+                contextLabel: `Scripture: ${scripture}`,
+            });
+
             await supabase.from('sermons').update({
-                title: generatedSermon.title || `Sermon for ${scripture}`,
-                scripture: generatedSermon.scripture || null,
-                illustration: generatedSermon.illustration || null,
-                sermon_outline: generatedSermon.sermon_outline || null,
-                key_takeaways: generatedSermon.key_takeaways || null,
-                sermon_body: generatedSermon.sermon_body || null,
+                title: lengthManaged.sermon.title || `Sermon for ${scripture}`,
+                scripture: lengthManaged.sermon.scripture || null,
+                illustration: lengthManaged.sermon.illustration || null,
+                sermon_outline: lengthManaged.sermon.sermon_outline || null,
+                key_takeaways: lengthManaged.sermon.key_takeaways || null,
+                sermon_body: lengthManaged.sermon.sermon_body || null,
                 status: 'completed',
                 content_format: normalizedContentFormat,
                 target_duration_min: safeDuration,
+                actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
         } catch (aiError) {
