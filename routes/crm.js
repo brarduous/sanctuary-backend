@@ -3,14 +3,14 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 
-const getNameParts = (user) => {
+const getNameParts = (user, profile = null) => {
     const metadata = user?.user_metadata || {};
     const fullName = metadata.full_name || metadata.name || '';
     const parts = fullName.trim().split(/\s+/).filter(Boolean);
 
     return {
-        firstName: metadata.first_name || parts[0] || 'Church',
-        lastName: metadata.last_name || parts.slice(1).join(' ') || 'Member'
+        firstName: profile?.first_name || metadata.first_name || parts[0] || 'Church',
+        lastName: profile?.last_name || metadata.last_name || parts.slice(1).join(' ') || 'Member'
     };
 };
 
@@ -50,6 +50,15 @@ const syncCrmProfilesFromMembers = async (congregationId) => {
 
     const linkedUserIds = new Set((existingProfiles || []).map(profile => profile.user_id).filter(Boolean));
 
+    const { data: userProfiles, error: userProfileError } = await supabase
+        .from('user_profiles')
+        .select('user_id, first_name, last_name, email')
+        .in('user_id', userIds);
+
+    if (userProfileError) throw userProfileError;
+
+    const userProfileById = new Map((userProfiles || []).map(profile => [profile.user_id, profile]));
+
     for (const userId of userIds) {
         if (linkedUserIds.has(userId)) continue;
 
@@ -60,7 +69,8 @@ const syncCrmProfilesFromMembers = async (congregationId) => {
         }
 
         const user = authData.user;
-        const email = user.email || user.user_metadata?.email || null;
+        const userProfile = userProfileById.get(userId);
+        const email = userProfile?.email || user.email || user.user_metadata?.email || null;
 
         if (email) {
             const shadowProfile = (existingProfiles || []).find(profile =>
@@ -79,7 +89,7 @@ const syncCrmProfilesFromMembers = async (congregationId) => {
             }
         }
 
-        const { firstName, lastName } = getNameParts(user);
+        const { firstName, lastName } = getNameParts(user, userProfile);
         const { error: insertError } = await supabase
             .from('church_crm_profiles')
             .insert({

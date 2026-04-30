@@ -3,19 +3,28 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 
-const getDisplayNameParts = (user) => {
+const getDisplayNameParts = (user, profile = null) => {
   const metadata = user?.user_metadata || {};
   const fullName = metadata.full_name || metadata.name || '';
-  const firstName = metadata.first_name || fullName.trim().split(/\s+/)[0] || 'Church';
-  const lastName = metadata.last_name || fullName.trim().split(/\s+/).slice(1).join(' ') || 'Member';
+  const firstName = profile?.first_name || metadata.first_name || fullName.trim().split(/\s+/)[0] || 'Church';
+  const lastName = profile?.last_name || metadata.last_name || fullName.trim().split(/\s+/).slice(1).join(' ') || 'Member';
 
   return { firstName, lastName };
 };
 
 const ensureCrmProfile = async ({ congregationId, user }) => {
   const userId = user.id;
-  const email = user.email || user.user_metadata?.email || null;
-  const { firstName, lastName } = getDisplayNameParts(user);
+  const { data: userProfile, error: userProfileError } = await supabase
+    .from('user_profiles')
+    .select('first_name, last_name, email')
+    .eq('user_id', userId)
+    .limit(1);
+
+  if (userProfileError) throw userProfileError;
+
+  const profile = userProfile?.[0] || null;
+  const email = profile?.email || user.email || user.user_metadata?.email || null;
+  const { firstName, lastName } = getDisplayNameParts(user, profile);
 
   const { data: existingProfile, error: existingError } = await supabase
     .from('church_crm_profiles')
