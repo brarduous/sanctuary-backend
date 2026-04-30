@@ -363,6 +363,7 @@ const aiRouter = require('./routes/ai');
 const analysisRouter = require('./routes/analysis'); // [!code ++]
 const congregationsRouter = require('./routes/congregations'); // <--- Add this
 const messagesRouter = require('./routes/messages'); // <--- Add this
+const crmRouter = require('./routes/crm');
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -381,6 +382,7 @@ app.use('/api/ai', aiRouter);
 app.use('/', analysisRouter);
 app.use('/api/congregations', congregationsRouter);
 app.use('/messages', messagesRouter);
+app.use('/api/crm', crmRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

@@ -63,12 +63,13 @@ router.post('/save-message', authenticateUser, async (req, res) => {
       .single();
 
     if (error) throw error;
-    sendPushToCongregation(
+    const pushResult = await sendPushToCongregation(
       congregationId,
       "New Pastoral Update 🎥",
       `Your pastor just posted a new ${messageType.replace('_', ' ')}: "${title}"`,
       { route: '/(tabs)/church' } // Deep linking data so tapping the notification opens the church tab
     );
+    console.log('[Messages] Push result:', pushResult);
     res.json(data);
   } catch (error) {
     console.error('Save message error:', error);

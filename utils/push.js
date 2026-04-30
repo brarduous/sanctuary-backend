@@ -19,33 +19,59 @@ const sendPushToCongregation = async (congregationId, title, body, dataPayload =
             return;
         }
 
-        const userIds = members.map(m => m.user_id);
+        const userIds = [...new Set(members.map(m => m.user_id).filter(Boolean))];
+
+        if (userIds.length === 0) {
+            console.log('[Push] No valid member user IDs found for congregation.');
+            return { sent: 0, reason: 'no_user_ids' };
+        }
 
         // 2. Get the Expo Push Tokens for those users
-        // Note: Make sure this matches the table where your mobile app saves the token!
-        // Your mobile app code saves to 'profiles' with column 'expo_push_token'.
-        const { data: profiles, error: profileError } = await supabase
+        // The mobile app can save tokens during startup to profiles, and during
+        // onboarding through user_profiles. Check both so either path works.
+        const { data: authProfiles, error: profileError } = await supabase
             .from('profiles')
             .select('expo_push_token')
             .in('id', userIds)
             .not('expo_push_token', 'is', null);
 
-        if (profileError || !profiles || profiles.length === 0) {
+        if (profileError) {
+            console.error('[Push] Error fetching profile push tokens:', profileError);
+        }
+
+        const { data: userProfiles, error: userProfileError } = await supabase
+            .from('user_profiles')
+            .select('expo_push_token')
+            .in('user_id', userIds)
+            .not('expo_push_token', 'is', null);
+
+        if (userProfileError) {
+            console.error('[Push] Error fetching user_profile push tokens:', userProfileError);
+        }
+
+        const pushTokens = [
+            ...(authProfiles || []).map(profile => profile.expo_push_token),
+            ...(userProfiles || []).map(profile => profile.expo_push_token)
+        ].filter(Boolean);
+
+        const uniquePushTokens = [...new Set(pushTokens)];
+
+        if (uniquePushTokens.length === 0) {
             console.log('[Push] No active push tokens found for these members.');
-            return;
+            return { sent: 0, reason: 'no_push_tokens' };
         }
 
         // 3. Construct the messages
         let messages = [];
-        for (let profile of profiles) {
+        for (let pushToken of uniquePushTokens) {
             // Check that all your push tokens appear to be valid Expo push tokens
-            if (!Expo.isExpoPushToken(profile.expo_push_token)) {
-                console.error(`[Push] Push token ${profile.expo_push_token} is not a valid Expo push token`);
+            if (!Expo.isExpoPushToken(pushToken)) {
+                console.error(`[Push] Push token ${pushToken} is not a valid Expo push token`);
                 continue;
             }
 
             messages.push({
-                to: profile.expo_push_token,
+                to: pushToken,
                 sound: 'default',
                 title: title,
                 body: body,
@@ -67,8 +93,10 @@ const sendPushToCongregation = async (congregationId, title, body, dataPayload =
         }
         
         console.log(`[Push] Successfully sent ${messages.length} notifications.`);
+        return { sent: messages.length, tickets };
     } catch (error) {
         console.error('[Push] Global Error sending push to congregation:', error);
+        return { sent: 0, error };
     }
 };
 

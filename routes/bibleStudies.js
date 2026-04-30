@@ -152,12 +152,13 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
         
         //send push notification to congregation if study is now published
         if (is_published === true && congregation_id) {
-            sendPushToCongregation(
+            const pushResult = await sendPushToCongregation(
                 congregation_id,
                 "New Church Curriculum 📖",
                 `A new Bible Study is available: "${data.title}"`,
                 { route: `/(tabs)/church` }
             );
+            console.log('[BibleStudies] Push result:', pushResult);
         }
 
         res.json(data);
