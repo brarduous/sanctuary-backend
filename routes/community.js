@@ -114,18 +114,50 @@ router.post('/community/pray/:prayerId', authenticateUser, async (req, res) => {
     res.json({ success: true });
 });
 
-// 4. Get User Stats (For "X prayed for you")
+const getWeekStartDate = () => {
+    const now = new Date();
+    const start = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    start.setUTCDate(start.getUTCDate() - start.getUTCDay());
+    return start.toISOString().split('T')[0];
+};
+
+// 4. Get User Stats (For "X prayed for you this week")
 router.get('/community/stats', authenticateUser, async (req, res) => {
     const userId = req.user.id;
 
-    const { data } = await supabase
-        .from('community_prayers')
-        .select('prayer_count')
-        .eq('user_id', userId);
+    try {
+        const weekStartDate = getWeekStartDate();
+        const { data: prayerRequests, error: prayerError } = await supabase
+            .from('prayer_requests')
+            .select('id')
+            .eq('user_id', userId);
 
-    const totalPrayedForYou = data.reduce((sum, row) => sum + (row.prayer_count || 0), 0);
-    logEvent('info', 'backend', userId, 'fetch_community_stats', 'Fetched community prayer stats', {}, 0);
-    res.json({ totalPrayedForYou });
+        if (prayerError) throw prayerError;
+
+        const prayerRequestIds = (prayerRequests || []).map((prayer) => prayer.id);
+
+        if (prayerRequestIds.length === 0) {
+            logEvent('info', 'backend', userId, 'fetch_community_stats', 'Fetched weekly community prayer stats', { weekStartDate }, 0);
+            return res.json({ totalPrayedForYou: 0, weekStartDate });
+        }
+
+        const { data: prayerActivities, error: activityError } = await supabase
+            .from('user_activities')
+            .select('user_id')
+            .eq('activity_type', 'intercessory_prayer')
+            .gte('activity_date', weekStartDate)
+            .in('activity_id', prayerRequestIds)
+            .neq('user_id', userId);
+
+        if (activityError) throw activityError;
+
+        const prayingUserIds = new Set((prayerActivities || []).map((activity) => activity.user_id).filter(Boolean));
+        logEvent('info', 'backend', userId, 'fetch_community_stats', 'Fetched weekly community prayer stats', { weekStartDate }, 0);
+        res.json({ totalPrayedForYou: prayingUserIds.size, weekStartDate });
+    } catch (error) {
+        console.error('Error fetching community stats:', error);
+        res.status(500).json({ error: 'Failed to fetch community stats.' });
+    }
 });
 
 module.exports = router;

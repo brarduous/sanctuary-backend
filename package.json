@@ -12,7 +12,9 @@
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
     "backfill-congregation-crm": "node scripts/backfillCongregationCrmProfiles.js",
-    "curate-music-library": "node scripts/curateMusicLibrary.js"
+    "curate-music-library": "node scripts/curateMusicLibrary.js",
+    "curate-videos": "node scripts/curateVideos.js",
+    "import-youtube-channels": "node scripts/importYoutubeChannelsFromXlsx.js"
   },
   "keywords": [],
   "author": "",
@@ -37,6 +39,7 @@
     "pdf-parse": "^2.4.5",
     "puppeteer": "^24.22.3",
     "stripe": "^20.0.0",
+    "xlsx": "^0.18.5",
     "xml2js": "^0.6.2",
     "youtube-transcript": "^1.2.1"
   }

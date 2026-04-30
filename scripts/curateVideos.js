@@ -33,10 +33,37 @@ async function curateVideos() {
     try {
       // Get the "Uploads" Playlist ID
       const channelRes = await fetch(
-        `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channel.channel_id}&key=${YT_KEY}`
+        `https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails,statistics&id=${channel.channel_id}&key=${YT_KEY}`
       );
       const channelData = await channelRes.json();
-      const uploadsPlaylistId = channelData.items[0].contentDetails.relatedPlaylists.uploads;
+      const channelMeta = channelData.items?.[0];
+      if (!channelMeta) {
+        console.warn(`No channel metadata found for ${channel.channel_id}`);
+        continue;
+      }
+
+      const uploadsPlaylistId = channelMeta.contentDetails.relatedPlaylists.uploads;
+
+      try {
+        await supabase
+          .from('youtube_channels')
+          .upsert({
+            channel_id: channel.channel_id,
+            channel_name: channelMeta.snippet?.title || channel.channel_name,
+            subscriber_count: Number(channelMeta.statistics?.subscriberCount || 0),
+            view_count: Number(channelMeta.statistics?.viewCount || 0),
+            video_count: Number(channelMeta.statistics?.videoCount || 0),
+            is_active: true
+          }, { onConflict: 'channel_id' });
+      } catch (upsertError) {
+        await supabase
+          .from('youtube_channels')
+          .upsert({
+            channel_id: channel.channel_id,
+            channel_name: channelMeta.snippet?.title || channel.channel_name
+          }, { onConflict: 'channel_id' });
+        console.warn(`Channel metrics columns unavailable yet: ${upsertError.message}`);
+      }
 
       let nextPageToken = '';
       let keepFetching = true;
@@ -63,7 +90,9 @@ async function curateVideos() {
             id: item.snippet.resourceId.videoId,
             title: item.snippet.title,
             description: item.snippet.description, // Use description instead of full heavy transcripts if possible
-            thumbnail: item.snippet.thumbnails?.high?.url || ''
+            thumbnail: item.snippet.thumbnails?.high?.url || '',
+            channelId: item.snippet.channelId,
+            channelTitle: item.snippet.channelTitle
           });
         }
 
@@ -116,14 +145,29 @@ async function curateVideos() {
             const originalVideo = batch.find(v => v.id === result.video_id);
             if (!originalVideo) continue;
 
-            await supabase.from('recommended_videos').upsert({
-              video_id: originalVideo.id,
-              video_url: `https://www.youtube.com/watch?v=${originalVideo.id}`,
-              title: originalVideo.title,
-              thumbnail_url: originalVideo.thumbnail,
-              focus_areas: result.matched_focus,
-              improvement_areas: result.matched_improvement
-            });
+            try {
+              await supabase.from('recommended_videos').upsert({
+                video_id: originalVideo.id,
+                video_url: `https://www.youtube.com/watch?v=${originalVideo.id}`,
+                title: originalVideo.title,
+                thumbnail_url: originalVideo.thumbnail,
+                channel_id: originalVideo.channelId || channel.channel_id,
+                channel_name: originalVideo.channelTitle || channel.channel_name,
+                view_count: Number(channelMeta.statistics?.viewCount || 0),
+                focus_areas: result.matched_focus,
+                improvement_areas: result.matched_improvement
+              });
+            } catch (videoUpsertError) {
+              await supabase.from('recommended_videos').upsert({
+                video_id: originalVideo.id,
+                video_url: `https://www.youtube.com/watch?v=${originalVideo.id}`,
+                title: originalVideo.title,
+                thumbnail_url: originalVideo.thumbnail,
+                focus_areas: result.matched_focus,
+                improvement_areas: result.matched_improvement
+              });
+              console.warn(`Video metadata columns unavailable yet: ${videoUpsertError.message}`);
+            }
             console.log(`✅ Saved Recommendation: ${originalVideo.title}`);
           }
         }
