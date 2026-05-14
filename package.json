@@ -11,6 +11,7 @@
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
+    "seed-demo": "node scripts/resetDemoData.js",
     "backfill-congregation-crm": "node scripts/backfillCongregationCrmProfiles.js",
     "curate-music-library": "node scripts/curateMusicLibrary.js",
     "curate-videos": "node scripts/curateVideos.js",
