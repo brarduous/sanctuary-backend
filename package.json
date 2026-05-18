@@ -15,7 +15,8 @@
     "backfill-congregation-crm": "node scripts/backfillCongregationCrmProfiles.js",
     "curate-music-library": "node scripts/curateMusicLibrary.js",
     "curate-videos": "node scripts/curateVideos.js",
-    "import-youtube-channels": "node scripts/importYoutubeChannelsFromXlsx.js"
+    "import-youtube-channels": "node scripts/importYoutubeChannelsFromXlsx.js",
+    "evaluate-prompts": "node scripts/evaluatePrompts.js"
   },
   "keywords": [],
   "author": "",

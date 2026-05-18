@@ -247,33 +247,64 @@ router.get('/random', authenticateUser, async (req, res) => {
 });
 
 
+const RESERVED_ADMIN_ROUTES = new Set([
+    'activity-chart',
+    'logs',
+    'prayers',
+    'prompts',
+    'recent-users',
+    'stats',
+    'users',
+    'whitelist',
+]);
+
 // GET: Fetch ALL prayers for a Pastor's Inbox
-router.get('/admin/:congregationId', authenticateUser, async (req, res) => {
+router.get('/admin/:congregationId', (req, res, next) => {
+    if (RESERVED_ADMIN_ROUTES.has(req.params.congregationId)) {
+        return next('route');
+    }
+
+    next();
+}, authenticateUser, async (req, res) => {
     try {
         // Fetch all prayers for this church, regardless of visibility tier
         const { data, error } = await supabase
             .from('prayer_requests')
             .select(`
-                id, request_text, visibility, created_at, user_id,
-                profiles:user_id(first_name, last_name, email)
+                id, request_text, visibility, created_at, user_id
             `)
             .eq('congregation_id', req.params.congregationId)
             .order('created_at', { ascending: false });
 
         if (error) throw error;
 
+        const userIds = [...new Set(data.map(prayer => prayer.user_id).filter(Boolean))];
+        const { data: profiles, error: profilesError } = userIds.length
+            ? await supabase
+                .from('user_profiles')
+                .select('user_id, first_name, last_name')
+                .in('user_id', userIds)
+            : { data: [], error: null };
+
+        if (profilesError) throw profilesError;
+
+        const profileMap = {};
+        profiles.forEach(profile => {
+            profileMap[profile.user_id] = profile;
+        });
+
         // Format the names cleanly
         const formattedData = data.map(prayer => {
-            const firstName = prayer.profiles?.first_name || 'Unknown';
-            const lastName = prayer.profiles?.last_name || 'User';
+            const profile = profileMap[prayer.user_id];
+            const firstName = profile?.first_name || 'Unknown';
+            const lastName = profile?.last_name || 'User';
             
             return {
                 ...prayer,
                 author_name: prayer.visibility === 'public_anonymous' 
                     ? 'Anonymous' // Keep it visually anonymous in the UI
                     : `${firstName} ${lastName}`,
-                author_email: prayer.profiles?.email || null,
-                profiles: undefined // Clean up payload
+                author_email: null,
             };
         });
 
