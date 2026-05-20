@@ -7,6 +7,10 @@ const mammoth = require('mammoth');
 const OpenAI = require('openai');
 const supabase = require('../config/supabase'); // [!code ++]
 const authenticateUser = require('../middleware/auth'); // [!code ++]
+const {
+  getSermonStyleAnalysisSystemPrompt,
+  getSermonStyleAnalysisPrompt
+} = require('../prompts');
 
 const upload = multer({ dest: 'uploads/' });
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -60,45 +64,14 @@ router.post('/analyze-style', authenticateUser, upload.array('files', 5), async 
       fs.unlinkSync(file.path); // Cleanup
     }
 
-    // 2. AI Analysis with "Context Awareness"
-    // We explicitly list the options so the AI knows the "Standard" but permit deviation.
-    const prompt = `
-      You are a Homiletics Expert analyzing a pastor's sermon archive.
-      
-      KNOWN PREACHING STYLES: 
-      - Expository (Verse-by-verse, text-driven)
-      - Topical (Subject-driven, gathers verses around a theme)
-      - Textual (Focuses on a short passage as a launchpad)
-      - Principle (Extracts timeless truths/applications)
-
-      KNOWN ORATORICAL VOICES:
-      - Scholar (Logical, systematic, teaching-focused, dense)
-      - Prophet (Powerful rhetoric, visionary, urgent, convicting)
-      - Evangelist (Simple, clear, call-to-action focused, gospel-centric)
-      - Persuader (Rich language, illustrative, practical, emotional connection)
-
-      TASK:
-      Analyze the text samples provided.
-      1. Determine the Preaching Style. If it fits a Known Style perfectly, use that name. If it is distinct (e.g., Narrative, Redemptive-Historical), create a NEW "Custom" Label and a 1-sentence description.
-      2. Determine the Oratorical Voice. If it fits a Known Voice, use that name. If it is distinct (e.g., Storyteller, Fatherly), create a NEW "Custom" Label and a 1-sentence description.
-      3. Write a "System Prompt" that tells an AI how to write exactly like this user.
-
-      Output JSON:
-      {
-        "preachingStyle": { "label": "String", "isCustom": boolean, "description": "String (if custom)" },
-        "oratoricalStyle": { "label": "String", "isCustom": boolean, "description": "String (if custom)" },
-        "analysisSummary": "String (2-3 sentences explaining your findings to the user)",
-        "customSystemPrompt": "String"
-      }
-
-      Text Samples:
-      ${combinedText.substring(0, 25000)} 
-    `;
+    const trimmedSamples = combinedText.substring(0, 25000);
+    const systemPrompt = await getSermonStyleAnalysisSystemPrompt();
+    const prompt = await getSermonStyleAnalysisPrompt({ combinedText: trimmedSamples });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-5-nano", // Stronger model needed for nuance
       messages: [
-        { role: "system", content: "You are a Homiletics Expert." }, 
+        { role: "system", content: systemPrompt }, 
         { role: "user", content: prompt }
       ],
       response_format: { type: "json_object" }

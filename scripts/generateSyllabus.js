@@ -3,26 +3,14 @@ require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
+const { fetchPrompt } = require('../prompts');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 const generateSyllabus = async () => {
   const startTime = Date.now();
-  const prompt = `
-    Act as a wise, unbiased theologian. 
-    Create a 52-week devotional curriculum for laypeople.
-    Goal: Cover a balanced range of topics including theological growth, practical living, dealing with hardship, and celebration.
-    Avoid repetitive topics. Ensure the "Whole Counsel of God" is represented.
-    
-    Output JSON format:
-    {
-      "weeks": [
-        { "week": 1, "theme": "New Beginnings", "focus": "Isaiah 43" },
-        ...
-      ]
-    }
-  `;
+  const prompt = await fetchPrompt('devotional_syllabus_generator');
 
   console.log("Generating yearly syllabus...");
   const completion = await openai.chat.completions.create({

@@ -9,6 +9,11 @@ const OpenAI = require('openai'); // Use the v4 client
 const { GoogleGenAI } = require('@google/genai');
 const puppeteer = require('puppeteer');
 const { logEvent } = require('../utils/helpers');
+const {
+    getScripturalOutlookPrompt,
+    getScripturalOutlookArticleInputPrompt,
+    getNewsTaxonomyBreakdownPrompt
+} = require('../prompts');
 
 require('dotenv').config();
 
@@ -438,45 +443,6 @@ async function fetchTopNewsStories(limit = 24) {
 }
 // Daily News Synopsis moved to cron/dailyNewsSynopsis.js
 
-// Function to fetch the scriptural outlook prompt from Supabase
-async function getScripturalOutlookPrompt() {
-    const { data, error } = await supabase
-        .from('system_prompts')
-        .select('content')
-        .eq('key', 'news_generator')
-        .single();
-
-    if (error) {
-        console.error('Error fetching news_generator prompt from system_prompts:', error);
-        throw new Error('Failed to fetch system prompt');
-    }
-
-    if (!data || !data.content) {
-        throw new Error('news_generator prompt not found in system_prompts table');
-    }
-
-    return data.content;
-}
-
-// Prompt for Taxonomy Breakdown and Image Generation
-const taxonomy_breakdown_prompt = `
-# ROLE
-You are a theological artist and analyst for a Christian News app.
-
-# TASK
-1.  **Analyze**: Consider the provided Topic or Category name and the synopses of recent articles associated with it.
-2.  **Breakdown**: Provide a "Current Scriptural Breakdown": How does this specific topic/category relate to current events (based on the provided synopses) and biblical truth right now? (2-3 sentences).
-3.  **Image Prompt**: Create a prompt for an image generation model (DALL-E) that represents this topic, influenced by the themes in the recent articles. If the image subject is a person, ensure the prompt captures their likeness accurately.
-    * **Style**: photorealistic Journalistic photograph, fit to be used as a news article image. If using a real person, feel free to change the style to more of a satirical approach where they can be more like a political cartoon.  
-    * **Constraint**: no text should be added to the image whatsoever.
-
-# JSON OUTPUT STRUCTURE
-{
-  "scriptural_breakdown": "string",
-  "image_prompt": "string"
-}
-`;
-
 // generateDailyNewsSynopsis moved to cron/dailyNewsSynopsis.js
 
 // Function to process thresholds for taxonomies
@@ -547,11 +513,16 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
                     .join('\n\n');
 
                 // 3. Generate Breakdown & Image Prompt
+                const taxonomyPrompt = await getNewsTaxonomyBreakdownPrompt({
+                    taxonomyName: item.name,
+                    synopses
+                });
+
                 const aiResponse = await callOpenAIAndProcessResult(
-                    `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}\n` + taxonomy_breakdown_prompt, 
-                    `Topic/Category Name: ${item.name}\n\nRecent Article Synopses:\n${synopses}`, 
-                    'gpt-5-mini', 
-                    2000, 
+                    taxonomyPrompt,
+                    `Generate JSON only.`,
+                    'gpt-5-mini',
+                    2000,
                     'json_object'
                 );
 
@@ -629,8 +600,7 @@ async function generateAndSaveScripturalOutlook() {
         console.log(`Article already exists in database, skipping: ${article.title}`);
         continue;
     }
-existingTaxonomies.categories, existingTaxonomies.topics
-    const promptInput = `Article Title: ${article.title}\nArticle Body: ${article.body}\nArticle Description: ${article.description}\nExisting Topics: ${existingTaxonomies.categories}\nExisting Topics: ${existingTaxonomies.topics}`;
+    const promptInput = await getScripturalOutlookArticleInputPrompt(article, existingTaxonomies);
     try {
       // Call the AI function with the prompt and content for the current article
       const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 5000, 'json_object');

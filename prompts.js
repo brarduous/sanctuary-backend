@@ -36,6 +36,22 @@ async function fetchPrompt(key) {
     return data.content;
 }
 
+const stringifyPromptVar = (value) => {
+    if (value === null || value === undefined) return '';
+    if (Array.isArray(value)) return value.join(', ');
+    if (typeof value === 'object') return JSON.stringify(value);
+    return String(value);
+};
+
+const renderPromptTemplate = (template, variables = {}) => {
+    return template.replace(/\{\{\s*([a-zA-Z0-9_]+)\s*\}\}/g, (_, key) => stringifyPromptVar(variables[key]));
+};
+
+const getRenderedPrompt = async (key, variables = {}) => {
+    const template = await fetchPrompt(key);
+    return renderPromptTemplate(template, variables);
+};
+
 // --- HELPER: Tuning Formatting ---
 const formatTuning = (notes) => {
   if (!notes) return "";
@@ -49,33 +65,19 @@ const formatTuning = (notes) => {
 
 // --- EXPORTED GENERATORS (Now Async) ---
 const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuningNotes = "") => {
-    const basePrompt = await fetchPrompt('daily_devotional_generator'); // Your base JSON instructions
-    
-    return `
-${formatTuning(tuningNotes)}
-${basePrompt}
+    const basePrompt = await fetchPrompt('daily_devotional_generator');
 
-=== TODAY'S CHURCH CURRICULUM ===
-You MUST anchor your devotional on this exact message today. 
-- Title: ${generalDevoData.title}
-- Scripture: ${generalDevoData.scripture_reference}
-- Scripture Text: ${generalDevoData.scripture_text || 'Use the reference above.'}
-- Core Message: ${generalDevoData.content}
-
-=== USER PROFILE ===
-Adapt the application of today's core message for this specific person:
-- Focus Areas: ${userData.focusAreas?.join(', ') || 'General spiritual growth'}
-- Improvement Areas: ${userData.improvementAreas?.join(', ') || 'None specified'}
-- Pastoral/Background Notes: ${userData.pastoral_notes || 'None available.'}
-
-=== INSTRUCTIONS ===
-1. Keep the EXACT same Title and Scripture Reference as the Church Curriculum.
-2. Rewrite the "Core Message" to speak directly to the user.
-3. Weave their "Focus Areas", "Improvement Areas", and "Background Notes" into the application of the scripture. 
-4. Provide a personalized prayer based on their struggles/focus areas and today's scripture. This prayer should be from the lips of the user to God.
-5. Provide a relevant song search query for YouTube.
-OUTPUT MUST BE A VALID JSON OBJECT matching the keys: title, scripture, content, daily_prayer, song_search_query.
-`;
+    return await getRenderedPrompt('daily_devotional_personalization_wrapper', {
+        base_prompt: basePrompt,
+        tuning_instructions: formatTuning(tuningNotes),
+        curriculum_title: generalDevoData.title,
+        curriculum_scripture_reference: generalDevoData.scripture_reference,
+        curriculum_scripture_text: generalDevoData.scripture_text || 'Use the reference above.',
+        curriculum_core_message: generalDevoData.content,
+        user_focus_areas: userData.focusAreas?.join(', ') || 'General spiritual growth',
+        user_improvement_areas: userData.improvementAreas?.join(', ') || 'None specified',
+        user_pastoral_notes: userData.pastoral_notes || 'None available.'
+    });
 };
 
 const generateTopicSermonPrompt = async (tuningNotes = "") => {
@@ -113,12 +115,63 @@ const getDailyNewsSynopsisPrompt = async () => {
     return await fetchPrompt('daily_news_synopsis');
 };
 
+const getGeneralDevotionalBatchPrompt = async (themeData) => {
+    return await getRenderedPrompt('general_devotional_generator', {
+        theme_title: themeData.theme_title,
+        scripture_focus: themeData.scripture_focus
+    });
+};
+
+const getScripturalOutlookPrompt = async () => {
+    return await fetchPrompt('news_generator');
+};
+
+const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {
+    return await getRenderedPrompt('news_generator_article_input', {
+        article_title: article.title,
+        article_body: article.body,
+        article_description: article.description,
+        existing_categories: existingTaxonomies.categories,
+        existing_topics: existingTaxonomies.topics
+    });
+};
+
+const getNewsTaxonomyBreakdownPrompt = async ({ taxonomyName, synopses }) => {
+    return await getRenderedPrompt('news_taxonomy_breakdown_generator', {
+        taxonomy_name: taxonomyName,
+        synopses
+    });
+};
+
+const getSermonStyleAnalysisSystemPrompt = async () => {
+    return await fetchPrompt('sermon_style_analysis_system');
+};
+
+const getSermonStyleAnalysisPrompt = async ({ combinedText }) => {
+    return await getRenderedPrompt('sermon_style_analysis_generator', {
+        combined_text: combinedText
+    });
+};
+
+const getAiEditorSystemPrompt = async () => {
+    return await fetchPrompt('ai_editor_system');
+};
+
+const getAiEditorUserPrompt = async ({ instruction, text }) => {
+    return await getRenderedPrompt('ai_editor_user_edit', {
+        instruction,
+        text
+    });
+};
+
 const generateSermonSeriesOutlinePrompt = async (tuningNotes = "") => {
     const basePrompt = await fetchPrompt('sermon_series_outline_generator');
     return `${formatTuning(tuningNotes)}\n\n${basePrompt}`;
 };
 
 module.exports = {
+    fetchPrompt,
+    getRenderedPrompt,
     getPersonalizedDevotionalPrompt,
     generateTopicSermonPrompt,
     generateScriptureSermonPrompt,
@@ -128,5 +181,13 @@ module.exports = {
     getDailyDevotionalPrompt,
     getCommunityPrayerPrompt,
     getDailyNewsSynopsisPrompt,
+    getGeneralDevotionalBatchPrompt,
+    getScripturalOutlookPrompt,
+    getScripturalOutlookArticleInputPrompt,
+    getNewsTaxonomyBreakdownPrompt,
+    getSermonStyleAnalysisSystemPrompt,
+    getSermonStyleAnalysisPrompt,
+    getAiEditorSystemPrompt,
+    getAiEditorUserPrompt,
     generateSermonSeriesOutlinePrompt
 };

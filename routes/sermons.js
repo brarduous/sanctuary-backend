@@ -4,7 +4,12 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult, getTuningNotes } = require('../utils/helpers');
-const { generateTopicSermonPrompt, generateScriptureSermonPrompt, generateSermonSeriesOutlinePrompt } = require('../prompts');
+const {
+    generateTopicSermonPrompt,
+    generateScriptureSermonPrompt,
+    generateSermonSeriesOutlinePrompt,
+    getRenderedPrompt
+} = require('../prompts');
 
 const ALLOWED_CONTENT_FORMATS = ['sermon', 'sermonette', 'podcast_episode', 'youtube_video'];
 const ALLOWED_DISTRIBUTION_CHANNELS = ['pulpit', 'podcast', 'youtube', 'multi'];
@@ -116,7 +121,13 @@ const enforceLengthWithRewrite = async ({
             };
         }
 
-        const rewritePrompt = `${contextLabel}\n\nYou are given a generated sermon JSON that is outside the required word count.\nRevise the JSON so sermon_body is strictly between ${budget.minWords} and ${budget.maxWords} words.\nCurrent word count: ${currentWordCount}.\nPreserve biblical accuracy, main points, and tone while expanding or compressing as needed.\n\nReturn a full valid JSON object with these keys:\n- title\n- scripture\n- illustration\n- sermon_outline\n- key_takeaways\n- sermon_body\n\nCurrent sermon JSON:\n${JSON.stringify(currentSermon)}`;
+        const rewritePrompt = await getRenderedPrompt('sermon_length_rewrite_generator', {
+            context_label: contextLabel,
+            min_words: budget.minWords,
+            max_words: budget.maxWords,
+            current_word_count: currentWordCount,
+            current_sermon_json: JSON.stringify(currentSermon)
+        });
 
         try {
             const revised = await callOpenAIAndProcessResult(

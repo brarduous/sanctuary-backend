@@ -1,5 +1,6 @@
 const supabase = require('../config/supabase');
 const openai = require('../config/openai');
+const { getRenderedPrompt } = require('../prompts');
 const YT_KEY = process.env.YOUTUBE_API_KEY;
 
 // How many days back should we check for new videos?
@@ -113,24 +114,20 @@ async function curateVideos() {
 
         console.log(`🤖 Sending batch of ${batch.length} videos to OpenAI...`);
 
+        const systemPrompt = await getRenderedPrompt('video_curation_batch_classifier', {
+          focus_areas: masterFocus,
+          improvement_areas: masterImprovement,
+          video_batch: textForAnalysis
+        });
+
         const analysis = await openai.chat.completions.create({
           model: "gpt-4o-mini", // <-- MASSIVE COST SAVING: Use mini for classification
           messages: [{
             role: "system",
-            content: `You are a categorization assistant. Analyze this batch of sermon videos. 
-            Match each video to these Focus Areas: ${masterFocus.join(', ')}
-            And these Improvement Areas: ${masterImprovement.join(', ')}
-            If a video doesn't fit, leave the arrays empty.
-            
-            Return ONLY a JSON object exactly in this format: 
-            {
-              "results": [
-                { "video_id": "the_id_provided", "matched_focus": ["area1"], "matched_improvement": [] }
-              ]
-            }`
+            content: systemPrompt
           }, {
             role: "user",
-            content: textForAnalysis
+            content: "Classify this batch now and return JSON only."
           }],
           response_format: { type: "json_object" }
         });

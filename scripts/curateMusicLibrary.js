@@ -1,6 +1,7 @@
 const { google } = require('googleapis');
 const supabase = require('../config/supabase');
 const openai = require('../config/openai');
+const { getRenderedPrompt } = require('../prompts');
 require('dotenv').config();
 
 const youtube = google.youtube({
@@ -53,21 +54,11 @@ async function processTag(item) {
     try {
         // 2. Ask AI for Songs + Cross-Tagging
         // We ask AI to provide the YouTube query AND best-fit activities/tags
-        const prompt = `
-            I need 3 excellent Christian/Worship songs for the category: "${item.tag}" (${item.type}).
-            
-            For EACH song, generate:
-            1. "query": A YouTube search string (add 'Lyrics', 'Audio', or 'Instrumental' to find music-only versions).
-            2. "activities": Pick 1-3 activities from this list that fit the song's vibe: ${VALID_ACTIVITIES.join(', ')}.
-            3. "vibes": A few keywords describing the sound (e.g. "Upbeat", "Soaking").
-
-            RETURN JSON ONLY:
-            {
-              "songs": [
-                { "query": "...", "activities": ["Gym", "Running"], "vibes": ["High Energy"] }
-              ]
-            }
-        `;
+                const prompt = await getRenderedPrompt('music_curation_generator', {
+                        tag: item.tag,
+                        tag_type: item.type,
+                        valid_activities: VALID_ACTIVITIES
+                });
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",

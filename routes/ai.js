@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
+const { getAiEditorSystemPrompt, getAiEditorUserPrompt } = require('../prompts');
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -12,11 +13,14 @@ router.post('/edit', async (req, res) => {
   if (!text) return res.status(400).json({ error: 'No text provided' });
 
   try {
+    const systemPrompt = await getAiEditorSystemPrompt();
+    const userPrompt = await getAiEditorUserPrompt({ instruction, text });
+
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini", // Fast and cheap for interactive edits
       messages: [
-        { role: "system", content: "You are a helpful editor for a pastor. Keep responses concise and maintain the user's voice." },
-        { role: "user", content: `Edit the following text based on this instruction: "${instruction}".\n\nText: "${text}"` }
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
       ],
       temperature: 0.7,
     });

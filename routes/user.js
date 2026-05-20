@@ -4,6 +4,7 @@ const supabase = require('../config/supabase');
 const openai = require('../config/openai');
 const authenticateUser = require('../middleware/auth');
 const { logEvent } = require('../utils/helpers');
+const { getRenderedPrompt } = require('../prompts');
 require('dotenv').config();
 
 const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
@@ -256,22 +257,12 @@ router.post('/feedback', authenticateUser, async (req, res) => {
         const currentNotes = profile?.ai_tuning_notes || "No specific tuning yet.";
 
         // 3. AI Analysis: Generate new tuning instructions
-        const systemPrompt = `
-      You are an AI Optimization Engineer. 
-      Your goal is to maintain a concise set of "Style Instructions" for a user based on their feedback history.
-      
-      Current Instructions: "${currentNotes}"
-      
-      New Feedback:
-      - Rating: ${feedback.rating}/5
-      - Good: ${feedback.positive}
-      - Bad: ${feedback.negative}
-      
-      TASK: Write a new, consolidated set of instructions (max 3 sentences) that incorporates the new feedback.
-      If the feedback is positive (4-5 stars), reinforce the current style.
-      If negative, adjust strictly to fix the complaints.
-      Write ONLY the instructions.
-    `;
+                const systemPrompt = await getRenderedPrompt('user_feedback_tuning_generator', {
+                        current_notes: currentNotes,
+                        rating: feedback.rating,
+                        positive_feedback: feedback.positive,
+                        negative_feedback: feedback.negative
+                });
 
         const completion = await openai.chat.completions.create({
             model: "gpt-4o",
