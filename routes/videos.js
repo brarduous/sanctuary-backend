@@ -18,6 +18,24 @@ const normalizeArray = (value) => {
     .filter(Boolean);
 };
 
+const normalizeSearchText = (value) => (
+  String(value || '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+);
+
+const getCreatorBlockTerms = (channelNames = [], explicitTerms = []) => {
+  const suffixPattern = /\b(ministries|ministry|official|channel|tv|television|broadcasting|media|network|church|inc|international|global)\b/g;
+  const terms = [...channelNames, ...explicitTerms]
+    .map((term) => normalizeSearchText(term).replace(suffixPattern, '').replace(/\s+/g, ' ').trim())
+    .filter((term) => term.length >= 4);
+
+  return [...new Set(terms)];
+};
+
 const getVideoPreferences = (profile) => {
   const userPreferences = profile?.user_preferences || {};
   const videoPreferences = userPreferences.videoPreferences || {};
@@ -25,6 +43,7 @@ const getVideoPreferences = (profile) => {
   return {
     preferredChannelIds: normalizeArray(videoPreferences.preferredChannelIds),
     blockedChannelIds: normalizeArray(videoPreferences.blockedChannelIds),
+    blockedSpeakers: normalizeArray(videoPreferences.blockedSpeakers),
     preferredSpeakers: normalizeArray(videoPreferences.preferredSpeakers)
   };
 };
@@ -85,6 +104,7 @@ router.post('/videos/preferences', auth, async (req, res) => {
     const preferredChannelIds = normalizeArray(req.body?.preferredChannelIds);
     const blockedChannelIds = normalizeArray(req.body?.blockedChannelIds)
       .filter((channelId) => !preferredChannelIds.includes(channelId));
+    const blockedSpeakers = normalizeArray(req.body?.blockedSpeakers);
     const preferredSpeakers = normalizeArray(req.body?.preferredSpeakers);
 
     const { data: profile, error: fetchError } = await supabase
@@ -102,6 +122,7 @@ router.post('/videos/preferences', auth, async (req, res) => {
       videoPreferences: {
         preferredChannelIds,
         blockedChannelIds,
+        blockedSpeakers,
         preferredSpeakers
       }
     };
@@ -157,7 +178,22 @@ router.get('/recommended', optionalAuth, async (req, res) => {
     }
 
     const { focusAreas = [], improvementAreas = [] } = profile.user_preferences || {};
-    const { preferredChannelIds, blockedChannelIds, preferredSpeakers } = getVideoPreferences(profile);
+    const { preferredChannelIds, blockedChannelIds, blockedSpeakers, preferredSpeakers } = getVideoPreferences(profile);
+    let blockedCreatorTerms = getCreatorBlockTerms([], blockedSpeakers);
+
+    if (blockedChannelIds.length > 0) {
+      const { data: blockedChannels, error: blockedChannelError } = await supabase
+        .from('youtube_channels')
+        .select('channel_id, channel_name, handle')
+        .in('channel_id', blockedChannelIds);
+
+      if (blockedChannelError) throw blockedChannelError;
+
+      blockedCreatorTerms = getCreatorBlockTerms(
+        (blockedChannels || []).flatMap((channel) => [channel.channel_name, channel.handle]),
+        blockedSpeakers
+      );
+    }
     
     // Convert to Postgres format for the query
     const focusString = toPgArray(focusAreas);
@@ -179,7 +215,17 @@ router.get('/recommended', optionalAuth, async (req, res) => {
     if (videoError) throw videoError;
 
     // 3. Score & Sort (The "Relevance" Logic)
-    const visibleCandidates = (candidates || []).filter((video) => !blockedChannelIds.includes(video.channel_id));
+    const visibleCandidates = (candidates || []).filter((video) => {
+      if (blockedChannelIds.includes(video.channel_id)) return false;
+
+      const searchableVideoText = normalizeSearchText([
+        video.title,
+        video.description,
+        video.channel_name
+      ].join(' '));
+
+      return !blockedCreatorTerms.some((term) => searchableVideoText.includes(term));
+    });
 
     const scoredVideos = visibleCandidates.map(video => {
       // Count how many tags match the user's profile
