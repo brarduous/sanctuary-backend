@@ -5,8 +5,7 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
-const { google } = require('googleapis');
-const youtube = google.youtube({ version: 'v3', auth: process.env.YOUTUBE_API_KEY });
+const { searchSpotifyTracks } = require('../utils/spotify');
 
 //Endpoint to initiate Daily Devotional generation
 router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res) => {
@@ -111,26 +110,19 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             let songData = {};
             if (song_search_query) {
                 try {
-                    const youtubeResponse = await youtube.search.list({
-                        part: 'snippet',
-                        q: song_search_query + ' worship lyric video', // Better search query targeting
-                        type: 'video',
-                        videoCategoryId: '10', // Music
-                        maxResults: 1,
-                    });
-
-                    const video = youtubeResponse.data.items[0];
-                    if (video) {
+                    const tracks = await searchSpotifyTracks(`${song_search_query} gospel worship christian`, 10);
+                    const track = tracks.find((item) => item.previewUrl) || tracks[0];
+                    if (track) {
                         songData = {
-                            song_title: video.snippet.title,
-                            song_video_id: video.id.videoId,
-                            song_url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
-                            song_thumbnail: video.snippet.thumbnails?.high?.url || null,
-                            song_channel: video.snippet.channelTitle || null,
+                            song_title: track.title,
+                            song_video_id: track.id,
+                            song_url: track.spotifyUrl,
+                            song_thumbnail: track.imageUrl,
+                            song_channel: track.artist,
                         };
                     }
-                } catch (youtubeError) {
-                    console.error('Error fetching song from YouTube:', youtubeError);
+                } catch (spotifyError) {
+                    console.error('Error fetching song from Spotify:', spotifyError);
                 }
             }
 

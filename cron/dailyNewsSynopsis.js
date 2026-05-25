@@ -74,10 +74,10 @@ async function generateDailyNewsSynopsisFromLast24h() {
       'json_object'
     );
 
-    if (aiResponse && (aiResponse.synopsis || aiResponse.scripture || aiResponse.prayer)) {
+    if (aiResponse && (aiResponse.synopsis || aiResponse.scripture || aiResponse.thought_to_remember || aiResponse.prayer)) {
       const payload = {
         synopsis: aiResponse.synopsis || null,
-        scripture: aiResponse.scripture || null,
+        scripture: aiResponse.thought_to_remember || aiResponse.scripture || null,
         prayer: aiResponse.prayer || null,
         created_at: new Date().toISOString(),
       };
