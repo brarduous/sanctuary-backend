@@ -6,6 +6,7 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
+const { generateContentImage } = require('../utils/contentImages');
 
 //Endpoint to get Bible Studies by user id
 router.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
@@ -212,6 +213,40 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 5000,
                 "json_object"
             );
+            let imagePayload = {};
+            try {
+                const image = await generateContentImage({
+                    contentType: 'bible-study',
+                    contentId: newStudy.study_id,
+                    userId,
+                    title: generatedStudy.title || `Bible Study on ${topic}`,
+                    scripture: generatedStudy.studies?.map((lesson) => lesson.scripture).filter(Boolean).join(', '),
+                    illustration: generatedStudy.illustration,
+                    outline: generatedStudy.studies?.map((lesson) => `${lesson.title}: ${lesson.study_outline || lesson.lesson_aims || ''}`).join('\n'),
+                    body: generatedStudy.subtitle,
+                });
+
+                imagePayload = {
+                    illustration: image.imageUrl,
+                    illustration_prompt: image.imagePrompt,
+                    illustration_image_url: image.imageUrl,
+                    thumbnail_url: image.imageUrl,
+                };
+            } catch (imageError) {
+                logEvent(
+                    'error',
+                    'backend',
+                    userId,
+                    'generate_bible_study_image',
+                    `Failed to generate Bible study image for ${newStudy.study_id}`,
+                    { error: imageError.message },
+                    Date.now() - startTime
+                );
+                imagePayload = {
+                    illustration: generatedStudy.illustration || null,
+                    illustration_prompt: generatedStudy.illustration || null,
+                };
+            }
 
             // Update the parent bible_studies record with top-level data
             const { error: updateStudyError } = await supabase
@@ -219,7 +254,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 .update({
                     title: generatedStudy.title || `Bible Study on ${topic}`,
                     subtitle: generatedStudy.subtitle || null,
-                    illustration: generatedStudy.illustration || null,
+                    ...imagePayload,
                     study_method: generatedStudy.study_method || method,
                     status: 'completed',
                     updated_at: new Date().toISOString(),

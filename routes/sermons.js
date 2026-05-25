@@ -4,6 +4,7 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult, getTuningNotes } = require('../utils/helpers');
+const { generateContentImage } = require('../utils/contentImages');
 const {
     generateTopicSermonPrompt,
     generateScriptureSermonPrompt,
@@ -220,6 +221,38 @@ const getStylePrompts = (userProfile) => {
     return instructions;
 };
 
+const tryGenerateSermonImage = async ({ userId, sermonId, sermon, contextLabel, startTime }) => {
+    try {
+        const image = await generateContentImage({
+            contentType: 'sermon',
+            contentId: sermonId,
+            userId,
+            title: sermon.title,
+            scripture: sermon.scripture,
+            illustration: sermon.illustration,
+            outline: sermon.sermon_outline,
+            body: sermon.sermon_body,
+        });
+
+        return {
+            illustration_prompt: image.imagePrompt,
+            illustration_image_url: image.imageUrl,
+            thumbnail_url: image.imageUrl,
+        };
+    } catch (error) {
+        logEvent(
+            'error',
+            'backend',
+            userId,
+            'generate_sermon_image',
+            `Failed to generate sermon image for ${contextLabel}`,
+            { error: error.message, sermonId },
+            Date.now() - startTime
+        );
+        return {};
+    }
+};
+
 // --- Series Endpoints ---
 router.get('/sermons/series/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
@@ -364,14 +397,25 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         targetDurationMin: safeDuration,
                         contextLabel: `Series Topic: ${topic} | Sermon Title: ${sermonOutline.title} | Scripture: ${sermonOutline.scripture || 'N/A'}`,
                     });
-
-                    await supabase.from('sermons').update({
+                    const sermonPayload = {
                         title: lengthManaged.sermon.title || sermonOutline.title,
                         scripture: lengthManaged.sermon.scripture || sermonOutline.scripture,
                         illustration: lengthManaged.sermon.illustration,
                         sermon_outline: lengthManaged.sermon.sermon_outline,
                         key_takeaways: lengthManaged.sermon.key_takeaways,
                         sermon_body: lengthManaged.sermon.sermon_body,
+                    };
+                    const imagePayload = await tryGenerateSermonImage({
+                        userId,
+                        sermonId: sermonRecord.sermon_id,
+                        sermon: sermonPayload,
+                        contextLabel: `series sermon "${sermonOutline.title}"`,
+                        startTime,
+                    });
+
+                    await supabase.from('sermons').update({
+                        ...sermonPayload,
+                        ...imagePayload,
                         status: 'completed',
                         content_format: normalizedContentFormat,
                         target_duration_min: safeDuration,
@@ -499,14 +543,25 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 targetDurationMin: safeDuration,
                 contextLabel: `Topic: ${topic}`,
             });
-
-            await supabase.from('sermons').update({
+            const sermonPayload = {
                 title: lengthManaged.sermon.title || `Sermon on ${topic}`,
                 scripture: lengthManaged.sermon.scripture || null,
                 illustration: lengthManaged.sermon.illustration || null,
                 sermon_outline: lengthManaged.sermon.sermon_outline || null,
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
+            };
+            const imagePayload = await tryGenerateSermonImage({
+                userId,
+                sermonId: newSermon.sermon_id,
+                sermon: sermonPayload,
+                contextLabel: `topic "${topic}"`,
+                startTime,
+            });
+
+            await supabase.from('sermons').update({
+                ...sermonPayload,
+                ...imagePayload,
                 status: 'completed',
                 content_format: normalizedContentFormat,
                 target_duration_min: safeDuration,
@@ -573,14 +628,25 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 targetDurationMin: safeDuration,
                 contextLabel: `Scripture: ${scripture}`,
             });
-
-            await supabase.from('sermons').update({
+            const sermonPayload = {
                 title: lengthManaged.sermon.title || `Sermon for ${scripture}`,
                 scripture: lengthManaged.sermon.scripture || null,
                 illustration: lengthManaged.sermon.illustration || null,
                 sermon_outline: lengthManaged.sermon.sermon_outline || null,
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
+            };
+            const imagePayload = await tryGenerateSermonImage({
+                userId,
+                sermonId: newSermon.sermon_id,
+                sermon: sermonPayload,
+                contextLabel: `scripture "${scripture}"`,
+                startTime,
+            });
+
+            await supabase.from('sermons').update({
+                ...sermonPayload,
+                ...imagePayload,
                 status: 'completed',
                 content_format: normalizedContentFormat,
                 target_duration_min: safeDuration,

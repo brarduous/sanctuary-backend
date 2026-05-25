@@ -365,6 +365,7 @@ const congregationsRouter = require('./routes/congregations'); // <--- Add this
 const messagesRouter = require('./routes/messages'); // <--- Add this
 const crmRouter = require('./routes/crm');
 const demoAdminRouter = require('./routes/demoAdmin');
+const cronRouter = require('./routes/cron');
 
 // Use Routes
 app.use('/', devotionalsRouter);
@@ -385,6 +386,7 @@ app.use('/api/congregations', congregationsRouter);
 app.use('/messages', messagesRouter);
 app.use('/api/crm', crmRouter);
 app.use('/api/admin', demoAdminRouter);
+app.use('/api/cron', cronRouter);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

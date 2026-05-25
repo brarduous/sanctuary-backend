@@ -24,6 +24,7 @@ const getVideoPreferences = (profile) => {
 
   return {
     preferredChannelIds: normalizeArray(videoPreferences.preferredChannelIds),
+    blockedChannelIds: normalizeArray(videoPreferences.blockedChannelIds),
     preferredSpeakers: normalizeArray(videoPreferences.preferredSpeakers)
   };
 };
@@ -82,6 +83,8 @@ router.post('/videos/preferences', auth, async (req, res) => {
   try {
     const userId = req.user.id;
     const preferredChannelIds = normalizeArray(req.body?.preferredChannelIds);
+    const blockedChannelIds = normalizeArray(req.body?.blockedChannelIds)
+      .filter((channelId) => !preferredChannelIds.includes(channelId));
     const preferredSpeakers = normalizeArray(req.body?.preferredSpeakers);
 
     const { data: profile, error: fetchError } = await supabase
@@ -98,6 +101,7 @@ router.post('/videos/preferences', auth, async (req, res) => {
       ...(profile?.user_preferences || {}),
       videoPreferences: {
         preferredChannelIds,
+        blockedChannelIds,
         preferredSpeakers
       }
     };
@@ -152,8 +156,8 @@ router.get('/recommended', optionalAuth, async (req, res) => {
       return res.status(404).json({ error: 'Profile not found' });
     }
 
-    const { focusAreas = [], improvementAreas = [] } = profile.user_preferences;
-    const { preferredChannelIds, preferredSpeakers } = getVideoPreferences(profile);
+    const { focusAreas = [], improvementAreas = [] } = profile.user_preferences || {};
+    const { preferredChannelIds, blockedChannelIds, preferredSpeakers } = getVideoPreferences(profile);
     
     // Convert to Postgres format for the query
     const focusString = toPgArray(focusAreas);
@@ -175,7 +179,9 @@ router.get('/recommended', optionalAuth, async (req, res) => {
     if (videoError) throw videoError;
 
     // 3. Score & Sort (The "Relevance" Logic)
-    const scoredVideos = (candidates || []).map(video => {
+    const visibleCandidates = (candidates || []).filter((video) => !blockedChannelIds.includes(video.channel_id));
+
+    const scoredVideos = visibleCandidates.map(video => {
       // Count how many tags match the user's profile
       const focusMatches = video.focus_areas?.filter(tag => focusAreas.includes(tag)).length || 0;
       const improveMatches = video.improvement_areas?.filter(tag => improvementAreas.includes(tag)).length || 0;
