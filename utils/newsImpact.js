@@ -19,7 +19,7 @@ function normalizeArticleForImpact(article = {}) {
 async function evaluateNewsImpactWithAI(openai, article, options = {}) {
     const normalized = normalizeArticleForImpact(article);
     const model = options.model || process.env.NEWS_IMPACT_MODEL || 'gpt-5-mini';
-    const bodyExcerpt = normalized.body.slice(0, 5000);
+    const bodyExcerpt = normalized.body.slice(0, 3000);
 
     const systemPrompt = `You are an editorial severity-and-scope scorer for a national news homepage.
 Return JSON only. Score real-world impact from 1 to 100.
@@ -66,7 +66,7 @@ Scoring rules:
                 { role: 'system', content: systemPrompt },
                 { role: 'user', content: userPrompt }
             ],
-            max_completion_tokens: 500,
+            max_completion_tokens: 1200,
             response_format: { type: 'json_object' }
         });
 

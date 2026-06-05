@@ -40,6 +40,28 @@ async function resolveTaxonomyId(tableName, value) {
     return data.id;
 }
 
+function buildTaxonomyImpactMap(rows, taxonomyIdField) {
+    const map = {};
+    (rows || []).forEach((row) => {
+        const taxonomyId = row[taxonomyIdField];
+        if (!taxonomyId) return;
+
+        const outlook = row.scriptural_outlooks;
+        const impactScore = Number(outlook?.news_impact_score) || 0;
+        if (!map[taxonomyId]) {
+            map[taxonomyId] = {
+                recentArticleCount: 0,
+                impactScore24h: 0
+            };
+        }
+
+        map[taxonomyId].recentArticleCount += 1;
+        map[taxonomyId].impactScore24h += impactScore;
+    });
+
+    return map;
+}
+
 // --- 1. SEARCH ARTICLES ---
 // Optimized: Fetches article_body for scoring, but strips it before sending to client to save bandwidth.
 router.get('/search', optionalAuth, async (req, res) => {
@@ -100,34 +122,34 @@ router.get('/search', optionalAuth, async (req, res) => {
     }
 });
 
-// --- 2. GET ALL CATEGORIES (WITH RECENT COUNTS) ---
+// --- 2. GET ALL CATEGORIES (SORTED BY 24H IMPACT) ---
 router.get('/categories', async (req, res) => {
     try {
-        const days = 7;
         const startDate = new Date();
-        startDate.setDate(startDate.getDate() - days);
+        startDate.setHours(startDate.getHours() - 24);
         const isoDate = startDate.toISOString();
 
         const { data: cats, error: catError } = await supabase.from('categories').select('*');
         if (catError) throw catError;
 
-        // Optimized: Only select what's needed for the count
-        const { data: counts, error: countErr } = await supabase
+        const { data: impactRows, error: impactErr } = await supabase
             .from('outlook_categories')
-            .select('category_id, scriptural_outlooks!inner(created_at)')
+            .select('category_id, scriptural_outlooks!inner(created_at, news_impact_score)')
             .gte('scriptural_outlooks.created_at', isoDate);
 
-        if (countErr) throw countErr;
+        if (impactErr) throw impactErr;
 
-        const activityMap = {};
-        counts.forEach(c => {
-            activityMap[c.category_id] = (activityMap[c.category_id] || 0) + 1;
-        });
+        const activityMap = buildTaxonomyImpactMap(impactRows, 'category_id');
 
         const result = cats.map(c => ({
             ...c,
-            recent_article_count: activityMap[c.id] || 0
-        })).sort((a, b) => b.recent_article_count - a.recent_article_count);
+            recent_article_count: activityMap[c.id]?.recentArticleCount || 0,
+            impact_score_24h: activityMap[c.id]?.impactScore24h || 0
+        })).sort((a, b) => {
+            if (b.impact_score_24h !== a.impact_score_24h) return b.impact_score_24h - a.impact_score_24h;
+            if (b.recent_article_count !== a.recent_article_count) return b.recent_article_count - a.recent_article_count;
+            return String(a.name || '').localeCompare(String(b.name || ''));
+        });
 
         res.json(result);
     } catch (error) {
@@ -155,33 +177,34 @@ router.get('/categories/:id', optionalAuth, async (req, res) => {
     }
 });
 
-// --- 4. GET ALL TOPICS (WITH RECENT COUNTS) ---
+// --- 4. GET ALL TOPICS (SORTED BY 24H IMPACT) ---
 router.get('/topics', async (req, res) => {
     try {
-        const days = 7;
         const startDate = new Date();
-        startDate.setDate(startDate.getDate() - days);
+        startDate.setHours(startDate.getHours() - 24);
         const isoDate = startDate.toISOString();
 
         const { data: topics, error: topError } = await supabase.from('topics').select('*');
         if (topError) throw topError;
 
-        const { data: counts, error: countErr } = await supabase
+        const { data: impactRows, error: impactErr } = await supabase
             .from('outlook_topics')
-            .select('topic_id, scriptural_outlooks!inner(created_at)')
+            .select('topic_id, scriptural_outlooks!inner(created_at, news_impact_score)')
             .gte('scriptural_outlooks.created_at', isoDate);
 
-        if (countErr) throw countErr;
+        if (impactErr) throw impactErr;
 
-        const activityMap = {};
-        counts.forEach(t => {
-            activityMap[t.topic_id] = (activityMap[t.topic_id] || 0) + 1;
-        });
+        const activityMap = buildTaxonomyImpactMap(impactRows, 'topic_id');
 
         const result = topics.map(t => ({
             ...t,
-            recent_article_count: activityMap[t.id] || 0
-        })).sort((a, b) => b.recent_article_count - a.recent_article_count);
+            recent_article_count: activityMap[t.id]?.recentArticleCount || 0,
+            impact_score_24h: activityMap[t.id]?.impactScore24h || 0
+        })).sort((a, b) => {
+            if (b.impact_score_24h !== a.impact_score_24h) return b.impact_score_24h - a.impact_score_24h;
+            if (b.recent_article_count !== a.recent_article_count) return b.recent_article_count - a.recent_article_count;
+            return String(a.name || '').localeCompare(String(b.name || ''));
+        });
 
         res.json(result);
     } catch (error) {

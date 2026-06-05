@@ -96,6 +96,39 @@ async function generateUniqueSlug(tableName, baseText) {
     }
 }
 
+function clampImpactScore(value) {
+    const score = Number(value);
+    if (!Number.isFinite(score)) return null;
+    return Math.max(1, Math.min(100, Math.round(score)));
+}
+
+function getGeneratedImpact(aiResponse) {
+    if (!aiResponse || typeof aiResponse !== 'object') {
+        return null;
+    }
+
+    const score = clampImpactScore(
+        aiResponse.newsImpactScore ??
+        aiResponse.news_impact_score ??
+        aiResponse.impactScore ??
+        aiResponse.impact_score
+    );
+
+    if (!score) {
+        return null;
+    }
+
+    return {
+        newsImpactScore: score,
+        newsImpactSummary:
+            aiResponse.newsImpactSummary ||
+            aiResponse.news_impact_summary ||
+            aiResponse.impactSummary ||
+            aiResponse.impact_summary ||
+            'Scored by AI based on the severity, seriousness, and scope of likely real-world consequences.'
+    };
+}
+
 // Function to generate image using Gemini
 async function generateImage(prompt) {
     const startTime = Date.now();
@@ -619,13 +652,21 @@ async function generateAndSaveScripturalOutlook() {
             publish_date: article.publish_date,
             ai_outlook: aiResponse // Full AI content
         };
-        try {
-            const impact = await evaluateNewsImpactWithAI(openai, { ...article, ai_outlook: aiResponse });
-            outlook.news_impact_score = impact.newsImpactScore;
-            outlook.news_impact_summary = impact.newsImpactSummary;
-        } catch (impactError) {
-            console.error(`Failed to score news impact for article. Saving without impact score: ${article.title}`, impactError);
+        let impact = getGeneratedImpact(aiResponse);
+        if (!impact) {
+            try {
+                impact = await evaluateNewsImpactWithAI(openai, { ...article, ai_outlook: aiResponse });
+            } catch (impactError) {
+                console.error(`Failed to score news impact for article. Skipping save to avoid a null impact score: ${article.title}`, impactError);
+                continue;
+            }
         }
+
+        aiResponse.newsImpactScore = impact.newsImpactScore;
+        aiResponse.newsImpactSummary = impact.newsImpactSummary;
+        outlook.news_impact_score = impact.newsImpactScore;
+        outlook.news_impact_summary = impact.newsImpactSummary;
+
         console.log('AI response processed for article:', article.title, aiResponse);
         const savedOutlook = await saveScripturalOutlook(outlook);
 

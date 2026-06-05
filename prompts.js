@@ -63,6 +63,24 @@ const formatTuning = (notes) => {
   `;
 };
 
+const NEWS_IMPACT_JSON_INSTRUCTIONS = `
+NEWS IMPACT SCORE REQUIREMENT:
+In the same JSON object you return for the scriptural outlook, include:
+- "newsImpactScore": integer from 1 to 100
+- "newsImpactSummary": one concise sentence explaining the score in terms of severity, seriousness, and scope
+
+Score real-world impact, not attention or novelty. Ask how many people could be materially affected, how severe the consequences are, and how direct or concrete the effects are. Public safety, war and peace, law, rights, health, economic security, infrastructure, democratic governance, and large-scale social stability should weigh heavily.
+
+Rubric:
+- 90-100: catastrophic or major national/global consequences; war escalation, nuclear risk, mass casualty, severe public-health threat, constitutional crisis, massive economic shock, or rights/safety consequences for millions.
+- 75-89: serious consequences for many people or a highly vulnerable population; major public safety, federal/state policy, court, infrastructure, security, economic, or health effects.
+- 55-74: meaningful but bounded impact; substantial local/regional effect, sector-wide consequences, significant legal/civic implications, or serious harm to a smaller group.
+- 35-54: moderate public interest but limited material consequence; political maneuvering, institutional controversy, business/sports/entertainment stories unless they substantially affect people beyond fans or insiders.
+- 1-34: low real-world consequence; celebrity updates, routine sports results, soft features, viral moments, commentary, niche lifestyle, or stories mostly about attention rather than material harm/benefit.
+
+Do not reward famous names, sensational language, partisan drama, or cultural buzz unless the story has severe and broad material consequences.
+`;
+
 // --- EXPORTED GENERATORS (Now Async) ---
 const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuningNotes = "") => {
     const basePrompt = await fetchPrompt('daily_devotional_generator');
@@ -123,7 +141,8 @@ const getGeneralDevotionalBatchPrompt = async (themeData) => {
 };
 
 const getScripturalOutlookPrompt = async () => {
-    return await fetchPrompt('news_generator');
+    const basePrompt = await fetchPrompt('news_generator');
+    return `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}`;
 };
 
 const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {
