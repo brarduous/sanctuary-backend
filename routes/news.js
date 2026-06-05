@@ -323,10 +323,12 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         } else if (sort === 'impact' || sort === 'featured') {
             query = query
                 .order('news_impact_score', { ascending: false, nullsFirst: false })
+                .order('publish_date', { ascending: false, nullsFirst: false })
                 .order('created_at', { ascending: false })
                 .range(offset, offset + limit - 1);
         } else {
             query = query
+                .order('publish_date', { ascending: false, nullsFirst: false })
                 .order('created_at', { ascending: false })
                 .range(offset, offset + limit - 1);
         }
