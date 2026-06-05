@@ -51,12 +51,12 @@ function buildTaxonomyImpactMap(rows, taxonomyIdField) {
         if (!map[taxonomyId]) {
             map[taxonomyId] = {
                 recentArticleCount: 0,
-                impactScore24h: 0
+                impactScoreWeek: 0
             };
         }
 
         map[taxonomyId].recentArticleCount += 1;
-        map[taxonomyId].impactScore24h += impactScore;
+        map[taxonomyId].impactScoreWeek += impactScore;
     });
 
     return map;
@@ -122,11 +122,11 @@ router.get('/search', optionalAuth, async (req, res) => {
     }
 });
 
-// --- 2. GET ALL CATEGORIES (SORTED BY 24H IMPACT) ---
+// --- 2. GET ALL CATEGORIES (SORTED BY WEEKLY IMPACT) ---
 router.get('/categories', async (req, res) => {
     try {
         const startDate = new Date();
-        startDate.setHours(startDate.getHours() - 24);
+        startDate.setDate(startDate.getDate() - 7);
         const isoDate = startDate.toISOString();
 
         const { data: cats, error: catError } = await supabase.from('categories').select('*');
@@ -144,9 +144,10 @@ router.get('/categories', async (req, res) => {
         const result = cats.map(c => ({
             ...c,
             recent_article_count: activityMap[c.id]?.recentArticleCount || 0,
-            impact_score_24h: activityMap[c.id]?.impactScore24h || 0
+            impact_score_week: activityMap[c.id]?.impactScoreWeek || 0,
+            impact_score_24h: activityMap[c.id]?.impactScoreWeek || 0
         })).sort((a, b) => {
-            if (b.impact_score_24h !== a.impact_score_24h) return b.impact_score_24h - a.impact_score_24h;
+            if (b.impact_score_week !== a.impact_score_week) return b.impact_score_week - a.impact_score_week;
             if (b.recent_article_count !== a.recent_article_count) return b.recent_article_count - a.recent_article_count;
             return String(a.name || '').localeCompare(String(b.name || ''));
         });
@@ -177,11 +178,11 @@ router.get('/categories/:id', optionalAuth, async (req, res) => {
     }
 });
 
-// --- 4. GET ALL TOPICS (SORTED BY 24H IMPACT) ---
+// --- 4. GET ALL TOPICS (SORTED BY WEEKLY IMPACT) ---
 router.get('/topics', async (req, res) => {
     try {
         const startDate = new Date();
-        startDate.setHours(startDate.getHours() - 24);
+        startDate.setDate(startDate.getDate() - 7);
         const isoDate = startDate.toISOString();
 
         const { data: topics, error: topError } = await supabase.from('topics').select('*');
@@ -199,9 +200,10 @@ router.get('/topics', async (req, res) => {
         const result = topics.map(t => ({
             ...t,
             recent_article_count: activityMap[t.id]?.recentArticleCount || 0,
-            impact_score_24h: activityMap[t.id]?.impactScore24h || 0
+            impact_score_week: activityMap[t.id]?.impactScoreWeek || 0,
+            impact_score_24h: activityMap[t.id]?.impactScoreWeek || 0
         })).sort((a, b) => {
-            if (b.impact_score_24h !== a.impact_score_24h) return b.impact_score_24h - a.impact_score_24h;
+            if (b.impact_score_week !== a.impact_score_week) return b.impact_score_week - a.impact_score_week;
             if (b.recent_article_count !== a.recent_article_count) return b.recent_article_count - a.recent_article_count;
             return String(a.name || '').localeCompare(String(b.name || ''));
         });
