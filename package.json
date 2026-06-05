@@ -9,6 +9,8 @@
     "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js",
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
+    "refresh-taxonomy-breakdowns": "node scripts/refreshTaxonomyBreakdowns.js",
+    "backfill-news-impact": "node scripts/backfillNewsImpactScores.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
     "seed-demo": "node scripts/resetDemoData.js",

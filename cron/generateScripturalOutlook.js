@@ -9,6 +9,7 @@ const OpenAI = require('openai'); // Use the v4 client
 const { GoogleGenAI } = require('@google/genai');
 const puppeteer = require('puppeteer');
 const { logEvent } = require('../utils/helpers');
+const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
 const {
     getScripturalOutlookPrompt,
     getScripturalOutlookArticleInputPrompt,
@@ -283,7 +284,9 @@ async function saveScripturalOutlook(outlook) {
                 article_thumbnail_url: outlook.article_thumbnail_url,
                 publish_date: outlook.publish_date,
                 slug: await generateUniqueSlug('scriptural_outlooks', outlook.article_title),
-                ai_outlook: outlook.ai_outlook // Full AI content including message, prayer, etc.
+                ai_outlook: outlook.ai_outlook, // Full AI content including message, prayer, etc.
+                news_impact_score: outlook.news_impact_score,
+                news_impact_summary: outlook.news_impact_summary
             }
         ])
         .select('id')
@@ -616,6 +619,13 @@ async function generateAndSaveScripturalOutlook() {
             publish_date: article.publish_date,
             ai_outlook: aiResponse // Full AI content
         };
+        try {
+            const impact = await evaluateNewsImpactWithAI(openai, { ...article, ai_outlook: aiResponse });
+            outlook.news_impact_score = impact.newsImpactScore;
+            outlook.news_impact_summary = impact.newsImpactSummary;
+        } catch (impactError) {
+            console.error(`Failed to score news impact for article. Saving without impact score: ${article.title}`, impactError);
+        }
         console.log('AI response processed for article:', article.title, aiResponse);
         const savedOutlook = await saveScripturalOutlook(outlook);
 

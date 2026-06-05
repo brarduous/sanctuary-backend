@@ -5,6 +5,41 @@ const authenticateUser = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
 
+const NEWS_LIST_COLUMNS = [
+    'id',
+    'article_title',
+    'article_url',
+    'article_thumbnail_url',
+    'created_at',
+    'publish_date',
+    'slug',
+    'ai_outlook',
+    'news_impact_score',
+    'news_impact_summary'
+].join(', ');
+
+function getWeightedNewsScore(outlook) {
+    const impactScore = Number(outlook.news_impact_score) || 0;
+    const articleTime = new Date(outlook.publish_date || outlook.created_at).getTime();
+    const ageHours = Number.isFinite(articleTime) ? (Date.now() - articleTime) / (1000 * 60 * 60) : 24;
+    const recencyScore = Math.max(0, 100 - ((Math.max(0, ageHours) / 24) * 100));
+    return (impactScore * 0.7) + (recencyScore * 0.3);
+}
+
+async function resolveTaxonomyId(tableName, value) {
+    if (!value) return null;
+    if (/^\d+$/.test(String(value))) return value;
+
+    const { data, error } = await supabase
+        .from(tableName)
+        .select('id')
+        .eq('slug', value)
+        .single();
+
+    if (error || !data) return null;
+    return data.id;
+}
+
 // --- 1. SEARCH ARTICLES ---
 // Optimized: Fetches article_body for scoring, but strips it before sending to client to save bandwidth.
 router.get('/search', optionalAuth, async (req, res) => {
@@ -216,11 +251,22 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
     const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
     const hasCategoryFilter = Boolean(category_id || category_slug || category);
-    const topicIsNumeric = topic && /^\d+$/.test(topic);
-    const categoryIsNumeric = category && /^\d+$/.test(category);
 
     try {
         const startTime = Date.now();
+        const resolvedTopicId = hasTopicFilter
+            ? await resolveTaxonomyId('topics', topic_id || topic_slug || topic)
+            : null;
+        const resolvedCategoryId = hasCategoryFilter
+            ? await resolveTaxonomyId('categories', category_id || category_slug || category)
+            : null;
+
+        if (hasTopicFilter && !resolvedTopicId) {
+            return res.json([]);
+        }
+        if (hasCategoryFilter && !resolvedCategoryId) {
+            return res.json([]);
+        }
         
         // Dynamically build relationship queries based on whether we are filtering by them
         let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, slug, name, description) )';
@@ -234,39 +280,46 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         }
 
         // OPTIMIZATION: Explicitly exclude `article_body` from the list view
-        const baseColumns = 'id, article_title, article_url, article_thumbnail_url, created_at, publish_date, slug, ai_outlook';
+        const baseColumns = NEWS_LIST_COLUMNS;
         const selectQuery = `${baseColumns}, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
+        const sort = String(req.query.sort || req.query.orderBy || 'latest').toLowerCase();
+
+        const useWeightedSort = sort === 'weighted' || sort === 'balanced';
+        const weightedCandidateLimit = Math.min(Math.max(limit * Math.max(page, 1) * 6, 120), 500);
 
         let query = supabase
             .from('scriptural_outlooks')
-            .select(selectQuery)
-            .order('created_at', { ascending: false })
-            .range(offset, offset + limit - 1);
+            .select(selectQuery);
+
+        if (useWeightedSort) {
+            query = query
+                .not('news_impact_score', 'is', null)
+                .order('publish_date', { ascending: false, nullsFirst: false })
+                .order('created_at', { ascending: false })
+                .limit(weightedCandidateLimit);
+        } else if (sort === 'impact' || sort === 'featured') {
+            query = query
+                .order('news_impact_score', { ascending: false, nullsFirst: false })
+                .order('created_at', { ascending: false })
+                .range(offset, offset + limit - 1);
+        } else {
+            query = query
+                .order('created_at', { ascending: false })
+                .range(offset, offset + limit - 1);
+        }
 
         // Apply Date Filters
         if (startDate) query = query.gte('created_at', startDate);
         if (endDate) query = query.lte('created_at', endDate);
 
         // Apply Topic Filters
-        if (topic_id) {
-            query = /^\d+$/.test(topic_id) 
-                ? query.eq('outlook_topics.topic_id', topic_id) 
-                : query.eq('outlook_topics.topics.slug', topic_id);
-        } else if (topic_slug) {
-            query = query.eq('outlook_topics.topics.slug', topic_slug);
-        } else if (topic) {
-            query = topicIsNumeric ? query.eq('outlook_topics.topic_id', topic) : query.eq('outlook_topics.topics.slug', topic);
+        if (resolvedTopicId) {
+            query = query.eq('outlook_topics.topic_id', resolvedTopicId);
         }
         
         // Apply Category Filters
-        if (category_id) {
-            query = /^\d+$/.test(category_id) 
-                ? query.eq('outlook_categories.category_id', category_id) 
-                : query.eq('outlook_categories.categories.slug', category_id);
-        } else if (category_slug) {
-            query = query.eq('outlook_categories.categories.slug', category_slug);
-        } else if (category) {
-            query = categoryIsNumeric ? query.eq('outlook_categories.category_id', category) : query.eq('outlook_categories.categories.slug', category);
+        if (resolvedCategoryId) {
+            query = query.eq('outlook_categories.category_id', resolvedCategoryId);
         } else if (category_ids) {
             query = query.in('outlook_categories.category_id', category_ids.split(','));
         }
@@ -276,13 +329,23 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         if (error) throw error;
 
         // Clean up nested Supabase formatting
-        const cleanedData = data.map(outlook => ({
+        let cleanedData = data.map(outlook => ({
             ...outlook,
             categories: outlook.outlook_categories ? outlook.outlook_categories.map(oc => oc.categories) : [],
             topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
             outlook_categories: undefined,
             outlook_topics: undefined,
         }));
+
+        if (useWeightedSort) {
+            cleanedData = cleanedData
+                .map(outlook => ({ ...outlook, weighted_score: getWeightedNewsScore(outlook) }))
+                .sort((a, b) => {
+                    if (b.weighted_score !== a.weighted_score) return b.weighted_score - a.weighted_score;
+                    return new Date(b.publish_date || b.created_at).getTime() - new Date(a.publish_date || a.created_at).getTime();
+                })
+                .slice(offset, offset + limit);
+        }
         
         logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched outlooks list', { page, limit, hasTopicFilter, hasCategoryFilter }, Date.now() - startTime);
         res.json(cleanedData);
