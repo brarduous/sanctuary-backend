@@ -5,9 +5,57 @@ const openai = require('../config/openai');
 const authenticateUser = require('../middleware/auth');
 const { logEvent } = require('../utils/helpers');
 const { getRenderedPrompt } = require('../prompts');
+const multer = require('multer');
+const path = require('path');
 require('dotenv').config();
 
 const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (_req, file, cb) => {
+        if (!file.mimetype?.startsWith('image/')) {
+            cb(new Error('Avatar must be an image file.'));
+            return;
+        }
+        cb(null, true);
+    },
+});
+
+const PROFILE_UPDATE_FIELDS = [
+    'first_name',
+    'last_name',
+    'avatar_url',
+    'sermon_preferences',
+    'user_preferences',
+];
+
+function pickProfileUpdateFields(body) {
+    return PROFILE_UPDATE_FIELDS.reduce((acc, field) => {
+        if (Object.prototype.hasOwnProperty.call(body, field)) {
+            acc[field] = body[field];
+        }
+        return acc;
+    }, {});
+}
+
+async function ensureAvatarBucket() {
+    const bucketName = 'clergy-profile-avatars';
+    const { data } = await supabase.storage.getBucket(bucketName);
+    if (data) return bucketName;
+
+    const { error } = await supabase.storage.createBucket(bucketName, {
+        public: true,
+        fileSizeLimit: 5 * 1024 * 1024,
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/gif'],
+    });
+
+    if (error && !/already exists/i.test(error.message)) {
+        throw error;
+    }
+
+    return bucketName;
+}
 
 router.get('/app-options', authenticateUser, async (req, res) => {
     try {
@@ -80,19 +128,74 @@ router.get('/user-profile/:userId', authenticateUser, async (req, res) => {
 //save or update user_profile by userId
 router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
-    const profileData = req.body;
-    if (!profileData.user_id) {
-        profileData.user_id = userId;
+    if (req.user.id !== userId) {
+        return res.status(403).json({ error: 'You can only update your own profile.' });
     }
+
+    const profileData = pickProfileUpdateFields(req.body);
+    if (Object.keys(profileData).length === 0) {
+        return res.status(400).json({ error: 'No supported profile fields were provided.' });
+    }
+    profileData.user_id = userId;
+
     const { data, error } = await supabase
         .from('user_profiles')
         .upsert(profileData)
-        .eq('user_id', userId);
+        .select('*')
+        .single();
     if (error) {
         console.error('Error saving or updating user profile:', error);
         return res.status(500).json({ error: 'Failed to save or update user profile.' });
     }
     res.json(data);
+});
+
+router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('avatar'), async (req, res) => {
+    const { userId } = req.params;
+    if (req.user.id !== userId) {
+        return res.status(403).json({ error: 'You can only update your own avatar.' });
+    }
+    if (!req.file) {
+        return res.status(400).json({ error: 'Avatar file is required.' });
+    }
+
+    try {
+        const bucketName = await ensureAvatarBucket();
+        const extension = path.extname(req.file.originalname || '').toLowerCase() || '.jpg';
+        const safeExtension = ['.jpg', '.jpeg', '.png', '.webp', '.gif'].includes(extension) ? extension : '.jpg';
+        const storagePath = `${userId}/${Date.now()}${safeExtension}`;
+
+        const { error: uploadError } = await supabase.storage
+            .from(bucketName)
+            .upload(storagePath, req.file.buffer, {
+                contentType: req.file.mimetype,
+                upsert: true,
+            });
+
+        if (uploadError) {
+            throw uploadError;
+        }
+
+        const { data: publicUrlData } = supabase.storage
+            .from(bucketName)
+            .getPublicUrl(storagePath);
+
+        const avatarUrl = publicUrlData.publicUrl;
+        const { data: profile, error: updateError } = await supabase
+            .from('user_profiles')
+            .upsert({ user_id: userId, avatar_url: avatarUrl })
+            .select('*')
+            .single();
+
+        if (updateError) {
+            throw updateError;
+        }
+
+        res.json({ avatar_url: avatarUrl, profile });
+    } catch (error) {
+        console.error('Error uploading profile avatar:', error);
+        res.status(500).json({ error: error.message || 'Failed to upload avatar.' });
+    }
 });
 
 // Example Node.js/Express route for a Supabase backend
