@@ -25,7 +25,6 @@ const upload = multer({
 const PROFILE_UPDATE_FIELDS = [
     'first_name',
     'last_name',
-    'avatar_url',
     'sermon_preferences',
     'user_preferences',
 ];
@@ -55,6 +54,38 @@ async function ensureAvatarBucket() {
     }
 
     return bucketName;
+}
+
+async function persistAvatarUrl(userId, avatarUrl) {
+    const { data: existingProfile } = await supabase
+        .from('user_profiles')
+        .select('user_preferences')
+        .eq('user_id', userId)
+        .single();
+
+    const currentPreferences = existingProfile?.user_preferences || {};
+    const { error: preferenceError } = await supabase
+        .from('user_profiles')
+        .upsert({
+            user_id: userId,
+            user_preferences: {
+                ...currentPreferences,
+                avatar_url: avatarUrl,
+            },
+        });
+
+    if (preferenceError) {
+        throw preferenceError;
+    }
+
+    const { error: avatarColumnError } = await supabase
+        .from('user_profiles')
+        .update({ avatar_url: avatarUrl })
+        .eq('user_id', userId);
+
+    if (avatarColumnError && avatarColumnError.code !== '42703' && avatarColumnError.code !== 'PGRST204') {
+        throw avatarColumnError;
+    }
 }
 
 router.get('/app-options', authenticateUser, async (req, res) => {
@@ -133,21 +164,42 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
     }
 
     const profileData = pickProfileUpdateFields(req.body);
-    if (Object.keys(profileData).length === 0) {
+    const avatarUrl = typeof req.body.avatar_url === 'string' ? req.body.avatar_url.trim() : '';
+    if (Object.keys(profileData).length === 0 && !avatarUrl) {
         return res.status(400).json({ error: 'No supported profile fields were provided.' });
     }
     profileData.user_id = userId;
 
-    const { data, error } = await supabase
-        .from('user_profiles')
-        .upsert(profileData)
-        .select('*')
-        .single();
-    if (error) {
-        console.error('Error saving or updating user profile:', error);
-        return res.status(500).json({ error: 'Failed to save or update user profile.' });
+    let data = null;
+    if (Object.keys(profileData).length > 1) {
+        const result = await supabase
+            .from('user_profiles')
+            .upsert(profileData)
+            .select('*')
+            .single();
+        if (result.error) {
+            console.error('Error saving or updating user profile:', result.error);
+            return res.status(500).json({ error: 'Failed to save or update user profile.' });
+        }
+        data = result.data;
     }
-    res.json(data);
+
+    if (avatarUrl) {
+        try {
+            await persistAvatarUrl(userId, avatarUrl);
+        } catch (error) {
+            console.error('Error saving profile avatar URL:', error);
+            return res.status(500).json({ error: 'Failed to save avatar URL.' });
+        }
+    }
+
+    const refreshed = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', userId)
+        .single();
+
+    res.json({ ...(refreshed.data || data || {}), avatar_url: avatarUrl || refreshed.data?.avatar_url || refreshed.data?.user_preferences?.avatar_url });
 });
 
 router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('avatar'), async (req, res) => {
@@ -181,17 +233,9 @@ router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('ava
             .getPublicUrl(storagePath);
 
         const avatarUrl = publicUrlData.publicUrl;
-        const { data: profile, error: updateError } = await supabase
-            .from('user_profiles')
-            .upsert({ user_id: userId, avatar_url: avatarUrl })
-            .select('*')
-            .single();
+        await persistAvatarUrl(userId, avatarUrl);
 
-        if (updateError) {
-            throw updateError;
-        }
-
-        res.json({ avatar_url: avatarUrl, profile });
+        res.json({ avatar_url: avatarUrl });
     } catch (error) {
         console.error('Error uploading profile avatar:', error);
         res.status(500).json({ error: error.message || 'Failed to upload avatar.' });
