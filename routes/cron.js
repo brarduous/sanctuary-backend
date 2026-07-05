@@ -14,7 +14,7 @@ const hasValidCronSecret = (req) => {
   return bearerToken === configuredSecret || headerSecret === configuredSecret;
 };
 
-router.post('/general-devotionals', async (req, res) => {
+const handleGeneralDevotionalsCron = async (req, res) => {
   if (!hasValidCronSecret(req)) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
@@ -27,6 +27,9 @@ router.post('/general-devotionals', async (req, res) => {
     console.error('[Cron] General devotional generation failed:', error);
     res.status(500).json({ error: error.message || 'Failed to generate general devotionals' });
   }
-});
+};
+
+router.get('/general-devotionals', handleGeneralDevotionalsCron);
+router.post('/general-devotionals', handleGeneralDevotionalsCron);
 
 module.exports = router;

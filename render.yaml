@@ -1,0 +1,18 @@
+services:
+  - type: cron
+    name: sanctuary-general-devotionals-daily
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "0 8 * * *"
+    buildCommand: npm install
+    startCommand: npm run cron-general-devotionals
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

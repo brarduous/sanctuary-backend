@@ -7,7 +7,9 @@ const { logEvent } = require('../utils/helpers');
 const { getGeneralDevotionalBatchPrompt } = require('../prompts');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 60_000 });
+const GENERAL_DEVOTIONAL_MODEL = process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-4o-mini';
+const USE_WEEKLY_BATCH_GENERATION = process.env.GENERAL_DEVOTIONAL_BATCH_MODE === 'true';
 
 const toDateString = (date) => date.toISOString().split('T')[0];
 
@@ -51,6 +53,152 @@ const parseEntries = (result) => {
   return entries;
 };
 
+const parseJsonContent = (content, label) => {
+  try {
+    return JSON.parse(content);
+  } catch (error) {
+    const preview = typeof content === 'string' ? content.slice(0, 500) : '';
+    throw new Error(`${label} returned invalid JSON: ${error.message}. Preview: ${preview}`);
+  }
+};
+
+const buildSingleDayPrompt = (theme, dayOffset) => `
+Role: You are the Lead Editor for Sanctuary.
+Task: Write one Daily Devotional for day ${dayOffset + 1} of a 7-day sequence.
+Theme: "${theme.theme_title}".
+Focus Scripture Area: ${theme.scripture_focus}.
+
+Use the focus scripture area as an anchor. Choose a short scripture verse or brief excerpt.
+
+REQUIREMENTS:
+- Tone: Orthodox, compassionate, conversational, non-political, focused on spiritual formation.
+- Full devotional content should be approximately 120-160 words.
+- scripture_text must be a short excerpt under 160 characters.
+- prayer must be 1-2 sentences.
+- short_form.slides must contain exactly 3 slides, each under 35 words.
+
+Return compact valid JSON only with this exact shape:
+{
+  "day_offset": ${dayOffset},
+  "title": "Title String",
+  "scripture_reference": "Book Chapter:Verse",
+  "scripture_text": "Short verse excerpt",
+  "content": "The devotional body text",
+  "prayer": "Prayer text",
+  "topics": ["Tag1", "Tag2"],
+  "short_form": {
+    "format": "instagram_story_3_slide",
+    "slides": [
+      { "slide": 1, "text": "Under 30 words" },
+      { "slide": 2, "text": "Under 30 words" },
+      { "slide": 3, "text": "Under 30 words" }
+    ]
+  }
+}
+`;
+
+const normalizeEntry = (entry, dayOffset) => {
+  const fallbackTitle = `Daily Reflection ${dayOffset + 1}`;
+  const content = String(entry.content || '').trim();
+  const shortForm = entry.short_form && typeof entry.short_form === 'object'
+    ? entry.short_form
+    : {
+        format: 'instagram_story_3_slide',
+        slides: [
+          { slide: 1, text: String(entry.title || fallbackTitle) },
+          { slide: 2, text: content.split('. ').slice(0, 2).join('. ').slice(0, 180) },
+          { slide: 3, text: String(entry.prayer || 'Lord, help us walk faithfully today.') },
+        ],
+      };
+
+  return {
+    day_offset: Number(entry.day_offset ?? dayOffset),
+    title: String(entry.title || fallbackTitle).trim(),
+    scripture_reference: String(entry.scripture_reference || '').trim(),
+    scripture_text: String(entry.scripture_text || '').trim().slice(0, 240),
+    content,
+    prayer: String(entry.prayer || '').trim(),
+    topics: Array.isArray(entry.topics) ? entry.topics : [],
+    short_form: {
+      format: shortForm.format || 'instagram_story_3_slide',
+      slides: Array.isArray(shortForm.slides) ? shortForm.slides.slice(0, 3) : [],
+    },
+  };
+};
+
+const generateSingleDayEntry = async (theme, dayOffset) => {
+  let lastError = null;
+
+  for (let attempt = 1; attempt <= 2; attempt += 1) {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: GENERAL_DEVOTIONAL_MODEL,
+        messages: [{ role: 'system', content: buildSingleDayPrompt(theme, dayOffset) }],
+        response_format: { type: 'json_object' },
+        max_completion_tokens: 4000,
+      }, { timeout: 60_000 });
+
+      const result = parseJsonContent(completion.choices[0].message.content, `Single-day devotional ${dayOffset + 1}`);
+      const entry = result.entry || result.devotional || result;
+      return {
+        ...normalizeEntry(entry, dayOffset),
+        tokens: completion.usage?.total_tokens,
+      };
+    } catch (error) {
+      lastError = error;
+      console.warn(`[General Devotionals] Single-day ${dayOffset + 1} attempt ${attempt} failed:`, error.message);
+    }
+  }
+
+  throw lastError;
+};
+
+const generateEntries = async (theme, prompt) => {
+  if (!USE_WEEKLY_BATCH_GENERATION) {
+    const entries = [];
+    let tokens = 0;
+
+    for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
+      const entry = await generateSingleDayEntry(theme, dayOffset);
+      tokens += entry.tokens || 0;
+      delete entry.tokens;
+      entries.push(entry);
+    }
+
+    return { entries, tokens, fallback: true };
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: GENERAL_DEVOTIONAL_MODEL,
+      messages: [{ role: 'system', content: prompt }],
+      response_format: { type: 'json_object' },
+      max_completion_tokens: 12000,
+    }, { timeout: 60_000 });
+
+    console.log('[General Devotionals] AI batch response received. Processing...');
+    const result = parseJsonContent(completion.choices[0].message.content, 'Weekly devotional batch');
+    return {
+      entries: parseEntries(result),
+      tokens: completion.usage?.total_tokens,
+      fallback: false,
+    };
+  } catch (error) {
+    console.warn('[General Devotionals] Batch generation failed. Falling back to single-day generation.', error.message);
+    const entries = [];
+    let tokens = 0;
+
+    for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
+      const entry = await generateSingleDayEntry(theme, dayOffset);
+      tokens += entry.tokens || 0;
+      delete entry.tokens;
+      entries.push(entry);
+    }
+
+    return { entries, tokens, fallback: true };
+  }
+};
+
 const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => {
   const startTime = Date.now();
 
@@ -80,15 +228,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
 
     const prompt = await getGeneralDevotionalBatchPrompt(theme);
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-5-nano',
-      messages: [{ role: 'system', content: prompt }],
-      response_format: { type: 'json_object' },
-    });
-
-    console.log('[General Devotionals] AI response received. Processing...');
-    const result = JSON.parse(completion.choices[0].message.content);
-    const entries = parseEntries(result);
+    const { entries, tokens, fallback } = await generateEntries(theme, prompt);
 
     for (const entry of entries) {
       const targetDate = addDays(resolvedStartDate, Number(entry.day_offset || 0));
@@ -130,6 +270,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
       themeTitle: theme.theme_title,
       startDate: toDateString(resolvedStartDate),
       count: entries.length,
+      fallback,
     };
 
     console.log('[General Devotionals] Success.', summary);
@@ -139,7 +280,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
       null,
       'generate_general_devotionals',
       'Successfully generated weekly batch of devotionals',
-      { tokens: completion.usage?.total_tokens, ...summary },
+      { tokens, ...summary },
       Date.now() - startTime
     );
 
