@@ -545,6 +545,43 @@ router.post('/log', async (req, res) => {
     res.status(200).send({ received: true });
 });
 
+router.post('/marketing/unsubscribe', async (req, res) => {
+    const email = typeof req.body?.email === 'string' ? req.body.email.trim().toLowerCase() : '';
+    const source = typeof req.body?.source === 'string' ? req.body.source.trim().slice(0, 100) : 'unknown';
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailPattern.test(email)) {
+        return res.status(400).json({ error: 'A valid email address is required.' });
+    }
+
+    try {
+        const { error } = await supabase
+            .from('marketing_unsubscribes')
+            .upsert({
+                email,
+                source,
+                unsubscribed_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            }, { onConflict: 'email' });
+
+        if (error) throw error;
+
+        await logEvent(
+            'info',
+            'marketing',
+            null,
+            'unsubscribe',
+            'Marketing unsubscribe recorded',
+            { source }
+        );
+
+        res.status(200).json({ ok: true, email });
+    } catch (error) {
+        console.error('Error recording marketing unsubscribe:', error);
+        res.status(500).json({ error: 'Failed to record unsubscribe request.' });
+    }
+});
+
 // --- NEW: Create Stripe Checkout Session (Updated for Trials) ---
 router.post('/create-checkout-session', authenticateUser,async (req, res) => {
     const { userId, email, isTrial } = req.body; // Accept isTrial flag

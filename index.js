@@ -368,6 +368,7 @@ const demoAdminRouter = require('./routes/demoAdmin');
 const cronRouter = require('./routes/cron');
 
 // Use Routes
+app.use('/admin', adminRouter);
 app.use('/', devotionalsRouter);
 app.use('/', sermonsRouter);
 app.use('/', bibleStudiesRouter);
@@ -376,7 +377,6 @@ app.use('/', adviceRouter);
 app.use('/', newsRouter);
 app.use('/', userRouter);
 app.use('/', communityRouter);
-app.use('/admin', adminRouter);
 app.use('/', videoRoutes);
 app.use('/api/music', musicRoutes);
 app.use('/api', transcribeRouter);

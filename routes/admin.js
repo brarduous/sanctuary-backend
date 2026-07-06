@@ -8,21 +8,126 @@ const requireAdmin = require('../middleware/adminAuth');
 router.use(authenticateUser);
 router.use(requireAdmin);
 
+function parseLimit(value, fallback = 100, max = 500) {
+    const parsed = parseInt(value, 10);
+    if (Number.isNaN(parsed) || parsed < 1) return fallback;
+    return Math.min(parsed, max);
+}
+
+function cleanFilter(value) {
+    if (!value || value === 'all') return null;
+    return String(value).trim();
+}
+
+function ecosystemAreaForActivity(activityType = '', description = '') {
+    const value = `${activityType} ${description}`.toLowerCase();
+    if (value.includes('auth') || value.includes('login') || value.includes('sign_in') || value.includes('profile')) return 'auth';
+    if (value.includes('sermon') || value.includes('clergy') || value.includes('congregation') || value.includes('curriculum') || value.includes('broadcast') || value.includes('event')) return 'clergy';
+    if (value.includes('news') || value.includes('outlook') || value.includes('article') || value.includes('topic') || value.includes('category')) return 'news';
+    if (value.includes('prayer') || value.includes('community') || value.includes('intercessory')) return 'community';
+    if (value.includes('bible') || value.includes('devotional') || value.includes('advice') || value.includes('music') || value.includes('playlist')) return 'layperson';
+    if (value.includes('admin') || value.includes('prompt') || value.includes('moderation') || value.includes('whitelist')) return 'admin';
+    return 'unknown';
+}
+
+function summarizeCounts(rows, keyGetter) {
+    return Object.entries(rows.reduce((acc, row) => {
+        const key = keyGetter(row) || 'unknown';
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {}))
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+}
+
+function buildLogQuery(req, select = '*') {
+    const level = cleanFilter(req.query.level);
+    const source = cleanFilter(req.query.source);
+    const action = cleanFilter(req.query.action);
+    const search = cleanFilter(req.query.search);
+    const days = parseInt(req.query.days, 10);
+    const minDuration = parseInt(req.query.minDuration, 10);
+
+    let query = supabase
+        .from('system_logs')
+        .select(select)
+        .order('created_at', { ascending: false });
+
+    if (level) query = query.eq('level', level);
+    if (source) query = query.eq('source', source);
+    if (action) query = query.eq('action', action);
+    if (!Number.isNaN(days) && days > 0) {
+        query = query.gte('created_at', new Date(Date.now() - days * 86400000).toISOString());
+    }
+    if (!Number.isNaN(minDuration) && minDuration > 0) {
+        query = query.gte('duration_ms', minDuration);
+    }
+    if (search) {
+        const escaped = search.replace(/[%_]/g, '\\$&').replace(/,/g, ' ');
+        query = query.or(`message.ilike.%${escaped}%,source.ilike.%${escaped}%,action.ilike.%${escaped}%`);
+    }
+
+    return query;
+}
+
 // GET /admin/logs
 router.get('/logs', async (req, res) => {
-    const limit = parseInt(req.query.limit) || 100;
-    
-    const { data, error } = await supabase
-        .from('system_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(limit);
+    const limit = parseLimit(req.query.limit);
+    const { data, error } = await buildLogQuery(req).limit(limit);
 
     if (error) {
         return res.status(500).json({ error: error.message });
     }
     
     res.json(data);
+});
+
+router.get('/logs/summary', async (req, res) => {
+    const sampleLimit = parseLimit(req.query.sampleLimit, 2000, 5000);
+    const { data, error } = await buildLogQuery(req, 'level, source, action, duration_ms, message')
+        .limit(sampleLimit);
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    const rows = data || [];
+    const durations = rows
+        .map((row) => Number(row.duration_ms))
+        .filter((value) => Number.isFinite(value) && value > 0);
+    const averageDuration = durations.length
+        ? Math.round(durations.reduce((sum, value) => sum + value, 0) / durations.length)
+        : 0;
+
+    res.json({
+        total: rows.length,
+        errors: rows.filter((row) => row.level === 'error').length,
+        warnings: rows.filter((row) => row.level === 'warn').length,
+        slow: rows.filter((row) => Number(row.duration_ms) >= 1000).length,
+        averageDuration,
+        byLevel: summarizeCounts(rows, (row) => row.level),
+        bySource: summarizeCounts(rows, (row) => row.source),
+        byAction: summarizeCounts(rows, (row) => row.action),
+        sampled: rows.length >= sampleLimit
+    });
+});
+
+router.get('/log-filters', async (_req, res) => {
+    const { data, error } = await supabase
+        .from('system_logs')
+        .select('level, source, action')
+        .order('created_at', { ascending: false })
+        .limit(1000);
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json({
+        levels: [...new Set((data || []).map((row) => row.level).filter(Boolean))].sort(),
+        sources: [...new Set((data || []).map((row) => row.source).filter(Boolean))].sort(),
+        actions: [...new Set((data || []).map((row) => row.action).filter(Boolean))].sort()
+    });
 });
 
 // GET /admin/stats (Mission Control Data)
@@ -75,20 +180,31 @@ router.get('/stats', async (req, res) => {
 
 router.get('/activity-chart', async (req, res) => {
     try {
-        const thirtyDaysAgo = new Date();
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        const days = parseLimit(req.query.days, 30, 120);
+        const activityType = cleanFilter(req.query.activityType);
+        const ecosystem = cleanFilter(req.query.ecosystem);
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - (days - 1));
 
         // Fetch all activities from the last 30 days
-        const { data, error } = await supabase
+        let query = supabase
             .from('user_activities')
-            .select('activity_date')
-            .gte('activity_date', thirtyDaysAgo.toISOString().split('T')[0]) // Comparison on Date column
+            .select('activity_type, activity_date, description')
+            .gte('activity_date', startDate.toISOString().split('T')[0]) // Comparison on Date column
             .order('activity_date', { ascending: true });
+
+        if (activityType) query = query.eq('activity_type', activityType);
+
+        const { data, error } = await query;
 
         if (error) throw error;
 
+        const filteredData = ecosystem
+            ? (data || []).filter((row) => ecosystemAreaForActivity(row.activity_type, row.description) === ecosystem)
+            : (data || []);
+
         // Group by Date (Client-side aggregation is fine for < 10k rows)
-        const grouped = data.reduce((acc, curr) => {
+        const grouped = filteredData.reduce((acc, curr) => {
             // activity_date comes back as 'YYYY-MM-DD' string usually
             const date = curr.activity_date; 
             acc[date] = (acc[date] || 0) + 1;
@@ -97,9 +213,9 @@ router.get('/activity-chart', async (req, res) => {
 
         // Fill in missing dates with 0 (Optional, but makes the chart look better)
         const chartData = [];
-        for (let d = 0; d < 30; d++) {
+        for (let d = 0; d < days; d++) {
             const dateObj = new Date();
-            dateObj.setDate(dateObj.getDate() - (29 - d)); // Go back 29 days up to today
+            dateObj.setDate(dateObj.getDate() - ((days - 1) - d)); // Go back up to today
             const dateStr = dateObj.toISOString().split('T')[0];
             
             chartData.push({
@@ -113,6 +229,57 @@ router.get('/activity-chart', async (req, res) => {
     } catch (err) {
         console.error('Activity Chart Error:', err);
         res.status(500).json({ error: 'Failed to fetch activity data' });
+    }
+});
+
+router.get('/activity', async (req, res) => {
+    try {
+        const limit = parseLimit(req.query.limit, 100, 500);
+        const sampleLimit = parseLimit(req.query.sampleLimit, 5000, 10000);
+        const days = parseLimit(req.query.days, 30, 365);
+        const activityType = cleanFilter(req.query.activityType);
+        const ecosystem = cleanFilter(req.query.ecosystem);
+        const userId = cleanFilter(req.query.userId);
+        const search = cleanFilter(req.query.search);
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - (days - 1));
+
+        let query = supabase
+            .from('user_activities')
+            .select('*')
+            .gte('activity_date', startDate.toISOString().split('T')[0])
+            .order('activity_date', { ascending: false })
+            .limit(sampleLimit);
+
+        if (activityType) query = query.eq('activity_type', activityType);
+        if (userId) query = query.eq('user_id', userId);
+        if (search) {
+            const escaped = search.replace(/[%_]/g, '\\$&').replace(/,/g, ' ');
+            query = query.or(`activity_type.ilike.%${escaped}%,description.ilike.%${escaped}%`);
+        }
+
+        const { data, error } = await query;
+        if (error) throw error;
+
+        const rows = (data || []).map((row) => ({
+            ...row,
+            ecosystem_area: ecosystemAreaForActivity(row.activity_type, row.description)
+        }));
+        const filteredRows = ecosystem ? rows.filter((row) => row.ecosystem_area === ecosystem) : rows;
+        const today = new Date().toISOString().split('T')[0];
+
+        res.json({
+            total: filteredRows.length,
+            sampled: rows.length >= sampleLimit,
+            today: filteredRows.filter((row) => row.activity_date === today).length,
+            anonymous: filteredRows.filter((row) => !row.user_id).length,
+            byType: summarizeCounts(filteredRows, (row) => row.activity_type),
+            byEcosystem: summarizeCounts(filteredRows, (row) => row.ecosystem_area),
+            recent: filteredRows.slice(0, limit)
+        });
+    } catch (err) {
+        console.error('Activity Explorer Error:', err);
+        res.status(500).json({ error: 'Failed to fetch activity explorer data' });
     }
 });
 
