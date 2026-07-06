@@ -1,6 +1,7 @@
 const supabase = require('../config/supabase');
 const openai = require('../config/openai'); // Using your existing config
 const { getRenderedPrompt } = require('../prompts');
+const { EVALUATION_SOURCES } = require('../utils/promptRegistry');
 require('dotenv').config();
 
 const countWords = (text = '') => {
@@ -117,35 +118,25 @@ ${sermonSummaries}`;
 };
 
 const EVAL_CONFIG = [
-    { 
-        table: 'daily_devotionals', 
-        promptKey: 'daily_devotional_generator', 
-        contentField: 'content',
-        idField: 'devotional_id' // Corrected ID
-    },
-    { 
-        table: 'daily_prayers', 
-        promptKey: 'daily_prayer_generator', 
-        contentField: 'generated_prayer',
-        idField: 'prayer_id' 
-    },
-    { 
-        table: 'scriptural_outlooks', 
-        promptKey: 'news_generator', 
-        contentField: 'ai_outlook',
-        idField: 'id' // Corrected ID
-    },
-    { 
-        table: 'advice_guidance', 
-        promptKey: 'advice_guidance_generator', 
-        contentField: 'advice_points',
-        idField: 'advice_id' // Corrected ID
+    {
+        promptKey: 'daily_devotional_generator',
+        ...EVALUATION_SOURCES.daily_devotional_generator,
     },
     {
-        table: 'sermons',
+        promptKey: 'daily_prayer_generator',
+        ...EVALUATION_SOURCES.daily_prayer_generator,
+    },
+    {
+        promptKey: 'news_generator',
+        ...EVALUATION_SOURCES.news_generator,
+    },
+    {
+        promptKey: 'advice_guidance_generator',
+        ...EVALUATION_SOURCES.advice_guidance_generator,
+    },
+    {
         promptKey: 'sermon_generator',
-        contentField: 'sermon_body',
-        idField: 'sermon_id',
+        ...EVALUATION_SOURCES.sermon_generator,
         prepareQuery: (query) => query
             .eq('status', 'completed')
             .not('sermon_body', 'is', null)
@@ -166,10 +157,8 @@ const EVAL_CONFIG = [
         `
     },
     {
-        table: 'sermon_series',
         promptKey: 'sermon_series_outline_generator',
-        contentField: 'description',
-        idField: 'series_id',
+        ...EVALUATION_SOURCES.sermon_series_outline_generator,
         prepareQuery: (query) => query
             .neq('description', 'Drafting curriculum outline...')
             .neq('description', 'Failed to generate series.'),

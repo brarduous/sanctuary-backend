@@ -3,6 +3,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 const requireAdmin = require('../middleware/adminAuth');
+const { listPromptUsageMetadata } = require('../utils/promptRegistry');
 
 // Apply checks to ALL routes in this file
 router.use(authenticateUser);
@@ -338,6 +339,21 @@ router.get('/prompts', async (req, res) => {
     } catch (err) {
         console.error('Fetch Prompts Error:', err);
         res.status(500).json({ error: 'Failed to fetch prompts' });
+    }
+});
+
+router.get('/prompts/usage', async (_req, res) => {
+    try {
+        const { data, error } = await supabase
+            .from('system_prompts')
+            .select('key')
+            .order('key', { ascending: true });
+
+        if (error) throw error;
+        res.json(listPromptUsageMetadata((data || []).map((prompt) => prompt.key)));
+    } catch (err) {
+        console.error('Fetch Prompt Usage Error:', err);
+        res.status(500).json({ error: 'Failed to fetch prompt usage metadata' });
     }
 });
 
