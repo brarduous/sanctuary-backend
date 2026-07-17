@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "dev:staging": "node scripts/devStaging.js",
     "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js",
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
@@ -18,7 +19,21 @@
     "curate-music-library": "node scripts/curateMusicLibrary.js",
     "curate-videos": "node scripts/curateVideos.js",
     "import-youtube-channels": "node scripts/importYoutubeChannelsFromXlsx.js",
-    "evaluate-prompts": "node scripts/evaluatePrompts.js"
+    "evaluate-prompts": "node scripts/evaluatePrompts.js",
+    "test": "node --test test/**/*.test.js",
+    "typecheck": "node --check index.js && find middleware routes utils -name '*.js' -print0 | xargs -0 -n1 node --check",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:lint": "supabase db lint --level warning",
+    "db:types": "supabase gen types typescript --local > types/database.generated.ts",
+    "db:production:preflight": "node scripts/productionDatabase.js preflight",
+    "db:production:rollback": "node scripts/productionDatabase.js rollback",
+    "test:message-isolation:staging": "node scripts/verifyMessageIsolation.js",
+    "test:checkin-journey:staging": "node scripts/verifyCheckinJourney.js",
+    "test:event-volunteer-journey:staging": "node scripts/verifyEventVolunteerJourney.js",
+    "test:content-production:staging": "node scripts/verifyContentProductionJourney.js"
+    ,"test:staging": "node scripts/verifyStaging.js",
+    "test:production-shape": "node scripts/verifyProductionShape.js"
   },
   "keywords": [],
   "author": "",
@@ -37,14 +52,16 @@
     "googleapis": "^170.1.0",
     "mammoth": "^1.11.0",
     "multer": "^2.0.2",
-    "nodemailer": "^7.0.11",
+    "nodemailer": "^9.0.3",
     "nodemon": "^3.1.11",
     "openai": "^5.10.1",
     "pdf-parse": "^2.4.5",
     "puppeteer": "^24.22.3",
     "stripe": "^20.0.0",
-    "xlsx": "^0.18.5",
     "xml2js": "^0.6.2",
     "youtube-transcript": "^1.2.1"
+  },
+  "devDependencies": {
+    "xlsx": "^0.18.5"
   }
 }

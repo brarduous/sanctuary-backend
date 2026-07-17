@@ -8,9 +8,25 @@ const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
 const { generateContentImage } = require('../utils/contentImages');
 
+router.post('/bible-study-drafts', authenticateUser, async (req, res, next) => {
+    const title = String(req.body?.title || '').trim();
+    if (!title) return res.status(400).json({ error: { code: 'TITLE_REQUIRED', message: 'A study title is required.', requestId: req.requestId } });
+    try {
+        const { data: study, error } = await supabase.from('bible_studies').insert({ user_id: req.user.id, title, subtitle: String(req.body?.subtitle || ''), study_method: String(req.body?.study_method || 'Expositional Method Blueprint'), status: 'draft', is_published: false }).select('*').single();
+        if (error) throw error;
+        const { data: lesson, error: lessonError } = await supabase.from('bible_study_lessons').insert({ study_id: study.study_id, lesson_number: 1, title: String(req.body?.lesson_title || 'Lesson 1'), scripture: String(req.body?.scripture || ''), user_id: req.user.id }).select('*').single();
+        if (lessonError) {
+            await supabase.from('bible_studies').delete().eq('study_id', study.study_id);
+            throw lessonError;
+        }
+        res.status(201).json({ ...study, lessons: [lesson] });
+    } catch (error) { next(error); }
+});
+
 //Endpoint to get Bible Studies by user id
 router.get('/bible-studies/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
+    if (userId !== req.user.id) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot access another user’s study library.', requestId: req.requestId } });
     console.log('Fetching bible studies for user ID:', userId);
     try {
         const { data, error } = await supabase
@@ -41,10 +57,11 @@ router.get('/bible-study/:studyId', authenticateUser, async (req, res) => {
             .from('bible_studies')
             .select('*')
         [isNumeric ? 'eq' : 'eq'](isNumeric ? 'study_id' : 'slug', studyId)
-            .single();
-        if (error) {
+            .eq('user_id', req.user.id)
+            .maybeSingle();
+        if (error || !data) {
             console.error('Error fetching bible study:', error);
-            return res.status(404).json({ error: 'Bible study not found' });
+            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study not found.', requestId: req.requestId } });
         }
         //get lessons for this study and add to data
         const { data: lessons, error: lessonsError } = await supabase
@@ -69,6 +86,9 @@ router.get('/bible-study-lessons/:studyId', authenticateUser, async (req, res) =
     const { studyId } = req.params;
     console.log('Fetching bible study lessons for study ID:', studyId);
     try {
+        const { data: ownedStudy, error: ownedError } = await supabase.from('bible_studies').select('study_id').eq('study_id', studyId).eq('user_id', req.user.id).maybeSingle();
+        if (ownedError) throw ownedError;
+        if (!ownedStudy) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study not found.', requestId: req.requestId } });
         const { data, error } = await supabase
             .from('bible_study_lessons')
             .select('*')
@@ -92,12 +112,13 @@ router.get('/bible-study-lessons/detail/:lessonId', authenticateUser, async (req
     try {
         const { data, error } = await supabase
             .from('bible_study_lessons')
-            .select('*')
+            .select('*, bible_studies!inner(user_id)')
             .eq('lesson_id', lessonId)
-            .single();
-        if (error) {
+            .eq('bible_studies.user_id', req.user.id)
+            .maybeSingle();
+        if (error || !data) {
             console.error('Error fetching bible study detail:', error);
-            return res.status(500).json({ error: 'Failed to fetch bible study detail.' });
+            return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study lesson not found.', requestId: req.requestId } });
         }
         res.json(data);
     } catch (error) {
@@ -109,18 +130,19 @@ router.get('/bible-study-lessons/detail/:lessonId', authenticateUser, async (req
 // Upsert bible study lesson (create or update)
 router.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res) => {
     try {
-        const lessonData = req.body;
+        const allowedLessonFields = new Set(['study_id','lesson_number','title','study_outline','commentary','reflection_questions','scripture','key_verse','lesson_aims','introduction','discussion_starters','application_sidebar','conclusion']);
+        const lessonData = Object.fromEntries(Object.entries(req.body || {}).filter(([key]) => allowedLessonFields.has(key)));
         const { lessonId } = req.params;
+        const { data: existing } = await supabase.from('bible_study_lessons').select('study_id').eq('lesson_id', lessonId).maybeSingle();
+        const studyId = existing?.study_id || lessonData.study_id;
+        const { data: ownedStudy, error: ownedError } = await supabase.from('bible_studies').select('study_id').eq('study_id', studyId).eq('user_id', req.user.id).maybeSingle();
+        if (ownedError) throw ownedError;
+        if (!ownedStudy) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study not found.', requestId: req.requestId } });
         console.log('Upserting bible study lesson:', lessonData);
-        const { data, error } = await supabase
-            .from('bible_study_lessons')
-            .upsert({
-                lesson_id: lessonId,
-                ...lessonData,
-                updated_at: new Date().toISOString(),
-            })
-            .select()
-            .single();
+        const mutation = existing
+            ? supabase.from('bible_study_lessons').update({ ...lessonData, study_id: existing.study_id, updated_at: new Date().toISOString() }).eq('lesson_id', lessonId)
+            : supabase.from('bible_study_lessons').insert({ lesson_id: lessonId, ...lessonData, user_id: req.user.id, updated_at: new Date().toISOString() });
+        const { data, error } = await mutation.select().single();
         if (error) {
             console.error('Error upserting bible study lesson:', error);
             return res.status(500).json({ error: 'Failed to upsert bible study lesson.' });
@@ -137,6 +159,14 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
     try {
         const { studyId } = req.params;
         const { is_published, congregation_id } = req.body;
+        const { data: ownedStudy, error: ownedError } = await supabase.from('bible_studies').select('study_id').eq('study_id', studyId).eq('user_id', req.user.id).maybeSingle();
+        if (ownedError) throw ownedError;
+        if (!ownedStudy) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study not found.', requestId: req.requestId } });
+        if (congregation_id !== undefined) {
+            const { data: allowed, error: authorizationError } = await supabase.rpc('has_congregation_capability', { requested_congregation_id: Number(congregation_id), requested_capability: 'content.write', requested_user_id: req.user.id, requested_campus_id: null });
+            if (authorizationError) throw authorizationError;
+            if (!allowed) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot publish to this organization.', requestId: req.requestId } });
+        }
         
         const payload = { updated_at: new Date().toISOString() };
         if (is_published !== undefined) payload.is_published = is_published;
@@ -152,7 +182,8 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
         if (error) throw error;
         
         //send push notification to congregation if study is now published
-        if (is_published === true && congregation_id) {
+        const suppressStagingNotification = process.env.NODE_ENV !== 'production' && req.get('x-suppress-notifications') === 'true';
+        if (is_published === true && congregation_id && !suppressStagingNotification) {
             const pushResult = await sendPushToCongregation(
                 congregation_id,
                 "New Church Curriculum 📖",
@@ -172,7 +203,8 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
 // Endpoint to initiate Bible Study generation
 router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, res) => {
     try {
-        const { userId, topic, length, method } = req.body;
+        const { topic, length, method } = req.body;
+        const userId = req.user.id;
         const startTime = Date.now();
         // 1. Create a placeholder in the `bible_studies` table immediately
         const { data: newStudy, error: insertStudyError } = await supabase

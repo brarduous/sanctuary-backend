@@ -1,0 +1,13 @@
+begin;
+drop policy if exists event_volunteers_staff_write on public.event_volunteers;
+drop policy if exists event_volunteers_staff_or_self_read on public.event_volunteers;
+drop policy if exists role_members_staff_write on public.role_members;
+drop policy if exists role_members_staff_or_self_read on public.role_members;
+alter table public.event_volunteers disable row level security;
+alter table public.role_members disable row level security;
+drop trigger if exists event_volunteers_tenant_guard on public.event_volunteers;
+drop trigger if exists role_members_tenant_guard on public.role_members;
+drop function if exists public.enforce_volunteer_tenant();
+alter table public.event_volunteers drop column if exists congregation_id;
+alter table public.role_members drop column if exists congregation_id;
+commit;

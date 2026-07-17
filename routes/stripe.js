@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const { getStripe } = require('../utils/stripe');
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
+const { requireCapability } = require('../middleware/authorization');
 
 // POST: Start the Stripe Onboarding Flow
-router.post('/onboard/:congregationId', authenticateUser, async (req, res) => {
+router.post('/onboard/:congregationId', authenticateUser, requireCapability('finance.write'), async (req, res) => {
     const { congregationId } = req.params;
 
     try {
+        const stripe = getStripe();
         // 1. Get the congregation
         const { data: cong, error } = await supabase
             .from('congregations')
@@ -58,10 +60,11 @@ router.post('/onboard/:congregationId', authenticateUser, async (req, res) => {
 });
 
 // GET: Check the status of the Stripe Account
-router.get('/status/:congregationId', authenticateUser, async (req, res) => {
+router.get('/status/:congregationId', authenticateUser, requireCapability('finance.read'), async (req, res) => {
     const { congregationId } = req.params;
 
     try {
+        const stripe = getStripe();
         const { data: cong } = await supabase
             .from('congregations')
             .select('stripe_account_id, stripe_charges_enabled')
@@ -100,8 +103,9 @@ router.get('/status/:congregationId', authenticateUser, async (req, res) => {
 });
 
 // GET: Generate a link for the Pastor to view their payouts/tax docs
-router.post('/dashboard/:congregationId', authenticateUser, async (req, res) => {
+router.post('/dashboard/:congregationId', authenticateUser, requireCapability('finance.read'), async (req, res) => {
     try {
+        const stripe = getStripe();
         const { data: cong } = await supabase.from('congregations').select('stripe_account_id').eq('congregation_id', req.params.congregationId).single();
         
         const loginLink = await stripe.accounts.createLoginLink(cong.stripe_account_id);
@@ -117,6 +121,7 @@ router.post('/checkout', authenticateUser, async (req, res) => {
     const userId = req.user.id;
 
     try {
+        const stripe = getStripe();
         // 1. Verify the congregation is active on Stripe
         const { data: cong, error } = await supabase
             .from('congregations')

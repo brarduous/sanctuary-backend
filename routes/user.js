@@ -108,6 +108,9 @@ router.get('/app-options', authenticateUser, async (req, res) => {
 // Get user_profile by userId
 router.get('/user-profile/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
+    if (req.user.id !== userId) {
+        return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only access your own profile.', requestId: req.requestId } });
+    }
     const { data, error } = await supabase
         .from('user_profiles')
         .select('*')

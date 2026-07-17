@@ -5,12 +5,14 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyPrayerPrompt } = require('../prompts');
+const { requireCapability } = require('../middleware/authorization');
 
 // New Endpoint: Generate Daily Prayer
 router.post('/generate-prayer', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
-        const { userId, focusAreas, improvementAreas } = req.body;
+        const { focusAreas = [], improvementAreas = [] } = req.body;
+        const userId = req.user.id;
         const prayerDate = new Date().toISOString().split('T')[0];
 
         // 1. Create placeholder
@@ -87,7 +89,8 @@ router.delete('/prayer/:prayerId', authenticateUser,    async (req, res) => {
         const { error } = await supabase
             .from('daily_prayers')
             .delete()
-            .eq('prayer_id', prayerId);
+            .eq('prayer_id', prayerId)
+            .eq('user_id', req.user.id);
 
         if (error) throw error;
         res.json({ message: 'Prayer deleted successfully' });
@@ -99,6 +102,7 @@ router.delete('/prayer/:prayerId', authenticateUser,    async (req, res) => {
 // New Fetching Endpoint: Get Daily Prayers for a user
 router.get('/prayers/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
+    if (userId !== req.user.id) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot access another user’s prayers.', requestId: req.requestId } });
     const { data, error } = await supabase
         .from('daily_prayers')
         .select('*')
@@ -114,6 +118,7 @@ router.get('/prayers/:userId', authenticateUser, async (req, res) => {
 //get prayer by prayerId
 router.get('/prayer/:userId/:prayerId', authenticateUser, async (req, res) => {
     const { prayerId, userId } = req.params;
+    if (userId !== req.user.id) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Prayer not found.', requestId: req.requestId } });
     const { data, error } = await supabase
         .from('daily_prayers')
         .select('*')
@@ -134,21 +139,28 @@ router.get('/prayer/:userId/:prayerId', authenticateUser, async (req, res) => {
 router.post('/request', authenticateUser, async (req, res) => {
     const { requestText, visibility, congregationId } = req.body;
     const userId = req.user.id;
+    const normalizedText = String(requestText || '').trim();
+    if (normalizedText.length < 3 || normalizedText.length > 5000 || !['public_anonymous','congregation','pastor'].includes(visibility)) return res.status(400).json({ error: { code: 'PRAYER_REQUEST_INVALID', message: 'Enter a prayer request and choose a valid privacy level.', requestId: req.requestId } });
 
     try {
+        if (congregationId) {
+            const { data: membership, error: membershipError } = await supabase.from('organization_memberships').select('id').eq('congregation_id', congregationId).eq('user_id', userId).eq('active', true).maybeSingle();
+            if (membershipError) throw membershipError;
+            if (!membership) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot submit care requests to another organization.', requestId: req.requestId } });
+        } else if (visibility !== 'public_anonymous') return res.status(400).json({ error: { code: 'CONGREGATION_REQUIRED', message: 'Congregation and pastor-only requests require an organization.', requestId: req.requestId } });
         const { data, error } = await supabase
             .from('prayer_requests')
             .insert({
                 user_id: userId,
                 congregation_id: congregationId || null,
-                request_text: requestText,
+                request_text: normalizedText,
                 visibility: visibility // 'public_anonymous', 'congregation', or 'pastor'
             })
             .select()
             .single();
 
         if (error) throw error;
-        res.status(201).json(data);
+        res.status(201).json({ ...data, user_id: visibility === 'public_anonymous' ? null : data.user_id, author_name: visibility === 'public_anonymous' ? 'Anonymous' : undefined });
     } catch (error) {
         console.error('Error submitting prayer:', error);
         res.status(500).json({ error: 'Failed to submit prayer.' });
@@ -265,7 +277,7 @@ router.get('/admin/:congregationId', (req, res, next) => {
     }
 
     next();
-}, authenticateUser, async (req, res) => {
+}, authenticateUser, requireCapability('care.read'), async (req, res) => {
     try {
         // Fetch all prayers for this church, regardless of visibility tier
         const { data, error } = await supabase
@@ -307,6 +319,8 @@ router.get('/admin/:congregationId', (req, res, next) => {
                 author_email: null,
             };
         });
+
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'care.prayer_inbox_accessed', resource_type: 'prayer_request', request_id: req.requestId, metadata: { resultCount: formattedData.length } });
 
         res.json(formattedData);
     } catch (error) {
