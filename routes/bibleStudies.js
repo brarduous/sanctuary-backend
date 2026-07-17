@@ -4,7 +4,8 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent } = require('../utils/helpers');
-const { callStructuredResponse } = require('../utils/openaiResponses');
+const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
+const { reviewPastoralContent } = require('../utils/theologicalReview');
 const {
     PROMPT_VERSION,
     buildVoiceInstructions,
@@ -269,6 +270,26 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             return res.status(500).json({ error: 'Failed to initiate Bible study generation.' });
         }
 
+        const { data: generationRun, error: generationRunError } = await supabase
+            .from('ai_generation_runs')
+            .insert({
+                owner_user_id: userId,
+                content_type: 'bible_study',
+                content_id: String(newStudy.study_id),
+                status: 'running',
+                model: QUALITY_MODEL,
+                voice_profile_id: voiceContext.profileRecord?.id || null,
+                voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline',
+                prompt_version: PROMPT_VERSION,
+                input_provenance: { requestedTradition: voiceContext.declaredTradition || null },
+            })
+            .select('id')
+            .single();
+        if (generationRunError) {
+            await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
+            return res.status(500).json({ error: 'Failed to register Bible study generation.' });
+        }
+
         // 2. Return the placeholder ID to the frontend immediately
         res.status(202).json({
             message: 'Bible Study generation initiated.',
@@ -293,6 +314,12 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             const voiceSources = await getVoiceSourceTexts(userId, voiceContext.profileRecord?.id);
             const similarity = checkSourceSimilarity(generatedStudy.studies.map((lesson) => lesson.commentary).join('\n'), voiceSources);
             if (!similarity.passed) throw Object.assign(new Error('Generated study failed the source-originality gate.'), { code: 'SOURCE_SIMILARITY_REJECTED' });
+            const theologicalReview = await reviewPastoralContent({
+                artifactType: 'bible_study',
+                requestedScripture: topic,
+                content: generatedStudy,
+                voiceContext,
+            });
             let imagePayload = {};
             try {
                 const image = await generateContentImage({
@@ -376,13 +403,25 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                         console.error(`Error inserting bible_study_lesson for study ${newStudy.study_id}:`, insertLessonError);
                     }
                 }
-                await supabase.from('ai_generation_runs').insert({
+                await supabase.from('ai_generation_runs').update({
                     owner_user_id: userId, content_type: 'bible_study', content_id: String(newStudy.study_id), status: 'completed',
                     model: generation.model, voice_profile_id: voiceContext.profileRecord?.id || null,
                     voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline', prompt_version: PROMPT_VERSION,
                     input_token_count: generation.usage.inputTokens, output_token_count: generation.usage.outputTokens,
                     duration_ms: generation.durationMs, completed_at: new Date().toISOString(),
-                });
+                    estimated_cost_usd: Number((estimateQualityCostUsd(generation.usage) + estimateQualityCostUsd(theologicalReview.usage)).toFixed(6)),
+                    input_provenance: {
+                        requestedTradition: voiceContext.declaredTradition || null,
+                        theologicalReview: {
+                            ...theologicalReview.summary,
+                            model: theologicalReview.model,
+                            reasoningEffort: theologicalReview.reasoningEffort,
+                            inputTokens: theologicalReview.usage?.inputTokens || 0,
+                            outputTokens: theologicalReview.usage?.outputTokens || 0,
+                            durationMs: theologicalReview.durationMs,
+                        },
+                    },
+                }).eq('id', generationRun.id);
                 logEvent('ai', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', { model: generation.model, promptVersion: PROMPT_VERSION }, duration);
                 console.log(`Bible study ${newStudy.study_id} and its lessons successfully generated and updated.`);
             } else {
@@ -394,12 +433,23 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             logEvent('error', 'backend', userId, 'generate_bible_study', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for Bible study ${newStudy.study_id}:`, aiError);
             await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
-            await supabase.from('ai_generation_runs').insert({
+            await supabase.from('ai_generation_runs').update({
                 owner_user_id: userId, content_type: 'bible_study', content_id: String(newStudy.study_id), status: 'failed',
                 failure_code: aiError.code || 'GENERATION_FAILED', voice_profile_id: voiceContext.profileRecord?.id || null,
                 voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline', prompt_version: PROMPT_VERSION,
+                input_provenance: {
+                    requestedTradition: voiceContext.declaredTradition || null,
+                    theologicalReview: aiError.reviewResult ? {
+                        ...aiError.reviewResult.summary,
+                        model: aiError.reviewResult.model,
+                        reasoningEffort: aiError.reviewResult.reasoningEffort,
+                        inputTokens: aiError.reviewResult.usage?.inputTokens || 0,
+                        outputTokens: aiError.reviewResult.usage?.outputTokens || 0,
+                        durationMs: aiError.reviewResult.durationMs,
+                    } : null,
+                },
                 completed_at: new Date().toISOString(),
-            });
+            }).eq('id', generationRun.id);
         }
 
     } catch (error) {

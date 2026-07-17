@@ -1,7 +1,7 @@
 const supabase = require('../config/supabase');
 const { normalizeWords, buildNgrams, checkSourceSimilarity } = require('./sourceSimilarity');
 
-const PROMPT_VERSION = 'pastor-voice-v1';
+const PROMPT_VERSION = 'pastor-voice-v2-canonical-review';
 
 async function getCongregationContext(userId) {
   const { data: membership, error: membershipError } = await supabase
@@ -49,6 +49,9 @@ async function getActiveVoiceContext(userId) {
     profileRecord: profileResult.data || null,
     profile: profileResult.data?.profile || null,
     legacyPreferences: preferencesResult.data?.sermon_preferences || null,
+    declaredTradition: preferencesResult.data?.sermon_preferences?.denomination
+      || congregation?.description
+      || null,
   };
 }
 
@@ -94,8 +97,11 @@ function buildVoiceInstructions(context, artifactType) {
 
   return [
     congregationLine,
+    `Declared church tradition: ${context.declaredTradition || 'not specified'}. Do not invent a more specific confession or position. Where this tradition contains meaningful internal diversity, avoid presenting one disputed position as universal and flag it for pastor review.`,
     `Pastor voice profile (derived traits, not source prose): ${JSON.stringify(voice)}`,
     artifactRule,
+    'Scriptural integrity contract: never put words in the mouth of God, Jesus, a biblical narrator, or another biblical character unless the wording is present in the cited passage. Clearly label paraphrase as paraphrase; never turn inference, composite wording, or application into a quotation. No interpretation or application may contradict the requested passage or the wider canonical witness of Scripture.',
+    'Doctrinal integrity contract: keep theological claims within the declared church tradition and the profile’s explicit theological constraints. Do not manufacture a position from a denomination label. Treat internally disputed or unspecified issues as matters for pastor review rather than asserting them as settled doctrine.',
     'Originality contract: never name or attribute language to a source author; never quote or closely paraphrase the samples; never reproduce a distinctive 12-word source sequence; minimize matching eight-word phrases; invent no quotations or personal experiences.',
   ].join('\n');
 }

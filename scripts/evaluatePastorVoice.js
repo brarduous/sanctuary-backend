@@ -115,6 +115,17 @@ async function main() {
       const inputTokens = response.usage?.input_tokens || 0;
       const outputTokens = response.usage?.output_tokens || 0;
       runs.push({ artifact: artifact.id, treatment, response: response.data, originality: similarity, model: response.model, reasoning: 'medium', latencyMs: response.durationMs, inputTokens, outputTokens, estimatedCostUsd: Number(((inputTokens * 5 + outputTokens * 30) / 1_000_000).toFixed(6)) });
+      console.log(JSON.stringify({
+        status: 'artifact_complete',
+        artifact: artifact.id,
+        treatment,
+        model: response.model,
+        reasoning: 'medium',
+        latencyMs: response.durationMs,
+        inputTokens,
+        outputTokens,
+        originalityPassed: similarity.passed,
+      }));
     }
   }
 
@@ -130,7 +141,27 @@ async function main() {
       input: `REQUEST:\n${artifact.instruction}\n\nTARGET VOICE RUBRIC (traits only):\n${JSON.stringify(profile.profile)}\n\nBLINDED OUTPUTS:\n${packet}`,
       schema: scoringSchema, name: 'blinded_pastor_voice_scores', maxOutputTokens: 3500,
     });
-    scored.push({ artifact: artifact.id, reviews: score.data.reviews });
+    const scoringInputTokens = score.usage?.input_tokens || 0;
+    const scoringOutputTokens = score.usage?.output_tokens || 0;
+    scored.push({
+      artifact: artifact.id,
+      reviews: score.data.reviews,
+      model: score.model,
+      reasoning: 'medium',
+      latencyMs: score.durationMs,
+      inputTokens: scoringInputTokens,
+      outputTokens: scoringOutputTokens,
+      estimatedCostUsd: Number(((scoringInputTokens * 5 + scoringOutputTokens * 30) / 1_000_000).toFixed(6)),
+    });
+    console.log(JSON.stringify({
+      status: 'blinded_scoring_complete',
+      artifact: artifact.id,
+      model: score.model,
+      reasoning: 'medium',
+      latencyMs: score.durationMs,
+      inputTokens: scoringInputTokens,
+      outputTokens: scoringOutputTokens,
+    }));
   }
 
   for (const run of runs) {

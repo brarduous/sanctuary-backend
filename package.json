@@ -23,6 +23,7 @@
     "import-youtube-channels": "node scripts/importYoutubeChannelsFromXlsx.js",
     "evaluate-prompts": "node scripts/evaluatePrompts.js",
     "evaluate:pastor-voice": "node scripts/evaluatePastorVoice.js",
+    "review:pastor-voice-eval": "node scripts/createPastorVoiceReviewPacket.js",
     "cleanup:pastor-voice-eval": "node scripts/cleanupPastorVoiceEvaluation.js",
     "test": "node --test test/**/*.test.js",
     "typecheck": "node --check index.js && find middleware routes utils -name '*.js' -print0 | xargs -0 -n1 node --check",

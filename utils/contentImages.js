@@ -78,6 +78,9 @@ async function generateContentImage({
         output_compression: outputFormat === 'jpeg' || outputFormat === 'webp' ? 85 : undefined,
         n: 1,
         user: userId,
+    }, {
+        timeout: Number(process.env.OPENAI_IMAGE_TIMEOUT_MS || 180000),
+        maxRetries: Number(process.env.OPENAI_IMAGE_MAX_RETRIES || 1),
     });
 
     const imageData = response.data?.[0]?.b64_json;
