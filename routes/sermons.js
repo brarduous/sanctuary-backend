@@ -4,7 +4,8 @@ const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, getTuningNotes } = require('../utils/helpers');
-const { callStructuredResponse } = require('../utils/openaiResponses');
+const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
+const { reviewPastoralContent } = require('../utils/theologicalReview');
 const {
     PROMPT_VERSION,
     buildVoiceInstructions,
@@ -76,8 +77,26 @@ async function enforceOriginality({ userId, voiceContext, sermon }) {
     return result;
 }
 
-async function recordGeneration({ userId, contentId, voiceContext, response, status = 'completed', failureCode = null }) {
-    await supabase.from('ai_generation_runs').insert({
+async function createGenerationRun({ userId, contentId, voiceContext }) {
+    const { data, error } = await supabase.from('ai_generation_runs').insert({
+        owner_user_id: userId,
+        content_type: 'sermon',
+        content_id: String(contentId),
+        status: 'running',
+        model: QUALITY_MODEL,
+        voice_profile_id: voiceContext.profileRecord?.id || null,
+        voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline',
+        prompt_version: PROMPT_VERSION,
+        input_provenance: { requestedTradition: voiceContext.declaredTradition || null },
+    }).select('id').single();
+    if (error) throw error;
+    return data.id;
+}
+
+async function recordGeneration({ generationRunId = null, userId, contentId, voiceContext, response, review = null, status = 'completed', failureCode = null }) {
+    const generationCost = estimateQualityCostUsd(response?.usage);
+    const reviewCost = estimateQualityCostUsd(review?.usage);
+    const payload = {
         owner_user_id: userId,
         content_type: 'sermon',
         content_id: String(contentId),
@@ -90,8 +109,24 @@ async function recordGeneration({ userId, contentId, voiceContext, response, sta
         input_token_count: response?.usage?.inputTokens || null,
         output_token_count: response?.usage?.outputTokens || null,
         duration_ms: response?.durationMs || null,
+        estimated_cost_usd: Number((generationCost + reviewCost).toFixed(6)),
+        input_provenance: {
+            requestedTradition: voiceContext.declaredTradition || null,
+            theologicalReview: review ? {
+                ...review.summary,
+                model: review.model,
+                reasoningEffort: review.reasoningEffort,
+                inputTokens: review.usage?.inputTokens || 0,
+                outputTokens: review.usage?.outputTokens || 0,
+                durationMs: review.durationMs,
+            } : null,
+        },
         completed_at: new Date().toISOString(),
-    });
+    };
+    const mutation = generationRunId
+        ? supabase.from('ai_generation_runs').update(payload).eq('id', generationRunId)
+        : supabase.from('ai_generation_runs').insert(payload);
+    await mutation;
 }
 
 const normalizeContentFormat = (value) => {
@@ -443,6 +478,11 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                     target_duration_min: safeDuration,
                     distribution_channel: normalizedDistributionChannel,
                 }).select().single();
+                const generationRunId = await createGenerationRun({
+                    userId,
+                    contentId: sermonRecord.sermon_id,
+                    voiceContext,
+                });
 
                 // Generate the individual sermon deeply
                 const sermonUserPrompt = `Series Topic: ${topic}\nSermon Title: ${sermonOutline.title}\nScripture: ${sermonOutline.scripture}\nInclude Illustration: true\n\nGenerate this specific sermon.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
@@ -467,6 +507,12 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         key_takeaways: lengthManaged.sermon.key_takeaways,
                         sermon_body: lengthManaged.sermon.sermon_body,
                     };
+                    const theologicalReview = await reviewPastoralContent({
+                        artifactType: 'sermon',
+                        requestedScripture: sermonOutline.scripture,
+                        content: sermonPayload,
+                        voiceContext,
+                    });
                     await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
                     const imagePayload = await tryGenerateSermonImage({
                         userId,
@@ -485,10 +531,10 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         actual_duration_min: lengthManaged.estimatedDurationMin,
                         distribution_channel: normalizedDistributionChannel,
                     }).eq('sermon_id', sermonRecord.sermon_id);
-                    await recordGeneration({ userId, contentId: sermonRecord.sermon_id, voiceContext, response: generation });
+                    await recordGeneration({ generationRunId, userId, contentId: sermonRecord.sermon_id, voiceContext, response: generation, review: theologicalReview });
                 } catch (sermonErr) {
                     await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', sermonRecord.sermon_id);
-                    await recordGeneration({ userId, contentId: sermonRecord.sermon_id, voiceContext, status: 'failed', failureCode: sermonErr.code || 'GENERATION_FAILED' });
+                    await recordGeneration({ generationRunId, userId, contentId: sermonRecord.sermon_id, voiceContext, review: sermonErr.reviewResult || null, status: 'failed', failureCode: sermonErr.code || 'GENERATION_FAILED' });
                 }
             }
         } catch (aiErr) {
@@ -613,6 +659,14 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
             .single();
 
         if (insertError) throw insertError;
+        const generationRunId = await createGenerationRun({
+            userId,
+            contentId: newSermon.sermon_id,
+            voiceContext,
+        }).catch(async (error) => {
+            await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            throw error;
+        });
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
@@ -637,6 +691,12 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
             };
+            const theologicalReview = await reviewPastoralContent({
+                artifactType: 'sermon',
+                requestedScripture: sermonPayload.scripture,
+                content: sermonPayload,
+                voiceContext,
+            });
             await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
             const imagePayload = await tryGenerateSermonImage({
                 userId,
@@ -655,10 +715,10 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
-            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, response: generation });
+            await recordGeneration({ generationRunId, userId, contentId: newSermon.sermon_id, voiceContext, response: generation, review: theologicalReview });
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
-            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
+            await recordGeneration({ generationRunId, userId, contentId: newSermon.sermon_id, voiceContext, review: aiError.reviewResult || null, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
         }
     } catch (error) { res.status(500).json({ error: 'An unexpected error occurred.' }); }
 });
@@ -704,6 +764,14 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
             .single();
 
         if (insertError) throw insertError;
+        const generationRunId = await createGenerationRun({
+            userId,
+            contentId: newSermon.sermon_id,
+            voiceContext,
+        }).catch(async (error) => {
+            await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            throw error;
+        });
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
         const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
@@ -728,6 +796,12 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
             };
+            const theologicalReview = await reviewPastoralContent({
+                artifactType: 'sermon',
+                requestedScripture: scripture,
+                content: sermonPayload,
+                voiceContext,
+            });
             await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
             const imagePayload = await tryGenerateSermonImage({
                 userId,
@@ -746,10 +820,10 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
-            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, response: generation });
+            await recordGeneration({ generationRunId, userId, contentId: newSermon.sermon_id, voiceContext, response: generation, review: theologicalReview });
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
-            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
+            await recordGeneration({ generationRunId, userId, contentId: newSermon.sermon_id, voiceContext, review: aiError.reviewResult || null, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
         }
     } catch (error) { res.status(500).json({ error: 'An unexpected error occurred.' }); }
 });

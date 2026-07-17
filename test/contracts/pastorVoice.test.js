@@ -3,22 +3,60 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 const { checkSourceSimilarity } = require('../../utils/sourceSimilarity');
+const { summarizeTheologicalReview } = require('../../utils/theologicalReview');
 
 const read = (relative) => fs.readFileSync(path.join(__dirname, '../..', relative), 'utf8');
 const sermonRoute = read('routes/sermons.js');
 const studyRoute = read('routes/bibleStudies.js');
 const analysisRoute = read('routes/analysis.js');
+const aiRoute = read('routes/ai.js');
+const pastorVoice = read('utils/pastorVoice.js');
+const theologicalReview = read('utils/theologicalReview.js');
 const resetScript = read('scripts/resetProductionAccount.js');
 const migration = read('supabase/migrations/20260718120000_pastor_voice_profiles.sql');
 
 test('quality-critical generation is server-owned and uses structured Responses calls', () => {
-  for (const source of [sermonRoute, studyRoute, analysisRoute]) {
+  for (const source of [sermonRoute, studyRoute, analysisRoute, aiRoute]) {
     assert.match(source, /callStructuredResponse/);
     assert.doesNotMatch(source, /gpt-4\.1|chat\.completions/);
   }
   assert.doesNotMatch(sermonRoute, /getStylePrompts|sermon_preferences:\s*req\.body|userProfile/);
   assert.match(sermonRoute, /getActiveVoiceContext\(userId\)/);
   assert.match(studyRoute, /buildVoiceInstructions\(voiceContext, 'bible_study'\)/);
+});
+
+test('generated and rewritten pastoral content is gated for canonical and doctrinal integrity', () => {
+  for (const source of [sermonRoute, studyRoute, aiRoute]) assert.match(source, /reviewPastoralContent/);
+  assert.match(aiRoute, /authenticateUser, aiLimiter/);
+  assert.doesNotMatch(aiRoute, /x-user-id|gpt-4o-mini|Instruction: \$\{instruction\}/);
+  assert.match(pastorVoice, /Scriptural integrity contract/);
+  assert.match(pastorVoice, /Declared church tradition/);
+  assert.match(theologicalReview, /THEOLOGICAL_REVIEW_REJECTED/);
+
+  assert.deepEqual(summarizeTheologicalReview({
+    passed: false,
+    requiresPastorReview: true,
+    attributedSpeechIssues: [{ severity: 'blocking' }],
+    canonicalConsistencyIssues: [{ severity: 'review' }],
+    doctrinalIssues: [],
+  }), {
+    status: 'rejected',
+    requiresPastorReview: true,
+    blockingIssueCount: 1,
+    reviewIssueCount: 1,
+  });
+});
+
+test('quality generations are persisted before the model call and finalized with usage and cost', () => {
+  for (const source of [sermonRoute, studyRoute, aiRoute]) {
+    assert.match(source, /ai_generation_runs/);
+    assert.match(source, /status:\s*'running'/);
+    assert.match(source, /estimated_cost_usd/);
+    assert.match(source, /input_token_count/);
+    assert.match(source, /output_token_count/);
+  }
+  assert.ok(studyRoute.indexOf("status: 'running'") < studyRoute.indexOf("callStructuredResponse({ instructions: bible_study_prompt"));
+  assert.ok(aiRoute.indexOf("status: 'running'") < aiRoute.indexOf('callStructuredResponse({'));
 });
 
 test('style analysis uses complete balanced in-memory extraction and delayed persistence', () => {
