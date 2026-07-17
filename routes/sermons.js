@@ -160,7 +160,12 @@ const enforceLengthWithRewrite = async ({
 
 const sanitizeSermonUpdatePayload = (body) => {
     const errors = [];
-    const payload = { ...body };
+    const allowed = new Set(['title', 'date_preached', 'sermon_outline', 'sermon_body', 'illustration', 'key_takeaways', 'scripture', 'status', 'tags', 'content_format', 'target_duration_min', 'actual_duration_min', 'distribution_channel']);
+    const payload = Object.fromEntries(Object.entries(body || {}).filter(([key]) => allowed.has(key)));
+    if (Object.prototype.hasOwnProperty.call(body, 'status') && !['draft', 'completed'].includes(body.status)) {
+        errors.push('status must be draft or completed.');
+        delete payload.status;
+    }
 
     if (Object.prototype.hasOwnProperty.call(body, 'content_format')) {
         const contentFormat = normalizeContentFormat(body.content_format);
@@ -256,6 +261,7 @@ const tryGenerateSermonImage = async ({ userId, sermonId, sermon, contextLabel, 
 // --- Series Endpoints ---
 router.get('/sermons/series/:userId', authenticateUser, async (req, res) => {
     const { userId } = req.params;
+    if (userId !== req.user.id) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot access another user’s sermon series.', requestId: req.requestId } });
     const seriesFormat = req.query.seriesFormat ? normalizeSeriesFormat(req.query.seriesFormat) : null;
 
     if (seriesFormat && !ALLOWED_SERIES_FORMATS.includes(seriesFormat)) {
@@ -300,10 +306,11 @@ router.post('/series', authenticateUser, async (req, res) => {
 router.get('/sermons/series/:seriesId/details', authenticateUser, async (req, res) => {
     const { seriesId } = req.params;
     try {
-        const { data: series, error: seriesError } = await supabase.from('sermon_series').select('*').eq('series_id', seriesId).single();
+        const { data: series, error: seriesError } = await supabase.from('sermon_series').select('*').eq('series_id', seriesId).eq('user_id', req.user.id).maybeSingle();
         if (seriesError) throw seriesError;
+        if (!series) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Sermon series not found.', requestId: req.requestId } });
 
-        const { data: sermons, error: sermonsError } = await supabase.from('sermons').select('*').eq('series_id', seriesId).order('created_at', { ascending: true });
+        const { data: sermons, error: sermonsError } = await supabase.from('sermons').select('*').eq('series_id', seriesId).eq('user_id', req.user.id).order('created_at', { ascending: true });
         if (sermonsError) throw sermonsError;
 
         // Calculate series status (If all sermons are completed, series is completed)
@@ -318,7 +325,8 @@ router.get('/sermons/series/:seriesId/details', authenticateUser, async (req, re
 // --- NEW: Deep Generation Sermon Series Flow ---
 router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, res) => {
     try {
-        const { userId, topic, details, numberOfSermons, userProfile, contentFormat, targetDurationMin, distributionChannel, seriesFormat } = req.body;
+        const { topic, details, numberOfSermons, userProfile, contentFormat, targetDurationMin, distributionChannel, seriesFormat } = req.body;
+        const userId = req.user.id;
         const startTime = Date.now();
 
         const normalizedContentFormat = normalizeContentFormat(contentFormat);
@@ -435,7 +443,24 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
 });
 
 // --- Standard Sermon Endpoints ---
+router.post('/sermon-drafts', authenticateUser, async (req, res, next) => {
+    const title = String(req.body?.title || '').trim() || 'Untitled Sermon';
+    const body = String(req.body?.sermon_body || '');
+    try {
+        const { data, error } = await supabase.from('sermons').insert({
+            user_id: req.user.id, title, sermon_body: body, scripture: req.body?.scripture || null,
+            status: 'draft', content_format: normalizeContentFormat(req.body?.content_format),
+            distribution_channel: normalizeDistributionChannel(req.body?.distribution_channel, normalizeContentFormat(req.body?.content_format)),
+            target_duration_min: parseTargetDuration(req.body?.target_duration_min)?.value || null,
+            tags: Array.isArray(req.body?.tags) ? req.body.tags.slice(0, 20).map(String) : [],
+        }).select('*').single();
+        if (error) throw error;
+        res.status(201).json(data);
+    } catch (error) { next(error); }
+});
+
 router.get('/sermons/:userId', authenticateUser, async (req, res) => {
+    if (req.params.userId !== req.user.id) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot access another user’s sermon library.', requestId: req.requestId } });
     const contentFormat = req.query.contentFormat ? normalizeContentFormat(req.query.contentFormat) : null;
     const distributionChannel = req.query.distributionChannel ? String(req.query.distributionChannel).trim().toLowerCase() : null;
     const seriesId = req.query.seriesId || null;
@@ -469,7 +494,7 @@ router.get('/sermons/:userId', authenticateUser, async (req, res) => {
 
 
 router.get('/sermon/:sermonId', authenticateUser, async (req, res) => {
-    const { data, error } = await supabase.from('sermons').select('*').eq('sermon_id', req.params.sermonId).single();
+    const { data, error } = await supabase.from('sermons').select('*').eq('sermon_id', req.params.sermonId).eq('user_id', req.user.id).maybeSingle();
     if (error || !data) return res.status(404).json({ error: 'Sermon not found.' });
     res.json(data);
 });
@@ -481,8 +506,9 @@ router.post('/sermons/:sermonId', authenticateUser, async (req, res) => {
             return res.status(400).json({ error: errors.join(' ') });
         }
 
-        const { data, error } = await supabase.from('sermons').update({ ...payload, updated_at: new Date().toISOString() }).eq('sermon_id', req.params.sermonId).select('*').single();
+        const { data, error } = await supabase.from('sermons').update({ ...payload, updated_at: new Date().toISOString() }).eq('sermon_id', req.params.sermonId).eq('user_id', req.user.id).select('*').maybeSingle();
         if (error) throw error;
+        if (!data) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Sermon not found.', requestId: req.requestId } });
         res.status(201).json(data);
     } catch (error) {
         res.status(500).json({ error: 'Failed to save sermon.' });
@@ -493,7 +519,8 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
     // Keep your existing generate-sermon-by-topic code here verbatim
     try {
         const startTime = Date.now();
-        const { userId, topic, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const { topic, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const userId = req.user.id;
 
         const normalizedContentFormat = normalizeContentFormat(contentFormat);
         const normalizedDistributionChannel = normalizeDistributionChannel(distributionChannel, normalizedContentFormat);
@@ -578,7 +605,8 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
     // Keep your existing generate-sermon-by-scripture code here verbatim
     try {
         const startTime = Date.now();
-        const { userId, scripture, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const { scripture, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const userId = req.user.id;
 
         const normalizedContentFormat = normalizeContentFormat(contentFormat);
         const normalizedDistributionChannel = normalizeDistributionChannel(distributionChannel, normalizedContentFormat);

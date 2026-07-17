@@ -4,11 +4,165 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const source = fs.readFileSync(path.join(__dirname, '../../index.js'), 'utf8');
+const messageSource = fs.readFileSync(path.join(__dirname, '../../routes/messages.js'), 'utf8');
+const messageSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717140000_message_tenant_security.sql'), 'utf8');
+const tenantRlsMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717143000_congregation_owned_rls.sql'), 'utf8');
+const normalizedErrors = fs.readFileSync(path.join(__dirname, '../../middleware/normalizeErrors.js'), 'utf8');
+const kioskSource = fs.readFileSync(path.join(__dirname, '../../routes/kiosk.js'), 'utf8');
+const exportSource = fs.readFileSync(path.join(__dirname, '../../routes/exports.js'), 'utf8');
+const recoverySource = fs.readFileSync(path.join(__dirname, '../../routes/recovery.js'), 'utf8');
+const softDeleteMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717153000_critical_record_soft_delete.sql'), 'utf8');
+const authorizationSource = fs.readFileSync(path.join(__dirname, '../../routes/authorization.js'), 'utf8');
+const demoAdminSource = fs.readFileSync(path.join(__dirname, '../../routes/demoAdmin.js'), 'utf8');
+const financialSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717163000_financial_column_security.sql'), 'utf8');
+const checkinIdempotencyMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717170000_checkin_idempotency.sql'), 'utf8');
+const volunteerSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717173000_volunteer_tenant_security.sql'), 'utf8');
+const eventSource = fs.readFileSync(path.join(__dirname, '../../routes/events.js'), 'utf8');
+const sermonSource = fs.readFileSync(path.join(__dirname, '../../routes/sermons.js'), 'utf8');
+const studySource = fs.readFileSync(path.join(__dirname, '../../routes/bibleStudies.js'), 'utf8');
+const operationsMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718100000_production_operations.sql'), 'utf8');
+const careSource = fs.readFileSync(path.join(__dirname, '../../routes/care.js'), 'utf8');
+const givingSource = fs.readFileSync(path.join(__dirname, '../../routes/giving.js'), 'utf8');
+const crmSource = fs.readFileSync(path.join(__dirname, '../../routes/crm.js'), 'utf8');
+const volunteerSource = fs.readFileSync(path.join(__dirname, '../../routes/volunteers.js'), 'utf8');
 
 test('all production routers are mounted at compatible paths', () => {
-  for (const route of ['/events', '/stripe', '/kiosk', '/volunteers', '/webhooks']) {
+  for (const route of ['/events', '/stripe', '/kiosk', '/volunteers', '/webhooks', '/api/care', '/api/giving']) {
     assert.match(source, new RegExp(`app\\.use\\('${route.replace('/', '\\/')}'`));
   }
+});
+
+test('operations tables are forced-RLS and withheld from direct clients', () => {
+  for (const table of ['message_deliveries','care_cases','person_timeline_events','event_registrations','volunteer_profiles','checkin_rooms','giving_funds','gifts','content_versions','ai_generation_runs']) {
+    assert.match(operationsMigration, new RegExp(`create table if not exists public\\.${table}`));
+  }
+  assert.match(operationsMigration, /force row level security/);
+  assert.match(operationsMigration, /revoke all on public\.%I from anon, authenticated/);
+});
+
+test('care and giving operations require capabilities and emit sensitive audit events', () => {
+  for (const capability of ['care.read','care.write']) assert.match(careSource, new RegExp(`requireCapability\\('${capability.replace('.', '\\.')}\\'`));
+  for (const capability of ['finance.read','finance.write']) assert.match(givingSource, new RegExp(`requireCapability\\('${capability.replace('.', '\\.')}\\'`));
+  assert.match(careSource, /care\.queue_accessed/);
+  assert.match(givingSource, /finance\.ledger_accessed/);
+  assert.match(givingSource, /finance\.gift_refunded/);
+});
+
+test('people operations cover import, bulk updates, merge, segments, consent, and timelines', () => {
+  for (const contract of ['/import', '/bulk', '/segments', '/timeline', 'consent_status', 'people.merged']) assert.match(crmSource, new RegExp(contract.replace('/', '\\/')));
+  assert.match(crmSource, /requireCapability\('people\.write'\)/);
+  assert.match(crmSource, /requireCapability\('care\.write'\)/);
+});
+
+test('events, volunteers, and check-in cover production scheduling and safeguarding contracts', () => {
+  for (const contract of ['/resources', '/register', '/attendance', '/cancel', '/substitute']) assert.match(eventSource, new RegExp(contract.replace('/', '\\/')));
+  for (const contract of ['/availability', '/rotations', '/background-checks']) assert.match(volunteerSource, new RegExp(contract.replace('/', '\\/')));
+  assert.match(kioskSource, /KIOSK_SESSION_INACTIVE/);
+  assert.match(kioskSource, /ROOM_CAPACITY_REACHED/);
+  assert.match(kioskSource, /checkin_labels/);
+});
+
+test('financial provider columns are not granted to authenticated direct clients', () => {
+  assert.match(financialSecurityMigration, /revoke select, update on public\.congregations from authenticated/i);
+  assert.doesNotMatch(financialSecurityMigration.match(/grant select \(([^)]+)/i)?.[1] || '', /stripe/i);
+});
+
+test('every demo reset is production-disabled and audited with its trusted actor', () => {
+  assert.match(demoAdminSource, /SUPABASE_ENVIRONMENT === 'production'/);
+  assert.match(demoAdminSource, /action: 'demo\.reset'/);
+  assert.match(demoAdminSource, /x-demo-actor-id/);
+});
+
+test('effective capabilities are derived server-side from memberships, defaults, and overrides', () => {
+  assert.match(source, /app\.use\('\/api\/authorization', authorizationRouter\)/);
+  assert.match(authorizationSource, /organization_memberships/);
+  assert.match(authorizationSource, /role_capabilities/);
+  assert.match(authorizationSource, /capability_overrides/);
+  assert.doesNotMatch(authorizationSource, /req\.body/);
+});
+
+test('critical records support capability-gated audited soft deletion and restoration', () => {
+  assert.match(source, /app\.use\('\/api\/recovery', recoveryRouter\)/);
+  for (const table of ['church_crm_profiles', 'households', 'events', 'pastoral_messages', 'prayer_requests', 'check_ins']) assert.match(softDeleteMigration, new RegExp(table));
+  assert.match(softDeleteMigration, /as restrictive for select/);
+  assert.match(recoverySource, /soft_deleted/);
+  assert.match(recoverySource, /restored/);
+  assert.match(recoverySource, /requireCapability/);
+});
+
+test('organization export is capability-gated, audited, checksummed, and excludes credentials', () => {
+  assert.match(source, /app\.use\('\/api\/exports', exportsRouter\)/);
+  assert.match(exportSource, /requireCapability\('organization\.export'\)/);
+  assert.match(exportSource, /organization\.exported/);
+  assert.match(exportSource, /sha256/);
+  assert.match(exportSource, /recordCounts/);
+  for (const table of ['audit_events', 'bible_studies', 'campuses', 'check_ins', 'church_crm_profiles', 'congregation_members', 'congregations', 'events', 'event_volunteers', 'guardian_relationships', 'households', 'kiosk_sessions', 'medical_alerts', 'organization_memberships', 'pastoral_messages', 'pickup_credentials', 'prayer_requests', 'role_members', 'volunteer_roles']) assert.match(exportSource, new RegExp(`table: '${table}'`));
+  assert.doesNotMatch(exportSource, /stripe_account_id|credential_hash|medical_notes/);
+});
+
+test('kiosk operations require capabilities, verified guardians, and cryptographic pickup codes', () => {
+  for (const capability of ['check_in.read', 'check_in.write', 'check_in.override']) assert.match(kioskSource, new RegExp(`requireCapability\\('${capability.replace('.', '\\.')}'\\)`));
+  assert.match(kioskSource, /guardian_relationships/);
+  assert.match(kioskSource, /pickup_credentials/);
+  assert.match(kioskSource, /timingSafeEqual/);
+  assert.match(kioskSource, /randomInt/);
+  assert.doesNotMatch(kioskSource, /Math\.random/);
+  assert.match(kioskSource, /idempotency-key/);
+  assert.match(checkinIdempotencyMigration, /check_ins_one_active_child_event/);
+});
+
+test('event staffing is capability-gated, audited, and tenant-isolated', () => {
+  assert.match(eventSource, /requireCapability\('volunteers\.write'\)/);
+  assert.match(eventSource, /volunteer\.scheduled/);
+  assert.match(eventSource, /volunteer\.\$\{status\}/);
+  for (const table of ['event_volunteers', 'role_members']) {
+    assert.match(volunteerSecurityMigration, new RegExp(`alter table public\\.${table} enable row level security`, 'i'));
+    assert.match(volunteerSecurityMigration, new RegExp(`alter table public\\.${table} force row level security`, 'i'));
+  }
+  assert.match(volunteerSecurityMigration, /Volunteer assignment tenant mismatch/);
+});
+
+test('sermon and study ownership is derived from the authenticated user', () => {
+  assert.match(sermonSource, /const userId = req\.user\.id/);
+  assert.match(sermonSource, /eq\('user_id', req\.user\.id\)/);
+  assert.match(sermonSource, /const allowed = new Set/);
+  assert.doesNotMatch(sermonSource, /const \{ userId, topic/);
+  assert.match(studySource, /const userId = req\.user\.id/);
+  assert.match(studySource, /eq\('user_id', req\.user\.id\)/);
+  assert.match(studySource, /allowedLessonFields/);
+  assert.doesNotMatch(studySource, /const \{ userId, topic/);
+});
+
+test('legacy JSON errors are normalized with safe codes and request IDs', () => {
+  assert.match(source, /app\.use\(normalizeErrors\)/);
+  assert.match(normalizedErrors, /res\.statusCode < 400/);
+  assert.match(normalizedErrors, /requestId: req\.requestId/);
+  assert.doesNotMatch(normalizedErrors, /stack/);
+});
+
+test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {
+  for (const table of ['bible_studies', 'check_ins', 'church_crm_profiles', 'congregation_members', 'congregations', 'events', 'households', 'prayer_requests', 'volunteer_roles']) {
+    assert.match(tenantRlsMigration, new RegExp(`alter table public\\.${table} enable row level security`, 'i'));
+    assert.match(tenantRlsMigration, new RegExp(`alter table public\\.${table} force row level security`, 'i'));
+  }
+  assert.match(tenantRlsMigration, /revoke all[\s\S]+from anon/i);
+});
+
+test('message routes derive authorship and require congregation capabilities', () => {
+  assert.match(messageSource, /requireCapability\('communications\.write'\)/);
+  assert.match(messageSource, /requireCapability\('communications\.read'\)/);
+  assert.match(messageSource, /author_id: req\.user\.id/);
+  assert.match(messageSource, /congregation_id: req\.congregationId/);
+  assert.doesNotMatch(messageSource, /author_id:\s*req\.body/);
+});
+
+test('pastoral message RLS filters reads and writes by tenant capability', () => {
+  assert.match(messageSecurityMigration, /enable row level security/i);
+  assert.match(messageSecurityMigration, /force row level security/i);
+  assert.match(messageSecurityMigration, /communications\.read/);
+  assert.match(messageSecurityMigration, /communications\.write/);
+  assert.match(messageSecurityMigration, /author_id = auth\.uid\(\)/);
+  assert.match(messageSecurityMigration, /revoke all on table public\.pastoral_messages from anon/i);
 });
 
 test('health endpoints and terminal error middleware are registered', () => {

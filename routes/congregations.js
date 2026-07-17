@@ -93,21 +93,29 @@ const getCurrentMembership = async (userId) => {
 router.get('/', authenticateUser, async (req, res) => {
   try {
     const userId = req.user.id;
+    const requestedCongregationId = Number(req.get('x-congregation-id')) || null;
 
-    // 1. Get the Congregation
+    let membershipQuery = supabase.from('organization_memberships').select('congregation_id').eq('user_id', userId).eq('active', true).order('created_at').limit(1);
+    if (requestedCongregationId) membershipQuery = membershipQuery.eq('congregation_id', requestedCongregationId);
+    const { data: memberships, error: membershipError } = await membershipQuery;
+    if (membershipError) throw membershipError;
+    let congregationId = memberships?.[0]?.congregation_id || null;
+    if (!congregationId) {
+      const { data: legacy } = await supabase.from('congregations').select('congregation_id').eq('leader_user_id', userId).limit(1).maybeSingle();
+      congregationId = legacy?.congregation_id || null;
+    }
+    if (!congregationId) return res.status(200).json(null);
     const { data: congregation, error: congError } = await supabase
       .from('congregations')
       .select('*')
-      .eq('leader_user_id', userId)
+      .eq('congregation_id', congregationId)
       .single();
 
     if (congError && congError.code !== 'PGRST116') { // PGRST116 is Supabase "No rows found"
       throw congError;
     }
 
-    if (!congregation) {
-      return res.status(200).json(null); // Return clean null if they haven't created one
-    }
+    if (!congregation) return res.status(200).json(null);
 
     // 2. Fetch Total Member Count
     const { count: totalMembers, error: totalError } = await supabase
@@ -235,15 +243,12 @@ router.post('/', authenticateUser, async (req, res) => {
       return res.status(400).json({ error: 'Congregation name is required' });
     }
 
-    // Check if one already exists
-    const { data: existing } = await supabase
-      .from('congregations')
-      .select('congregation_id')
-      .eq('leader_user_id', userId)
-      .single();
+    const { data: existingMembership } = await supabase.from('organization_memberships').select('congregation_id').eq('user_id', userId).eq('active', true).limit(1).maybeSingle();
+    const { data: existingLegacy } = await supabase.from('congregations').select('congregation_id').eq('leader_user_id', userId).limit(1).maybeSingle();
+    const existing = existingMembership || existingLegacy;
 
     if (existing) {
-      return res.status(400).json({ error: 'A congregation already exists for this user', congregation_id: existing.congregation_id });
+      return res.status(409).json({ error: { code: 'CONGREGATION_EXISTS', message: 'This account already belongs to an organization.', requestId: req.requestId }, congregation_id: existing.congregation_id });
     }
 
     // Create the congregation
@@ -258,6 +263,8 @@ router.post('/', authenticateUser, async (req, res) => {
       .single();
 
     if (error) throw error;
+    const { error: membershipInsertError } = await supabase.from('organization_memberships').insert({ congregation_id: data.congregation_id, user_id: userId, role: 'lead_pastor', active: true });
+    if (membershipInsertError) throw membershipInsertError;
 
     res.status(201).json(data);
   } catch (error) {

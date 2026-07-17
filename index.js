@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 const requestContext = require('./middleware/requestContext');
+const normalizeErrors = require('./middleware/normalizeErrors');
 const { notFound, errorHandler } = require('./middleware/errors');
 
 // Imports from refactoring
@@ -16,6 +17,7 @@ const stripeLayperson = process.env.STRIPE_SECRET_KEY_LAYPERSON ? require('strip
 
 const app = express();
 app.use(requestContext);
+app.use(normalizeErrors);
 
 // --- SECURE CORS CONFIGURATION ---
 const allowedOrigins = [
@@ -28,6 +30,8 @@ const allowedOrigins = [
     'https://staging-clergy.sanctuaryapp.us',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
+    'http://localhost:3010',
+    'http://127.0.0.1:3010',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
     'https://sanctuarynews.org',
@@ -48,7 +52,7 @@ const corsOptions = {
     },
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-user-id']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'x-user-id', 'x-congregation-id', 'x-membership-id']
 };
 
 app.use(cors(corsOptions));
@@ -376,6 +380,12 @@ const stripeRouter = require('./routes/stripe');
 const kioskRouter = require('./routes/kiosk');
 const volunteersRouter = require('./routes/volunteers');
 const webhooksRouter = require('./routes/webhooks');
+const exportsRouter = require('./routes/exports');
+const recoveryRouter = require('./routes/recovery');
+const authorizationRouter = require('./routes/authorization');
+const staffRouter = require('./routes/staff');
+const careRouter = require('./routes/care');
+const givingRouter = require('./routes/giving');
 
 // Use Routes
 app.use('/admin', adminRouter);
@@ -402,6 +412,12 @@ app.use('/stripe', stripeRouter);
 app.use('/kiosk', kioskRouter);
 app.use('/volunteers', volunteersRouter);
 app.use('/webhooks', webhooksRouter);
+app.use('/api/exports', exportsRouter);
+app.use('/api/recovery', recoveryRouter);
+app.use('/api/authorization', authorizationRouter);
+app.use('/api/staff', staffRouter);
+app.use('/api/care', careRouter);
+app.use('/api/giving', givingRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.get('/ready', (_req, res) => res.json({ status: 'ready', integrations: { stripe: Boolean(process.env.STRIPE_SECRET_KEY) } }));

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "dev:staging": "node scripts/devStaging.js",
     "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js",
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
@@ -24,7 +25,15 @@
     "db:start": "supabase start",
     "db:reset": "supabase db reset",
     "db:lint": "supabase db lint --level warning",
-    "db:types": "supabase gen types typescript --local > types/database.generated.ts"
+    "db:types": "supabase gen types typescript --local > types/database.generated.ts",
+    "db:production:preflight": "node scripts/productionDatabase.js preflight",
+    "db:production:rollback": "node scripts/productionDatabase.js rollback",
+    "test:message-isolation:staging": "node scripts/verifyMessageIsolation.js",
+    "test:checkin-journey:staging": "node scripts/verifyCheckinJourney.js",
+    "test:event-volunteer-journey:staging": "node scripts/verifyEventVolunteerJourney.js",
+    "test:content-production:staging": "node scripts/verifyContentProductionJourney.js"
+    ,"test:staging": "node scripts/verifyStaging.js",
+    "test:production-shape": "node scripts/verifyProductionShape.js"
   },
   "keywords": [],
   "author": "",
