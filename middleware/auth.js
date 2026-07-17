@@ -4,14 +4,14 @@ const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader) {
-    return res.status(401).json({ error: 'Missing Authorization header' });
+    return res.status(401).json({ error: { code: 'AUTH_REQUIRED', message: 'Authentication is required.', requestId: req.requestId } });
   }
 
   // Extract token: "Bearer eyJhbG..." -> "eyJhbG..."
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({ error: 'Malformed Authorization header' });
+    return res.status(401).json({ error: { code: 'AUTH_INVALID', message: 'Authentication is invalid.', requestId: req.requestId } });
   }
 
   // Verify token with Supabase
@@ -19,7 +19,7 @@ const authenticateUser = async (req, res, next) => {
 
   if (error || !user) {
     console.error("Auth Error:", error?.message);
-    return res.status(401).json({ error: 'Invalid or expired token' });
+    return res.status(401).json({ error: { code: 'AUTH_INVALID', message: 'Authentication is invalid or expired.', requestId: req.requestId } });
   }
 
   // SUCCESS: Attach the user object to the request

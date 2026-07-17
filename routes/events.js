@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
+const { requireCapability } = require('../middleware/authorization');
 
 // GET: Fetch events for the Dashboard (Handles Pastor vs. Organizer permissions)
-router.get('/dashboard/:congregationId', authenticateUser, async (req, res) => {
+router.get('/dashboard/:congregationId', authenticateUser, requireCapability('events.read'), async (req, res) => {
     try {
         const userId = req.user.id;
         const { congregationId } = req.params;
@@ -40,7 +41,7 @@ router.get('/dashboard/:congregationId', authenticateUser, async (req, res) => {
 });
 
 // POST: Create an Event Shell (Usually done by the Pastor)
-router.post('/', authenticateUser, async (req, res) => {
+router.post('/', authenticateUser, requireCapability('events.write'), async (req, res) => {
     const { congregationId, title, eventType } = req.body;
     
     // We create a shell. The date/time can be filled in later by the delegated leader.

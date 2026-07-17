@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const requestContext = require('./middleware/requestContext');
+const { notFound, errorHandler } = require('./middleware/errors');
 
 // Imports from refactoring
 const supabase = require('./config/supabase');
@@ -9,10 +11,11 @@ const { logEvent } = require('./utils/helpers');
 const adminRouter = require('./routes/admin'); // <--- Add this
 
 // Initialize Stripe (needed for webhooks)
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
+const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
+const stripeLayperson = process.env.STRIPE_SECRET_KEY_LAYPERSON ? require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON) : null;
 
 const app = express();
+app.use(requestContext);
 
 // --- SECURE CORS CONFIGURATION ---
 const allowedOrigins = [
@@ -53,6 +56,7 @@ app.use(cors(corsOptions));
 
 // Stripe Webhook Endpoint
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    if (!stripe) return res.status(503).json({ error: { code: 'INTEGRATION_UNAVAILABLE', message: 'Stripe is not configured.', requestId: req.requestId } });
     const sig = req.headers['stripe-signature'];
     let event;
     try {
@@ -195,6 +199,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 // --- NEW: Layperson Webhook Endpoint ---
 // Handles subscriptions for the Layperson App (writing to 'subscription_tier')
 app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async (req, res) => {
+    if (!stripeLayperson) return res.status(503).json({ error: { code: 'INTEGRATION_UNAVAILABLE', message: 'Stripe is not configured.', requestId: req.requestId } });
     const sig = req.headers['stripe-signature'];
     let event;
 
@@ -366,6 +371,11 @@ const messagesRouter = require('./routes/messages'); // <--- Add this
 const crmRouter = require('./routes/crm');
 const demoAdminRouter = require('./routes/demoAdmin');
 const cronRouter = require('./routes/cron');
+const eventsRouter = require('./routes/events');
+const stripeRouter = require('./routes/stripe');
+const kioskRouter = require('./routes/kiosk');
+const volunteersRouter = require('./routes/volunteers');
+const webhooksRouter = require('./routes/webhooks');
 
 // Use Routes
 app.use('/admin', adminRouter);
@@ -387,8 +397,21 @@ app.use('/messages', messagesRouter);
 app.use('/api/crm', crmRouter);
 app.use('/api/admin', demoAdminRouter);
 app.use('/api/cron', cronRouter);
+app.use('/events', eventsRouter);
+app.use('/stripe', stripeRouter);
+app.use('/kiosk', kioskRouter);
+app.use('/volunteers', volunteersRouter);
+app.use('/webhooks', webhooksRouter);
+
+app.get('/health', (_req, res) => res.json({ status: 'ok' }));
+app.get('/ready', (_req, res) => res.json({ status: 'ready', integrations: { stripe: Boolean(process.env.STRIPE_SECRET_KEY) } }));
+
+app.use(notFound);
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-    console.log(`Backend server running on port ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));
+}
+
+module.exports = app;
