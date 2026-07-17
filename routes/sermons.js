@@ -3,7 +3,15 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
-const { logEvent, callOpenAIAndProcessResult, getTuningNotes } = require('../utils/helpers');
+const { logEvent, getTuningNotes } = require('../utils/helpers');
+const { callStructuredResponse } = require('../utils/openaiResponses');
+const {
+    PROMPT_VERSION,
+    buildVoiceInstructions,
+    checkSourceSimilarity,
+    getActiveVoiceContext,
+    getVoiceSourceTexts,
+} = require('../utils/pastorVoice');
 const { generateContentImage } = require('../utils/contentImages');
 const {
     generateTopicSermonPrompt,
@@ -15,6 +23,76 @@ const {
 const ALLOWED_CONTENT_FORMATS = ['sermon', 'sermonette', 'podcast_episode', 'youtube_video'];
 const ALLOWED_DISTRIBUTION_CHANNELS = ['pulpit', 'podcast', 'youtube', 'multi'];
 const ALLOWED_SERIES_FORMATS = ['standard', 'short_form'];
+
+const sermonSchema = {
+    type: 'object', additionalProperties: false,
+    required: ['title', 'scripture', 'illustration', 'sermon_outline', 'key_takeaways', 'sermon_body'],
+    properties: {
+        title: { type: 'string' },
+        scripture: { type: ['string', 'null'] },
+        illustration: { type: ['string', 'null'] },
+        sermon_outline: { type: 'array', items: { type: 'string' } },
+        key_takeaways: { type: 'array', items: { type: 'string' } },
+        sermon_body: { type: 'string' },
+    },
+};
+
+const seriesOutlineSchema = {
+    type: 'object', additionalProperties: false,
+    required: ['series_name', 'description', 'sermons'],
+    properties: {
+        series_name: { type: 'string' },
+        description: { type: 'string' },
+        sermons: {
+            type: 'array',
+            items: {
+                type: 'object', additionalProperties: false,
+                required: ['title', 'scripture'],
+                properties: { title: { type: 'string' }, scripture: { type: 'string' } },
+            },
+        },
+    },
+};
+
+async function generateStructuredSermon({ systemPrompt, userPrompt }) {
+    return callStructuredResponse({
+        instructions: systemPrompt,
+        input: userPrompt,
+        schema: sermonSchema,
+        schemaName: 'generated_sermon',
+        maxOutputTokens: 12000,
+    });
+}
+
+async function enforceOriginality({ userId, voiceContext, sermon }) {
+    const sources = await getVoiceSourceTexts(userId, voiceContext.profileRecord?.id);
+    const result = checkSourceSimilarity(sermon.sermon_body || '', sources);
+    if (!result.passed) {
+        const error = new Error('Generated sermon failed the source-originality gate.');
+        error.code = 'SOURCE_SIMILARITY_REJECTED';
+        error.similarity = result;
+        throw error;
+    }
+    return result;
+}
+
+async function recordGeneration({ userId, contentId, voiceContext, response, status = 'completed', failureCode = null }) {
+    await supabase.from('ai_generation_runs').insert({
+        owner_user_id: userId,
+        content_type: 'sermon',
+        content_id: String(contentId),
+        status,
+        model: response?.model || null,
+        failure_code: failureCode,
+        voice_profile_id: voiceContext.profileRecord?.id || null,
+        voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline',
+        prompt_version: PROMPT_VERSION,
+        input_token_count: response?.usage?.inputTokens || null,
+        output_token_count: response?.usage?.outputTokens || null,
+        duration_ms: response?.durationMs || null,
+        completed_at: new Date().toISOString(),
+    });
+}
 
 const normalizeContentFormat = (value) => {
     if (!value || typeof value !== 'string') return 'sermon';
@@ -131,13 +209,7 @@ const enforceLengthWithRewrite = async ({
         });
 
         try {
-            const revised = await callOpenAIAndProcessResult(
-                systemPrompt,
-                rewritePrompt,
-                'gpt-4.1-2025-04-14',
-                4000,
-                'json_object'
-            );
+            const revised = (await generateStructuredSermon({ systemPrompt, userPrompt: rewritePrompt })).data;
 
             if (revised && typeof revised === 'object') {
                 currentSermon = {
@@ -204,26 +276,6 @@ const sanitizeSermonUpdatePayload = (body) => {
     }
 
     return { payload, errors };
-};
-
-const getStylePrompts = (userProfile) => {
-    let instructions = "";
-    if (userProfile && userProfile.sermon_preferences) {
-        const prefs = userProfile.sermon_preferences;
-        if (prefs.customPreachingDesc && prefs.customPreachingDesc.trim() !== "") {
-            instructions += `\n\nCRITICAL - CUSTOM PREACHING STYLE:\nThe user has a unique preaching structure described as: "${prefs.customPreachingDesc}".\nYou MUST organize the sermon outline and content to reflect this specific approach.`;
-        } else if (prefs.preachingStyle) {
-             instructions += `\n\nPreaching Style: ${prefs.preachingStyle}`;
-        }
-
-        if (prefs.customOratoricalDesc && prefs.customOratoricalDesc.trim() !== "") {
-            instructions += `\n\nCRITICAL - CUSTOM ORATORICAL VOICE:\nThe user has a unique speaking voice described as: "${prefs.customOratoricalDesc}".\nYou MUST write the sermon body using this specific tone, vocabulary, and rhetorical flair.`;
-        } else if (prefs.oratoricalStyle) {
-             instructions += `\n\nOratorical Voice: ${prefs.oratoricalStyle}`;
-        }
-        instructions += `\n\nGeneral Preferences: ${JSON.stringify(prefs)}`;
-    }
-    return instructions;
 };
 
 const tryGenerateSermonImage = async ({ userId, sermonId, sermon, contextLabel, startTime }) => {
@@ -325,7 +377,7 @@ router.get('/sermons/series/:seriesId/details', authenticateUser, async (req, re
 // --- NEW: Deep Generation Sermon Series Flow ---
 router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, res) => {
     try {
-        const { topic, details, numberOfSermons, userProfile, contentFormat, targetDurationMin, distributionChannel, seriesFormat } = req.body;
+        const { topic, details, numberOfSermons, contentFormat, targetDurationMin, distributionChannel, seriesFormat } = req.body;
         const userId = req.user.id;
         const startTime = Date.now();
 
@@ -347,6 +399,8 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
             return res.status(400).json({ error: parsedDuration.error });
         }
         const safeDuration = parsedDuration ? parsedDuration.value : null;
+        const voiceContext = await getActiveVoiceContext(userId);
+        const styleInstructions = buildVoiceInstructions(voiceContext, 'sermon');
 
         // 1. Create a Placeholder Series immediately
         const { data: newSeries, error: insertError } = await supabase.from('sermon_series').insert({
@@ -361,12 +415,11 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
         res.status(202).json({ message: 'Series generation initiated.', seriesId: newSeries.series_id, status: 'pending' });
 
         // 3. Background Process: Outline Generation
-        const styleInstructions = getStylePrompts(userProfile);
-        const outlinePrompt = `Topic: ${topic}\nAdditional Context: ${details}\nNumber of Sermons: ${numberOfSermons}\nSeries Format: ${normalizedSeriesFormat}\nContent Format: ${normalizedContentFormat}\nDistribution Channel: ${normalizedDistributionChannel}\nTarget Duration (minutes): ${safeDuration || 'auto'}\n\nCreate a cohesive sermon series outline. Return a JSON object with 'series_name', 'description', and a 'sermons' array containing 'title' and 'scripture' for each sermon.`;
+        const outlinePrompt = `Topic: ${topic}\nAdditional Context: ${details}\nNumber of Sermons: ${numberOfSermons}\nSeries Format: ${normalizedSeriesFormat}\nContent Format: ${normalizedContentFormat}\nDistribution Channel: ${normalizedDistributionChannel}\nTarget Duration (minutes): ${safeDuration || 'auto'}\n\nCreate a cohesive sermon series outline.\n${styleInstructions}`;
         const systemPromptOutline = await generateSermonSeriesOutlinePrompt(await getTuningNotes(userId));
 
         try {
-            const generatedOutline = await callOpenAIAndProcessResult(systemPromptOutline, outlinePrompt, 'gpt-4.1-2025-04-14', 2000, "json_object");
+            const generatedOutline = (await callStructuredResponse({ instructions: systemPromptOutline, input: outlinePrompt, schema: seriesOutlineSchema, schemaName: 'sermon_series_outline', maxOutputTokens: 4000 })).data;
 
             await supabase.from('sermon_series').update({
                 series_name: generatedOutline.series_name || `Series on ${topic}`,
@@ -396,7 +449,8 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                 const sermonSystemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
                 try {
-                    const generatedSermon = await callOpenAIAndProcessResult(sermonSystemPrompt, sermonUserPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+                    const generation = await generateStructuredSermon({ systemPrompt: sermonSystemPrompt, userPrompt: sermonUserPrompt });
+                    const generatedSermon = generation.data;
                     const lengthManaged = await enforceLengthWithRewrite({
                         generatedSermon,
                         systemPrompt: sermonSystemPrompt,
@@ -413,6 +467,7 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         key_takeaways: lengthManaged.sermon.key_takeaways,
                         sermon_body: lengthManaged.sermon.sermon_body,
                     };
+                    await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
                     const imagePayload = await tryGenerateSermonImage({
                         userId,
                         sermonId: sermonRecord.sermon_id,
@@ -430,8 +485,10 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                         actual_duration_min: lengthManaged.estimatedDurationMin,
                         distribution_channel: normalizedDistributionChannel,
                     }).eq('sermon_id', sermonRecord.sermon_id);
+                    await recordGeneration({ userId, contentId: sermonRecord.sermon_id, voiceContext, response: generation });
                 } catch (sermonErr) {
                     await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', sermonRecord.sermon_id);
+                    await recordGeneration({ userId, contentId: sermonRecord.sermon_id, voiceContext, status: 'failed', failureCode: sermonErr.code || 'GENERATION_FAILED' });
                 }
             }
         } catch (aiErr) {
@@ -473,7 +530,7 @@ router.get('/sermons/:userId', authenticateUser, async (req, res) => {
     }
 
     try {
-        let query = supabase.from('sermons').select('*').eq('user_id', req.params.userId).neq('status', 'failed');
+        let query = supabase.from('sermons').select('*').eq('user_id', req.params.userId).neq('status', 'failed').not('tags', 'cs', '{voice-source}');
         if (contentFormat) {
             query = query.eq('content_format', contentFormat);
         }
@@ -519,7 +576,7 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
     // Keep your existing generate-sermon-by-topic code here verbatim
     try {
         const startTime = Date.now();
-        const { topic, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const { topic, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
         const userId = req.user.id;
 
         const normalizedContentFormat = normalizeContentFormat(contentFormat);
@@ -536,6 +593,8 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
             return res.status(400).json({ error: parsedDuration.error });
         }
         const safeDuration = parsedDuration ? parsedDuration.value : null;
+        const voiceContext = await getActiveVoiceContext(userId);
+        const styleInstructions = buildVoiceInstructions(voiceContext, 'sermon');
 
         const { data: newSermon, error: insertError } = await supabase
             .from('sermons')
@@ -556,12 +615,12 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
         if (insertError) throw insertError;
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
-        const styleInstructions = getStylePrompts(userProfile);
         const userPrompt = `Topic: ${topic}\nInclude Illustration: true\nGenerate the sermon based on this topic.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
         const systemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generatedSermon = await callOpenAIAndProcessResult(systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const generation = await generateStructuredSermon({ systemPrompt, userPrompt });
+            const generatedSermon = generation.data;
             const lengthManaged = await enforceLengthWithRewrite({
                 generatedSermon,
                 systemPrompt,
@@ -578,6 +637,7 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
             };
+            await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
             const imagePayload = await tryGenerateSermonImage({
                 userId,
                 sermonId: newSermon.sermon_id,
@@ -595,8 +655,10 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
                 actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
+            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, response: generation });
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
         }
     } catch (error) { res.status(500).json({ error: 'An unexpected error occurred.' }); }
 });
@@ -605,7 +667,7 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
     // Keep your existing generate-sermon-by-scripture code here verbatim
     try {
         const startTime = Date.now();
-        const { scripture, userProfile, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
+        const { scripture, seriesId, contentFormat, targetDurationMin, distributionChannel } = req.body;
         const userId = req.user.id;
 
         const normalizedContentFormat = normalizeContentFormat(contentFormat);
@@ -622,6 +684,8 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
             return res.status(400).json({ error: parsedDuration.error });
         }
         const safeDuration = parsedDuration ? parsedDuration.value : null;
+        const voiceContext = await getActiveVoiceContext(userId);
+        const styleInstructions = buildVoiceInstructions(voiceContext, 'sermon');
 
         const { data: newSermon, error: insertError } = await supabase
             .from('sermons')
@@ -642,12 +706,12 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
         if (insertError) throw insertError;
         res.status(202).json({ message: 'Sermon generation initiated.', sermonId: newSermon.sermon_id, status: 'pending' });
 
-        const styleInstructions = getStylePrompts(userProfile);
         const userPrompt = `Scripture: ${scripture}\nInclude Illustration: true\nGenerate the sermon based on this scripture.${buildFormatInstructions({ contentFormat: normalizedContentFormat, targetDurationMin: safeDuration, distributionChannel: normalizedDistributionChannel })}\n${styleInstructions}`;
         const systemPrompt = await generateScriptureSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generatedSermon = await callOpenAIAndProcessResult(systemPrompt, userPrompt, 'gpt-4.1-2025-04-14', 4000, "json_object");
+            const generation = await generateStructuredSermon({ systemPrompt, userPrompt });
+            const generatedSermon = generation.data;
             const lengthManaged = await enforceLengthWithRewrite({
                 generatedSermon,
                 systemPrompt,
@@ -664,6 +728,7 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 key_takeaways: lengthManaged.sermon.key_takeaways || null,
                 sermon_body: lengthManaged.sermon.sermon_body || null,
             };
+            await enforceOriginality({ userId, voiceContext, sermon: sermonPayload });
             const imagePayload = await tryGenerateSermonImage({
                 userId,
                 sermonId: newSermon.sermon_id,
@@ -681,8 +746,10 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
                 actual_duration_min: lengthManaged.estimatedDurationMin,
                 distribution_channel: normalizedDistributionChannel,
             }).eq('sermon_id', newSermon.sermon_id);
+            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, response: generation });
         } catch (aiError) {
             await supabase.from('sermons').update({ status: 'failed' }).eq('sermon_id', newSermon.sermon_id);
+            await recordGeneration({ userId, contentId: newSermon.sermon_id, voiceContext, status: 'failed', failureCode: aiError.code || 'GENERATION_FAILED' });
         }
     } catch (error) { res.status(500).json({ error: 'An unexpected error occurred.' }); }
 });

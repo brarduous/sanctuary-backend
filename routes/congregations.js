@@ -117,23 +117,25 @@ router.get('/', authenticateUser, async (req, res) => {
 
     if (!congregation) return res.status(200).json(null);
 
-    // 2. Fetch Total Member Count
+    // CRM people are the congregation roster. App-auth memberships are access
+    // records and must not be presented as the church's member count.
     const { count: totalMembers, error: totalError } = await supabase
-      .from('congregation_members')
+      .from('church_crm_profiles')
       .select('*', { count: 'exact', head: true })
-      .eq('congregation_id', congregation.congregation_id);
+      .eq('congregation_id', congregation.congregation_id)
+      .is('deleted_at', null);
 
     if (totalError) throw totalError;
 
-    // 3. Fetch Active Member Count (Last 7 Days)
+    // Active this week means people with a real check-in, not accounts whose
+    // membership row happened to be created or refreshed.
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-    
-    const { count: activeThisWeek, error: activeError } = await supabase
-      .from('congregation_members')
-      .select('*', { count: 'exact', head: true })
+    const { data: recentCheckIns, error: activeError } = await supabase
+      .from('check_ins')
+      .select('profile_id')
       .eq('congregation_id', congregation.congregation_id)
-      .gte('last_active_date', sevenDaysAgo.toISOString());
+      .gte('checked_in_at', sevenDaysAgo.toISOString());
 
     if (activeError) throw activeError;
 
@@ -142,7 +144,7 @@ router.get('/', authenticateUser, async (req, res) => {
       ...congregation,
       stats: {
         totalMembers: totalMembers || 0,
-        activeThisWeek: activeThisWeek || 0
+        activeThisWeek: new Set((recentCheckIns || []).map((row) => row.profile_id).filter(Boolean)).size
       }
     });
 
@@ -244,10 +246,31 @@ router.post('/', authenticateUser, async (req, res) => {
     }
 
     const { data: existingMembership } = await supabase.from('organization_memberships').select('congregation_id').eq('user_id', userId).eq('active', true).limit(1).maybeSingle();
-    const { data: existingLegacy } = await supabase.from('congregations').select('congregation_id').eq('leader_user_id', userId).limit(1).maybeSingle();
+    const { data: existingLegacy } = await supabase.from('congregations').select('congregation_id, onboarding_reset_at').eq('leader_user_id', userId).limit(1).maybeSingle();
     const existing = existingMembership || existingLegacy;
 
     if (existing) {
+      if (existingLegacy?.onboarding_reset_at) {
+        const { data: restored, error: restoreError } = await supabase.from('congregations').update({
+          name: String(name).trim(),
+          description: description || null,
+          onboarding_reset_at: null,
+          invite_token: null,
+          updated_at: new Date().toISOString(),
+        }).eq('congregation_id', existingLegacy.congregation_id).eq('leader_user_id', userId).select().single();
+        if (restoreError) throw restoreError;
+        const { error: membershipRestoreError } = await supabase.from('organization_memberships').insert({
+          congregation_id: restored.congregation_id, user_id: userId, role: 'lead_pastor', active: true,
+        });
+        if (membershipRestoreError) throw membershipRestoreError;
+        await ensureCrmProfile({ congregationId: restored.congregation_id, user: req.user });
+        return res.status(200).json(restored);
+      }
+      if (existingLegacy && existingLegacy.congregation_id === existing.congregation_id) {
+        const { data: ownedCongregation, error: ownedError } = await supabase.from('congregations').select('*').eq('congregation_id', existingLegacy.congregation_id).eq('leader_user_id', userId).single();
+        if (ownedError) throw ownedError;
+        return res.status(200).json(ownedCongregation);
+      }
       return res.status(409).json({ error: { code: 'CONGREGATION_EXISTS', message: 'This account already belongs to an organization.', requestId: req.requestId }, congregation_id: existing.congregation_id });
     }
 

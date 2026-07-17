@@ -3,10 +3,46 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
-const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
+const { logEvent } = require('../utils/helpers');
+const { callStructuredResponse } = require('../utils/openaiResponses');
+const {
+    PROMPT_VERSION,
+    buildVoiceInstructions,
+    checkSourceSimilarity,
+    getActiveVoiceContext,
+    getVoiceSourceTexts,
+} = require('../utils/pastorVoice');
 const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
 const { generateContentImage } = require('../utils/contentImages');
+
+const bibleStudySchema = {
+    type: 'object', additionalProperties: false,
+    required: ['title', 'subtitle', 'illustration', 'study_method', 'studies'],
+    properties: {
+        title: { type: 'string' }, subtitle: { type: 'string' }, illustration: { type: 'string' }, study_method: { type: 'string' },
+        studies: {
+            type: 'array',
+            items: {
+                type: 'object', additionalProperties: false,
+                required: ['lesson_number', 'title', 'scripture', 'key_verse', 'lesson_aims', 'study_outline', 'introduction', 'commentary', 'discussion_starters', 'application_sidebar', 'conclusion', 'reflection_questions'],
+                properties: {
+                    lesson_number: { type: 'integer' }, title: { type: 'string' }, scripture: { type: 'string' }, key_verse: { type: 'string' },
+                    lesson_aims: { type: 'array', items: { type: 'string' } }, study_outline: { type: 'array', items: { type: 'string' } },
+                    introduction: {
+                        type: 'object', additionalProperties: false, required: ['hook', 'background'],
+                        properties: { hook: { type: 'string' }, background: { type: 'string' } },
+                    }, commentary: { type: 'string' },
+                    discussion_starters: { type: 'array', items: { type: 'string' } }, application_sidebar: { type: 'array', items: { type: 'string' } },
+                    conclusion: {
+                        type: 'object', additionalProperties: false, required: ['summary', 'prayer', 'thoughtToRemember'],
+                        properties: { summary: { type: 'string' }, prayer: { type: 'string' }, thoughtToRemember: { type: 'string' } },
+                    }, reflection_questions: { type: 'array', items: { type: 'string' } },
+                },
+            },
+        },
+    },
+};
 
 router.post('/bible-study-drafts', authenticateUser, async (req, res, next) => {
     const title = String(req.body?.title || '').trim();
@@ -206,6 +242,12 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
         const { topic, length, method } = req.body;
         const userId = req.user.id;
         const startTime = Date.now();
+        const lessonCount = Number(length);
+        if (!String(topic || '').trim()) return res.status(400).json({ error: 'A study topic or passage is required.' });
+        if (!Number.isInteger(lessonCount) || lessonCount < 1 || lessonCount > 12) return res.status(400).json({ error: 'Number of lessons must be between 1 and 12.' });
+        if (!String(method || '').trim()) return res.status(400).json({ error: 'A study method is required.' });
+        const voiceContext = await getActiveVoiceContext(userId);
+        const voiceInstructions = buildVoiceInstructions(voiceContext, 'bible_study');
         // 1. Create a placeholder in the `bible_studies` table immediately
         const { data: newStudy, error: insertStudyError } = await supabase
             .from('bible_studies')
@@ -235,16 +277,22 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
         });
 
         // 3. Start AI generation in the background
-        const userPrompt = 'Topic: ' + topic + '\n Number of Lessons:' + length + '\n Bible Study Type: ' + method + '\n Include Illustration: true\n ';
+        const userPrompt = [
+            `Topic or passage: ${topic}`,
+            `Exact number of lessons: ${lessonCount}`,
+            `Required Bible study method: ${method}`,
+            'Include one original illustration concept.',
+            'The method, passage, and lesson count are hard constraints. Voice personalization must never override them.',
+            voiceInstructions,
+        ].join('\n');
         const bible_study_prompt = await generateBibleStudyPrompt();
         try {
-            const generatedStudy = await callOpenAIAndProcessResult(
-                bible_study_prompt,
-                userPrompt,
-                'gpt-4.1-2025-04-14',
-                5000,
-                "json_object"
-            );
+            const generation = await callStructuredResponse({ instructions: bible_study_prompt, input: userPrompt, schema: bibleStudySchema, schemaName: 'generated_bible_study', maxOutputTokens: 14000 });
+            const generatedStudy = generation.data;
+            if (generatedStudy.studies.length !== lessonCount) throw Object.assign(new Error('Generated study did not follow the requested lesson count.'), { code: 'FORMAT_NONCOMPLIANCE' });
+            const voiceSources = await getVoiceSourceTexts(userId, voiceContext.profileRecord?.id);
+            const similarity = checkSourceSimilarity(generatedStudy.studies.map((lesson) => lesson.commentary).join('\n'), voiceSources);
+            if (!similarity.passed) throw Object.assign(new Error('Generated study failed the source-originality gate.'), { code: 'SOURCE_SIMILARITY_REJECTED' });
             let imagePayload = {};
             try {
                 const image = await generateContentImage({
@@ -287,7 +335,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                     title: generatedStudy.title || `Bible Study on ${topic}`,
                     subtitle: generatedStudy.subtitle || null,
                     ...imagePayload,
-                    study_method: generatedStudy.study_method || method,
+                    study_method: method,
                     status: 'completed',
                     updated_at: new Date().toISOString(),
                 })
@@ -328,7 +376,14 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                         console.error(`Error inserting bible_study_lesson for study ${newStudy.study_id}:`, insertLessonError);
                     }
                 }
-                logEvent('ai', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', {tokens: generatedStudy.tokens}, duration);
+                await supabase.from('ai_generation_runs').insert({
+                    owner_user_id: userId, content_type: 'bible_study', content_id: String(newStudy.study_id), status: 'completed',
+                    model: generation.model, voice_profile_id: voiceContext.profileRecord?.id || null,
+                    voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline', prompt_version: PROMPT_VERSION,
+                    input_token_count: generation.usage.inputTokens, output_token_count: generation.usage.outputTokens,
+                    duration_ms: generation.durationMs, completed_at: new Date().toISOString(),
+                });
+                logEvent('ai', 'backend', userId, 'generate_bible_study', 'Successfully generated bible study and lessons', { model: generation.model, promptVersion: PROMPT_VERSION }, duration);
                 console.log(`Bible study ${newStudy.study_id} and its lessons successfully generated and updated.`);
             } else {
                 logEvent('error', 'backend', userId, 'generate_bible_study', `No 'studies' array found in generated Bible study for ID ${newStudy.study_id}`, {}, Date.now() - startTime);
@@ -339,6 +394,12 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             logEvent('error', 'backend', userId, 'generate_bible_study', 'AI generation failed', { error: aiError.message }, Date.now() - startTime);
             console.error(`AI generation failed for Bible study ${newStudy.study_id}:`, aiError);
             await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
+            await supabase.from('ai_generation_runs').insert({
+                owner_user_id: userId, content_type: 'bible_study', content_id: String(newStudy.study_id), status: 'failed',
+                failure_code: aiError.code || 'GENERATION_FAILED', voice_profile_id: voiceContext.profileRecord?.id || null,
+                voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline', prompt_version: PROMPT_VERSION,
+                completed_at: new Date().toISOString(),
+            });
         }
 
     } catch (error) {

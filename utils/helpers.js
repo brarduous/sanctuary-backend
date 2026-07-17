@@ -26,7 +26,6 @@ const logEvent = async (level, source, userId, action, message, details = {}, du
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
     try {
 
-        console.log("Calling OpenAI with prompt:", systemPrompt, userPrompt);
         const chatCompletion = await openai.chat.completions.create({
             model: model || 'gpt-5-nano',
             messages: [
@@ -38,8 +37,6 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
 
         const generatedContent = chatCompletion.choices?.[0]?.message?.content || '';
         const totalTokens = chatCompletion.usage?.total_tokens || null;
-        console.log("AI Generated Content:", generatedContent);
-
         if (responseFormatType === "json_object") {
             try {
                 const parsed = JSON.parse(generatedContent);
