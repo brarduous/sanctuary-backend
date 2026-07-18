@@ -5,6 +5,7 @@ const path = require('node:path');
 
 const source = fs.readFileSync(path.join(__dirname, '../../index.js'), 'utf8');
 const messageSource = fs.readFileSync(path.join(__dirname, '../../routes/messages.js'), 'utf8');
+const userSource = fs.readFileSync(path.join(__dirname, '../../routes/user.js'), 'utf8');
 const messageSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717140000_message_tenant_security.sql'), 'utf8');
 const tenantRlsMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717143000_congregation_owned_rls.sql'), 'utf8');
 const normalizedErrors = fs.readFileSync(path.join(__dirname, '../../middleware/normalizeErrors.js'), 'utf8');
@@ -17,6 +18,7 @@ const demoAdminSource = fs.readFileSync(path.join(__dirname, '../../routes/demoA
 const financialSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717163000_financial_column_security.sql'), 'utf8');
 const checkinIdempotencyMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717170000_checkin_idempotency.sql'), 'utf8');
 const volunteerSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717173000_volunteer_tenant_security.sql'), 'utf8');
+const personalGrowthMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718140000_personal_growth_privacy.sql'), 'utf8');
 const eventSource = fs.readFileSync(path.join(__dirname, '../../routes/events.js'), 'utf8');
 const sermonSource = fs.readFileSync(path.join(__dirname, '../../routes/sermons.js'), 'utf8');
 const studySource = fs.readFileSync(path.join(__dirname, '../../routes/bibleStudies.js'), 'utf8');
@@ -154,6 +156,16 @@ test('message routes derive authorship and require congregation capabilities', (
   assert.match(messageSource, /author_id: req\.user\.id/);
   assert.match(messageSource, /congregation_id: req\.congregationId/);
   assert.doesNotMatch(messageSource, /author_id:\s*req\.body/);
+});
+
+test('personal growth is separated, owner-only, exportable, and deletable', () => {
+  assert.match(personalGrowthMigration, /create table if not exists public\.personal_growth_profiles/i);
+  assert.match(personalGrowthMigration, /force row level security/i);
+  assert.match(personalGrowthMigration, /revoke all.+anon, authenticated/is);
+  assert.match(userSource, /personal-growth\/export/);
+  assert.match(userSource, /router\.delete\('\/user-profile\/:userId\/personal-growth'/);
+  assert.match(userSource, /PERSONAL_GROWTH_MIGRATION_REQUIRED/);
+  assert.match(userSource, /Your changes were not saved to ordinary preferences/);
 });
 
 test('broadcast recipient resolution is tenant-scoped and enforced before persistence', () => {

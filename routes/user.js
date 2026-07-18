@@ -28,6 +28,30 @@ const PROFILE_UPDATE_FIELDS = [
     'sermon_preferences',
     'user_preferences',
 ];
+const PERSONAL_GROWTH_PURPOSE = 'Private self-directed ministry growth and wellbeing reflection';
+const personalGrowthSchemaUnavailable = (error) => ['42P01', 'PGRST204', 'PGRST205'].includes(error?.code);
+const normalizeGrowthAreas = (value) => Array.isArray(value)
+    ? [...new Set(value.map((item) => String(item).trim()).filter(Boolean))].slice(0, 25)
+    : [];
+
+async function readPersonalGrowth(userId) {
+    const { data, error } = await supabase.from('personal_growth_profiles').select('*').eq('user_id', userId).maybeSingle();
+    if (!error) return { data, storage: 'separated' };
+    if (!personalGrowthSchemaUnavailable(error)) throw error;
+    const legacy = await supabase.from('user_profiles').select('user_preferences').eq('user_id', userId).maybeSingle();
+    if (legacy.error) throw legacy.error;
+    return {
+        data: {
+            user_id: userId,
+            focus_areas: normalizeGrowthAreas(legacy.data?.user_preferences?.focusAreas),
+            improvement_areas: normalizeGrowthAreas(legacy.data?.user_preferences?.improvementAreas),
+            purpose: PERSONAL_GROWTH_PURPOSE,
+            visibility: 'self',
+            retention_until: null,
+        },
+        storage: 'legacy_read_only',
+    };
+}
 
 function pickProfileUpdateFields(body) {
     return PROFILE_UPDATE_FIELDS.reduce((acc, field) => {
@@ -203,6 +227,58 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
         .single();
 
     res.json({ ...(refreshed.data || data || {}), avatar_url: avatarUrl || refreshed.data?.avatar_url || refreshed.data?.user_preferences?.avatar_url });
+});
+
+router.get('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+    if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only access your own personal-growth data.', requestId: req.requestId } });
+    try {
+        const result = await readPersonalGrowth(req.user.id);
+        res.json({ data: result.data, storage: result.storage, purpose: PERSONAL_GROWTH_PURPOSE, visibility: 'Only you', retention: 'Retained until you delete it or the account is deleted.' });
+    } catch (error) { next(error); }
+});
+
+router.put('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+    if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only update your own personal-growth data.', requestId: req.requestId } });
+    const payload = {
+        user_id: req.user.id,
+        focus_areas: normalizeGrowthAreas(req.body?.focusAreas),
+        improvement_areas: normalizeGrowthAreas(req.body?.improvementAreas),
+        purpose: PERSONAL_GROWTH_PURPOSE,
+        visibility: 'self',
+        retention_until: req.body?.retentionUntil || null,
+        updated_at: new Date().toISOString(),
+    };
+    try {
+        const { data, error } = await supabase.from('personal_growth_profiles').upsert(payload).select('*').single();
+        if (error && personalGrowthSchemaUnavailable(error)) return res.status(503).json({ error: { code: 'PERSONAL_GROWTH_MIGRATION_REQUIRED', message: 'Private personal-growth storage is not available yet. Your changes were not saved to ordinary preferences.', requestId: req.requestId } });
+        if (error) throw error;
+        res.json({ data });
+    } catch (error) { next(error); }
+});
+
+router.get('/user-profile/:userId/personal-growth/export', authenticateUser, async (req, res, next) => {
+    if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only export your own personal-growth data.', requestId: req.requestId } });
+    try {
+        const result = await readPersonalGrowth(req.user.id);
+        res.set('content-disposition', 'attachment; filename="sanctuary-personal-growth.json"');
+        res.json({ exportedAt: new Date().toISOString(), purpose: PERSONAL_GROWTH_PURPOSE, visibility: 'self', retentionUntil: result.data?.retention_until || null, focusAreas: result.data?.focus_areas || [], improvementAreas: result.data?.improvement_areas || [] });
+    } catch (error) { next(error); }
+});
+
+router.delete('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+    if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only delete your own personal-growth data.', requestId: req.requestId } });
+    try {
+        const deletion = await supabase.from('personal_growth_profiles').delete().eq('user_id', req.user.id);
+        if (deletion.error && !personalGrowthSchemaUnavailable(deletion.error)) throw deletion.error;
+        const legacy = await supabase.from('user_profiles').select('user_preferences').eq('user_id', req.user.id).maybeSingle();
+        if (legacy.error) throw legacy.error;
+        const preferences = { ...(legacy.data?.user_preferences || {}) };
+        delete preferences.focusAreas;
+        delete preferences.improvementAreas;
+        const update = await supabase.from('user_profiles').update({ user_preferences: preferences }).eq('user_id', req.user.id);
+        if (update.error) throw update.error;
+        res.status(204).end();
+    } catch (error) { next(error); }
 });
 
 router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('avatar'), async (req, res) => {
