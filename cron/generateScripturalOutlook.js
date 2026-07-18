@@ -680,7 +680,8 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
 async function generateAndSaveScripturalOutlook() {
   console.log('Starting scriptural outlook generation cron job...');
     const startTime = Date.now();
-  const articles = await fetchTopNewsStories();
+  const requestedLimit = Math.min(24, Math.max(1, Number.parseInt(process.env.NEWS_CRON_LIMIT, 10) || 24));
+  const articles = await fetchTopNewsStories(requestedLimit);
   if (articles.length === 0) {
     console.error('Failed to get any news articles. Exiting.');
     return;
