@@ -58,13 +58,17 @@ test('quality generations are persisted before the model call and finalized with
     assert.match(source, /input_token_count/);
     assert.match(source, /output_token_count/);
   }
-  assert.ok(studyRoute.indexOf("status: 'running'") < studyRoute.indexOf("callStructuredResponse({ instructions: bible_study_prompt"));
+  assert.ok(studyRoute.indexOf("status: 'running'") < studyRoute.indexOf('const generation = await callStructuredResponse({'));
   assert.ok(aiRoute.indexOf("status: 'running'") < aiRoute.indexOf('callStructuredResponse({'));
 });
 
 test('generation retries twice before a soft failure and preserves exact retry lineage', () => {
   assert.match(openaiResponses, /OPENAI_QUALITY_MAX_RETRIES \|\| 2/);
   assert.match(contentImages, /OPENAI_IMAGE_MAX_RETRIES \|\| 2/);
+  assert.match(openaiResponses, /timeoutMs = QUALITY_TIMEOUT_MS/);
+  assert.match(openaiResponses, /maxRetries = QUALITY_MAX_RETRIES/);
+  assert.match(studyRoute, /OPENAI_BIBLE_STUDY_TIMEOUT_MS \|\| 420000/);
+  assert.match(studyRoute, /timeoutMs: BIBLE_STUDY_GENERATION_TIMEOUT_MS/);
   for (const source of [sermonRoute, studyRoute]) {
     assert.match(source, /retryOfGenerationRunId/);
     assert.match(source, /retry_of_id/);
