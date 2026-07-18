@@ -3,7 +3,8 @@ const openai = require('../config/openai');
 const QUALITY_MODEL = process.env.OPENAI_QUALITY_MODEL || 'gpt-5.6-sol';
 const QUALITY_REASONING_EFFORT = process.env.OPENAI_QUALITY_REASONING_EFFORT || 'medium';
 const QUALITY_TIMEOUT_MS = Number(process.env.OPENAI_QUALITY_TIMEOUT_MS || 300000);
-const QUALITY_MAX_RETRIES = Number(process.env.OPENAI_QUALITY_MAX_RETRIES || 1);
+// Initial request + two retries before a model failure reaches the product UI.
+const QUALITY_MAX_RETRIES = Number(process.env.OPENAI_QUALITY_MAX_RETRIES || 2);
 const QUALITY_INPUT_USD_PER_MILLION = Number(process.env.OPENAI_QUALITY_INPUT_USD_PER_MILLION || 5);
 const QUALITY_OUTPUT_USD_PER_MILLION = Number(process.env.OPENAI_QUALITY_OUTPUT_USD_PER_MILLION || 30);
 

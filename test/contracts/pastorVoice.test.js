@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { checkSourceSimilarity } = require('../../utils/sourceSimilarity');
 const { summarizeTheologicalReview } = require('../../utils/theologicalReview');
+const { generationRequestsMatch } = require('../../utils/generationRequests');
 
 const read = (relative) => fs.readFileSync(path.join(__dirname, '../..', relative), 'utf8');
 const sermonRoute = read('routes/sermons.js');
@@ -12,6 +13,8 @@ const analysisRoute = read('routes/analysis.js');
 const aiRoute = read('routes/ai.js');
 const pastorVoice = read('utils/pastorVoice.js');
 const theologicalReview = read('utils/theologicalReview.js');
+const openaiResponses = read('utils/openaiResponses.js');
+const contentImages = read('utils/contentImages.js');
 const resetScript = read('scripts/resetProductionAccount.js');
 const migration = read('supabase/migrations/20260718120000_pastor_voice_profiles.sql');
 
@@ -57,6 +60,25 @@ test('quality generations are persisted before the model call and finalized with
   }
   assert.ok(studyRoute.indexOf("status: 'running'") < studyRoute.indexOf("callStructuredResponse({ instructions: bible_study_prompt"));
   assert.ok(aiRoute.indexOf("status: 'running'") < aiRoute.indexOf('callStructuredResponse({'));
+});
+
+test('generation retries twice before a soft failure and preserves exact retry lineage', () => {
+  assert.match(openaiResponses, /OPENAI_QUALITY_MAX_RETRIES \|\| 2/);
+  assert.match(contentImages, /OPENAI_IMAGE_MAX_RETRIES \|\| 2/);
+  for (const source of [sermonRoute, studyRoute]) {
+    assert.match(source, /retryOfGenerationRunId/);
+    assert.match(source, /retry_of_id/);
+    assert.match(source, /request: requestMetadata/);
+    assert.match(source, /Retry inputs must exactly match/);
+  }
+  assert.equal(generationRequestsMatch(
+    { topic: 'Mark 5', lessonCount: 4, method: 'Expository' },
+    { method: 'Expository', topic: 'Mark 5', lessonCount: 4 }
+  ), true);
+  assert.equal(generationRequestsMatch(
+    { topic: 'Mark 5', lessonCount: 4, method: 'Expository' },
+    { topic: 'Mark 5', lessonCount: 3, method: 'Expository' }
+  ), false);
 });
 
 test('style analysis uses complete balanced in-memory extraction and delayed persistence', () => {

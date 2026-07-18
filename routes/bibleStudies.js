@@ -6,6 +6,7 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent } = require('../utils/helpers');
 const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
 const { reviewPastoralContent } = require('../utils/theologicalReview');
+const { generationRequestsMatch } = require('../utils/generationRequests');
 const {
     PROMPT_VERSION,
     buildVoiceInstructions,
@@ -240,13 +241,34 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
 // Endpoint to initiate Bible Study generation
 router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, res) => {
     try {
-        const { topic, length, method } = req.body;
+        const { topic, length, method, retryOfGenerationRunId } = req.body;
         const userId = req.user.id;
         const startTime = Date.now();
         const lessonCount = Number(length);
         if (!String(topic || '').trim()) return res.status(400).json({ error: 'A study topic or passage is required.' });
         if (!Number.isInteger(lessonCount) || lessonCount < 1 || lessonCount > 12) return res.status(400).json({ error: 'Number of lessons must be between 1 and 12.' });
         if (!String(method || '').trim()) return res.status(400).json({ error: 'A study method is required.' });
+        const requestMetadata = {
+            topic: String(topic).trim(),
+            lessonCount,
+            method: String(method).trim(),
+        };
+        let validatedRetryOfId = null;
+        if (retryOfGenerationRunId) {
+            const { data: retryRun, error: retryRunError } = await supabase.from('ai_generation_runs')
+                .select('id, status, input_provenance')
+                .eq('id', retryOfGenerationRunId)
+                .eq('owner_user_id', userId)
+                .eq('content_type', 'bible_study')
+                .maybeSingle();
+            if (retryRunError || !retryRun || retryRun.status !== 'failed') {
+                return res.status(409).json({ error: 'The requested Bible study retry is not available.' });
+            }
+            if (!generationRequestsMatch(retryRun.input_provenance?.request || null, requestMetadata)) {
+                return res.status(409).json({ error: 'Retry inputs must exactly match the failed Bible study request.' });
+            }
+            validatedRetryOfId = retryRun.id;
+        }
         const voiceContext = await getActiveVoiceContext(userId);
         const voiceInstructions = buildVoiceInstructions(voiceContext, 'bible_study');
         // 1. Create a placeholder in the `bible_studies` table immediately
@@ -281,7 +303,11 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 voice_profile_id: voiceContext.profileRecord?.id || null,
                 voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline',
                 prompt_version: PROMPT_VERSION,
-                input_provenance: { requestedTradition: voiceContext.declaredTradition || null },
+                retry_of_id: validatedRetryOfId,
+                input_provenance: {
+                    requestedTradition: voiceContext.declaredTradition || null,
+                    request: requestMetadata,
+                },
             })
             .select('id')
             .single();
@@ -294,6 +320,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
         res.status(202).json({
             message: 'Bible Study generation initiated.',
             studyId: newStudy.study_id,
+            generationRunId: generationRun.id,
             status: 'pending'
         });
 
@@ -412,6 +439,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                     estimated_cost_usd: Number((estimateQualityCostUsd(generation.usage) + estimateQualityCostUsd(theologicalReview.usage)).toFixed(6)),
                     input_provenance: {
                         requestedTradition: voiceContext.declaredTradition || null,
+                        request: requestMetadata,
                         theologicalReview: {
                             ...theologicalReview.summary,
                             model: theologicalReview.model,
@@ -439,6 +467,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 voice_treatment: voiceContext.profileRecord ? 'structured_profile' : 'baseline', prompt_version: PROMPT_VERSION,
                 input_provenance: {
                     requestedTradition: voiceContext.declaredTradition || null,
+                    request: requestMetadata,
                     theologicalReview: aiError.reviewResult ? {
                         ...aiError.reviewResult.summary,
                         model: aiError.reviewResult.model,
