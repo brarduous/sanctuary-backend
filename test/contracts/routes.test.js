@@ -51,6 +51,16 @@ test('care and giving operations require capabilities and emit sensitive audit e
   assert.match(givingSource, /finance\.gift_refunded/);
 });
 
+test('confidential care and timeline reads are independently capability filtered', () => {
+  assert.match(careSource, /care\.confidential/);
+  assert.match(careSource, /confidentialAccess/);
+  assert.match(careSource, /CONFIDENTIALITY_INVALID/);
+  assert.match(careSource, /person_timeline_events/);
+  assert.match(crmSource, /visibility_capability/);
+  assert.match(crmSource, /allowedCapabilities/);
+  assert.match(crmSource, /people\.timeline_accessed/);
+});
+
 test('people operations cover import, bulk updates, merge, segments, consent, and timelines', () => {
   for (const contract of ['/import', '/bulk', '/segments', '/timeline', 'consent_status', 'people.merged']) assert.match(crmSource, new RegExp(contract.replace('/', '\\/')));
   assert.match(crmSource, /requireCapability\('people\.write'\)/);

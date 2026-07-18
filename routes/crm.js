@@ -274,7 +274,16 @@ router.get('/:congregationId/:profileId/timeline', authenticateUser, requireCapa
     try {
         const { data, error } = await supabase.from('person_timeline_events').select('*').eq('congregation_id', req.congregationId).eq('profile_id', req.params.profileId).order('occurred_at', { ascending: false });
         if (error) throw error;
-        res.json({ data });
+        const visibilityCapabilities = [...new Set((data || []).map(event => event.visibility_capability).filter(capability => capability !== 'people.read'))];
+        const allowedCapabilities = new Set(['people.read']);
+        for (const capability of visibilityCapabilities) {
+            const { data: allowed, error: capabilityError } = await supabase.rpc('has_congregation_capability', { requested_congregation_id: req.congregationId, requested_capability: capability, requested_user_id: req.user.id, requested_campus_id: req.query?.campusId || null });
+            if (capabilityError && !['PGRST202', '42883'].includes(capabilityError.code)) throw capabilityError;
+            if (allowed || (capabilityError && req.authorizationMode === 'legacy_leader_compatibility')) allowedCapabilities.add(capability);
+        }
+        const visible = (data || []).filter(event => allowedCapabilities.has(event.visibility_capability));
+        if ((data || []).some(event => event.visibility_capability === 'care.confidential')) await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'people.timeline_accessed', resource_type: 'person', resource_id: req.params.profileId, request_id: req.requestId, metadata: { returned: visible.length, withheld: data.length - visible.length } });
+        res.json({ data: visible });
     } catch (error) { next(error); }
 });
 
