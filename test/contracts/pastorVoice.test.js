@@ -68,7 +68,10 @@ test('generation retries twice before a soft failure and preserves exact retry l
   assert.match(openaiResponses, /timeoutMs = QUALITY_TIMEOUT_MS/);
   assert.match(openaiResponses, /maxRetries = QUALITY_MAX_RETRIES/);
   assert.match(studyRoute, /OPENAI_BIBLE_STUDY_TIMEOUT_MS \|\| 420000/);
+  assert.match(studyRoute, /OPENAI_BIBLE_STUDY_MAX_OUTPUT_TOKENS \|\| 10000/);
   assert.match(studyRoute, /timeoutMs: BIBLE_STUDY_GENERATION_TIMEOUT_MS/);
+  assert.match(studyRoute, /450–650 words of commentary per lesson/);
+  assert.match(studyRoute, /maxOutputTokens: BIBLE_STUDY_MAX_OUTPUT_TOKENS/);
   for (const source of [sermonRoute, studyRoute]) {
     assert.match(source, /retryOfGenerationRunId/);
     assert.match(source, /retry_of_id/);
