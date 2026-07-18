@@ -17,6 +17,7 @@ const authorizationSource = fs.readFileSync(path.join(__dirname, '../../routes/a
 const demoAdminSource = fs.readFileSync(path.join(__dirname, '../../routes/demoAdmin.js'), 'utf8');
 const financialSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717163000_financial_column_security.sql'), 'utf8');
 const checkinIdempotencyMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717170000_checkin_idempotency.sql'), 'utf8');
+const peopleMergeMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718142000_atomic_people_merge.sql'), 'utf8');
 const volunteerSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717173000_volunteer_tenant_security.sql'), 'utf8');
 const personalGrowthMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718140000_personal_growth_privacy.sql'), 'utf8');
 const safeguardingMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718141000_safeguarding_incidents.sql'), 'utf8');
@@ -65,6 +66,14 @@ test('people operations cover import, bulk updates, merge, segments, consent, an
   for (const contract of ['/import', '/bulk', '/segments', '/timeline', 'consent_status', 'people.merged']) assert.match(crmSource, new RegExp(contract.replace('/', '\\/')));
   assert.match(crmSource, /requireCapability\('people\.write'\)/);
   assert.match(crmSource, /requireCapability\('care\.write'\)/);
+});
+
+test('people merge is atomic across operational relationships and remains recoverable', () => {
+  assert.match(crmSource, /merge_crm_profiles/);
+  for (const table of ['person_timeline_events','care_cases','check_ins','gifts','recurring_gifts','event_registrations','guardian_relationships','medical_alerts','pastoral_notes','communication_preferences','communication_group_members','message_deliveries']) assert.match(peopleMergeMigration, new RegExp(table));
+  assert.match(peopleMergeMigration, /merged_into_id=target_profile_id/);
+  assert.match(peopleMergeMigration, /grant execute.*service_role/i);
+  assert.match(recoverySource, /RECOVERY_LIST_UNSUPPORTED/);
 });
 
 test('people directory separates attendance and withholds confidential care notes', () => {

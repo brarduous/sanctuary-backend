@@ -3,6 +3,8 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 const { requireCapability } = require('../middleware/authorization');
+const lifecycleStatuses = new Set(['visitor', 'newcomer', 'active', 'member', 'inactive', 'archived']);
+const consentStatuses = new Set(['unknown', 'granted', 'denied']);
 
 const getNameParts = (user, profile = null) => {
     const metadata = user?.user_metadata || {};
@@ -173,6 +175,57 @@ router.post('/shadow', authenticateUser, requireCapability('people.write'), asyn
     }
 });
 
+router.patch('/:congregationId/people/:profileId', authenticateUser, requireCapability('people.write'), async (req, res, next) => {
+    try {
+        const fieldMap = { firstName: 'first_name', lastName: 'last_name', email: 'email', phone: 'phone', lifecycleStatus: 'lifecycle_status', householdId: 'household_id', householdRole: 'household_role', tags: 'tags', customFields: 'custom_fields', consentStatus: 'consent_status' };
+        const updates = Object.fromEntries(Object.entries(req.body || {}).filter(([key]) => fieldMap[key]).map(([key, value]) => [fieldMap[key], value]));
+        if (updates.lifecycle_status && !lifecycleStatuses.has(updates.lifecycle_status)) return res.status(400).json({ error: { code: 'LIFECYCLE_INVALID', message: 'Lifecycle status is invalid.', requestId: req.requestId } });
+        if (updates.consent_status && !consentStatuses.has(updates.consent_status)) return res.status(400).json({ error: { code: 'CONSENT_INVALID', message: 'Consent status is invalid.', requestId: req.requestId } });
+        if (updates.consent_status) updates.consent_updated_at = new Date().toISOString();
+        if (!Object.keys(updates).length) return res.status(400).json({ error: { code: 'PROFILE_UPDATE_EMPTY', message: 'Provide at least one supported profile update.', requestId: req.requestId } });
+        const { data, error } = await supabase.from('church_crm_profiles').update(updates).eq('id', req.params.profileId).eq('congregation_id', req.congregationId).is('deleted_at', null).select().maybeSingle();
+        if (error) throw error;
+        if (!data) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Active person not found.', requestId: req.requestId } });
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'people.updated', resource_type: 'person', resource_id: data.id, request_id: req.requestId, metadata: { fields: Object.keys(updates) } });
+        res.json({ data });
+    } catch (error) { next(error); }
+});
+
+router.post('/:congregationId/households', authenticateUser, requireCapability('people.write'), async (req, res, next) => {
+    try {
+        const name = String(req.body?.name || '').trim();
+        if (!name) return res.status(400).json({ error: { code: 'HOUSEHOLD_NAME_REQUIRED', message: 'Household name is required.', fieldErrors: { name: 'Required' }, requestId: req.requestId } });
+        const { data, error } = await supabase.from('households').insert({ congregation_id: req.congregationId, name, primary_phone: String(req.body?.primaryPhone || '').trim() || null, address: req.body?.address || {} }).select().single();
+        if (error) throw error;
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'households.created', resource_type: 'household', resource_id: data.id, request_id: req.requestId });
+        res.status(201).json({ data });
+    } catch (error) { next(error); }
+});
+
+router.get('/:congregationId/households', authenticateUser, requireCapability('people.read'), async (req, res, next) => {
+    try {
+        const { data, error } = await supabase.from('households').select('id,name,primary_phone,address,tags,created_at').eq('congregation_id', req.congregationId).is('deleted_at', null).order('name');
+        if (error) throw error;
+        res.json({ data });
+    } catch (error) { next(error); }
+});
+
+router.patch('/:congregationId/households/:householdId', authenticateUser, requireCapability('people.write'), async (req, res, next) => {
+    try {
+        const updates = {};
+        if (req.body.name !== undefined) updates.name = String(req.body.name).trim();
+        if (req.body.primaryPhone !== undefined) updates.primary_phone = String(req.body.primaryPhone).trim() || null;
+        if (req.body.address !== undefined) updates.address = req.body.address || {};
+        if (req.body.tags !== undefined) updates.tags = Array.isArray(req.body.tags) ? req.body.tags.map(String) : [];
+        if (!updates.name && req.body.name !== undefined) return res.status(400).json({ error: { code: 'HOUSEHOLD_NAME_REQUIRED', message: 'Household name is required.', requestId: req.requestId } });
+        const { data, error } = await supabase.from('households').update(updates).eq('id', req.params.householdId).eq('congregation_id', req.congregationId).is('deleted_at', null).select().maybeSingle();
+        if (error) throw error;
+        if (!data) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Active household not found.', requestId: req.requestId } });
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'households.updated', resource_type: 'household', resource_id: data.id, request_id: req.requestId, metadata: { fields: Object.keys(updates) } });
+        res.json({ data });
+    } catch (error) { next(error); }
+});
+
 // PUT: Merge a Shadow Profile with a newly registered App User
 const loadProfileTenant = async (req, res, next) => {
     const { data, error } = await supabase.from('church_crm_profiles').select('id,congregation_id').eq('id', req.params.profileId).maybeSingle();
@@ -190,11 +243,16 @@ router.put('/:profileId/merge', authenticateUser, loadProfileTenant, requireCapa
         if (sourceProfileId) {
             const { data: source } = await supabase.from('church_crm_profiles').select('*').eq('id', sourceProfileId).eq('congregation_id', req.congregationId).is('deleted_at', null).maybeSingle();
             if (!source || source.id === profileId) return res.status(400).json({ error: { code: 'MERGE_INVALID', message: 'Choose two active people in this organization.', requestId: req.requestId } });
-            await Promise.all([
-                supabase.from('person_timeline_events').update({ profile_id: profileId }).eq('profile_id', source.id).eq('congregation_id', req.congregationId),
-                supabase.from('care_cases').update({ profile_id: profileId }).eq('profile_id', source.id).eq('congregation_id', req.congregationId),
-                supabase.from('church_crm_profiles').update({ merged_into_id: profileId, deleted_at: new Date().toISOString(), deleted_by: req.user.id, deletion_reason: 'Merged duplicate' }).eq('id', source.id),
-            ]);
+            const { error: mergeError } = await supabase.rpc('merge_crm_profiles', { requested_congregation_id: req.congregationId, target_profile_id: profileId, source_profile_id: source.id, actor_user_id: req.user.id });
+            if (mergeError && ['PGRST202', '42883'].includes(mergeError.code)) {
+                const operations = await Promise.all([
+                    supabase.from('person_timeline_events').update({ profile_id: profileId }).eq('profile_id', source.id).eq('congregation_id', req.congregationId),
+                    supabase.from('care_cases').update({ profile_id: profileId }).eq('profile_id', source.id).eq('congregation_id', req.congregationId),
+                    supabase.from('church_crm_profiles').update({ merged_into_id: profileId, deleted_at: new Date().toISOString(), deleted_by: req.user.id, deletion_reason: 'Merged duplicate' }).eq('id', source.id).eq('congregation_id', req.congregationId),
+                ]);
+                const failed = operations.find(operation => operation.error);
+                if (failed) throw failed.error;
+            } else if (mergeError) throw mergeError;
         } else if (newUserId) {
             await supabase.from('church_crm_profiles').update({ user_id: newUserId }).eq('id', profileId).eq('congregation_id', req.congregationId);
         } else return res.status(400).json({ error: { code: 'MERGE_INVALID', message: 'A duplicate person or user link is required.', requestId: req.requestId } });
@@ -233,12 +291,20 @@ router.post('/:congregationId/import', authenticateUser, requireCapability('peop
     try {
         const rows = Array.isArray(req.body?.rows) ? req.body.rows.slice(0, 500) : [];
         if (!rows.length) return res.status(400).json({ error: { code: 'IMPORT_EMPTY', message: 'Provide at least one person row.', requestId: req.requestId } });
-        const seen = new Set(); const accepted = []; const rejected = [];
+        const { data: existing, error: existingError } = await supabase.from('church_crm_profiles').select('first_name,last_name,email,phone').eq('congregation_id', req.congregationId).is('deleted_at', null);
+        if (existingError) throw existingError;
+        const personKey = (row) => {
+            const email = String(row.email || '').trim().toLowerCase();
+            const phone = String(row.phone || '').replace(/\D/g, '');
+            return email ? `email:${email}` : phone ? `phone:${phone}` : `name:${String(row.first_name || row.firstName || '').trim().toLowerCase()}|${String(row.last_name || row.lastName || '').trim().toLowerCase()}`;
+        };
+        const seen = new Set((existing || []).map(personKey)); const accepted = []; const rejected = [];
         rows.forEach((row, index) => {
             const firstName = String(row.firstName || '').trim(); const email = String(row.email || '').trim().toLowerCase();
-            const key = email || `${firstName}|${String(row.lastName || '').trim()}|${String(row.phone || '').replace(/\D/g, '')}`;
-            if (!firstName || seen.has(key)) rejected.push({ row: index + 1, reason: !firstName ? 'First name is required.' : 'Duplicate in import.' });
-            else { seen.add(key); accepted.push({ congregation_id: req.congregationId, first_name: firstName, last_name: String(row.lastName || '').trim() || null, email: email || null, phone: String(row.phone || '').trim() || null, lifecycle_status: row.lifecycleStatus || 'active', tags: Array.isArray(row.tags) ? row.tags.map(String) : [], custom_fields: row.customFields || {}, consent_status: row.consentStatus || 'unknown' }); }
+            const lifecycleStatus = row.lifecycleStatus || 'active'; const consentStatus = row.consentStatus || 'unknown'; const key = personKey(row);
+            const invalidReason = !firstName ? 'First name is required.' : !lifecycleStatuses.has(lifecycleStatus) ? 'Lifecycle status is invalid.' : !consentStatuses.has(consentStatus) ? 'Consent status is invalid.' : seen.has(key) ? 'Duplicate in organization or import.' : null;
+            if (invalidReason) rejected.push({ row: index + 1, reason: invalidReason });
+            else { seen.add(key); accepted.push({ congregation_id: req.congregationId, first_name: firstName, last_name: String(row.lastName || '').trim() || null, email: email || null, phone: String(row.phone || '').trim() || null, lifecycle_status: lifecycleStatus, tags: Array.isArray(row.tags) ? row.tags.map(String).slice(0, 50) : [], custom_fields: row.customFields && typeof row.customFields === 'object' && !Array.isArray(row.customFields) ? row.customFields : {}, consent_status: consentStatus, consent_updated_at: consentStatus === 'unknown' ? null : new Date().toISOString() }); }
         });
         const { data, error } = accepted.length ? await supabase.from('church_crm_profiles').insert(accepted).select('id') : { data: [], error: null };
         if (error) throw error;
@@ -252,6 +318,9 @@ router.patch('/:congregationId/bulk', authenticateUser, requireCapability('peopl
         const ids = Array.isArray(req.body?.profileIds) ? [...new Set(req.body.profileIds)].slice(0, 500) : [];
         const allowed = new Set(['lifecycle_status','household_id','tags','consent_status','custom_fields']);
         const updates = Object.fromEntries(Object.entries(req.body?.updates || {}).filter(([key]) => allowed.has(key)));
+        if (updates.lifecycle_status && !lifecycleStatuses.has(updates.lifecycle_status)) return res.status(400).json({ error: { code: 'LIFECYCLE_INVALID', message: 'Lifecycle status is invalid.', requestId: req.requestId } });
+        if (updates.consent_status && !consentStatuses.has(updates.consent_status)) return res.status(400).json({ error: { code: 'CONSENT_INVALID', message: 'Consent status is invalid.', requestId: req.requestId } });
+        if (updates.consent_status) updates.consent_updated_at = new Date().toISOString();
         if (!ids.length || !Object.keys(updates).length) return res.status(400).json({ error: { code: 'BULK_INVALID', message: 'Choose people and at least one supported update.', requestId: req.requestId } });
         const { data, error } = await supabase.from('church_crm_profiles').update(updates).in('id', ids).eq('congregation_id', req.congregationId).is('deleted_at', null).select('id');
         if (error) throw error;
@@ -267,6 +336,14 @@ router.post('/:congregationId/segments', authenticateUser, requireCapability('pe
         const { data, error } = await supabase.from('person_segments').insert({ congregation_id: req.congregationId, name, definition: req.body.definition || {}, created_by: req.user.id }).select().single();
         if (error) throw error;
         res.status(201).json({ data });
+    } catch (error) { next(error); }
+});
+
+router.get('/:congregationId/segments', authenticateUser, requireCapability('people.read'), async (req, res, next) => {
+    try {
+        const { data, error } = await supabase.from('person_segments').select('id,name,definition,created_at,updated_at').eq('congregation_id', req.congregationId).order('name');
+        if (error) throw error;
+        res.json({ data });
     } catch (error) { next(error); }
 });
 
