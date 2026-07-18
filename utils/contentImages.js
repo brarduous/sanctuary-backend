@@ -80,7 +80,7 @@ async function generateContentImage({
         user: userId,
     }, {
         timeout: Number(process.env.OPENAI_IMAGE_TIMEOUT_MS || 180000),
-        maxRetries: Number(process.env.OPENAI_IMAGE_MAX_RETRIES || 1),
+        maxRetries: Number(process.env.OPENAI_IMAGE_MAX_RETRIES || 2),
     });
 
     const imageData = response.data?.[0]?.b64_json;
