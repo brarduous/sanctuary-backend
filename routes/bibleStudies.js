@@ -5,6 +5,7 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent } = require('../utils/helpers');
 const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
+const { createAttemptTelemetryRecorder } = require('../utils/generationAttemptTelemetry');
 const { reviewPastoralContent } = require('../utils/theologicalReview');
 const { generationRequestsMatch } = require('../utils/generationRequests');
 const {
@@ -365,6 +366,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 schemaName: 'generated_bible_study',
                 maxOutputTokens: BIBLE_STUDY_MAX_OUTPUT_TOKENS,
                 timeoutMs: BIBLE_STUDY_GENERATION_TIMEOUT_MS,
+                onAttempts: createAttemptTelemetryRecorder(generationRun.id),
             });
             const generatedStudy = generation.data;
             if (generatedStudy.studies.length !== lessonCount) throw Object.assign(new Error('Generated study did not follow the requested lesson count.'), { code: 'FORMAT_NONCOMPLIANCE' });

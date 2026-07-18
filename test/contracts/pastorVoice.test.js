@@ -106,6 +106,19 @@ test('generation retries twice before a soft failure and preserves exact retry l
   ), false);
 });
 
+test('generation attempts persist only bounded non-sensitive operational telemetry', () => {
+    const migration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718130000_generation_attempt_telemetry.sql'), 'utf8');
+    const runner = fs.readFileSync(path.join(__dirname, '../../utils/openaiResponses.js'), 'utf8');
+    const recorder = fs.readFileSync(path.join(__dirname, '../../utils/generationAttemptTelemetry.js'), 'utf8');
+    assert.match(migration, /attempt_count/);
+    assert.match(migration, /attempt_telemetry jsonb/);
+    assert.match(runner, /maxRetries: 0/);
+    assert.match(runner, /errorClass/);
+    assert.match(recorder, /\{ attempt, startedAt, completedAt, outcome, errorClass \}/);
+    assert.doesNotMatch(recorder, /instructions|input|prompt|manuscript|message/);
+    for (const source of [sermonRoute, studyRoute, aiRoute]) assert.match(source, /createAttemptTelemetryRecorder/);
+});
+
 test('Bible study persistence writes all lessons before marking the parent complete', () => {
   assert.match(studyRoute, /const lessonRows = generatedStudy\.studies\.map/);
   assert.match(studyRoute, /LESSON_PERSISTENCE_FAILED/);

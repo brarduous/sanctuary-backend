@@ -5,6 +5,7 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, getTuningNotes } = require('../utils/helpers');
 const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
+const { createAttemptTelemetryRecorder } = require('../utils/generationAttemptTelemetry');
 const { reviewPastoralContent } = require('../utils/theologicalReview');
 const { getPastorReview } = require('../utils/pastorReviewGate');
 const {
@@ -57,13 +58,14 @@ const seriesOutlineSchema = {
     },
 };
 
-async function generateStructuredSermon({ systemPrompt, userPrompt }) {
+async function generateStructuredSermon({ systemPrompt, userPrompt, generationRunId = null }) {
     return callStructuredResponse({
         instructions: systemPrompt,
         input: userPrompt,
         schema: sermonSchema,
         schemaName: 'generated_sermon',
         maxOutputTokens: 12000,
+        onAttempts: generationRunId ? createAttemptTelemetryRecorder(generationRunId) : null,
     });
 }
 
@@ -525,7 +527,7 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
                 const sermonSystemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
                 try {
-                    const generation = await generateStructuredSermon({ systemPrompt: sermonSystemPrompt, userPrompt: sermonUserPrompt });
+                    const generation = await generateStructuredSermon({ systemPrompt: sermonSystemPrompt, userPrompt: sermonUserPrompt, generationRunId });
                     const generatedSermon = generation.data;
                     const lengthManaged = await enforceLengthWithRewrite({
                         generatedSermon,
@@ -724,7 +726,7 @@ router.post('/generate-sermon-by-topic', authenticateUser, aiLimiter, async (req
         const systemPrompt = await generateTopicSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generation = await generateStructuredSermon({ systemPrompt, userPrompt });
+            const generation = await generateStructuredSermon({ systemPrompt, userPrompt, generationRunId });
             const generatedSermon = generation.data;
             const lengthManaged = await enforceLengthWithRewrite({
                 generatedSermon,
@@ -839,7 +841,7 @@ router.post('/generate-sermon-by-scripture', authenticateUser, aiLimiter, async 
         const systemPrompt = await generateScriptureSermonPrompt(await getTuningNotes(userId));
 
         try {
-            const generation = await generateStructuredSermon({ systemPrompt, userPrompt });
+            const generation = await generateStructuredSermon({ systemPrompt, userPrompt, generationRunId });
             const generatedSermon = generation.data;
             const lengthManaged = await enforceLengthWithRewrite({
                 generatedSermon,

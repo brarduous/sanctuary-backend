@@ -6,6 +6,7 @@ const { getAiEditorSystemPrompt, getAiEditorUserPrompt } = require('../prompts')
 const authenticateUser = require('../middleware/auth');
 const { aiLimiter } = require('../middleware/limiters');
 const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
+const { createAttemptTelemetryRecorder } = require('../utils/generationAttemptTelemetry');
 const { PROMPT_VERSION, buildVoiceInstructions, getActiveVoiceContext } = require('../utils/pastorVoice');
 const { reviewPastoralContent } = require('../utils/theologicalReview');
 
@@ -48,6 +49,7 @@ router.post('/edit', authenticateUser, aiLimiter, async (req, res) => {
       schema: aiEditSchema,
       schemaName: 'pastoral_editor_rewrite',
       maxOutputTokens: 6000,
+      onAttempts: createAttemptTelemetryRecorder(generationRunId),
     });
     const result = generation.data.result;
 
