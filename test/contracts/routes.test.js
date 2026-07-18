@@ -156,6 +156,15 @@ test('message routes derive authorship and require congregation capabilities', (
   assert.doesNotMatch(messageSource, /author_id:\s*req\.body/);
 });
 
+test('broadcast recipient resolution is tenant-scoped and enforced before persistence', () => {
+  assert.match(messageSource, /resolveRecipientProfiles/);
+  assert.match(messageSource, /eligibleRecipientCount/);
+  assert.match(messageSource, /channelCounts/);
+  assert.match(messageSource, /RECIPIENTS_EMPTY/);
+  assert.ok(messageSource.indexOf("code: 'RECIPIENTS_EMPTY'") < messageSource.indexOf("from('pastoral_messages')\n      .insert"));
+  assert.match(messageSource, /\.eq\('congregation_id', congregationId\)/);
+});
+
 test('pastoral message RLS filters reads and writes by tenant capability', () => {
   assert.match(messageSecurityMigration, /enable row level security/i);
   assert.match(messageSecurityMigration, /force row level security/i);

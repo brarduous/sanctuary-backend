@@ -47,6 +47,36 @@ const isWithinQuietHours = (preference, now = new Date()) => {
   } catch { return true; }
 };
 
+const resolveRecipientProfiles = async ({ congregationId, recipientScope }) => {
+  let profilesQuery = supabase.from('church_crm_profiles').select('id').eq('congregation_id', congregationId).is('deleted_at', null).neq('consent_status', 'denied');
+  if (recipientScope.type === 'group') {
+    const { data: members, error } = await supabase.from('communication_group_members').select('profile_id,communication_groups!inner(congregation_id)').eq('group_id', recipientScope.id).eq('communication_groups.congregation_id', congregationId);
+    if (error) throw error;
+    profilesQuery = profilesQuery.in('id', (members || []).map((member) => member.profile_id));
+  } else if (recipientScope.type === 'segment') {
+    const { data: segment, error } = await supabase.from('person_segments').select('definition').eq('id', recipientScope.id).eq('congregation_id', congregationId).maybeSingle();
+    if (error) throw error;
+    if (!segment) throw Object.assign(new Error('Recipient segment was not found.'), { status: 400, code: 'SEGMENT_INVALID' });
+    if (segment.definition?.lifecycleStatus) profilesQuery = profilesQuery.eq('lifecycle_status', segment.definition.lifecycleStatus);
+    if (segment.definition?.tag) profilesQuery = profilesQuery.contains('tags', [segment.definition.tag]);
+  }
+  const { data: profiles, error: profileError } = await profilesQuery;
+  if (profileError) throw profileError;
+  const profileIds = (profiles || []).map((profile) => profile.id);
+  const { data: preferences, error: preferenceError } = profileIds.length
+    ? await supabase.from('communication_preferences').select('*').eq('congregation_id', congregationId).in('profile_id', profileIds)
+    : { data: [], error: null };
+  if (preferenceError) throw preferenceError;
+  return { profiles: profiles || [], preferenceByProfile: new Map((preferences || []).map((preference) => [preference.profile_id, preference])) };
+};
+
+const planDeliveries = ({ profiles, preferenceByProfile, channels, status }) => profiles.flatMap((profile) => channels.map((channel) => {
+  const preference = preferenceByProfile.get(profile.id);
+  const disabled = preference?.unsubscribed_at || (channelPreference[channel] && preference?.[channelPreference[channel]] === false);
+  const quiet = status === 'sent' && isWithinQuietHours(preference);
+  return { profile_id: profile.id, channel, status: disabled ? 'suppressed' : quiet ? 'deferred_quiet_hours' : status === 'scheduled' ? 'scheduled' : 'queued' };
+}));
+
 // 1. Get a Direct Upload URL from Mux
 router.post('/upload-url', authenticateUser, requireCapability('communications.write'), async (req, res) => {
   try {
@@ -77,6 +107,10 @@ router.post('/save-message', authenticateUser, requireCapability('communications
   if (!Array.isArray(channels) || channels.length === 0 || channels.some((channel) => !['in_app','email','sms','push'].includes(channel))) return res.status(400).json({ error: { code: 'CHANNEL_INVALID', message: 'Choose at least one supported delivery channel.', requestId: req.requestId } });
 
   try {
+    const recipientPlan = status === 'draft' ? null : await resolveRecipientProfiles({ congregationId: req.congregationId, recipientScope });
+    const plannedDeliveries = recipientPlan ? planDeliveries({ ...recipientPlan, channels, status }) : [];
+    const eligibleCount = new Set(plannedDeliveries.filter((delivery) => !['suppressed'].includes(delivery.status)).map((delivery) => delivery.profile_id)).size;
+    if (status !== 'draft' && eligibleCount === 0) return res.status(409).json({ error: { code: 'RECIPIENTS_EMPTY', message: 'No consented recipients are eligible for the selected channels.', requestId: req.requestId } });
     let assetId = null;
     let playbackId = null;
 
@@ -110,30 +144,7 @@ router.post('/save-message', authenticateUser, requireCapability('communications
 
     if (error) throw error;
     if (status !== 'draft') {
-      let profilesQuery = supabase.from('church_crm_profiles').select('id').eq('congregation_id', req.congregationId).is('deleted_at', null).neq('consent_status', 'denied');
-      if (recipientScope.type === 'group') {
-        const { data: members, error: memberError } = await supabase.from('communication_group_members').select('profile_id,communication_groups!inner(congregation_id)').eq('group_id', recipientScope.id).eq('communication_groups.congregation_id', req.congregationId);
-        if (memberError) throw memberError;
-        profilesQuery = profilesQuery.in('id', members.map((member) => member.profile_id));
-      } else if (recipientScope.type === 'segment') {
-        const { data: segment, error: segmentError } = await supabase.from('person_segments').select('definition').eq('id', recipientScope.id).eq('congregation_id', req.congregationId).maybeSingle();
-        if (segmentError) throw segmentError;
-        if (!segment) return res.status(400).json({ error: { code: 'SEGMENT_INVALID', message: 'Recipient segment was not found.', requestId: req.requestId } });
-        if (segment.definition?.lifecycleStatus) profilesQuery = profilesQuery.eq('lifecycle_status', segment.definition.lifecycleStatus);
-        if (segment.definition?.tag) profilesQuery = profilesQuery.contains('tags', [segment.definition.tag]);
-      }
-      const { data: profiles, error: profileError } = await profilesQuery;
-      if (profileError) throw profileError;
-      const profileIds = profiles.map((profile) => profile.id);
-      const { data: preferences, error: preferenceError } = profileIds.length ? await supabase.from('communication_preferences').select('*').eq('congregation_id', req.congregationId).in('profile_id', profileIds) : { data: [], error: null };
-      if (preferenceError) throw preferenceError;
-      const preferenceByProfile = new Map(preferences.map((preference) => [preference.profile_id, preference]));
-      const deliveries = profiles.flatMap((profile) => channels.map((channel) => {
-        const preference = preferenceByProfile.get(profile.id);
-        const disabled = preference?.unsubscribed_at || (channelPreference[channel] && preference?.[channelPreference[channel]] === false);
-        const quiet = status === 'sent' && isWithinQuietHours(preference);
-        return { congregation_id: req.congregationId, message_id: data.message_id, profile_id: profile.id, channel, status: disabled ? 'suppressed' : quiet ? 'deferred_quiet_hours' : status === 'scheduled' ? 'scheduled' : 'queued' };
-      }));
+      const deliveries = plannedDeliveries.map((delivery) => ({ ...delivery, congregation_id: req.congregationId, message_id: data.message_id }));
       if (deliveries.length) {
         const { error: deliveryError } = await supabase.from('message_deliveries').insert(deliveries);
         if (deliveryError) throw deliveryError;
@@ -153,11 +164,19 @@ router.post('/save-message', authenticateUser, requireCapability('communications
   }
 });
 
-router.post('/preview', authenticateUser, requireCapability('communications.write'), async (req, res) => {
+router.post('/preview', authenticateUser, requireCapability('communications.write'), async (req, res, next) => {
   const title = String(req.body?.title || '').trim();
   const messageBody = String(req.body?.messageBody || '').trim();
   if (!title || !messageBody) return res.status(400).json({ error: { code: 'PREVIEW_INVALID', message: 'Title and message body are required.', requestId: req.requestId } });
-  res.json({ data: { title, messageBody, messageType: req.body.messageType || 'announcement', channels: req.body.channels || ['in_app'], recipientScope: req.body.recipientScope || { type: 'all' } } });
+  try {
+    const channels = Array.isArray(req.body.channels) ? req.body.channels : ['in_app'];
+    const recipientScope = req.body.recipientScope || { type: 'all' };
+    const recipientPlan = await resolveRecipientProfiles({ congregationId: req.congregationId, recipientScope });
+    const deliveries = planDeliveries({ ...recipientPlan, channels, status: 'sent' });
+    const channelCounts = Object.fromEntries(channels.map((channel) => [channel, deliveries.filter((delivery) => delivery.channel === channel && delivery.status !== 'suppressed').length]));
+    const eligibleRecipientCount = new Set(deliveries.filter((delivery) => delivery.status !== 'suppressed').map((delivery) => delivery.profile_id)).size;
+    res.json({ data: { title, messageBody, messageType: req.body.messageType || 'announcement', channels, recipientScope, eligibleRecipientCount, channelCounts } });
+  } catch (error) { next(error); }
 });
 
 router.post('/:messageId/test-send', authenticateUser, loadMessageCongregation, requireCapability('communications.write'), async (req, res, next) => {
