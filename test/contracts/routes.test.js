@@ -110,6 +110,9 @@ test('kiosk operations require capabilities, verified guardians, and cryptograph
   assert.match(kioskSource, /randomInt/);
   assert.doesNotMatch(kioskSource, /Math\.random/);
   assert.match(kioskSource, /idempotency-key/);
+  assert.match(kioskSource, /normalizePhone\(candidate\.primary_phone\)/);
+  assert.match(kioskSource, /HOUSEHOLD_NOT_FOUND/);
+  assert.match(kioskSource, /eq\('congregation_id', req\.congregationId\)[\s\S]+eq\('household_id', household\.id\)/);
   assert.match(checkinIdempotencyMigration, /check_ins_one_active_child_event/);
 });
 

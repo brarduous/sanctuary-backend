@@ -90,27 +90,34 @@ router.post('/sessions/:sessionId/lock', authenticateUser, loadSessionTenant, re
     } catch (error) { next(error); }
 });
 
-router.post('/lookup', authenticateUser, requireCapability('check_in.read'), async (req, res) => {
+router.post('/lookup', authenticateUser, requireCapability('check_in.read'), async (req, res, next) => {
     const { congregationId, phone } = req.body;
     try {
         const normalizedPhone = normalizePhone(phone);
         if (normalizedPhone.length !== 10) return res.status(400).json({ error: { code: 'PHONE_INVALID', message: 'Enter a valid 10-digit phone number.', requestId: req.requestId } });
         // Find the household based on the primary phone
-        const { data: household, error: hhError } = await supabase
+        let { data: household, error: hhError } = await supabase
             .from('households')
             .select('id, name')
             .eq('congregation_id', congregationId)
             .eq('primary_phone_normalized', normalizedPhone)
-            .single();
+            .maybeSingle();
 
-        if (hhError || !household) {
-            return res.status(404).json({ error: 'No household found with this number.' });
+        if ((hhError && ['42703', 'PGRST204'].includes(hhError.code)) || (!hhError && !household)) {
+            const legacy = await supabase.from('households').select('id,name,primary_phone').eq('congregation_id', congregationId).limit(500);
+            if (legacy.error) throw legacy.error;
+            household = (legacy.data || []).find((candidate) => normalizePhone(candidate.primary_phone) === normalizedPhone) || null;
+            hhError = null;
         }
+
+        if (hhError) throw hhError;
+        if (!household) return res.status(404).json({ error: { code: 'HOUSEHOLD_NOT_FOUND', message: 'No household found with this number.', requestId: req.requestId } });
 
         // Get all members of this household
         const { data: members, error: memError } = await supabase
             .from('church_crm_profiles')
             .select('id, first_name, last_name, household_role')
+            .eq('congregation_id', req.congregationId)
             .eq('household_id', household.id)
             .order('first_name');
 
@@ -124,10 +131,7 @@ router.post('/lookup', authenticateUser, requireCapability('check_in.read'), asy
             .select('child_profile_id, alert_type, description').eq('congregation_id', req.congregationId).in('child_profile_id', childIds).eq('active', true) : { data: [], error: null };
         if (alertsError) throw alertsError;
         res.json({ household: { id: household.id, name: household.name }, parents, children: children.map((child) => ({ ...child, medicalAlerts: alerts.filter((alert) => alert.child_profile_id === child.id).map(({ alert_type, description }) => ({ type: alert_type, description })) })) });
-    } catch (error) {
-        console.error('Kiosk Lookup Error:', error);
-        res.status(500).json({ error: 'Failed to lookup household.' });
-    }
+    } catch (error) { next(error); }
 });
 
 // POST: Process the Check-In
