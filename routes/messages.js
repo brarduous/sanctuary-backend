@@ -36,6 +36,7 @@ const getMux = () => {
 const BROADCAST_TYPES = new Set(['announcement', 'devotional', 'prayer_update', 'emergency', 'newsletter', 'video_update']);
 const MESSAGE_STATUSES = new Set(['draft', 'scheduled', 'sent']);
 const channelPreference = { email: 'email_enabled', sms: 'sms_enabled', push: 'push_enabled' };
+const isAdditiveSchemaUnavailable = (error) => ['42P01', '42703', 'PGRST204', 'PGRST205'].includes(error?.code);
 const isWithinQuietHours = (preference, now = new Date()) => {
   if (!preference?.quiet_hours_start || !preference?.quiet_hours_end) return false;
   try {
@@ -60,19 +61,25 @@ const resolveRecipientProfiles = async ({ congregationId, recipientScope }) => {
     if (segment.definition?.lifecycleStatus) profilesQuery = profilesQuery.eq('lifecycle_status', segment.definition.lifecycleStatus);
     if (segment.definition?.tag) profilesQuery = profilesQuery.contains('tags', [segment.definition.tag]);
   }
-  const { data: profiles, error: profileError } = await profilesQuery;
+  let { data: profiles, error: profileError } = await profilesQuery;
+  // Production migrations are approval-gated. Until the additive consent and
+  // soft-delete columns arrive, permit only legacy in-app recipient discovery.
+  if (profileError && recipientScope.type === 'all' && isAdditiveSchemaUnavailable(profileError)) {
+    ({ data: profiles, error: profileError } = await supabase.from('church_crm_profiles').select('id').eq('congregation_id', congregationId));
+  }
   if (profileError) throw profileError;
   const profileIds = (profiles || []).map((profile) => profile.id);
   const { data: preferences, error: preferenceError } = profileIds.length
     ? await supabase.from('communication_preferences').select('*').eq('congregation_id', congregationId).in('profile_id', profileIds)
     : { data: [], error: null };
-  if (preferenceError) throw preferenceError;
+  if (preferenceError && !isAdditiveSchemaUnavailable(preferenceError)) throw preferenceError;
   return { profiles: profiles || [], preferenceByProfile: new Map((preferences || []).map((preference) => [preference.profile_id, preference])) };
 };
 
 const planDeliveries = ({ profiles, preferenceByProfile, channels, status }) => profiles.flatMap((profile) => channels.map((channel) => {
   const preference = preferenceByProfile.get(profile.id);
-  const disabled = preference?.unsubscribed_at || (channelPreference[channel] && preference?.[channelPreference[channel]] === false);
+  const preferenceField = channelPreference[channel];
+  const disabled = preference?.unsubscribed_at || (preferenceField && preference?.[preferenceField] !== true);
   const quiet = status === 'sent' && isWithinQuietHours(preference);
   return { profile_id: profile.id, channel, status: disabled ? 'suppressed' : quiet ? 'deferred_quiet_hours' : status === 'scheduled' ? 'scheduled' : 'queued' };
 }));

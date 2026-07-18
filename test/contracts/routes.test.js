@@ -159,6 +159,8 @@ test('message routes derive authorship and require congregation capabilities', (
 test('broadcast recipient resolution is tenant-scoped and enforced before persistence', () => {
   assert.match(messageSource, /resolveRecipientProfiles/);
   assert.match(messageSource, /eligibleRecipientCount/);
+  assert.match(messageSource, /isAdditiveSchemaUnavailable/);
+  assert.match(messageSource, /preference\?\.\[preferenceField\] !== true/);
   assert.match(messageSource, /channelCounts/);
   assert.match(messageSource, /RECIPIENTS_EMPTY/);
   assert.ok(messageSource.indexOf("code: 'RECIPIENTS_EMPTY'") < messageSource.indexOf("from('pastoral_messages')\n      .insert"));
