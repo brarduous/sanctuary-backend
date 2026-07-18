@@ -62,6 +62,65 @@ function buildTaxonomyImpactMap(rows, taxonomyIdField) {
     return map;
 }
 
+async function hydrateOutlookTaxonomies(outlooks) {
+    if (!outlooks.length) return outlooks;
+    const ids = outlooks.map((outlook) => outlook.id);
+    const [categoryResult, topicResult] = await Promise.all([
+        supabase
+            .from('outlook_categories')
+            .select('outlook_id, categories (id, slug, name, description)')
+            .in('outlook_id', ids),
+        supabase
+            .from('outlook_topics')
+            .select('outlook_id, topics (id, slug, name, description)')
+            .in('outlook_id', ids),
+    ]);
+    if (categoryResult.error) throw categoryResult.error;
+    if (topicResult.error) throw topicResult.error;
+
+    const categoriesByOutlook = new Map();
+    for (const relation of categoryResult.data || []) {
+        if (!relation.categories) continue;
+        const values = categoriesByOutlook.get(relation.outlook_id) || [];
+        values.push(relation.categories);
+        categoriesByOutlook.set(relation.outlook_id, values);
+    }
+    const topicsByOutlook = new Map();
+    for (const relation of topicResult.data || []) {
+        if (!relation.topics) continue;
+        const values = topicsByOutlook.get(relation.outlook_id) || [];
+        values.push(relation.topics);
+        topicsByOutlook.set(relation.outlook_id, values);
+    }
+
+    return outlooks.map((outlook) => ({
+        ...outlook,
+        categories: categoriesByOutlook.get(outlook.id) || [],
+        topics: topicsByOutlook.get(outlook.id) || [],
+    }));
+}
+
+async function resolveFilteredOutlookIds({ resolvedTopicId, resolvedCategoryId, categoryIds }) {
+    const lookups = [];
+    if (resolvedTopicId) {
+        lookups.push(
+            supabase.from('outlook_topics').select('outlook_id').eq('topic_id', resolvedTopicId).limit(1000),
+        );
+    }
+    const requestedCategoryIds = resolvedCategoryId ? [resolvedCategoryId] : categoryIds;
+    if (requestedCategoryIds.length) {
+        lookups.push(
+            supabase.from('outlook_categories').select('outlook_id').in('category_id', requestedCategoryIds).limit(1000),
+        );
+    }
+    if (!lookups.length) return null;
+
+    const results = await Promise.all(lookups);
+    for (const result of results) if (result.error) throw result.error;
+    const idSets = results.map((result) => new Set((result.data || []).map((row) => row.outlook_id)));
+    return [...idSets[0]].filter((id) => idSets.every((values) => values.has(id)));
+}
+
 // --- 1. SEARCH ARTICLES ---
 // Optimized: Fetches article_body for scoring, but strips it before sending to client to save bandwidth.
 router.get('/search', optionalAuth, async (req, res) => {
@@ -257,8 +316,8 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
 // --- 7. GET ALL SCRIPTURAL OUTLOOKS (LIST/FEED VIEW) ---
 // HIGHLY OPTIMIZED: Uses targeted selects, explicit dates, and prevents full table scans on inner joins.
 router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 10));
     const offset = (page - 1) * limit;
     
     // Date Filters
@@ -276,6 +335,10 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
     const hasTopicFilter = Boolean(topic_id || topic_slug || topic);
     const hasCategoryFilter = Boolean(category_id || category_slug || category);
+    const categoryIds = String(category_ids || '')
+        .split(',')
+        .map((value) => value.trim())
+        .filter((value) => /^\d+$/.test(value));
 
     try {
         const startTime = Date.now();
@@ -293,20 +356,17 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
             return res.json([]);
         }
         
-        // Dynamically build relationship queries based on whether we are filtering by them
-        let outlookTopicsSelect = 'outlook_topics ( topic_id, topics (id, slug, name, description) )';
-        let outlookCategoriesSelect = 'outlook_categories ( category_id, categories (id, slug, name, description) )';
-
-        if (hasTopicFilter) {
-            outlookTopicsSelect = 'outlook_topics!inner ( topic_id, topics (id, slug, name, description) )';
-        }
-        if (hasCategoryFilter) {
-            outlookCategoriesSelect = 'outlook_categories!inner ( category_id, categories (id, slug, name, description) )';
-        }
-
-        // OPTIMIZATION: Explicitly exclude `article_body` from the list view
+        // Resolve relationship IDs before the feed query and hydrate details
+        // only for the final page. This avoids the nested PostgREST join that
+        // repeatedly exceeded the production statement timeout.
+        const filteredOutlookIds = await resolveFilteredOutlookIds({
+            resolvedTopicId,
+            resolvedCategoryId,
+            categoryIds,
+        });
+        if (filteredOutlookIds && !filteredOutlookIds.length) return res.json([]);
         const baseColumns = NEWS_LIST_COLUMNS;
-        const selectQuery = `${baseColumns}, ${outlookCategoriesSelect}, ${outlookTopicsSelect}`;
+        const selectQuery = baseColumns;
         const sort = String(req.query.sort || req.query.orderBy || 'latest').toLowerCase();
 
         const useWeightedSort = sort === 'weighted' || sort === 'balanced';
@@ -315,6 +375,8 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         let query = supabase
             .from('scriptural_outlooks')
             .select(selectQuery);
+
+        if (filteredOutlookIds) query = query.in('id', filteredOutlookIds);
 
         if (useWeightedSort) {
             query = query
@@ -339,30 +401,11 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         if (startDate) query = query.gte('created_at', startDate);
         if (endDate) query = query.lte('created_at', endDate);
 
-        // Apply Topic Filters
-        if (resolvedTopicId) {
-            query = query.eq('outlook_topics.topic_id', resolvedTopicId);
-        }
-        
-        // Apply Category Filters
-        if (resolvedCategoryId) {
-            query = query.eq('outlook_categories.category_id', resolvedCategoryId);
-        } else if (category_ids) {
-            query = query.in('outlook_categories.category_id', category_ids.split(','));
-        }
-
         const { data, error } = await query;
 
         if (error) throw error;
 
-        // Clean up nested Supabase formatting
-        let cleanedData = data.map(outlook => ({
-            ...outlook,
-            categories: outlook.outlook_categories ? outlook.outlook_categories.map(oc => oc.categories) : [],
-            topics: outlook.outlook_topics ? outlook.outlook_topics.map(ot => ot.topics) : [],
-            outlook_categories: undefined,
-            outlook_topics: undefined,
-        }));
+        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => outlook);
 
         if (useWeightedSort) {
             cleanedData = cleanedData
@@ -373,6 +416,8 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
                 })
                 .slice(offset, offset + limit);
         }
+
+        cleanedData = await hydrateOutlookTaxonomies(cleanedData);
         
         logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched outlooks list', { page, limit, hasTopicFilter, hasCategoryFilter }, Date.now() - startTime);
         res.json(cleanedData);

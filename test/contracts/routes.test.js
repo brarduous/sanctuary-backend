@@ -29,6 +29,7 @@ const operationsMigration = fs.readFileSync(path.join(__dirname, '../../supabase
 const careSource = fs.readFileSync(path.join(__dirname, '../../routes/care.js'), 'utf8');
 const givingSource = fs.readFileSync(path.join(__dirname, '../../routes/giving.js'), 'utf8');
 const crmSource = fs.readFileSync(path.join(__dirname, '../../routes/crm.js'), 'utf8');
+const newsSource = fs.readFileSync(path.join(__dirname, '../../routes/news.js'), 'utf8');
 const volunteerSource = fs.readFileSync(path.join(__dirname, '../../routes/volunteers.js'), 'utf8');
 
 test('all production routers are mounted at compatible paths', () => {
@@ -188,6 +189,16 @@ test('public API routers have v1 aliases and bounded legacy telemetry', () => {
   assert.match(versioning, /api_legacy_request/);
   assert.doesNotMatch(versioning, /req\.(body|cookies?)\b/);
   assert.ok(source.indexOf("app.use('/api/v1', sermonsRouter)") < source.indexOf('app.use(notFound)'));
+});
+
+test('filtered news feeds avoid the production-timeout nested taxonomy join', () => {
+  assert.match(newsSource, /hydrateOutlookTaxonomies/);
+  assert.match(newsSource, /resolveFilteredOutlookIds/);
+  assert.match(newsSource, /from\('outlook_topics'\)\.select\('outlook_id'\)/);
+  assert.match(newsSource, /from\('outlook_categories'\)\.select\('outlook_id'\)/);
+  assert.match(newsSource, /Promise\.all/);
+  assert.doesNotMatch(newsSource, /outlook_topics!inner/);
+  assert.doesNotMatch(newsSource, /outlook_categories!inner/);
 });
 
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {
