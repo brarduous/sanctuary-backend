@@ -17,6 +17,7 @@ const {
 const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
 const { generateContentImage } = require('../utils/contentImages');
+const { acknowledgePastorReview, getPastorReview } = require('../utils/pastorReviewGate');
 
 // Four complete lessons can legitimately take longer than the default quality
 // request. Seven minutes keeps the initial request viable while retaining the
@@ -118,6 +119,7 @@ router.get('/bible-study/:studyId', authenticateUser, async (req, res) => {
             return res.status(500).json({ error: 'Failed to fetch bible study lessons for detail.' });
         }
         data.lessons = lessons;
+        data.pastor_review = await getPastorReview({ ownerUserId: req.user.id, contentType: 'bible_study', contentId: data.study_id });
         res.json(data);
     } catch (error) {
         console.error('Server error:', error);
@@ -202,7 +204,7 @@ router.post('/bible-study-lessons/:lessonId', authenticateUser, async (req, res)
 router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
     try {
         const { studyId } = req.params;
-        const { is_published, congregation_id } = req.body;
+        const { is_published, congregation_id, acknowledge_pastor_review } = req.body;
         const { data: ownedStudy, error: ownedError } = await supabase.from('bible_studies').select('study_id').eq('study_id', studyId).eq('user_id', req.user.id).maybeSingle();
         if (ownedError) throw ownedError;
         if (!ownedStudy) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Bible study not found.', requestId: req.requestId } });
@@ -212,6 +214,19 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
             if (!allowed) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You cannot publish to this organization.', requestId: req.requestId } });
         }
         
+        const pastorReview = is_published === true
+            ? await getPastorReview({ ownerUserId: req.user.id, contentType: 'bible_study', contentId: studyId })
+            : null;
+        if (pastorReview?.blockingIssueCount > 0 || pastorReview?.status === 'rejected') {
+            return res.status(409).json({ error: { code: 'CONTENT_REVIEW_REJECTED', message: 'This study did not pass scriptural and doctrinal review.', requestId: req.requestId } });
+        }
+        if (pastorReview?.requiresPastorReview && !pastorReview.acknowledgedAt) {
+            if (acknowledge_pastor_review !== true) {
+                return res.status(409).json({ error: { code: 'PASTOR_REVIEW_REQUIRED', message: 'A pastor must acknowledge the generated-content review before publishing.', requestId: req.requestId } });
+            }
+            pastorReview.acknowledgedAt = await acknowledgePastorReview({ generationRunId: pastorReview.generationRunId, ownerUserId: req.user.id });
+        }
+
         const payload = { updated_at: new Date().toISOString() };
         if (is_published !== undefined) payload.is_published = is_published;
         if (congregation_id !== undefined) payload.congregation_id = congregation_id;
@@ -237,7 +252,7 @@ router.put('/bible-study/:studyId', authenticateUser, async (req, res) => {
             console.log('[BibleStudies] Push result:', pushResult);
         }
 
-        res.json(data);
+        res.json({ ...data, pastor_review: pastorReview });
     } catch (error) {
         console.error('Error updating bible study:', error);
         res.status(500).json({ error: 'Failed to update bible study.' });

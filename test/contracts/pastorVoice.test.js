@@ -13,6 +13,7 @@ const analysisRoute = read('routes/analysis.js');
 const aiRoute = read('routes/ai.js');
 const pastorVoice = read('utils/pastorVoice.js');
 const theologicalReview = read('utils/theologicalReview.js');
+const pastorReviewGate = read('utils/pastorReviewGate.js');
 const openaiResponses = read('utils/openaiResponses.js');
 const contentImages = read('utils/contentImages.js');
 const resetScript = read('scripts/resetProductionAccount.js');
@@ -48,6 +49,16 @@ test('generated and rewritten pastoral content is gated for canonical and doctri
     blockingIssueCount: 1,
     reviewIssueCount: 1,
   });
+});
+
+test('pastor-review requirements are persisted, returned to editors, and enforced at publish', () => {
+  assert.match(pastorReviewGate, /pastorReviewAcknowledgement/);
+  assert.match(pastorReviewGate, /acknowledgedBy: ownerUserId/);
+  assert.match(studyRoute, /PASTOR_REVIEW_REQUIRED/);
+  assert.match(studyRoute, /CONTENT_REVIEW_REJECTED/);
+  assert.match(studyRoute, /acknowledge_pastor_review !== true/);
+  assert.match(studyRoute, /pastor_review/);
+  assert.match(sermonRoute, /pastor_review/);
 });
 
 test('quality generations are persisted before the model call and finalized with usage and cost', () => {

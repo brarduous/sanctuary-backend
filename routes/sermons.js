@@ -6,6 +6,7 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent, getTuningNotes } = require('../utils/helpers');
 const { QUALITY_MODEL, callStructuredResponse, estimateQualityCostUsd } = require('../utils/openaiResponses');
 const { reviewPastoralContent } = require('../utils/theologicalReview');
+const { getPastorReview } = require('../utils/pastorReviewGate');
 const {
     PROMPT_VERSION,
     buildVoiceInstructions,
@@ -634,7 +635,12 @@ router.get('/sermons/:userId', authenticateUser, async (req, res) => {
 router.get('/sermon/:sermonId', authenticateUser, async (req, res) => {
     const { data, error } = await supabase.from('sermons').select('*').eq('sermon_id', req.params.sermonId).eq('user_id', req.user.id).maybeSingle();
     if (error || !data) return res.status(404).json({ error: 'Sermon not found.' });
-    res.json(data);
+    try {
+        const pastorReview = await getPastorReview({ ownerUserId: req.user.id, contentType: 'sermon', contentId: data.sermon_id });
+        res.json({ ...data, pastor_review: pastorReview });
+    } catch (reviewError) {
+        res.status(500).json({ error: { code: 'REVIEW_STATUS_UNAVAILABLE', message: 'The content review status could not be loaded.', requestId: req.requestId } });
+    }
 });
 
 router.post('/sermons/:sermonId', authenticateUser, async (req, res) => {
