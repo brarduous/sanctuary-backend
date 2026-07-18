@@ -1,5 +1,7 @@
 // backend/cron/generateScripturalOutlook.js
 
+require('dotenv').config();
+
 // Import necessary packages
 const { createClient } = require('@supabase/supabase-js');
 const axios = require('axios');
