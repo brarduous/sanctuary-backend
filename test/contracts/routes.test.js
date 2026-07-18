@@ -57,6 +57,12 @@ test('people operations cover import, bulk updates, merge, segments, consent, an
   assert.match(crmSource, /requireCapability\('care\.write'\)/);
 });
 
+test('people directory separates attendance and withholds confidential care notes', () => {
+  assert.match(crmSource, /last_attendance_at/);
+  assert.match(crmSource, /from\('check_ins'\)/);
+  assert.doesNotMatch(crmSource, /select\('\*, pastoral_notes/);
+});
+
 test('events, volunteers, and check-in cover production scheduling and safeguarding contracts', () => {
   for (const contract of ['/resources', '/register', '/attendance', '/cancel', '/substitute']) assert.match(eventSource, new RegExp(contract.replace('/', '\\/')));
   for (const contract of ['/availability', '/rotations', '/background-checks']) assert.match(volunteerSource, new RegExp(contract.replace('/', '\\/')));

@@ -113,12 +113,37 @@ router.get('/:congregationId', authenticateUser, requireCapability('people.read'
 
         const { data, error } = await supabase
             .from('church_crm_profiles')
-            .select('*, pastoral_notes(id)') // Also get a count of notes
+            // Confidential notes require care access; they must not ride along
+            // with the general people-directory capability.
+            .select('*')
             .eq('congregation_id', req.params.congregationId)
+            .is('deleted_at', null)
             .order('last_name', { ascending: true });
 
         if (error) throw error;
-        res.json(data);
+
+        const profileIds = (data || []).map(profile => profile.id);
+        const lastAttendanceByProfile = new Map();
+        if (profileIds.length) {
+            const { data: attendance, error: attendanceError } = await supabase
+                .from('check_ins')
+                .select('profile_id,checked_in_at')
+                .eq('congregation_id', req.params.congregationId)
+                .in('profile_id', profileIds)
+                .is('deleted_at', null)
+                .order('checked_in_at', { ascending: false });
+            if (attendanceError) throw attendanceError;
+            for (const checkIn of attendance || []) {
+                if (!lastAttendanceByProfile.has(checkIn.profile_id)) {
+                    lastAttendanceByProfile.set(checkIn.profile_id, checkIn.checked_in_at);
+                }
+            }
+        }
+
+        res.json((data || []).map(profile => ({
+            ...profile,
+            last_attendance_at: lastAttendanceByProfile.get(profile.id) || null,
+        })));
     } catch (error) {
         console.error('[CRM] Failed to fetch profiles:', error);
         res.status(error.status || 500).json({ error: 'Failed to fetch CRM profiles' });
