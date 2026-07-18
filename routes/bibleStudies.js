@@ -22,6 +22,7 @@ const { generateContentImage } = require('../utils/contentImages');
 // request. Seven minutes keeps the initial request viable while retaining the
 // required two transient retries.
 const BIBLE_STUDY_GENERATION_TIMEOUT_MS = Number(process.env.OPENAI_BIBLE_STUDY_TIMEOUT_MS || 420000);
+const BIBLE_STUDY_MAX_OUTPUT_TOKENS = Number(process.env.OPENAI_BIBLE_STUDY_MAX_OUTPUT_TOKENS || 10000);
 
 const bibleStudySchema = {
     type: 'object', additionalProperties: false,
@@ -335,6 +336,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             `Exact number of lessons: ${lessonCount}`,
             `Required Bible study method: ${method}`,
             'Include one original illustration concept.',
+            'Keep the complete study within the response budget. Write 450–650 words of commentary per lesson; keep introductions, outlines, applications, discussion starters, conclusions, and reflection questions concise but complete.',
             'The method, passage, and lesson count are hard constraints. Voice personalization must never override them.',
             voiceInstructions,
         ].join('\n');
@@ -345,7 +347,7 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 input: userPrompt,
                 schema: bibleStudySchema,
                 schemaName: 'generated_bible_study',
-                maxOutputTokens: 14000,
+                maxOutputTokens: BIBLE_STUDY_MAX_OUTPUT_TOKENS,
                 timeoutMs: BIBLE_STUDY_GENERATION_TIMEOUT_MS,
             });
             const generatedStudy = generation.data;
