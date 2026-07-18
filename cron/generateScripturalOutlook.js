@@ -838,8 +838,10 @@ async function generateAndSaveScripturalOutlook() {
 
 // You can export this function to be used by your cron job scheduler
 module.exports = {
-  generateAndSaveScripturalOutlook
+  generateAndSaveScripturalOutlook,
+  attachCorroboratingSources,
+  callOpenAIAndProcessResult,
+  persistNewsVerification,
 };
 
-// If you want to run this script directly (for testing), uncomment the line below
-generateAndSaveScripturalOutlook();
+if (require.main === module) generateAndSaveScripturalOutlook();

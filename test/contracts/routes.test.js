@@ -35,6 +35,7 @@ const promptSource = fs.readFileSync(path.join(__dirname, '../../prompts.js'), '
 const newsEditorialSource = fs.readFileSync(path.join(__dirname, '../../routes/newsEditorial.js'), 'utf8');
 const newsVerificationSource = fs.readFileSync(path.join(__dirname, '../../utils/newsVerification.js'), 'utf8');
 const newsEditorialMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718150000_news_editorial_verification.sql'), 'utf8');
+const newsBackfillSource = fs.readFileSync(path.join(__dirname, '../../scripts/backfillRecentNewsVerification.js'), 'utf8');
 const volunteerSource = fs.readFileSync(path.join(__dirname, '../../routes/volunteers.js'), 'utf8');
 
 test('all production routers are mounted at compatible paths', () => {
@@ -241,6 +242,14 @@ test('news editorial history is immutable and withheld from direct clients', () 
   }
   assert.match(newsEditorialMigration, /revoke all on public\.news_article_sources[\s\S]*from anon, authenticated/);
   assert.match(newsEditorialMigration, /force row level security/);
+});
+
+test('recent news verification backfill is bounded, resumable, and preserves legacy content', () => {
+  assert.match(newsBackfillSource, /NEWS_BACKFILL_APPROVED.*recent-24h/);
+  assert.match(newsBackfillSource, /gte\('created_at', since\)/);
+  assert.match(newsBackfillSource, /scoredIds/);
+  assert.match(newsBackfillSource, /\.\.\.article\.ai_outlook/);
+  assert.match(newsBackfillSource, /persistNewsVerification/);
 });
 
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {
