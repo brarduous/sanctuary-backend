@@ -81,6 +81,25 @@ Rubric:
 Do not reward famous names, sensational language, partisan drama, or cultural buzz unless the story has severe and broad material consequences.
 `;
 
+const NEWS_EDITORIAL_JSON_INSTRUCTIONS = `
+EDITORIAL AND THEOLOGICAL OUTPUT REQUIREMENT:
+Return these fields in the same JSON object. Do not omit them and do not collapse them into one generic devotional paragraph.
+- "newsSummary": a concise factual summary that clearly distinguishes reported facts, attributed claims, and uncertainty
+- "sourceAndFramingAnalysis": identify the source's role, missing voices, incentives, disputed claims, and what requires independent verification
+- "biblicalReflection": a context-sensitive Christian reflection tied to the cited passage rather than generic moral vocabulary
+- "citedPassages": an array with at least one object containing "reference", "context", and "application"; explain what the passage addresses in its literary/historical context and avoid proof-texting
+- "faithfulResponse": concrete practices for an individual Christian that follow from the facts and biblical reflection
+- "congregationalImplications": specific implications for a church community without partisan instruction
+- "ministryActions": 2-4 practical, proportionate ministry actions
+- "sermonDiscussionPrompts": 2-4 questions useful for pastors or small-group leaders
+- "reflectionQuestions": 2-4 media-literacy and discipleship questions specific to this story
+- "closingPrayer": a specific prayer that does not claim facts beyond the reporting
+- "sources": an array containing only sources actually supplied in the input, each with "title", "url", and "type" ("primary_reporting", "additional_reporting", "official_document", or "commentary")
+- "additionalSourcesNeeded": true when fewer than two independent sources support a consequential story
+
+Never invent a URL, author, quotation, reviewer, publication, biblical citation, or corroborating source. If the supplied reporting is insufficient, say so explicitly. Denominationally disputed applications must be labeled as such rather than presented as settled Christian doctrine.
+`;
+
 // --- EXPORTED GENERATORS (Now Async) ---
 const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuningNotes = "") => {
     const basePrompt = await fetchPrompt('daily_devotional_generator');
@@ -142,7 +161,7 @@ const getGeneralDevotionalBatchPrompt = async (themeData) => {
 
 const getScripturalOutlookPrompt = async () => {
     const basePrompt = await fetchPrompt('news_generator');
-    return `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}`;
+    return `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}\n\n${NEWS_EDITORIAL_JSON_INSTRUCTIONS}`;
 };
 
 const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {

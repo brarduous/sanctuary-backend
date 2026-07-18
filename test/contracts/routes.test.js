@@ -30,6 +30,8 @@ const careSource = fs.readFileSync(path.join(__dirname, '../../routes/care.js'),
 const givingSource = fs.readFileSync(path.join(__dirname, '../../routes/giving.js'), 'utf8');
 const crmSource = fs.readFileSync(path.join(__dirname, '../../routes/crm.js'), 'utf8');
 const newsSource = fs.readFileSync(path.join(__dirname, '../../routes/news.js'), 'utf8');
+const newsGeneratorSource = fs.readFileSync(path.join(__dirname, '../../cron/generateScripturalOutlook.js'), 'utf8');
+const promptSource = fs.readFileSync(path.join(__dirname, '../../prompts.js'), 'utf8');
 const volunteerSource = fs.readFileSync(path.join(__dirname, '../../routes/volunteers.js'), 'utf8');
 
 test('all production routers are mounted at compatible paths', () => {
@@ -199,6 +201,25 @@ test('filtered news feeds avoid the production-timeout nested taxonomy join', ()
   assert.match(newsSource, /Promise\.all/);
   assert.doesNotMatch(newsSource, /outlook_topics!inner/);
   assert.doesNotMatch(newsSource, /outlook_categories!inner/);
+});
+
+test('news generation requires accountable structured pastoral analysis', () => {
+  for (const field of [
+    'newsSummary',
+    'sourceAndFramingAnalysis',
+    'biblicalReflection',
+    'citedPassages',
+    'faithfulResponse',
+    'congregationalImplications',
+    'ministryActions',
+    'sermonDiscussionPrompts',
+    'sources',
+    'additionalSourcesNeeded',
+  ]) assert.match(promptSource, new RegExp(`"${field}"`));
+  assert.match(promptSource, /Never invent a URL, author, quotation, reviewer/);
+  assert.match(newsGeneratorSource, /status: 'pending_human_review'/);
+  assert.match(newsGeneratorSource, /source\.url === article\.url/);
+  assert.match(newsGeneratorSource, /contentSchemaVersion = 2/);
 });
 
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {

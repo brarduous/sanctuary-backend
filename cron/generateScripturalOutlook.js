@@ -642,6 +642,17 @@ async function generateAndSaveScripturalOutlook() {
       const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 5000, 'json_object');
       
       if (aiResponse && typeof aiResponse === 'object') {
+        aiResponse.contentSchemaVersion = 2;
+        aiResponse.editorialReview = {
+            status: 'pending_human_review',
+            reviewerName: null,
+            reviewedAt: null,
+        };
+        aiResponse.generatedAt = new Date().toISOString();
+        aiResponse.sources = Array.isArray(aiResponse.sources) && aiResponse.sources.length
+            ? aiResponse.sources.filter((source) => source && source.url === article.url)
+            : [{ title: article.title, url: article.url, type: 'primary_reporting' }];
+        aiResponse.additionalSourcesNeeded = aiResponse.sources.length < 2;
         
         // 1. Save the core outlook and get its ID
         const outlook = {
