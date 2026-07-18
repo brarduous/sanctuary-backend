@@ -96,8 +96,14 @@ Return these fields in the same JSON object. Do not omit them and do not collaps
 - "closingPrayer": a specific prayer that does not claim facts beyond the reporting
 - "sources": an array containing only sources actually supplied in the input, each with "title", "url", and "type" ("primary_reporting", "additional_reporting", "official_document", or "commentary")
 - "additionalSourcesNeeded": true when fewer than two independent sources support a consequential story
+- "originalArticleAssessment": an object assessing factual claims in the original article only:
+  - "assessmentSummary": concise evidence-based summary without judging the author's motives
+  - "claims": up to 20 material factual claims, each with "claimText", "materiality" (1-5), "status" ("supported", "partially_supported", "unverifiable", "unsupported", or "contradicted"), "rationale", and "evidenceUrls" containing only supplied URLs
+  - "confidenceFactors": 0-100 integers for "evidenceCoverage", "publisherIndependence", "sourceQuality", "claimSpecificity", "freshness", and "conflictResolution"
+  - "unresolvedEvidenceGaps": an array of specific missing evidence
 
 Never invent a URL, author, quotation, reviewer, publication, biblical citation, or corroborating source. If the supplied reporting is insufficient, say so explicitly. Denominationally disputed applications must be labeled as such rather than presented as settled Christian doctrine.
+Truthfulness concerns evidentiary support for factual claims, never the publisher's honesty, motives, theology, or politics. Use "unverifiable" when supplied evidence cannot resolve a claim.
 `;
 
 // --- EXPORTED GENERATORS (Now Async) ---
@@ -165,13 +171,22 @@ const getScripturalOutlookPrompt = async () => {
 };
 
 const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {
-    return await getRenderedPrompt('news_generator_article_input', {
+    const rendered = await getRenderedPrompt('news_generator_article_input', {
         article_title: article.title,
         article_body: article.body,
         article_description: article.description,
         existing_categories: existingTaxonomies.categories,
         existing_topics: existingTaxonomies.topics
     });
+    const suppliedSources = [article, ...(article.corroboratingSources || [])].map((source, index) => ({
+        role: index === 0 ? 'original_article' : 'corroborating_report',
+        publisher: source.publisher,
+        title: source.title,
+        url: source.url,
+        publishDate: source.publish_date,
+        body: source.body,
+    }));
+    return `${rendered}\n\nSUPPLIED SOURCE PACKAGE (the only allowed evidence and URLs):\n${JSON.stringify(suppliedSources)}`;
 };
 
 const getNewsTaxonomyBreakdownPrompt = async ({ taxonomyName, synopses }) => {

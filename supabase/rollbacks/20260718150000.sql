@@ -1,0 +1,11 @@
+begin;
+drop table if exists public.news_correction_notices;
+drop table if exists public.news_correction_reports;
+drop table if exists public.news_review_decisions;
+drop table if exists public.news_editorial_revisions;
+drop table if exists public.news_score_versions;
+drop table if exists public.news_claim_evidence;
+drop table if exists public.news_claims;
+drop table if exists public.news_article_sources;
+drop function if exists public.reject_news_immutable_change();
+commit;

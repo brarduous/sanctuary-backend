@@ -388,6 +388,7 @@ const authorizationRouter = require('./routes/authorization');
 const staffRouter = require('./routes/staff');
 const careRouter = require('./routes/care');
 const givingRouter = require('./routes/giving');
+const newsEditorialRouter = require('./routes/newsEditorial');
 
 // Use Routes
 app.use('/admin', adminRouter);
@@ -420,6 +421,7 @@ app.use('/api/authorization', authorizationRouter);
 app.use('/api/staff', staffRouter);
 app.use('/api/care', careRouter);
 app.use('/api/giving', givingRouter);
+app.use('/admin/news', newsEditorialRouter);
 
 // Stable public aliases. Legacy paths remain available while client migration
 // telemetry identifies callers that still need to move.
@@ -449,6 +451,7 @@ app.use('/api/v1/authorization', authorizationRouter);
 app.use('/api/v1/staff', staffRouter);
 app.use('/api/v1/care', careRouter);
 app.use('/api/v1/giving', givingRouter);
+app.use('/api/v1/admin/news', newsEditorialRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.get('/ready', (_req, res) => res.json({ status: 'ready', integrations: { stripe: Boolean(process.env.STRIPE_SECRET_KEY) } }));

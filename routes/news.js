@@ -1,9 +1,14 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const authenticateUser = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
+const rateLimit = require('express-rate-limit');
+const { publicAssessment } = require('../utils/newsVerification');
+
+const correctionLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
 
 const NEWS_LIST_COLUMNS = [
     'id',
@@ -119,6 +124,27 @@ async function resolveFilteredOutlookIds({ resolvedTopicId, resolvedCategoryId, 
     for (const result of results) if (result.error) throw result.error;
     const idSets = results.map((result) => new Set((result.data || []).map((row) => row.outlook_id)));
     return [...idSets[0]].filter((id) => idSets.every((values) => values.has(id)));
+}
+
+async function hydratePublicVerification(outlook) {
+    const [scores, claims, sources, notices, reviews] = await Promise.all([
+        supabase.from('news_score_versions').select('version,truthfulness_score,truthfulness_band,assessment_summary,assessed_at').eq('outlook_id', outlook.id).order('version', { ascending: false }).limit(1),
+        supabase.from('news_claims').select('id,claim_text,materiality,status,rationale').eq('outlook_id', outlook.id).order('materiality', { ascending: false }),
+        supabase.from('news_article_sources').select('id,publisher,title,url,published_at,source_type,is_independent').eq('outlook_id', outlook.id).order('created_at'),
+        supabase.from('news_correction_notices').select('id,notice,published_at').eq('outlook_id', outlook.id).order('published_at'),
+        supabase.from('news_review_decisions').select('decision,reviewer_display_name,created_at').eq('outlook_id', outlook.id).eq('decision', 'approved').order('created_at', { ascending: false }).limit(1),
+    ]);
+    const results = [scores, claims, sources, notices, reviews];
+    if (results.some((result) => result.error?.code === '42P01' || result.error?.code === 'PGRST205')) return outlook;
+    for (const result of results) if (result.error) throw result.error;
+    const review = reviews.data?.[0];
+    return {
+        ...outlook,
+        verification: publicAssessment(scores.data?.[0], claims.data, sources.data, notices.data),
+        editorialStatus: review ? 'reviewed' : 'pending_human_review',
+        reviewedBy: review?.reviewer_display_name || null,
+        reviewedAt: review?.created_at || null,
+    };
 }
 
 // --- 1. SEARCH ARTICLES ---
@@ -237,6 +263,34 @@ router.get('/categories/:id', optionalAuth, async (req, res) => {
     }
 });
 
+router.post('/news/corrections', correctionLimiter, async (req, res) => {
+    try {
+        if (String(req.body.website || '').trim()) return res.status(202).json({ receiptId: crypto.randomUUID() });
+        const articleUrl = String(req.body.articleUrl || '').trim();
+        const disputedStatement = String(req.body.disputedStatement || '').trim();
+        const explanation = String(req.body.explanation || '').trim();
+        const evidenceUrl = String(req.body.evidenceUrl || '').trim() || null;
+        const replyEmail = String(req.body.replyEmail || '').trim() || null;
+        if (!/^https?:\/\//i.test(articleUrl) || disputedStatement.length < 10 || disputedStatement.length > 2000 || explanation.length < 20 || explanation.length > 5000) {
+            return res.status(400).json({ error: { code: 'CORRECTION_INVALID', message: 'Provide a valid article URL, disputed statement, and explanation.', requestId: req.requestId } });
+        }
+        if (evidenceUrl && !/^https?:\/\//i.test(evidenceUrl)) return res.status(400).json({ error: { code: 'EVIDENCE_URL_INVALID', message: 'Evidence URL must use HTTP or HTTPS.', requestId: req.requestId } });
+        if (replyEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(replyEmail)) return res.status(400).json({ error: { code: 'EMAIL_INVALID', message: 'Reply email is invalid.', requestId: req.requestId } });
+        let { data: outlook } = await supabase.from('scriptural_outlooks').select('id').eq('article_url', articleUrl).maybeSingle();
+        if (!outlook) {
+            const slug = articleUrl.split('/').filter(Boolean).pop();
+            if (slug) ({ data: outlook } = await supabase.from('scriptural_outlooks').select('id').eq('slug', slug).maybeSingle());
+        }
+        const { data, error } = await supabase.from('news_correction_reports').insert({ outlook_id: outlook?.id || null, article_url: articleUrl, disputed_statement: disputedStatement, explanation, evidence_url: evidenceUrl, reply_email: replyEmail }).select('id').single();
+        if (error) throw error;
+        await logEvent('info', 'news', null, 'submit_news_correction', 'Correction report submitted', { outlookId: outlook?.id || null });
+        return res.status(201).json({ receiptId: data.id });
+    } catch (error) {
+        console.error('Correction submission failed:', error);
+        return res.status(500).json({ error: { code: 'CORRECTION_FAILED', message: 'The correction report could not be submitted.', requestId: req.requestId } });
+    }
+});
+
 // --- 4. GET ALL TOPICS (SORTED BY WEEKLY IMPACT) ---
 router.get('/topics', async (req, res) => {
     try {
@@ -306,7 +360,7 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
             .single();
 
         if (error) return res.status(404).json({ error: 'Article not found' });
-        res.json(data);
+        res.json(await hydratePublicVerification(data));
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });

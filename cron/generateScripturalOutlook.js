@@ -8,8 +8,10 @@ const cheerio = require('cheerio');
 const OpenAI = require('openai'); // Use the v4 client
 const { GoogleGenAI } = require('@google/genai');
 const puppeteer = require('puppeteer');
+const crypto = require('crypto');
 const { logEvent } = require('../utils/helpers');
 const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
+const { normalizeVerificationAssessment } = require('../utils/newsVerification');
 const {
     getScripturalOutlookPrompt,
     getScripturalOutlookArticleInputPrompt,
@@ -127,6 +129,79 @@ function getGeneratedImpact(aiResponse) {
             aiResponse.impact_summary ||
             'Scored by AI based on the severity, seriousness, and scope of likely real-world consequences.'
     };
+}
+
+function titleTokens(title) {
+    const stopWords = new Set(['about','after','again','against','from','into','over','that','the','their','this','with']);
+    return new Set(String(title || '').toLowerCase().match(/[a-z0-9]{3,}/g)?.filter((token) => !stopWords.has(token)) || []);
+}
+
+function relatedTitleScore(left, right) {
+    const a = titleTokens(left);
+    const b = titleTokens(right);
+    if (!a.size || !b.size) return 0;
+    const overlap = [...a].filter((token) => b.has(token)).length;
+    return overlap / Math.min(a.size, b.size);
+}
+
+function attachCorroboratingSources(articles) {
+    return articles.map((article) => ({
+        ...article,
+        corroboratingSources: articles
+            .filter((candidate) => candidate.publisher !== article.publisher && relatedTitleScore(article.title, candidate.title) >= 0.45)
+            .sort((a, b) => relatedTitleScore(article.title, b.title) - relatedTitleScore(article.title, a.title))
+            .slice(0, 4),
+    }));
+}
+
+async function persistNewsVerification(outlookId, article, assessment) {
+    const sourcePackage = [article, ...(article.corroboratingSources || [])];
+    const sourceRows = sourcePackage.map((source, index) => ({
+        outlook_id: outlookId,
+        publisher: source.publisher || new URL(source.url).hostname.replace(/^www\./, ''),
+        title: source.title,
+        url: source.url,
+        published_at: source.publish_date || null,
+        source_type: index === 0 ? 'primary_reporting' : 'additional_reporting',
+        is_independent: index > 0,
+        extracted_text_checksum: crypto.createHash('sha256').update(source.body || '').digest('hex'),
+    }));
+    const { data: savedSources, error: sourceError } = await supabase.from('news_article_sources').insert(sourceRows).select('id,url');
+    if (sourceError) throw sourceError;
+
+    const normalized = normalizeVerificationAssessment(assessment, sourceRows.map((source) => ({ ...source, isIndependent: source.is_independent })));
+    const { error: scoreError } = await supabase.from('news_score_versions').insert({
+        outlook_id: outlookId,
+        version: 1,
+        truthfulness_score: normalized.truthfulnessScore,
+        truthfulness_band: normalized.truthfulnessBand,
+        assessment_summary: normalized.assessmentSummary,
+        confidence_score: normalized.confidenceScore,
+        confidence_factors: normalized.confidenceFactors,
+        unresolved_evidence_gaps: normalized.unresolvedEvidenceGaps,
+    });
+    if (scoreError) throw scoreError;
+
+    if (normalized.claims.length) {
+        const { data: savedClaims, error: claimError } = await supabase.from('news_claims').insert(normalized.claims.map((claim) => ({
+            outlook_id: outlookId,
+            claim_text: claim.claimText,
+            materiality: claim.materiality,
+            status: claim.status,
+            rationale: claim.rationale,
+        }))).select('id,claim_text');
+        if (claimError) throw claimError;
+        const sourceIds = new Map((savedSources || []).map((source) => [source.url, source.id]));
+        const claimIds = new Map((savedClaims || []).map((claim) => [claim.claim_text, claim.id]));
+        const evidenceRows = normalized.claims.flatMap((claim) => claim.evidenceUrls
+            .filter((url) => sourceIds.has(url))
+            .map((url) => ({ claim_id: claimIds.get(claim.claimText), source_id: sourceIds.get(url), support_type: claim.status === 'contradicted' ? 'contradicts' : claim.status === 'supported' ? 'supports' : 'partially_supports', evidence_summary: claim.rationale })));
+        if (evidenceRows.length) {
+            const { error: evidenceError } = await supabase.from('news_claim_evidence').insert(evidenceRows);
+            if (evidenceError) throw evidenceError;
+        }
+    }
+    return normalized;
 }
 
 // Function to generate image using Gemini
@@ -343,6 +418,7 @@ async function fetchTopNewsStories(limit = 24) {
         'https://www.cbsnews.com/latest/rss/main',
         'https://moxie.foxnews.com/google-publisher/latest.xml',
     ];
+    const publishers = ['NPR', 'CBS News', 'Fox News'];
     
     const newsStories = [];
     const parser = new xml2js.Parser();
@@ -456,7 +532,7 @@ async function fetchTopNewsStories(limit = 24) {
                       });
                     const articleBody = paragraphText.join('\n\n');
                     
-                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description, publish_date };
+                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description, publish_date, publisher: publishers[feedIndex] };
                     newsStories.push(article);
                 }catch(err){
                   console.error(`Error fetching or parsing article at ${link}:`, err);
@@ -475,7 +551,7 @@ async function fetchTopNewsStories(limit = 24) {
     
     console.log(`Total articles fetched: ${newsStories.length}`);
     logEvent('info', 'backend', null, 'fetch_top_news_stories', `Fetched ${newsStories.length} articles`, {}, Date.now() - startTime);
-    return newsStories;
+    return attachCorroboratingSources(newsStories);
 }
 // Daily News Synopsis moved to cron/dailyNewsSynopsis.js
 
@@ -649,9 +725,11 @@ async function generateAndSaveScripturalOutlook() {
             reviewedAt: null,
         };
         aiResponse.generatedAt = new Date().toISOString();
+        const allowedSources = [article, ...(article.corroboratingSources || [])];
+        const allowedUrls = new Set(allowedSources.map((source) => source.url));
         aiResponse.sources = Array.isArray(aiResponse.sources) && aiResponse.sources.length
-            ? aiResponse.sources.filter((source) => source && source.url === article.url)
-            : [{ title: article.title, url: article.url, type: 'primary_reporting' }];
+            ? aiResponse.sources.filter((source) => source && allowedUrls.has(source.url))
+            : allowedSources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' }));
         aiResponse.additionalSourcesNeeded = aiResponse.sources.length < 2;
         
         // 1. Save the core outlook and get its ID
@@ -687,6 +765,20 @@ async function generateAndSaveScripturalOutlook() {
         }
 
         const outlookId = savedOutlook.id;
+
+        try {
+            const verification = await persistNewsVerification(outlookId, article, aiResponse.originalArticleAssessment || {});
+            aiResponse.originalArticleAssessment = {
+                truthfulnessScore: verification.truthfulnessScore,
+                truthfulnessBand: verification.truthfulnessBand,
+                assessmentSummary: verification.assessmentSummary,
+                assessedAt: new Date().toISOString(),
+                assessmentVersion: 1,
+            };
+            await supabase.from('scriptural_outlooks').update({ ai_outlook: aiResponse }).eq('id', outlookId);
+        } catch (verificationError) {
+            console.error(`Failed to persist verification for outlook ${outlookId}:`, verificationError);
+        }
 
         // 2. Process Categories
         if (aiResponse.categories && Array.isArray(aiResponse.categories)) {

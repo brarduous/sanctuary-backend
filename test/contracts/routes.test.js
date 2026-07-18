@@ -32,6 +32,9 @@ const crmSource = fs.readFileSync(path.join(__dirname, '../../routes/crm.js'), '
 const newsSource = fs.readFileSync(path.join(__dirname, '../../routes/news.js'), 'utf8');
 const newsGeneratorSource = fs.readFileSync(path.join(__dirname, '../../cron/generateScripturalOutlook.js'), 'utf8');
 const promptSource = fs.readFileSync(path.join(__dirname, '../../prompts.js'), 'utf8');
+const newsEditorialSource = fs.readFileSync(path.join(__dirname, '../../routes/newsEditorial.js'), 'utf8');
+const newsVerificationSource = fs.readFileSync(path.join(__dirname, '../../utils/newsVerification.js'), 'utf8');
+const newsEditorialMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718150000_news_editorial_verification.sql'), 'utf8');
 const volunteerSource = fs.readFileSync(path.join(__dirname, '../../routes/volunteers.js'), 'utf8');
 
 test('all production routers are mounted at compatible paths', () => {
@@ -218,8 +221,26 @@ test('news generation requires accountable structured pastoral analysis', () => 
   ]) assert.match(promptSource, new RegExp(`"${field}"`));
   assert.match(promptSource, /Never invent a URL, author, quotation, reviewer/);
   assert.match(newsGeneratorSource, /status: 'pending_human_review'/);
-  assert.match(newsGeneratorSource, /source\.url === article\.url/);
+  assert.match(newsGeneratorSource, /allowedUrls\.has\(source\.url\)/);
   assert.match(newsGeneratorSource, /contentSchemaVersion = 2/);
+});
+
+test('news verification separates public truthfulness from private editorial confidence', () => {
+  assert.match(promptSource, /originalArticleAssessment/);
+  assert.match(promptSource, /supported.*partially_supported.*unverifiable.*unsupported.*contradicted/s);
+  assert.match(newsVerificationSource, /truthfulnessScore/);
+  assert.doesNotMatch(newsVerificationSource.match(/function publicAssessment[\s\S]*?\n}/)?.[0] || '', /confidenceScore:/);
+  assert.match(newsEditorialSource, /confidenceScore/);
+  assert.match(newsEditorialSource, /requireAdmin/);
+  assert.match(newsSource, /correctionLimiter/);
+});
+
+test('news editorial history is immutable and withheld from direct clients', () => {
+  for (const table of ['news_score_versions','news_editorial_revisions','news_review_decisions','news_correction_notices']) {
+    assert.match(newsEditorialMigration, new RegExp(`${table}_immutable`));
+  }
+  assert.match(newsEditorialMigration, /revoke all on public\.news_article_sources[\s\S]*from anon, authenticated/);
+  assert.match(newsEditorialMigration, /force row level security/);
 });
 
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {
