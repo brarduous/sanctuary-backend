@@ -9,6 +9,7 @@ const userSource = fs.readFileSync(path.join(__dirname, '../../routes/user.js'),
 const messageSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717140000_message_tenant_security.sql'), 'utf8');
 const tenantRlsMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717143000_congregation_owned_rls.sql'), 'utf8');
 const normalizedErrors = fs.readFileSync(path.join(__dirname, '../../middleware/normalizeErrors.js'), 'utf8');
+const apiVersionSource = fs.readFileSync(path.join(__dirname, '../../middleware/apiVersion.js'), 'utf8');
 const kioskSource = fs.readFileSync(path.join(__dirname, '../../routes/kiosk.js'), 'utf8');
 const exportSource = fs.readFileSync(path.join(__dirname, '../../routes/exports.js'), 'utf8');
 const recoverySource = fs.readFileSync(path.join(__dirname, '../../routes/recovery.js'), 'utf8');
@@ -169,6 +170,24 @@ test('legacy JSON errors are normalized with safe codes and request IDs', () => 
   assert.match(normalizedErrors, /res\.statusCode < 400/);
   assert.match(normalizedErrors, /requestId: req\.requestId/);
   assert.doesNotMatch(normalizedErrors, /stack/);
+});
+
+test('public API routers have v1 aliases and bounded legacy telemetry', () => {
+  const versioning = apiVersionSource;
+  for (const mount of [
+    "app.use('/api/v1', sermonsRouter)",
+    "app.use('/api/v1', bibleStudiesRouter)",
+    "app.use('/api/v1/messages', messagesRouter)",
+    "app.use('/api/v1/crm', crmRouter)",
+    "app.use('/api/v1/events', eventsRouter)",
+    "app.use('/api/v1/kiosk', kioskRouter)",
+    "app.use('/api/v1/care', careRouter)",
+    "app.use('/api/v1/giving', givingRouter)",
+  ]) assert.match(source, new RegExp(mount.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  assert.match(versioning, /X-API-Deprecated/);
+  assert.match(versioning, /api_legacy_request/);
+  assert.doesNotMatch(versioning, /req\.(body|cookies?)\b/);
+  assert.ok(source.indexOf("app.use('/api/v1', sermonsRouter)") < source.indexOf('app.use(notFound)'));
 });
 
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {

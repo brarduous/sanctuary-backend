@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config();
 const requestContext = require('./middleware/requestContext');
 const normalizeErrors = require('./middleware/normalizeErrors');
+const apiVersion = require('./middleware/apiVersion');
 const { notFound, errorHandler } = require('./middleware/errors');
 
 // Imports from refactoring
@@ -18,6 +19,7 @@ const stripeLayperson = process.env.STRIPE_SECRET_KEY_LAYPERSON ? require('strip
 const app = express();
 app.use(requestContext);
 app.use(normalizeErrors);
+app.use(apiVersion);
 
 // --- SECURE CORS CONFIGURATION ---
 const allowedOrigins = [
@@ -418,6 +420,35 @@ app.use('/api/authorization', authorizationRouter);
 app.use('/api/staff', staffRouter);
 app.use('/api/care', careRouter);
 app.use('/api/giving', givingRouter);
+
+// Stable public aliases. Legacy paths remain available while client migration
+// telemetry identifies callers that still need to move.
+app.use('/api/v1', devotionalsRouter);
+app.use('/api/v1', sermonsRouter);
+app.use('/api/v1', bibleStudiesRouter);
+app.use('/api/v1', prayersRouter);
+app.use('/api/v1', adviceRouter);
+app.use('/api/v1', newsRouter);
+app.use('/api/v1', userRouter);
+app.use('/api/v1', communityRouter);
+app.use('/api/v1', videoRoutes);
+app.use('/api/v1/music', musicRoutes);
+app.use('/api/v1', transcribeRouter);
+app.use('/api/v1/ai', aiRouter);
+app.use('/api/v1', analysisRouter);
+app.use('/api/v1/congregations', congregationsRouter);
+app.use('/api/v1/messages', messagesRouter);
+app.use('/api/v1/crm', crmRouter);
+app.use('/api/v1/events', eventsRouter);
+app.use('/api/v1/stripe', stripeRouter);
+app.use('/api/v1/kiosk', kioskRouter);
+app.use('/api/v1/volunteers', volunteersRouter);
+app.use('/api/v1/exports', exportsRouter);
+app.use('/api/v1/recovery', recoveryRouter);
+app.use('/api/v1/authorization', authorizationRouter);
+app.use('/api/v1/staff', staffRouter);
+app.use('/api/v1/care', careRouter);
+app.use('/api/v1/giving', givingRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.get('/ready', (_req, res) => res.json({ status: 'ready', integrations: { stripe: Boolean(process.env.STRIPE_SECRET_KEY) } }));
