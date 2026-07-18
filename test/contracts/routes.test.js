@@ -256,6 +256,9 @@ test('recent news verification backfill is bounded, resumable, and preserves leg
   assert.match(newsBackfillSource, /scoredIds/);
   assert.match(newsBackfillSource, /\.\.\.article\.ai_outlook/);
   assert.match(newsBackfillSource, /persistNewsVerification/);
+  assert.match(newsBackfillSource, /NEWS_BACKFILL_CONCURRENCY/);
+  assert.match(newsBackfillSource, /Math\.min\(6/);
+  assert.match(newsBackfillSource, /Promise\.all\(Array\.from/);
 });
 
 test('news ingestion isolates publisher navigation failures', () => {

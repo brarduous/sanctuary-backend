@@ -51,8 +51,10 @@ async function run() {
   const systemPrompt = await getScripturalOutlookPrompt();
   let completed = 0;
   let failed = 0;
-  console.log(`Backfilling ${clustered.length} of ${rows?.length || 0} articles created since ${since}.`);
-  for (const article of clustered) {
+  const concurrency = Math.min(6, Math.max(1, Number.parseInt(process.env.NEWS_BACKFILL_CONCURRENCY || '4', 10) || 4));
+  let nextIndex = 0;
+  console.log(`Backfilling ${clustered.length} of ${rows?.length || 0} articles created since ${since} with ${concurrency} workers.`);
+  async function processArticle(article) {
     try {
       const promptInput = await getScripturalOutlookArticleInputPrompt(article, { categories: [], topics: [] });
       const generated = await callOpenAIAndProcessResult(systemPrompt, promptInput, 'gpt-5-mini', 10000, 'json_object');
@@ -83,6 +85,14 @@ async function run() {
       console.error(`Backfill failed for ${article.id}: ${article.title}`, backfillError);
     }
   }
+  async function worker() {
+    while (nextIndex < clustered.length) {
+      const article = clustered[nextIndex];
+      nextIndex += 1;
+      await processArticle(article);
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(concurrency, clustered.length) }, () => worker()));
   console.log(JSON.stringify({ scanned: rows?.length || 0, candidates: clustered.length, completed, failed, since }));
   if (failed) process.exitCode = 1;
 }
