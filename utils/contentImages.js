@@ -1,6 +1,7 @@
 const openai = require('../config/openai');
 const supabase = require('../config/supabase');
 const { normalizeContentImageBuffer } = require('./imageAspect');
+const { callStructuredResponse } = require('./openaiResponses');
 
 const DEFAULT_BUCKET = 'clergy-content-images';
 
@@ -71,23 +72,52 @@ async function generateContentImage({
     const contentFolder = contentType === 'bible-study' ? 'bible-studies' : 'sermons';
     const storagePath = `${contentFolder}/${userId}/${contentId}-${Date.now()}-${slugify(title)}.${extension}`;
 
-    const response = await openai.images.generate({
-        model: imageModel,
-        prompt,
-        size: process.env.OPENAI_IMAGE_SIZE || '1536x1024',
-        quality: process.env.OPENAI_IMAGE_QUALITY || 'medium',
-        output_format: outputFormat,
-        output_compression: outputFormat === 'jpeg' || outputFormat === 'webp' ? 85 : undefined,
-        n: 1,
-        user: userId,
-    }, {
-        timeout: Number(process.env.OPENAI_IMAGE_TIMEOUT_MS || 180000),
-        maxRetries: Number(process.env.OPENAI_IMAGE_MAX_RETRIES || 2),
-    });
-
-    const imageData = response.data?.[0]?.b64_json;
+    let imageData;
+    for (let visualAttempt = 1; visualAttempt <= 2; visualAttempt += 1) {
+        const response = await openai.images.generate({
+            model: imageModel,
+            prompt: visualAttempt === 1 ? prompt : `${prompt}\nRegeneration requirement: the prior artwork was rejected because it contained lettering or a logo. Return only text-free visual artwork.`,
+            size: process.env.OPENAI_IMAGE_SIZE || '1536x1024',
+            quality: process.env.OPENAI_IMAGE_QUALITY || 'medium',
+            output_format: outputFormat,
+            output_compression: outputFormat === 'jpeg' || outputFormat === 'webp' ? 85 : undefined,
+            n: 1,
+            user: userId,
+        }, {
+            timeout: Number(process.env.OPENAI_IMAGE_TIMEOUT_MS || 180000),
+            maxRetries: Number(process.env.OPENAI_IMAGE_MAX_RETRIES || 2),
+        });
+        const candidate = response.data?.[0]?.b64_json;
+        if (!candidate) throw new Error('OpenAI image generation did not return base64 image data.');
+        const validation = await callStructuredResponse({
+            model: process.env.OPENAI_IMAGE_VALIDATION_MODEL || process.env.OPENAI_QUALITY_MODEL || 'gpt-5.6-sol',
+            reasoningEffort: 'low',
+            maxOutputTokens: 300,
+            maxRetries: 1,
+            schemaName: 'content_image_constraint_check',
+            schema: {
+                type: 'object', additionalProperties: false,
+                required: ['hasProhibitedTextOrLogo', 'reason'],
+                properties: {
+                    hasProhibitedTextOrLogo: { type: 'boolean' },
+                    reason: { type: 'string', maxLength: 180 },
+                },
+            },
+            instructions: 'Inspect ministry artwork for any visible or pseudo-visible words, letters, numbers, captions, signs, logos, brand marks, or watermarks. Treat malformed lettering and scripture-like glyphs as prohibited. Do not assess theology or aesthetics.',
+            input: [{ role: 'user', content: [{ type: 'input_text', text: 'Does this artwork contain any prohibited lettering or logo? Return the strict JSON decision.' }, { type: 'input_image', image_url: `data:image/${outputFormat};base64,${candidate}`, detail: 'low' }] }],
+        });
+        if (!validation.data.hasProhibitedTextOrLogo) {
+            imageData = candidate;
+            break;
+        }
+        if (visualAttempt === 2) {
+            const constraintError = new Error('Generated artwork repeatedly contained prohibited lettering or logos.');
+            constraintError.code = 'IMAGE_CONTENT_CONSTRAINT_FAILED';
+            throw constraintError;
+        }
+    }
     if (!imageData) {
-        throw new Error('OpenAI image generation did not return base64 image data.');
+        throw new Error('OpenAI image generation did not return acceptable image data.');
     }
 
     const contentTypeHeader = outputFormat === 'png'

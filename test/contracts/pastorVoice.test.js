@@ -42,6 +42,10 @@ test('content artwork is text-free and normalized to an uncropped 16:9 canvas', 
   assert.match(contentImages, /exact 16:9 widescreen/i);
   assert.match(contentImages, /no words, letters, numbers/i);
   assert.match(contentImages, /do not crop/i);
+  assert.match(contentImages, /hasProhibitedTextOrLogo/);
+  assert.match(contentImages, /visualAttempt <= 2/);
+  assert.match(contentImages, /IMAGE_CONTENT_CONSTRAINT_FAILED/);
+  assert.ok(contentImages.indexOf('if (!validation.data.hasProhibitedTextOrLogo)') < contentImages.indexOf('const normalizedBuffer'));
   const source = await sharp({ create: { width: 300, height: 200, channels: 3, background: '#ca8a04' } }).jpeg().toBuffer();
   const normalized = await normalizeContentImageBuffer({ buffer: source, outputFormat: 'jpeg' });
   const metadata = await sharp(normalized).metadata();
