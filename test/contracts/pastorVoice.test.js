@@ -19,6 +19,8 @@ const contentImages = read('utils/contentImages.js');
 const openaiConfig = read('config/openai.js');
 const resetScript = read('scripts/resetProductionAccount.js');
 const migration = read('supabase/migrations/20260718120000_pastor_voice_profiles.sql');
+const { normalizeContentImageBuffer, CONTENT_IMAGE_WIDTH, CONTENT_IMAGE_HEIGHT } = require('../../utils/imageAspect');
+const sharp = require('sharp');
 
 test('quality-critical generation is server-owned and uses structured Responses calls', () => {
   for (const source of [sermonRoute, studyRoute, analysisRoute, aiRoute]) {
@@ -34,6 +36,18 @@ test('OpenAI configuration initializes lazily so CI imports require no productio
   assert.match(openaiConfig, /getOpenAIClient/);
   assert.match(openaiConfig, /new Proxy/);
   assert.ok(openaiConfig.indexOf('if (!process.env.OPENAI_API_KEY)') < openaiConfig.indexOf('new OpenAI'));
+});
+
+test('content artwork is text-free and normalized to an uncropped 16:9 canvas', async () => {
+  assert.match(contentImages, /exact 16:9 widescreen/i);
+  assert.match(contentImages, /no words, letters, numbers/i);
+  assert.match(contentImages, /do not crop/i);
+  const source = await sharp({ create: { width: 300, height: 200, channels: 3, background: '#ca8a04' } }).jpeg().toBuffer();
+  const normalized = await normalizeContentImageBuffer({ buffer: source, outputFormat: 'jpeg' });
+  const metadata = await sharp(normalized).metadata();
+  assert.equal(metadata.width, CONTENT_IMAGE_WIDTH);
+  assert.equal(metadata.height, CONTENT_IMAGE_HEIGHT);
+  assert.equal(metadata.width / metadata.height, 16 / 9);
 });
 
 test('generated and rewritten pastoral content is gated for canonical and doctrinal integrity', () => {

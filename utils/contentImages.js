@@ -1,5 +1,6 @@
 const openai = require('../config/openai');
 const supabase = require('../config/supabase');
+const { normalizeContentImageBuffer } = require('./imageAspect');
 
 const DEFAULT_BUCKET = 'clergy-content-images';
 
@@ -27,8 +28,9 @@ const buildContentImagePrompt = ({ contentType, title, scripture, illustration, 
         scripture ? `Scripture or biblical anchor: ${cleanText(scripture, 220)}.` : '',
         `Core visual idea: ${subject}.`,
         'Style: cinematic but natural, reverent, hopeful, modern church publication quality, realistic lighting, rich depth, emotionally grounded.',
-        'Composition: landscape hero image with a clear focal point, suitable as a sermon thumbnail and header image, with room for optional title overlay.',
-        'Avoid: words, lettering, logos, watermarks, distorted hands, celebrity likenesses, denominational symbols unless directly implied, sensational or kitsch imagery.'
+        'Composition: exact 16:9 widescreen landscape artwork with a clear focal point. Keep every important subject fully inside the frame with comfortable edge padding; do not crop heads, hands, faces, or symbolic objects.',
+        'The image must be purely visual: no words, letters, numbers, captions, title treatments, signs, logos, typography, or watermarks anywhere in the artwork.',
+        'Avoid: distorted hands, celebrity likenesses, denominational symbols unless directly implied, sensational or kitsch imagery.'
     ].filter(Boolean).join('\n');
 };
 
@@ -94,8 +96,13 @@ async function generateContentImage({
             ? 'image/webp'
             : 'image/jpeg';
 
-    const publicUrl = await uploadImageBuffer({
+    const normalizedBuffer = await normalizeContentImageBuffer({
         buffer: Buffer.from(imageData, 'base64'),
+        outputFormat,
+    });
+
+    const publicUrl = await uploadImageBuffer({
+        buffer: normalizedBuffer,
         bucketName,
         storagePath,
         contentType: contentTypeHeader,

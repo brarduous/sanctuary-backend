@@ -36,8 +36,8 @@
     "test:message-isolation:staging": "node scripts/verifyMessageIsolation.js",
     "test:checkin-journey:staging": "node scripts/verifyCheckinJourney.js",
     "test:event-volunteer-journey:staging": "node scripts/verifyEventVolunteerJourney.js",
-    "test:content-production:staging": "node scripts/verifyContentProductionJourney.js"
-    ,"test:staging": "node scripts/verifyStaging.js",
+    "test:content-production:staging": "node scripts/verifyContentProductionJourney.js",
+    "test:staging": "node scripts/verifyStaging.js",
     "test:production-shape": "node scripts/verifyProductionShape.js"
   },
   "keywords": [],
@@ -62,6 +62,7 @@
     "openai": "^5.10.1",
     "pdf-parse": "^2.4.5",
     "puppeteer": "^24.22.3",
+    "sharp": "^0.34.5",
     "stripe": "^20.0.0",
     "xml2js": "^0.6.2",
     "youtube-transcript": "^1.2.1"
