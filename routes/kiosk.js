@@ -37,6 +37,15 @@ const loadSessionTenant = async (req, res, next) => {
     next();
 };
 
+const loadIncidentTenant = async (req, res, next) => {
+    const { data, error } = await supabase.from('safeguarding_incidents').select('id,congregation_id,status').eq('id', req.params.incidentId).maybeSingle();
+    if (error) return next(error);
+    if (!data) return res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Safeguarding incident not found.', requestId: req.requestId } });
+    req.incident = data;
+    req.body = { ...(req.body || {}), congregationId: data.congregation_id };
+    next();
+};
+
 router.get('/events/:eventId/rooms', authenticateUser, async (req, res, next) => {
     try {
         const { data: event, error: eventError } = await supabase.from('events').select('congregation_id').eq('id', req.params.eventId).maybeSingle();
@@ -320,6 +329,44 @@ router.post('/checkout-override', authenticateUser, loadCheckInTenant, requireCa
     await supabase.from('pickup_credentials').update({ verified_at: now, verified_by: req.user.id, override_reason: reason }).eq('check_in_id', req.body.checkInId);
     await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'check_in.checkout_overridden', resource_type: 'check_in', resource_id: req.body.checkInId, metadata: { reason } });
     res.json({ success: true, checkedOutAt: now });
+});
+
+router.get('/incidents', authenticateUser, requireCapability('check_in.override'), async (req, res, next) => {
+    try {
+        const { data, error } = await supabase.from('safeguarding_incidents').select('id,event_id,check_in_id,subject_profile_id,incident_type,severity,summary,actions_taken,status,occurred_at,reported_by,closed_at,closed_by,outcome,retention_until,created_at').eq('congregation_id', req.congregationId).order('occurred_at', { ascending: false }).limit(100);
+        if (error) throw error;
+        res.json({ data });
+    } catch (error) { next(error); }
+});
+
+router.post('/incidents', authenticateUser, requireCapability('check_in.override'), async (req, res, next) => {
+    const incidentType = String(req.body?.incidentType || '');
+    const severity = String(req.body?.severity || '');
+    const summary = String(req.body?.summary || '').trim();
+    const actionsTaken = String(req.body?.actionsTaken || '').trim();
+    if (!['injury','medical','guardian_dispute','missing_child','behavior','facility','other'].includes(incidentType) || !['low','moderate','high','critical'].includes(severity) || summary.length < 20 || actionsTaken.length < 10) {
+        return res.status(400).json({ error: { code: 'INCIDENT_INVALID', message: 'Choose an incident type and severity, then document a specific summary and actions taken.', requestId: req.requestId } });
+    }
+    try {
+        const row = { congregation_id: req.congregationId, event_id: req.body.eventId || null, check_in_id: req.body.checkInId || null, subject_profile_id: req.body.subjectProfileId || null, incident_type: incidentType, severity, summary, actions_taken: actionsTaken, occurred_at: req.body.occurredAt ? new Date(req.body.occurredAt).toISOString() : new Date().toISOString(), reported_by: req.user.id, retention_until: req.body.retentionUntil || null };
+        const { data, error } = await supabase.from('safeguarding_incidents').insert(row).select('*').single();
+        if (error) throw error;
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'safeguarding.incident_recorded', resource_type: 'safeguarding_incident', resource_id: data.id, request_id: req.requestId, metadata: { incidentType, severity } });
+        res.status(201).json({ data });
+    } catch (error) { next(error); }
+});
+
+router.patch('/incidents/:incidentId/close', authenticateUser, loadIncidentTenant, requireCapability('check_in.override'), async (req, res, next) => {
+    const outcome = String(req.body?.outcome || '').trim();
+    if (outcome.length < 10) return res.status(400).json({ error: { code: 'OUTCOME_REQUIRED', message: 'Document the safeguarding outcome before closing.', requestId: req.requestId } });
+    try {
+        const now = new Date().toISOString();
+        const { data, error } = await supabase.from('safeguarding_incidents').update({ status: 'closed', outcome, closed_at: now, closed_by: req.user.id, updated_at: now }).eq('id', req.params.incidentId).eq('congregation_id', req.congregationId).eq('status', 'open').select('*').maybeSingle();
+        if (error) throw error;
+        if (!data) return res.status(409).json({ error: { code: 'INCIDENT_NOT_OPEN', message: 'This incident is already closed.', requestId: req.requestId } });
+        await supabase.from('audit_events').insert({ congregation_id: req.congregationId, actor_user_id: req.user.id, action: 'safeguarding.incident_closed', resource_type: 'safeguarding_incident', resource_id: data.id, request_id: req.requestId });
+        res.json({ data });
+    } catch (error) { next(error); }
 });
 
 

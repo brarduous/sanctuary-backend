@@ -19,6 +19,7 @@ const financialSecurityMigration = fs.readFileSync(path.join(__dirname, '../../s
 const checkinIdempotencyMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717170000_checkin_idempotency.sql'), 'utf8');
 const volunteerSecurityMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260717173000_volunteer_tenant_security.sql'), 'utf8');
 const personalGrowthMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718140000_personal_growth_privacy.sql'), 'utf8');
+const safeguardingMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718141000_safeguarding_incidents.sql'), 'utf8');
 const eventSource = fs.readFileSync(path.join(__dirname, '../../routes/events.js'), 'utf8');
 const sermonSource = fs.readFileSync(path.join(__dirname, '../../routes/sermons.js'), 'utf8');
 const studySource = fs.readFileSync(path.join(__dirname, '../../routes/bibleStudies.js'), 'utf8');
@@ -169,6 +170,17 @@ test('personal growth is separated, owner-only, exportable, and deletable', () =
   assert.match(userSource, /router\.delete\('\/user-profile\/:userId\/personal-growth'/);
   assert.match(userSource, /PERSONAL_GROWTH_MIGRATION_REQUIRED/);
   assert.match(userSource, /Your changes were not saved to ordinary preferences/);
+});
+
+test('safeguarding incidents are restricted, auditable, and closable', () => {
+  assert.match(safeguardingMigration, /create table if not exists public\.safeguarding_incidents/i);
+  assert.match(safeguardingMigration, /force row level security/i);
+  assert.match(safeguardingMigration, /revoke all.+anon, authenticated/is);
+  assert.match(kioskSource, /safeguarding\.incident_recorded/);
+  assert.match(kioskSource, /safeguarding\.incident_closed/);
+  assert.match(kioskSource, /INCIDENT_INVALID/);
+  assert.match(kioskSource, /OUTCOME_REQUIRED/);
+  assert.match(kioskSource, /loadIncidentTenant, requireCapability\('check_in\.override'\)/);
 });
 
 test('broadcast recipient resolution is tenant-scoped and enforced before persistence', () => {
