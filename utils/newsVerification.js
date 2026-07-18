@@ -21,7 +21,7 @@ function truthfulnessBand(score) {
 
 function normalizeClaims(rawClaims) {
     if (!Array.isArray(rawClaims)) return [];
-    return rawClaims.slice(0, 20).map((claim) => {
+    return rawClaims.slice(0, 10).map((claim) => {
         const status = Object.hasOwn(STATUS_VALUES, claim?.status) ? claim.status : 'unverifiable';
         return {
             claimText: String(claim?.claimText || '').trim().slice(0, 2000),

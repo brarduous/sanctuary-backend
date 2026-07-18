@@ -717,7 +717,7 @@ async function generateAndSaveScripturalOutlook() {
     const promptInput = await getScripturalOutlookArticleInputPrompt(article, existingTaxonomies);
     try {
       // Call the AI function with the prompt and content for the current article
-      const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 5000, 'json_object');
+      const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 10000, 'json_object');
       
       if (aiResponse && typeof aiResponse === 'object') {
         aiResponse.contentSchemaVersion = 2;

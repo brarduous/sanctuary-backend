@@ -98,7 +98,7 @@ Return these fields in the same JSON object. Do not omit them and do not collaps
 - "additionalSourcesNeeded": true when fewer than two independent sources support a consequential story
 - "originalArticleAssessment": an object assessing factual claims in the original article only:
   - "assessmentSummary": concise evidence-based summary without judging the author's motives
-  - "claims": up to 20 material factual claims, each with "claimText", "materiality" (1-5), "status" ("supported", "partially_supported", "unverifiable", "unsupported", or "contradicted"), "rationale", and "evidenceUrls" containing only supplied URLs
+  - "claims": up to 10 material factual claims, each with "claimText", "materiality" (1-5), "status" ("supported", "partially_supported", "unverifiable", "unsupported", or "contradicted"), "rationale", and "evidenceUrls" containing only supplied URLs
   - "confidenceFactors": 0-100 integers for "evidenceCoverage", "publisherIndependence", "sourceQuality", "claimSpecificity", "freshness", and "conflictResolution"
   - "unresolvedEvidenceGaps": an array of specific missing evidence
 
@@ -184,7 +184,7 @@ const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomie
         title: source.title,
         url: source.url,
         publishDate: source.publish_date,
-        body: source.body,
+        body: index === 0 ? 'Use the primary article body already supplied above.' : String(source.body || '').slice(0, 12000),
     }));
     return `${rendered}\n\nSUPPLIED SOURCE PACKAGE (the only allowed evidence and URLs):\n${JSON.stringify(suppliedSources)}`;
 };
