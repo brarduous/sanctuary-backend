@@ -106,6 +106,13 @@ test('generation retries twice before a soft failure and preserves exact retry l
   ), false);
 });
 
+test('Bible study persistence writes all lessons before marking the parent complete', () => {
+  assert.match(studyRoute, /const lessonRows = generatedStudy\.studies\.map/);
+  assert.match(studyRoute, /LESSON_PERSISTENCE_FAILED/);
+  assert.ok(studyRoute.indexOf("from('bible_study_lessons').insert(lessonRows)") < studyRoute.indexOf("status: 'completed'"));
+  assert.doesNotMatch(studyRoute, /for \(const lesson of generatedStudy\.studies\)/);
+});
+
 test('style analysis uses complete balanced in-memory extraction and delayed persistence', () => {
   assert.match(analysisRoute, /memoryStorage/);
   assert.match(analysisRoute, /Promise\.all\(files\.map/);

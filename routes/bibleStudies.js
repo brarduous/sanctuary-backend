@@ -411,7 +411,29 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 };
             }
 
-            // Update the parent bible_studies record with top-level data
+            const lessonRows = generatedStudy.studies.map((lesson) => ({
+                study_id: newStudy.study_id,
+                lesson_number: lesson.lesson_number,
+                title: lesson.title,
+                scripture: lesson.scripture || null,
+                key_verse: lesson.key_verse || null,
+                lesson_aims: lesson.lesson_aims || null,
+                study_outline: lesson.study_outline || null,
+                introduction: lesson.introduction || null,
+                commentary: lesson.commentary || null,
+                discussion_starters: lesson.discussion_starters || null,
+                application_sidebar: lesson.application_sidebar || null,
+                conclusion: lesson.conclusion || null,
+                reflection_questions: lesson.reflection_questions || null,
+                user_id: userId,
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString(),
+            }));
+            // One bulk statement is atomic: either every lesson persists or none do.
+            const { error: insertLessonsError } = await supabase.from('bible_study_lessons').insert(lessonRows);
+            if (insertLessonsError) throw Object.assign(new Error('Failed to persist the complete Bible study lesson set.'), { code: 'LESSON_PERSISTENCE_FAILED' });
+
+            // Mark the parent completed only after every lesson exists.
             const { error: updateStudyError } = await supabase
                 .from('bible_studies')
                 .update({
@@ -426,39 +448,13 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 const duration = Date.now() - startTime;
             if (updateStudyError) {
                 console.error(`Error updating bible_studies record ${newStudy.study_id}:`, updateStudyError);
+                await supabase.from('bible_study_lessons').delete().eq('study_id', newStudy.study_id);
                 await supabase.from('bible_studies').update({ status: 'failed' }).eq('study_id', newStudy.study_id);
                 logEvent('error', 'backend', userId, 'generate_bible_study', 'Failed to update bible_studies record', { error: updateStudyError.message }, duration);
                 return; // Stop here if parent update fails
             }
 
-            // Insert individual lessons into bible_study_lessons table
             if (generatedStudy.studies && Array.isArray(generatedStudy.studies)) {
-                for (const lesson of generatedStudy.studies) {
-                    const { error: insertLessonError } = await supabase
-                        .from('bible_study_lessons')
-                        .insert({
-                            study_id: newStudy.study_id, 
-                            lesson_number: lesson.lesson_number,
-                            title: lesson.title,
-                            scripture: lesson.scripture || null,
-                            key_verse: lesson.key_verse || null,
-                            lesson_aims: lesson.lesson_aims || null,
-                            study_outline: lesson.study_outline || null,
-                            introduction: lesson.introduction || null,
-                            commentary: lesson.commentary || null,
-                            discussion_starters: lesson.discussion_starters || null,
-                            application_sidebar: lesson.application_sidebar || null,
-                            conclusion: lesson.conclusion || null,
-                            reflection_questions: lesson.reflection_questions || null, 
-                            user_id: userId, 
-                            created_at: new Date().toISOString(),
-                            updated_at: new Date().toISOString(),
-                        });
-                    if (insertLessonError) {
-                        logEvent('error', 'backend', userId, 'generate_bible_study', `Failed to insert bible_study_lesson for study ${newStudy.study_id}`, { error: insertLessonError.message }, Date.now() - startTime);
-                        console.error(`Error inserting bible_study_lesson for study ${newStudy.study_id}:`, insertLessonError);
-                    }
-                }
                 await supabase.from('ai_generation_runs').update({
                     owner_user_id: userId, content_type: 'bible_study', content_id: String(newStudy.study_id), status: 'completed',
                     model: generation.model, voice_profile_id: voiceContext.profileRecord?.id || null,
