@@ -18,6 +18,7 @@ const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
 const { generateContentImage } = require('../utils/contentImages');
 const { acknowledgePastorReview, getPastorReview } = require('../utils/pastorReviewGate');
+const { normalizeGeneratedLessonLists } = require('../utils/normalizeGeneratedLists');
 
 // Four complete lessons can legitimately take longer than the default quality
 // request. Seven minutes keeps the initial request viable while retaining the
@@ -411,7 +412,9 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 };
             }
 
-            const lessonRows = generatedStudy.studies.map((lesson) => ({
+            const lessonRows = generatedStudy.studies.map((generatedLesson) => {
+                const lesson = normalizeGeneratedLessonLists(generatedLesson);
+                return ({
                 study_id: newStudy.study_id,
                 lesson_number: lesson.lesson_number,
                 title: lesson.title,
@@ -428,7 +431,8 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
                 user_id: userId,
                 created_at: new Date().toISOString(),
                 updated_at: new Date().toISOString(),
-            }));
+                });
+            });
             // One bulk statement is atomic: either every lesson persists or none do.
             const { error: insertLessonsError } = await supabase.from('bible_study_lessons').insert(lessonRows);
             if (insertLessonsError) throw Object.assign(new Error('Failed to persist the complete Bible study lesson set.'), { code: 'LESSON_PERSISTENCE_FAILED' });
