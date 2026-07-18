@@ -234,6 +234,12 @@ test('news verification separates public truthfulness from private editorial con
   assert.match(newsEditorialSource, /confidenceScore/);
   assert.match(newsEditorialSource, /requireAdmin/);
   assert.match(newsSource, /correctionLimiter/);
+  assert.match(newsSource, /automated_high_confidence/);
+  assert.match(newsSource, /confidence_score.*>= 90/);
+  assert.match(newsEditorialSource, /reviewAlert/);
+  assert.match(newsEditorialSource, /confidenceScore < 90/);
+  assert.match(newsGeneratorSource, /news_low_confidence_review_required/);
+  assert.match(newsBackfillSource, /news_low_confidence_review_required/);
 });
 
 test('news editorial history is immutable and withheld from direct clients', () => {

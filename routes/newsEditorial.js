@@ -38,7 +38,7 @@ router.get('/queue', async (req, res, next) => {
             const confidenceScore = score?.confidence_score ?? 0;
             const truthfulnessScore = score?.truthfulness_score ?? 50;
             const priority = Math.round((article.news_impact_score || 0) * 0.35 + (100 - confidenceScore) * 0.3 + (100 - truthfulnessScore) * 0.2 + Math.min(15, correctionCount * 5));
-            return { ...article, ai_outlook: undefined, editorialStatus: review?.decision || 'pending', reviewerDisplayName: review?.reviewer_display_name || null, truthfulnessScore, truthfulnessBand: score?.truthfulness_band || null, confidenceScore, confidenceFactors: score?.confidence_factors || {}, unresolvedEvidenceGaps: score?.unresolved_evidence_gaps || [], assessmentVersion: score?.version || null, openCorrectionCount: correctionCount, queuePriority: priority };
+            return { ...article, ai_outlook: undefined, editorialStatus: review?.decision || 'pending', reviewerDisplayName: review?.reviewer_display_name || null, truthfulnessScore, truthfulnessBand: score?.truthfulness_band || null, confidenceScore, confidenceFactors: score?.confidence_factors || {}, unresolvedEvidenceGaps: score?.unresolved_evidence_gaps || [], assessmentVersion: score?.version || null, openCorrectionCount: correctionCount, reviewAlert: !review || review.decision !== 'approved' ? confidenceScore < 90 : false, queuePriority: priority };
         }).filter((item) => !req.query.status || req.query.status === 'all' || item.editorialStatus === req.query.status).sort((a, b) => b.queuePriority - a.queuePriority).slice(0, limit);
         res.json(queue);
     } catch (error) { next(error); }

@@ -3,6 +3,7 @@ require('dotenv').config();
 const supabase = require('../config/supabase');
 const { getScripturalOutlookPrompt, getScripturalOutlookArticleInputPrompt } = require('../prompts');
 const { attachCorroboratingSources, callOpenAIAndProcessResult, persistNewsVerification } = require('../cron/generateScripturalOutlook');
+const { logEvent } = require('../utils/helpers');
 
 const EDITORIAL_FIELDS = [
   'newsSummary', 'sourceAndFramingAnalysis', 'biblicalReflection', 'citedPassages',
@@ -57,6 +58,9 @@ async function run() {
       const generated = await callOpenAIAndProcessResult(systemPrompt, promptInput, 'gpt-5-mini', 10000, 'json_object');
       if (!generated || typeof generated !== 'object') throw new Error('Model did not return structured JSON.');
       const verification = await persistNewsVerification(article.id, article, generated.originalArticleAssessment || {});
+      if (verification.confidenceScore < 90) {
+        await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review', { outlookId: article.id, confidenceScore: verification.confidenceScore, threshold: 90 });
+      }
       const editorialUpdates = Object.fromEntries(EDITORIAL_FIELDS.filter((field) => generated[field] !== undefined).map((field) => [field, generated[field]]));
       const aiOutlook = {
         ...article.ai_outlook,

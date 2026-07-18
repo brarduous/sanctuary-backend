@@ -128,7 +128,7 @@ async function resolveFilteredOutlookIds({ resolvedTopicId, resolvedCategoryId, 
 
 async function hydratePublicVerification(outlook) {
     const [scores, claims, sources, notices, reviews] = await Promise.all([
-        supabase.from('news_score_versions').select('version,truthfulness_score,truthfulness_band,assessment_summary,assessed_at').eq('outlook_id', outlook.id).order('version', { ascending: false }).limit(1),
+        supabase.from('news_score_versions').select('version,truthfulness_score,truthfulness_band,assessment_summary,assessed_at,confidence_score').eq('outlook_id', outlook.id).order('version', { ascending: false }).limit(1),
         supabase.from('news_claims').select('id,claim_text,materiality,status,rationale').eq('outlook_id', outlook.id).order('materiality', { ascending: false }),
         supabase.from('news_article_sources').select('id,publisher,title,url,published_at,source_type,is_independent').eq('outlook_id', outlook.id).order('created_at'),
         supabase.from('news_correction_notices').select('id,notice,published_at').eq('outlook_id', outlook.id).order('published_at'),
@@ -138,10 +138,11 @@ async function hydratePublicVerification(outlook) {
     if (results.some((result) => result.error?.code === '42P01' || result.error?.code === 'PGRST205')) return outlook;
     for (const result of results) if (result.error) throw result.error;
     const review = reviews.data?.[0];
+    const hasHighAutomatedConfidence = (scores.data?.[0]?.confidence_score ?? 0) >= 90;
     return {
         ...outlook,
         verification: publicAssessment(scores.data?.[0], claims.data, sources.data, notices.data),
-        editorialStatus: review ? 'reviewed' : 'pending_human_review',
+        editorialStatus: review ? 'reviewed' : hasHighAutomatedConfidence ? 'automated_high_confidence' : 'pending_human_review',
         reviewedBy: review?.reviewer_display_name || null,
         reviewedAt: review?.created_at || null,
     };
