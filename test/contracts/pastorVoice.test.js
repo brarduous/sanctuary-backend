@@ -16,6 +16,7 @@ const theologicalReview = read('utils/theologicalReview.js');
 const pastorReviewGate = read('utils/pastorReviewGate.js');
 const openaiResponses = read('utils/openaiResponses.js');
 const contentImages = read('utils/contentImages.js');
+const openaiConfig = read('config/openai.js');
 const resetScript = read('scripts/resetProductionAccount.js');
 const migration = read('supabase/migrations/20260718120000_pastor_voice_profiles.sql');
 
@@ -27,6 +28,12 @@ test('quality-critical generation is server-owned and uses structured Responses 
   assert.doesNotMatch(sermonRoute, /getStylePrompts|sermon_preferences:\s*req\.body|userProfile/);
   assert.match(sermonRoute, /getActiveVoiceContext\(userId\)/);
   assert.match(studyRoute, /buildVoiceInstructions\(voiceContext, 'bible_study'\)/);
+});
+
+test('OpenAI configuration initializes lazily so CI imports require no production secret', () => {
+  assert.match(openaiConfig, /getOpenAIClient/);
+  assert.match(openaiConfig, /new Proxy/);
+  assert.ok(openaiConfig.indexOf('if (!process.env.OPENAI_API_KEY)') < openaiConfig.indexOf('new OpenAI'));
 });
 
 test('generated and rewritten pastoral content is gated for canonical and doctrinal integrity', () => {
