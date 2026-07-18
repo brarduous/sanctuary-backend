@@ -494,14 +494,19 @@ async function fetchTopNewsStories(limit = 24) {
                 let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
                 
                 // Note: Puppeteer setup remains the same as previously defined
+                let final_url = link;
                 const browser = await puppeteer.launch();
-                const page = await browser.newPage();
-                // Set a user agent to mimic a real browser to avoid being blocked
-                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-                await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
-               
-                const final_url = await page.url();
-                await browser.close();
+                try {
+                    const page = await browser.newPage();
+                    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+                    await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
+                    final_url = await page.url();
+                } catch (navigationError) {
+                    console.warn(`Skipping article after navigation failure: ${link}`, navigationError.message);
+                    continue;
+                } finally {
+                    await browser.close();
+                }
 
                 // Skip if the resolved URL is a video page
                 if ((final_url || '').toLowerCase().includes('/video/')) {

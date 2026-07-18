@@ -252,6 +252,12 @@ test('recent news verification backfill is bounded, resumable, and preserves leg
   assert.match(newsBackfillSource, /persistNewsVerification/);
 });
 
+test('news ingestion isolates publisher navigation failures', () => {
+  assert.match(newsGeneratorSource, /catch \(navigationError\)/);
+  assert.match(newsGeneratorSource, /Skipping article after navigation failure/);
+  assert.match(newsGeneratorSource, /finally \{\s*await browser\.close\(\)/);
+});
+
 test('every legacy congregation-owned table has forced RLS in the enforcement migration', () => {
   for (const table of ['bible_studies', 'check_ins', 'church_crm_profiles', 'congregation_members', 'congregations', 'events', 'households', 'prayer_requests', 'volunteer_roles']) {
     assert.match(tenantRlsMigration, new RegExp(`alter table public\\.${table} enable row level security`, 'i'));
