@@ -27,6 +27,8 @@ async function callStructuredResponse({
   maxOutputTokens = 6000,
   model = QUALITY_MODEL,
   reasoningEffort = QUALITY_REASONING_EFFORT,
+  timeoutMs = QUALITY_TIMEOUT_MS,
+  maxRetries = QUALITY_MAX_RETRIES,
 }) {
   const startedAt = Date.now();
   const response = await openai.responses.create({
@@ -45,8 +47,8 @@ async function callStructuredResponse({
       },
     },
   }, {
-    timeout: QUALITY_TIMEOUT_MS,
-    maxRetries: QUALITY_MAX_RETRIES,
+    timeout: timeoutMs,
+    maxRetries,
   });
 
   if (!response.output_text) {

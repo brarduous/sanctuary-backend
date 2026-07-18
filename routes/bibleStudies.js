@@ -18,6 +18,11 @@ const { generateBibleStudyPrompt } = require('../prompts');
 const { sendPushToCongregation } = require('../utils/push');
 const { generateContentImage } = require('../utils/contentImages');
 
+// Four complete lessons can legitimately take longer than the default quality
+// request. Seven minutes keeps the initial request viable while retaining the
+// required two transient retries.
+const BIBLE_STUDY_GENERATION_TIMEOUT_MS = Number(process.env.OPENAI_BIBLE_STUDY_TIMEOUT_MS || 420000);
+
 const bibleStudySchema = {
     type: 'object', additionalProperties: false,
     required: ['title', 'subtitle', 'illustration', 'study_method', 'studies'],
@@ -335,7 +340,14 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
         ].join('\n');
         const bible_study_prompt = await generateBibleStudyPrompt();
         try {
-            const generation = await callStructuredResponse({ instructions: bible_study_prompt, input: userPrompt, schema: bibleStudySchema, schemaName: 'generated_bible_study', maxOutputTokens: 14000 });
+            const generation = await callStructuredResponse({
+                instructions: bible_study_prompt,
+                input: userPrompt,
+                schema: bibleStudySchema,
+                schemaName: 'generated_bible_study',
+                maxOutputTokens: 14000,
+                timeoutMs: BIBLE_STUDY_GENERATION_TIMEOUT_MS,
+            });
             const generatedStudy = generation.data;
             if (generatedStudy.studies.length !== lessonCount) throw Object.assign(new Error('Generated study did not follow the requested lesson count.'), { code: 'FORMAT_NONCOMPLIANCE' });
             const voiceSources = await getVoiceSourceTexts(userId, voiceContext.profileRecord?.id);
