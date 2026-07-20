@@ -9,6 +9,7 @@
     "dev:staging": "node scripts/devStaging.js",
     "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-outlook": "node cron/generateScripturalOutlook.js",
+    "test:news-sources": "node scripts/testNewsSources.js",
     "cron-daily-news": "node cron/dailyNewsSynopsis.js",
     "refresh-taxonomy-breakdowns": "node scripts/refreshTaxonomyBreakdowns.js",
     "backfill-news-impact": "node scripts/backfillNewsImpactScores.js",

@@ -157,13 +157,13 @@ function attachCorroboratingSources(articles) {
 }
 
 const NEWS_SOURCES = [
-    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
-    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
-    { publisher: 'Federal Register', kind: 'federal-register', url: 'https://www.federalregister.gov/api/v1/documents.json?per_page=40&order=newest', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
+    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
+    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
+    { publisher: 'Federal Register', kind: 'federal-register', url: 'https://www.federalregister.gov/api/v1/documents.json?per_page=40&order=newest', fetchFullText: true, accessMode: 'us_government_full_text', sourceType: 'official_document', isIndependent: false },
 ];
 
 function stripHtml(value) {
@@ -178,11 +178,51 @@ async function fetchSourceItems(source, parser) {
             link: [document.html_url],
             description: [document.abstract || document.type || 'Official document published in the Federal Register.'],
             pubDate: [document.publication_date],
+            documentNumber: [document.document_number],
         }));
     }
 
     const result = await parser.parseStringPromise(response.data);
     return result?.rss?.channel?.[0]?.item || [];
+}
+
+async function fetchAuthorizedFullText(source, item) {
+    if (source.kind !== 'federal-register') return null;
+    const documentNumber = item.documentNumber?.[0];
+    if (!documentNumber) return null;
+    const detail = await axios.get(`https://www.federalregister.gov/api/v1/documents/${encodeURIComponent(documentNumber)}.json`, { timeout: 30000 });
+    const bodyUrl = detail.data?.raw_text_url;
+    if (!bodyUrl) return null;
+    const bodyResponse = await axios.get(bodyUrl, { timeout: 30000, responseType: 'text' });
+    return String(bodyResponse.data || '').replace(/\r\n/g, '\n').trim();
+}
+
+async function smokeTestNewsSources() {
+    const parser = new xml2js.Parser();
+    const results = [];
+    for (const source of NEWS_SOURCES) {
+        try {
+            const items = await fetchSourceItems(source, parser);
+            const item = items[0];
+            if (!item) throw new Error('source returned no articles');
+            const excerpt = stripHtml(item.description?.[0] || '');
+            const authorizedBody = source.accessMode === 'us_government_full_text'
+                ? await fetchAuthorizedFullText(source, item)
+                : null;
+            results.push({
+                publisher: source.publisher,
+                status: 'ok',
+                accessMode: source.accessMode,
+                articleCount: items.length,
+                title: item.title?.[0] || '',
+                publishedAt: item.pubDate?.[0] || null,
+                retrievedCharacters: authorizedBody?.length || excerpt.length,
+            });
+        } catch (error) {
+            results.push({ publisher: source.publisher, status: 'failed', accessMode: source.accessMode, error: error.message });
+        }
+    }
+    return results;
 }
 
 async function persistNewsVerification(outlookId, article, assessment) {
@@ -514,7 +554,7 @@ async function fetchTopNewsStories(limit = 24) {
                 let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
                 
                 let final_url = link;
-                if (source.fetchFullText) {
+                if (source.fetchFullText && source.kind !== 'federal-register') {
                     const browser = await puppeteer.launch();
                     try {
                         const page = await browser.newPage();
@@ -542,6 +582,26 @@ async function fetchTopNewsStories(limit = 24) {
                             url: final_url,
                             thumbnail_url,
                             body: stripHtml(description),
+                            description: stripHtml(description),
+                            publish_date,
+                            publisher: source.publisher,
+                            sourceType: source.sourceType,
+                            isIndependent: source.isIndependent,
+                        });
+                        continue;
+                    }
+
+                    if (source.kind === 'federal-register') {
+                        const authorizedBody = await fetchAuthorizedFullText(source, item);
+                        if (!authorizedBody) {
+                            console.warn(`Skipping Federal Register document without full text: ${title}`);
+                            continue;
+                        }
+                        newsStories.push({
+                            title,
+                            url: final_url,
+                            thumbnail_url,
+                            body: authorizedBody,
                             description: stripHtml(description),
                             publish_date,
                             publisher: source.publisher,
@@ -883,6 +943,9 @@ async function generateAndSaveScripturalOutlook() {
 // You can export this function to be used by your cron job scheduler
 module.exports = {
   generateAndSaveScripturalOutlook,
+  fetchTopNewsStories,
+  smokeTestNewsSources,
+  NEWS_SOURCES,
   attachCorroboratingSources,
   callOpenAIAndProcessResult,
   persistNewsVerification,
