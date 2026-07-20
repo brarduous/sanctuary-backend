@@ -1,7 +1,7 @@
 const express = require('express');
 const { generateWeeklyBatch } = require('../cron/generateGeneralDevotionals');
 const supabase = require('../config/supabase');
-const { sendPushToAll } = require('../utils/push');
+const { sendPushToAll, sendPushToUsers } = require('../utils/push');
 
 const router = express.Router();
 
@@ -46,13 +46,42 @@ router.get('/notifications/daily-devotional', async (req, res) => {
       .limit(1)
       .maybeSingle();
     if (error) throw error;
-    const body = devotional?.title && devotional?.scripture_reference
+    const generalBody = devotional?.title && devotional?.scripture_reference
       ? `${devotional.title} — reflecting on ${devotional.scripture_reference}.`
       : devotional?.title
         ? `Today's reflection: ${devotional.title}.`
         : 'Your daily devotional is ready.';
-    const result = await sendPushToAll('Today’s devotional is ready', body, { url: '/(tabs)' }, 'devotionals');
-    res.json({ success: true, ...result });
+    const dayStart = `${today}T00:00:00.000Z`;
+    const [{ data: personalized, error: personalizedError }, { data: authProfiles }, { data: userProfiles }] = await Promise.all([
+      supabase.from('daily_devotionals').select('user_id, title, scripture, created_at').gte('created_at', dayStart).eq('status', 'completed').order('created_at', { ascending: false }),
+      supabase.from('profiles').select('id'),
+      supabase.from('user_profiles').select('user_id'),
+    ]);
+    if (personalizedError) throw personalizedError;
+
+    const latestByUser = new Map();
+    for (const item of personalized || []) {
+      if (item.user_id && !latestByUser.has(item.user_id)) latestByUser.set(item.user_id, item);
+    }
+    let sent = 0;
+    for (const [userId, item] of latestByUser) {
+      const body = item.title && item.scripture
+        ? `${item.title} — reflecting on ${item.scripture}.`
+        : item.title ? `Today's reflection: ${item.title}.` : generalBody;
+      const result = await sendPushToUsers({ userIds: [userId], title: 'Today’s devotional is ready', body, data: { url: '/(tabs)' }, preference: 'devotionals' });
+      sent += result.sent;
+    }
+
+    const allUserIds = new Set([
+      ...(authProfiles || []).map(profile => profile.id),
+      ...(userProfiles || []).map(profile => profile.user_id),
+    ].filter(Boolean));
+    const generalUserIds = [...allUserIds].filter(userId => !latestByUser.has(userId));
+    if (generalUserIds.length) {
+      const result = await sendPushToUsers({ userIds: generalUserIds, title: 'Today’s devotional is ready', body: generalBody, data: { url: '/(tabs)' }, preference: 'devotionals' });
+      sent += result.sent;
+    }
+    res.json({ success: true, sent, personalized: latestByUser.size });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
