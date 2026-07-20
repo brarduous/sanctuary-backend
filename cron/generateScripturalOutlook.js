@@ -379,6 +379,19 @@ async function uploadImageToSupabase(imageInput, bucketName, path) {
     }
 }
 
+function buildNewsImagePrompt(article) {
+    const summary = article.ai_outlook?.newsSummary || article.ai_outlook?.synopsis || article.description || '';
+    return `Create a respectful editorial illustration for this news story: "${article.title}". Context: ${String(summary).slice(0, 700)}. Use a sophisticated documentary-inspired digital illustration, restrained natural colors, realistic geography and human dignity, strong single focal point, and a wide 16:9 composition. Do not include text, captions, logos, watermarks, political campaign branding, graphic injury, or identifiable likenesses of real people. Avoid sensationalism and partisan visual cues.`;
+}
+
+async function createAndStoreNewsImage(article, storageKey) {
+    const prompt = buildNewsImagePrompt(article);
+    const generated = await generateImage(prompt);
+    if (!generated) return null;
+    const safeKey = String(storageKey).replace(/[^a-zA-Z0-9_-]/g, '-');
+    return uploadImageToSupabase(generated, 'Sanctuary News Images', `articles/${safeKey}.png`);
+}
+
 // Function to fetch all existing topics and categories for the AI prompt
 async function fetchExistingTaxonomies() {
     const { data: topics, error: topicsError } = await supabase
@@ -835,6 +848,12 @@ async function generateAndSaveScripturalOutlook() {
             ? aiResponse.sources.filter((source) => source && allowedUrls.has(source.url))
             : allowedSources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' }));
         aiResponse.additionalSourcesNeeded = aiResponse.sources.length < 2;
+
+        if (!article.thumbnail_url) {
+            const imageKey = `${Date.now()}-${crypto.createHash('sha256').update(article.url).digest('hex').slice(0, 12)}`;
+            article.thumbnail_url = await createAndStoreNewsImage({ ...article, ai_outlook: aiResponse }, imageKey);
+            aiResponse.imagePrompt = buildNewsImagePrompt({ ...article, ai_outlook: aiResponse });
+        }
         
         // 1. Save the core outlook and get its ID
         const outlook = {
@@ -946,6 +965,8 @@ module.exports = {
   fetchTopNewsStories,
   smokeTestNewsSources,
   NEWS_SOURCES,
+  buildNewsImagePrompt,
+  createAndStoreNewsImage,
   attachCorroboratingSources,
   callOpenAIAndProcessResult,
   persistNewsVerification,
