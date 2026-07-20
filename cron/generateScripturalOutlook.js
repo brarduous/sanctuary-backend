@@ -156,6 +156,35 @@ function attachCorroboratingSources(articles) {
     }));
 }
 
+const NEWS_SOURCES = [
+    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: true, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
+    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
+    { publisher: 'Federal Register', kind: 'federal-register', url: 'https://www.federalregister.gov/api/v1/documents.json?per_page=40&order=newest', fetchFullText: false, sourceType: 'official_document', isIndependent: false },
+];
+
+function stripHtml(value) {
+    return cheerio.load(`<div>${String(value || '')}</div>`)('div').text().replace(/\s+/g, ' ').trim();
+}
+
+async function fetchSourceItems(source, parser) {
+    const response = await axios.get(source.url, { timeout: 30000 });
+    if (source.kind === 'federal-register') {
+        return (response.data?.results || []).map((document) => ({
+            title: [document.title],
+            link: [document.html_url],
+            description: [document.abstract || document.type || 'Official document published in the Federal Register.'],
+            pubDate: [document.publication_date],
+        }));
+    }
+
+    const result = await parser.parseStringPromise(response.data);
+    return result?.rss?.channel?.[0]?.item || [];
+}
+
 async function persistNewsVerification(outlookId, article, assessment) {
     const sourcePackage = [article, ...(article.corroboratingSources || [])];
     const sourceRows = sourcePackage.map((source, index) => ({
@@ -164,8 +193,10 @@ async function persistNewsVerification(outlookId, article, assessment) {
         title: source.title,
         url: source.url,
         published_at: source.publish_date || null,
-        source_type: index === 0 ? 'primary_reporting' : 'additional_reporting',
-        is_independent: index > 0,
+        source_type: source.sourceType === 'official_document'
+            ? 'official_document'
+            : (index === 0 ? 'primary_reporting' : 'additional_reporting'),
+        is_independent: Boolean(source.isIndependent && index > 0),
         extracted_text_checksum: crypto.createHash('sha256').update(source.body || '').digest('hex'),
     }));
     const { data: savedSources, error: sourceError } = await supabase.from('news_article_sources').insert(sourceRows).select('id,url');
@@ -415,36 +446,24 @@ async function saveScripturalOutlook(outlook) {
 async function fetchTopNewsStories(limit = 24) {
   console.log('Fetching top news stories...');
   const startTime = Date.now();
-    const rssFeedUrls = [
-        'https://feeds.npr.org/1001/rss.xml',
-        'https://www.cbsnews.com/latest/rss/main',
-        'https://moxie.foxnews.com/google-publisher/latest.xml',
-    ];
-    const publishers = ['NPR', 'CBS News', 'Fox News'];
-    
     const newsStories = [];
     const parser = new xml2js.Parser();
     
     // First, fetch all feeds and store their items
     const feedItems = [];
-    for (const rssFeedUrl of rssFeedUrls) {
+    for (const source of NEWS_SOURCES) {
         try {
-            console.log(`Fetching articles from: ${rssFeedUrl}`);
-            const response = await axios.get(rssFeedUrl);
-            const xml = response.data;
-
-            const result = await parser.parseStringPromise(xml);
-            
-            const items = result.rss.channel[0].item;
-            console.log(`Fetched ${items.length} articles from RSS feed: ${rssFeedUrl}`);
+            console.log(`Fetching articles from: ${source.url}`);
+            const items = await fetchSourceItems(source, parser);
+            console.log(`Fetched ${items.length} articles from source: ${source.publisher}`);
             if (!items || items.length === 0) {
-                console.warn(`No articles found in RSS feed: ${rssFeedUrl}`);
+                console.warn(`No articles found for source: ${source.publisher}`);
                 feedItems.push([]);
             } else {
                 feedItems.push(items);
             }
         } catch (err) {
-            console.error(`Error fetching and parsing RSS feed ${rssFeedUrl}:`, err);
+            console.error(`Error fetching source ${source.publisher}:`, err.message);
             feedItems.push([]); // Add empty array for failed feeds
         }
     }
@@ -460,6 +479,7 @@ async function fetchTopNewsStories(limit = 24) {
         for (let i = 0; i < feedItems.length && newsStories.length < limit; i++) {
             const feedIndex = (currentIndex + i) % feedItems.length;
             const items = feedItems[feedIndex];
+            const source = NEWS_SOURCES[feedIndex];
             const itemIndex = feedIndices[feedIndex];
             
             if (itemIndex < items.length) {
@@ -493,19 +513,20 @@ async function fetchTopNewsStories(limit = 24) {
                 const publish_date = item.pubDate ? item.pubDate[0] : null; // RSS pubDate
                 let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
                 
-                // Note: Puppeteer setup remains the same as previously defined
                 let final_url = link;
-                const browser = await puppeteer.launch();
-                try {
-                    const page = await browser.newPage();
-                    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
-                    await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
-                    final_url = await page.url();
-                } catch (navigationError) {
-                    console.warn(`Skipping article after navigation failure: ${link}`, navigationError.message);
-                    continue;
-                } finally {
-                    await browser.close();
+                if (source.fetchFullText) {
+                    const browser = await puppeteer.launch();
+                    try {
+                        const page = await browser.newPage();
+                        await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+                        await page.goto(link, {waitUntil: 'domcontentloaded', timeout: 30000});
+                        final_url = await page.url();
+                    } catch (navigationError) {
+                        console.warn(`Skipping article after navigation failure: ${link}`, navigationError.message);
+                        continue;
+                    } finally {
+                        await browser.close();
+                    }
                 }
 
                 // Skip if the resolved URL is a video page
@@ -514,7 +535,22 @@ async function fetchTopNewsStories(limit = 24) {
                     continue;
                 }
 
-                try{
+                try {
+                    if (!source.fetchFullText) {
+                        newsStories.push({
+                            title,
+                            url: final_url,
+                            thumbnail_url,
+                            body: stripHtml(description),
+                            description: stripHtml(description),
+                            publish_date,
+                            publisher: source.publisher,
+                            sourceType: source.sourceType,
+                            isIndependent: source.isIndependent,
+                        });
+                        continue;
+                    }
+
                     const response = await axios.get(final_url);
                     console.log(`Fetched article content from: ${final_url}`);
                     const html = await response.data;
@@ -539,7 +575,7 @@ async function fetchTopNewsStories(limit = 24) {
                       });
                     const articleBody = paragraphText.join('\n\n');
                     
-                    const article = { title: title, url: final_url, thumbnail_url:thumbnail_url, body: articleBody, description: description, publish_date, publisher: publishers[feedIndex] };
+                    const article = { title, url: final_url, thumbnail_url, body: articleBody, description, publish_date, publisher: source.publisher, sourceType: source.sourceType, isIndependent: source.isIndependent };
                     newsStories.push(article);
                 }catch(err){
                   console.error(`Error fetching or parsing article at ${link}:`, err);
