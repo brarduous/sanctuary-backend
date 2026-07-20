@@ -16,7 +16,9 @@ const fetchPushRecipients = async (userIds = null, preference = null) => {
         authQuery,
         userProfileQuery,
     ]);
-    if (authError) throw authError;
+    // Some production projects use only user_profiles. Treat a missing legacy
+    // profiles table as an empty token source while surfacing all other errors.
+    if (authError && authError.code !== '42P01') throw authError;
     if (userProfileError) throw userProfileError;
 
     const preferencesByUser = new Map((userProfiles || []).map(profile => [
