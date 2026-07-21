@@ -53,7 +53,7 @@ router.get('/notifications/daily-devotional', async (req, res) => {
         : 'Your daily devotional is ready.';
     const dayStart = `${today}T00:00:00.000Z`;
     const [{ data: personalized, error: personalizedError }, { data: authProfiles }, { data: userProfiles }] = await Promise.all([
-      supabase.from('daily_devotionals').select('user_id, title, scripture, created_at').gte('created_at', dayStart).eq('status', 'completed').order('created_at', { ascending: false }),
+      supabase.from('daily_devotionals').select('devotional_id, user_id, title, scripture, created_at').gte('created_at', dayStart).eq('status', 'completed').order('created_at', { ascending: false }),
       supabase.from('profiles').select('id'),
       supabase.from('user_profiles').select('user_id'),
     ]);
@@ -68,7 +68,7 @@ router.get('/notifications/daily-devotional', async (req, res) => {
       const body = item.title && item.scripture
         ? `${item.title} — reflecting on ${item.scripture}.`
         : item.title ? `Today's reflection: ${item.title}.` : generalBody;
-      const result = await sendPushToUsers({ userIds: [userId], title: 'Today’s devotional is ready', body, data: { url: '/(tabs)' }, preference: 'devotionals' });
+      const result = await sendPushToUsers({ userIds: [userId], title: 'Today’s devotional is ready', body, data: { url: `/devotional/${item.devotional_id}` }, preference: 'devotionals', requireExplicitPreference: true });
       sent += result.sent;
     }
 
@@ -78,7 +78,7 @@ router.get('/notifications/daily-devotional', async (req, res) => {
     ].filter(Boolean));
     const generalUserIds = [...allUserIds].filter(userId => !latestByUser.has(userId));
     if (generalUserIds.length) {
-      const result = await sendPushToUsers({ userIds: generalUserIds, title: 'Today’s devotional is ready', body: generalBody, data: { url: '/(tabs)' }, preference: 'devotionals' });
+      const result = await sendPushToUsers({ userIds: generalUserIds, title: 'Today’s devotional is ready', body: generalBody, data: { url: '/(tabs)' }, preference: 'devotionals', requireExplicitPreference: true });
       sent += result.sent;
     }
     res.json({ success: true, sent, personalized: latestByUser.size });

@@ -4,7 +4,7 @@ const supabase = require('../config/supabase');
 // Create a new Expo SDK client
 let expo = new Expo();
 
-const fetchPushRecipients = async (userIds = null, preference = null) => {
+const fetchPushRecipients = async (userIds = null, preference = null, requireExplicitPreference = false) => {
     let authQuery = supabase.from('profiles').select('id, expo_push_token').not('expo_push_token', 'is', null);
     let userProfileQuery = supabase.from('user_profiles').select('user_id, expo_push_token, user_preferences');
     if (userIds) {
@@ -39,12 +39,14 @@ const fetchPushRecipients = async (userIds = null, preference = null) => {
     ];
 
     return [...new Map(recipients
-        .filter(recipient => !preference || recipient.preferences[preference] !== false)
+        .filter(recipient => !preference || (requireExplicitPreference
+            ? recipient.preferences[preference] === true
+            : recipient.preferences[preference] !== false))
         .map(recipient => [recipient.token, recipient])).values()];
 };
 
-const sendPushToUsers = async ({ userIds = null, title, body, data = {}, preference = null }) => {
-    const recipients = await fetchPushRecipients(userIds, preference);
+const sendPushToUsers = async ({ userIds = null, title, body, data = {}, preference = null, requireExplicitPreference = false }) => {
+    const recipients = await fetchPushRecipients(userIds, preference, requireExplicitPreference);
     const messages = recipients
         .filter(recipient => Expo.isExpoPushToken(recipient.token))
         .map(recipient => ({
