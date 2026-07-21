@@ -11,6 +11,7 @@ const supabase = require('./config/supabase');
 const { logEvent } = require('./utils/helpers');
 
 const adminRouter = require('./routes/admin'); // <--- Add this
+const notificationsRouter = require('./routes/notifications');
 
 // Initialize Stripe (needed for webhooks)
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
@@ -410,6 +411,7 @@ app.use('/messages', messagesRouter);
 app.use('/api/crm', crmRouter);
 app.use('/api/admin', demoAdminRouter);
 app.use('/api/cron', cronRouter);
+app.use('/api/notifications', notificationsRouter);
 app.use('/events', eventsRouter);
 app.use('/stripe', stripeRouter);
 app.use('/kiosk', kioskRouter);
@@ -452,6 +454,7 @@ app.use('/api/v1/staff', staffRouter);
 app.use('/api/v1/care', careRouter);
 app.use('/api/v1/giving', givingRouter);
 app.use('/api/v1/admin/news', newsEditorialRouter);
+app.use('/api/v1/notifications', notificationsRouter);
 
 app.get('/health', (_req, res) => res.json({ status: 'ok' }));
 app.get('/ready', (_req, res) => res.json({ status: 'ready', integrations: { stripe: Boolean(process.env.STRIPE_SECRET_KEY) } }));
