@@ -207,23 +207,26 @@ test('filtered news feeds avoid the production-timeout nested taxonomy join', ()
   assert.doesNotMatch(newsSource, /outlook_categories!inner/);
 });
 
-test('news generation requires accountable structured pastoral analysis', () => {
+test('news generation separates layperson outlook from clergy guidance', () => {
   for (const field of [
     'newsSummary',
     'sourceAndFramingAnalysis',
-    'biblicalReflection',
+    'outlook',
     'citedPassages',
     'faithfulResponse',
-    'congregationalImplications',
-    'ministryActions',
-    'sermonDiscussionPrompts',
+    'clergyGuidance',
     'sources',
     'additionalSourcesNeeded',
   ]) assert.match(promptSource, new RegExp(`"${field}"`));
   assert.match(promptSource, /Never invent a URL, author, quotation, reviewer/);
   assert.match(newsGeneratorSource, /status: 'pending_human_review'/);
   assert.match(newsGeneratorSource, /allowedUrls\.has\(source\.url\)/);
-  assert.match(newsGeneratorSource, /contentSchemaVersion = 2/);
+  assert.match(newsGeneratorSource, /contentSchemaVersion = 3/);
+  assert.match(newsSource, /publicNewsOutlook/);
+  assert.match(newsSource, /requireCapability\('content\.read'\)/);
+  assert.match(newsGeneratorSource, /publisherImageUrl/);
+  assert.match(newsGeneratorSource, /publisherFallbackImageUrl/);
+  assert.doesNotMatch(newsGeneratorSource, /createAndStoreNewsImage/);
 });
 
 test('news verification separates public truthfulness from private editorial confidence', () => {

@@ -163,8 +163,42 @@ const NEWS_SOURCES = [
     { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
     { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
     { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
-    { publisher: 'Federal Register', kind: 'federal-register', url: 'https://www.federalregister.gov/api/v1/documents.json?per_page=40&order=newest', fetchFullText: true, accessMode: 'us_government_full_text', sourceType: 'official_document', isIndependent: false },
+    { publisher: 'BBC News', kind: 'rss', url: 'https://feeds.bbci.co.uk/news/rss.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'The Guardian', kind: 'rss', url: 'https://www.theguardian.com/us-news/rss', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
 ];
+
+function feedImageUrl(item) {
+    const candidates = [
+        item['media:thumbnail']?.[0]?.$?.url,
+        ...(item['media:content'] || []).map((entry) => entry?.$?.url),
+        item.enclosure?.find((entry) => String(entry?.$?.type || '').startsWith('image/'))?.$?.url,
+        typeof item.image?.[0] === 'string' ? item.image[0] : item.image?.[0]?.url?.[0],
+    ].filter(Boolean);
+    return candidates[candidates.length - 1] || null;
+}
+
+async function publisherImageUrl(articleUrl) {
+    try {
+        const response = await axios.get(articleUrl, {
+            timeout: 15000,
+            maxRedirects: 5,
+            headers: { 'User-Agent': 'SanctuaryNewsBot/1.0 (+https://sanctuarynews.com)' },
+        });
+        const $ = cheerio.load(response.data);
+        const imageUrl = $('meta[property="og:image"]').attr('content')
+            || $('meta[name="twitter:image"]').attr('content')
+            || $('meta[property="twitter:image"]').attr('content');
+        return imageUrl ? new URL(imageUrl, response.request?.res?.responseUrl || articleUrl).toString() : null;
+    } catch (error) {
+        console.warn(`Could not resolve publisher image for ${articleUrl}: ${error.message}`);
+        return null;
+    }
+}
+
+function publisherFallbackImageUrl(publisher) {
+    const backendUrl = (process.env.RENDER_EXTERNAL_URL || process.env.PUBLIC_BACKEND_URL || 'https://sanctuary-backend-qts0.onrender.com').replace(/\/$/, '');
+    return `${backendUrl}/news/source-image/${encodeURIComponent(publisher)}.svg`;
+}
 
 function stripHtml(value) {
     return cheerio.load(`<div>${String(value || '')}</div>`)('div').text().replace(/\s+/g, ' ').trim();
@@ -206,6 +240,7 @@ async function smokeTestNewsSources() {
             const item = items[0];
             if (!item) throw new Error('source returned no articles');
             const excerpt = stripHtml(item.description?.[0] || '');
+            const firstImage = feedImageUrl(item) || await publisherImageUrl(item.link?.[0]);
             const authorizedBody = source.accessMode === 'us_government_full_text'
                 ? await fetchAuthorizedFullText(source, item)
                 : null;
@@ -217,6 +252,8 @@ async function smokeTestNewsSources() {
                 title: item.title?.[0] || '',
                 publishedAt: item.pubDate?.[0] || null,
                 retrievedCharacters: authorizedBody?.length || excerpt.length,
+                imageCoverage: `${items.filter((candidate) => feedImageUrl(candidate)).length}/${items.length}`,
+                firstArticleImage: firstImage ? 'publisher' : 'fallback-card',
             });
         } catch (error) {
             results.push({ publisher: source.publisher, status: 'failed', accessMode: source.accessMode, error: error.message });
@@ -377,19 +414,6 @@ async function uploadImageToSupabase(imageInput, bucketName, path) {
         console.error(`Error uploading image to Supabase (${path}):`, error);
         return null;
     }
-}
-
-function buildNewsImagePrompt(article) {
-    const summary = article.ai_outlook?.newsSummary || article.ai_outlook?.synopsis || article.description || '';
-    return `Create a respectful editorial illustration for this news story: "${article.title}". Context: ${String(summary).slice(0, 700)}. Use a sophisticated documentary-inspired digital illustration, restrained natural colors, realistic geography and human dignity, strong single focal point, and a wide 16:9 composition. Do not include text, captions, logos, watermarks, political campaign branding, graphic injury, or identifiable likenesses of real people. Avoid sensationalism and partisan visual cues.`;
-}
-
-async function createAndStoreNewsImage(article, storageKey) {
-    const prompt = buildNewsImagePrompt(article);
-    const generated = await generateImage(prompt);
-    if (!generated) return null;
-    const safeKey = String(storageKey).replace(/[^a-zA-Z0-9_-]/g, '-');
-    return uploadImageToSupabase(generated, 'Sanctuary News Images', `articles/${safeKey}.png`);
 }
 
 // Function to fetch all existing topics and categories for the AI prompt
@@ -564,7 +588,9 @@ async function fetchTopNewsStories(limit = 24) {
                 console.log(`Processing article: ${title} - ${link}`);
                 const description = item.description? item.description[0] : '';
                 const publish_date = item.pubDate ? item.pubDate[0] : null; // RSS pubDate
-                let thumbnail_url = item['media:thumbnail'] ? item['media:thumbnail'][0].$.url : null;
+                const thumbnail_url = feedImageUrl(item)
+                    || await publisherImageUrl(link)
+                    || publisherFallbackImageUrl(source.publisher);
                 
                 let final_url = link;
                 if (source.fetchFullText && source.kind !== 'federal-register') {
@@ -835,7 +861,7 @@ async function generateAndSaveScripturalOutlook() {
       const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 10000, 'json_object');
       
       if (aiResponse && typeof aiResponse === 'object') {
-        aiResponse.contentSchemaVersion = 2;
+        aiResponse.contentSchemaVersion = 3;
         aiResponse.editorialReview = {
             status: 'pending_human_review',
             reviewerName: null,
@@ -849,12 +875,6 @@ async function generateAndSaveScripturalOutlook() {
             : allowedSources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' }));
         aiResponse.additionalSourcesNeeded = aiResponse.sources.length < 2;
 
-        if (!article.thumbnail_url) {
-            const imageKey = `${Date.now()}-${crypto.createHash('sha256').update(article.url).digest('hex').slice(0, 12)}`;
-            article.thumbnail_url = await createAndStoreNewsImage({ ...article, ai_outlook: aiResponse }, imageKey);
-            aiResponse.imagePrompt = buildNewsImagePrompt({ ...article, ai_outlook: aiResponse });
-        }
-        
         // 1. Save the core outlook and get its ID
         const outlook = {
             article_title: aiResponse.title,
@@ -965,8 +985,6 @@ module.exports = {
   fetchTopNewsStories,
   smokeTestNewsSources,
   NEWS_SOURCES,
-  buildNewsImagePrompt,
-  createAndStoreNewsImage,
   attachCorroboratingSources,
   callOpenAIAndProcessResult,
   persistNewsVerification,

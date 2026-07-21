@@ -7,8 +7,43 @@ const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
 const rateLimit = require('express-rate-limit');
 const { publicAssessment } = require('../utils/newsVerification');
+const { requireCapability } = require('../middleware/authorization');
 
 const correctionLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
+
+function publicNewsOutlook(outlook) {
+    if (!outlook || typeof outlook !== 'object') return outlook;
+    const {
+        clergyGuidance,
+        biblicalReflection,
+        congregationalImplications,
+        ministryActions,
+        sermonDiscussionPrompts,
+        ...publicOutlook
+    } = outlook;
+    return publicOutlook;
+}
+
+function publicNewsArticle(article) {
+    return article ? { ...article, ai_outlook: publicNewsOutlook(article.ai_outlook) } : article;
+}
+
+router.get('/news/source-image/:publisher.svg', (req, res) => {
+    const publisher = String(req.params.publisher || 'News Source').slice(0, 80);
+    const escapedPublisher = publisher
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;');
+    const hue = parseInt(crypto.createHash('sha256').update(publisher).digest('hex').slice(0, 4), 16) % 360;
+    res.set({
+        'Content-Type': 'image/svg+xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=604800, immutable',
+        'X-Content-Type-Options': 'nosniff',
+    });
+    res.send(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-label="${escapedPublisher}"><rect width="1200" height="675" fill="hsl(${hue} 28% 20%)"/><rect x="72" y="72" width="1056" height="531" rx="24" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="3"/><text x="600" y="310" fill="#fff" font-family="Georgia,serif" font-size="76" font-weight="700" text-anchor="middle">${escapedPublisher}</text><text x="600" y="390" fill="rgba(255,255,255,.76)" font-family="Arial,sans-serif" font-size="28" letter-spacing="8" text-anchor="middle">SOURCE REPORTING</text></svg>`);
+});
 
 const NEWS_LIST_COLUMNS = [
     'id',
@@ -350,6 +385,34 @@ router.get('/topics/:id', optionalAuth, async (req, res) => {
 
 // --- 6. GET SINGLE SCRIPTURAL OUTLOOK (FULL DETAIL) ---
 // This is the ONLY route that should select '*' because it needs the full article_body
+router.get('/scriptural-outlooks/:id/clergy/:congregationId', authenticateUser, requireCapability('content.read'), async (req, res) => {
+    const { id } = req.params;
+    try {
+        const isNumeric = /^\d+$/.test(id);
+        const { data, error } = await supabase
+            .from('scriptural_outlooks')
+            .select('id,slug,article_title,ai_outlook')
+            [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+            .single();
+        if (error) return res.status(404).json({ error: 'Article not found' });
+        const outlook = data.ai_outlook || {};
+        res.json({
+            id: data.id,
+            slug: data.slug,
+            article_title: data.article_title,
+            clergyGuidance: outlook.clergyGuidance || {
+                pastoralOutlook: outlook.biblicalReflection || null,
+                congregationalImplications: outlook.congregationalImplications || [],
+                ministryActions: outlook.ministryActions || [],
+                sermonDiscussionPrompts: outlook.sermonDiscussionPrompts || [],
+            },
+        });
+    } catch (error) {
+        console.error('Server error:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
     const { id } = req.params;
     try {
@@ -361,7 +424,7 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
             .single();
 
         if (error) return res.status(404).json({ error: 'Article not found' });
-        res.json(await hydratePublicVerification(data));
+        res.json(publicNewsArticle(await hydratePublicVerification(data)));
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -460,7 +523,7 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
         if (error) throw error;
 
-        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => outlook);
+        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => publicNewsArticle(outlook));
 
         if (useWeightedSort) {
             cleanedData = cleanedData
