@@ -17,10 +17,10 @@ The devotional title must appear in every daily message. Use the personalized de
 
 | Week | Title pattern | Body pattern |
 | --- | --- | --- |
-| 1 | `Your daily devotional is ready` | `{Devotional title} reflects on {Scripture}.` |
-| 2 | `A moment for Scripture` | `Today's devotional: {Devotional title}.` |
-| 3 | `Begin with what matters` | `{Devotional title} — a reflection on {Scripture}.` |
-| 4 | `Pause, pray, and reflect` | `Spend a few minutes with {Devotional title}.` |
+| 1 | `Your daily devotional is ready` | `{Devotional title} — {Scripture}. Read it, then share today's verse with a friend.` |
+| 2 | `A moment for Scripture` | `Today's devotional: {Devotional title}. Who could use this encouragement today?` |
+| 3 | `Begin with what matters` | `{Devotional title} — a reflection on {Scripture}. Share the verse with a friend.` |
+| 4 | `Pause, pray, and reflect` | `Spend a few minutes with {Devotional title}, then invite a friend into the reflection.` |
 
 Repeat the rotation with newly generated devotional titles. A first name may be used in the title when available, but avoid sensitive personalization in lock-screen copy.
 

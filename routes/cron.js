@@ -47,9 +47,9 @@ router.get('/notifications/daily-devotional', async (req, res) => {
       .maybeSingle();
     if (error) throw error;
     const generalBody = devotional?.title && devotional?.scripture_reference
-      ? `${devotional.title} — reflecting on ${devotional.scripture_reference}.`
+      ? `${devotional.title} — ${devotional.scripture_reference}. Read it, then share today's verse with a friend.`
       : devotional?.title
-        ? `Today's reflection: ${devotional.title}.`
+        ? `Today's reflection: ${devotional.title}. Read it, then share the devotional with a friend.`
         : 'Your daily devotional is ready.';
     const dayStart = `${today}T00:00:00.000Z`;
     const [{ data: personalized, error: personalizedError }, { data: authProfiles }, { data: userProfiles }] = await Promise.all([
@@ -66,8 +66,8 @@ router.get('/notifications/daily-devotional', async (req, res) => {
     let sent = 0;
     for (const [userId, item] of latestByUser) {
       const body = item.title && item.scripture
-        ? `${item.title} — reflecting on ${item.scripture}.`
-        : item.title ? `Today's reflection: ${item.title}.` : generalBody;
+        ? `${item.title} — ${item.scripture}. Read it, then share today's verse with a friend.`
+        : item.title ? `Today's reflection: ${item.title}. Read it, then share the devotional with a friend.` : generalBody;
       const result = await sendPushToUsers({ userIds: [userId], title: 'Today’s devotional is ready', body, data: { url: `/devotional/${item.devotional_id}` }, preference: 'devotionals', requireExplicitPreference: true });
       sent += result.sent;
     }
