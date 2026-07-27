@@ -14,6 +14,27 @@ function boundedLimit(value, fallback = 50) {
     return Math.min(100, Math.max(1, Number.parseInt(value, 10) || fallback));
 }
 
+router.get('/candidates', async (req, res, next) => {
+    try {
+        const limit = boundedLimit(req.query.limit);
+        const status = String(req.query.status || 'awaiting_evidence');
+        const allowedStatuses = new Set(['awaiting_evidence', 'eligible', 'generated', 'dismissed', 'all']);
+        if (!allowedStatuses.has(status)) {
+            return res.status(400).json({ error: { code: 'NEWS_CANDIDATE_STATUS_INVALID', message: 'Unknown candidate status.', requestId: req.requestId } });
+        }
+        let query = supabase
+            .from('news_discovery_candidates')
+            .select('id,canonical_url,title,publisher,published_at,thumbnail_url,discovery_provider,discovery_rank,discovery_match_score,evidence_status,evidence_reason,evidence_summary,source_package,first_discovered_at,last_discovered_at')
+            .order('discovery_rank', { ascending: true, nullsFirst: false })
+            .order('last_discovered_at', { ascending: false })
+            .limit(limit);
+        if (status !== 'all') query = query.eq('evidence_status', status);
+        const { data, error } = await query;
+        if (error) throw error;
+        res.json(data || []);
+    } catch (error) { next(error); }
+});
+
 router.get('/queue', async (req, res, next) => {
     try {
         const limit = boundedLimit(req.query.limit);

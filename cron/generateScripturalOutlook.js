@@ -14,6 +14,7 @@ const crypto = require('crypto');
 const { logEvent } = require('../utils/helpers');
 const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
 const { normalizeVerificationAssessment } = require('../utils/newsVerification');
+const { assessEvidencePackage, discoveryRankFor, wordCount } = require('../utils/newsEvidence');
 const {
     getScripturalOutlookPrompt,
     getScripturalOutlookArticleInputPrompt,
@@ -157,15 +158,29 @@ function attachCorroboratingSources(articles) {
 }
 
 const NEWS_SOURCES = [
-    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
-    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
-    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
-    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
-    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
-    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, accessMode: 'official_feed_excerpt', sourceType: 'official_document', isIndependent: false },
-    { publisher: 'BBC News', kind: 'rss', url: 'https://feeds.bbci.co.uk/news/rss.xml', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
-    { publisher: 'The Guardian', kind: 'rss', url: 'https://www.theguardian.com/us-news/rss', fetchFullText: false, accessMode: 'licensed_feed_excerpt', sourceType: 'reporting', isIndependent: true },
+    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'CNN', kind: 'rss', url: 'http://rss.cnn.com/rss/cnn_topstories.rss', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'official_document', isIndependent: false },
+    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'official_document', isIndependent: false },
+    { publisher: 'BBC News', kind: 'rss', url: 'https://feeds.bbci.co.uk/news/rss.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'The Guardian', kind: 'rss', url: 'https://www.theguardian.com/us-news/rss', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
 ];
+
+const NEWS_DISCOVERY_SOURCES = [
+    { provider: 'Google News', kind: 'rss', url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en' },
+];
+
+const NEWS_MAX_AGE_HOURS = Math.max(1, Number.parseInt(process.env.NEWS_MAX_AGE_HOURS, 10) || 168);
+
+function isFreshPublishedDate(value, maxAgeHours = NEWS_MAX_AGE_HOURS) {
+    const timestamp = new Date(value || 0).getTime();
+    if (!Number.isFinite(timestamp) || timestamp <= 0) return false;
+    const ageHours = (Date.now() - timestamp) / (60 * 60 * 1000);
+    return ageHours >= -1 && ageHours <= maxAgeHours;
+}
 
 function feedImageUrl(item) {
     const candidates = [
@@ -205,7 +220,10 @@ function stripHtml(value) {
 }
 
 async function fetchSourceItems(source, parser) {
-    const response = await axios.get(source.url, { timeout: 30000 });
+    const response = await axios.get(source.url, {
+        timeout: 30000,
+        headers: { 'User-Agent': 'SanctuaryNewsBot/1.0 (+https://sanctuarynews.com)' },
+    });
     if (source.kind === 'federal-register') {
         return (response.data?.results || []).map((document) => ({
             title: [document.title],
@@ -218,6 +236,24 @@ async function fetchSourceItems(source, parser) {
 
     const result = await parser.parseStringPromise(response.data);
     return result?.rss?.channel?.[0]?.item || [];
+}
+
+async function fetchDiscoveryItems(parser) {
+    const items = [];
+    for (const source of NEWS_DISCOVERY_SOURCES) {
+        try {
+            const sourceItems = await fetchSourceItems(source, parser);
+            items.push(...sourceItems.map((item, index) => ({
+                provider: source.provider,
+                rank: index + 1,
+                title: item.title?.[0] || '',
+                publishedAt: item.pubDate?.[0] || null,
+            })).filter((item) => item.title && isFreshPublishedDate(item.publishedAt)));
+        } catch (error) {
+            console.warn(`Discovery source ${source.provider} failed; publisher feeds will continue without its ranking signal: ${error.message}`);
+        }
+    }
+    return items;
 }
 
 async function fetchAuthorizedFullText(source, item) {
@@ -525,6 +561,7 @@ async function fetchTopNewsStories(limit = 24) {
   const startTime = Date.now();
     const newsStories = [];
     const parser = new xml2js.Parser();
+    const discoveryItemsPromise = fetchDiscoveryItems(parser);
     
     // First, fetch all feeds and store their items
     const feedItems = [];
@@ -566,6 +603,12 @@ async function fetchTopNewsStories(limit = 24) {
                 
                 const title = item.title[0];
                 const link = item.link[0];
+                const publish_date = item.pubDate ? item.pubDate[0] : null;
+
+                if (!isFreshPublishedDate(publish_date)) {
+                    console.log(`Skipping stale or undated article: ${title}`);
+                    continue;
+                }
 
                 // Skip obvious video links early to avoid extra work
                 if ((link || '').toLowerCase().includes('/video/')) {
@@ -587,7 +630,6 @@ async function fetchTopNewsStories(limit = 24) {
 
                 console.log(`Processing article: ${title} - ${link}`);
                 const description = item.description? item.description[0] : '';
-                const publish_date = item.pubDate ? item.pubDate[0] : null; // RSS pubDate
                 const thumbnail_url = feedImageUrl(item)
                     || await publisherImageUrl(link)
                     || publisherFallbackImageUrl(source.publisher);
@@ -624,6 +666,9 @@ async function fetchTopNewsStories(limit = 24) {
                             description: stripHtml(description),
                             publish_date,
                             publisher: source.publisher,
+                            accessMode: source.accessMode,
+                            analysisEligible: source.analysisEligible,
+                            fullTextAuthorized: source.fullTextAuthorized,
                             sourceType: source.sourceType,
                             isIndependent: source.isIndependent,
                         });
@@ -644,6 +689,9 @@ async function fetchTopNewsStories(limit = 24) {
                             description: stripHtml(description),
                             publish_date,
                             publisher: source.publisher,
+                            accessMode: source.accessMode,
+                            analysisEligible: source.analysisEligible,
+                            fullTextAuthorized: source.fullTextAuthorized,
                             sourceType: source.sourceType,
                             isIndependent: source.isIndependent,
                         });
@@ -674,7 +722,20 @@ async function fetchTopNewsStories(limit = 24) {
                       });
                     const articleBody = paragraphText.join('\n\n');
                     
-                    const article = { title, url: final_url, thumbnail_url, body: articleBody, description, publish_date, publisher: source.publisher, sourceType: source.sourceType, isIndependent: source.isIndependent };
+                    const article = {
+                        title,
+                        url: final_url,
+                        thumbnail_url,
+                        body: articleBody,
+                        description,
+                        publish_date,
+                        publisher: source.publisher,
+                        accessMode: source.accessMode,
+                        analysisEligible: source.analysisEligible,
+                        fullTextAuthorized: source.fullTextAuthorized,
+                        sourceType: source.sourceType,
+                        isIndependent: source.isIndependent,
+                    };
                     newsStories.push(article);
                 }catch(err){
                   console.error(`Error fetching or parsing article at ${link}:`, err);
@@ -691,9 +752,25 @@ async function fetchTopNewsStories(limit = 24) {
         currentIndex = (currentIndex + 1) % feedItems.length;
     }
     
-    console.log(`Total articles fetched: ${newsStories.length}`);
+    const discoveryItems = await discoveryItemsPromise;
+    const rankedStories = attachCorroboratingSources(newsStories).map((article) => {
+        const match = discoveryRankFor(article.title, discoveryItems, relatedTitleScore);
+        return {
+            ...article,
+            discoveryProvider: match ? 'Google News' : null,
+            discoveryRank: match?.rank || null,
+            discoveryMatchScore: match?.matchScore || null,
+        };
+    }).sort((left, right) => {
+        if (left.discoveryRank && right.discoveryRank) return left.discoveryRank - right.discoveryRank;
+        if (left.discoveryRank) return -1;
+        if (right.discoveryRank) return 1;
+        return new Date(right.publish_date || 0).getTime() - new Date(left.publish_date || 0).getTime();
+    });
+
+    console.log(`Total articles fetched: ${rankedStories.length}; Google-ranked matches: ${rankedStories.filter((article) => article.discoveryRank).length}`);
     logEvent('info', 'backend', null, 'fetch_top_news_stories', `Fetched ${newsStories.length} articles`, {}, Date.now() - startTime);
-    return attachCorroboratingSources(newsStories);
+    return rankedStories;
 }
 // Daily News Synopsis moved to cron/dailyNewsSynopsis.js
 
@@ -817,6 +894,44 @@ async function processTaxonomyThresholds(categoryIds, topicIds) {
     if (topicIds.size > 0) await processItems(topicIds, 'topic');
 }
 
+function discoverySourceMetadata(source) {
+    return {
+        publisher: source.publisher,
+        title: source.title,
+        url: source.url,
+        publishedAt: source.publish_date || null,
+        sourceType: source.sourceType,
+        accessMode: source.accessMode,
+        fullTextAuthorized: source.fullTextAuthorized === true,
+        analysisEligible: source.analysisEligible === true,
+        bodyWordCount: wordCount(source.body),
+    };
+}
+
+async function saveDiscoveryCandidate(article, evidence, evidenceStatus = 'awaiting_evidence') {
+    const sourcePackage = [article, ...(article.corroboratingSources || [])].map(discoverySourceMetadata);
+    const row = {
+        canonical_url: article.url,
+        title: article.title,
+        publisher: article.publisher,
+        published_at: article.publish_date || null,
+        thumbnail_url: article.thumbnail_url || null,
+        discovery_provider: article.discoveryProvider || null,
+        discovery_rank: article.discoveryRank || null,
+        discovery_match_score: article.discoveryMatchScore || null,
+        evidence_status: evidenceStatus,
+        evidence_reason: evidence.reason,
+        evidence_summary: evidence,
+        source_package: sourcePackage,
+        last_discovered_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+    };
+    const { error } = await supabase.from('news_discovery_candidates').upsert(row, { onConflict: 'canonical_url' });
+    if (error) {
+        console.error(`Could not save discovery candidate ${article.url}:`, error.message);
+    }
+}
+
 async function generateAndSaveScripturalOutlook() {
   console.log('Starting scriptural outlook generation cron job...');
     const startTime = Date.now();
@@ -840,6 +955,20 @@ async function generateAndSaveScripturalOutlook() {
 
   // Iterate through each of the top articles
   for (const article of articles) {
+    const evidence = assessEvidencePackage(article);
+    await saveDiscoveryCandidate(article, evidence, evidence.eligible ? 'eligible' : 'awaiting_evidence');
+    if (!evidence.eligible) {
+        console.warn(`Queued without analysis: ${article.title}. ${evidence.reason}`);
+        await logEvent('info', 'news', null, 'news_candidate_awaiting_evidence', 'News candidate was not sent to AI because its evidence package was insufficient', {
+            articleUrl: article.url,
+            publisher: article.publisher,
+            discoveryProvider: article.discoveryProvider,
+            discoveryRank: article.discoveryRank,
+            ...evidence,
+        });
+        continue;
+    }
+
     // Check if article already exists in database
     const { data: existingArticle, error: checkError } = await supabase
         .from('scriptural_outlooks')
@@ -908,6 +1037,7 @@ async function generateAndSaveScripturalOutlook() {
         }
 
         const outlookId = savedOutlook.id;
+        await saveDiscoveryCandidate(article, { ...evidence, reason: null }, 'generated');
 
         try {
             const verification = await persistNewsVerification(outlookId, article, aiResponse.originalArticleAssessment || {});
