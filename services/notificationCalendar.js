@@ -47,9 +47,14 @@ async function loadAudience() {
 
 async function loadContent(now) {
   const utcDate = now.toISOString().slice(0, 10);
+  const nextUtcDate = new Date(now.getTime() + DAY_MS).toISOString().slice(0, 10);
+  const previousUtcDate = new Date(now.getTime() - DAY_MS).toISOString().slice(0, 10);
   const since = new Date(now.getTime() - 36 * 60 * 60 * 1000).toISOString();
   const [{ data: general, error: generalError }, { data: personalized, error: personalizedError }] = await Promise.all([
-    supabase.from('general_devotionals').select('id, title, scripture_reference, date').lte('date', utcDate).order('date', { ascending: false }).limit(2),
+    // Include adjacent UTC dates because a recipient's local date can be one day
+    // ahead of or behind UTC while the dispatcher is running.
+    supabase.from('general_devotionals').select('id, title, scripture_reference, date')
+      .gte('date', previousUtcDate).lte('date', nextUtcDate).order('date', { ascending: true }),
     supabase.from('daily_devotionals').select('devotional_id, user_id, title, scripture, created_at').gte('created_at', since).eq('status', 'completed').order('created_at', { ascending: false }),
   ]);
   if (generalError) throw generalError;
@@ -64,7 +69,9 @@ function selectDevotional(profile, localDate, content) {
     title: personalized.title.trim(), scripture: personalized.scripture?.trim(),
     contentId: String(personalized.devotional_id), url: `/devotional/${personalized.devotional_id}`,
   };
-  const general = content.general.find(item => item.date === localDate) || content.general[0];
+  // Never label an older devotional as today's content. If the content runway is
+  // stale, skip the push and let the dispatch report surface missingContent.
+  const general = content.general.find(item => item.date === localDate);
   if (!general?.title) return null;
   return {
     title: general.title.trim(), scripture: general.scripture_reference?.trim(),

@@ -41,11 +41,15 @@ router.get('/notifications/daily-devotional', async (req, res) => {
     const { data: devotional, error } = await supabase
       .from('general_devotionals')
       .select('title, scripture_reference')
-      .lte('date', today)
-      .order('date', { ascending: false })
-      .limit(1)
+      .eq('date', today)
       .maybeSingle();
     if (error) throw error;
+    if (!devotional) {
+      return res.status(503).json({
+        error: 'Today\'s general devotional has not been generated; no notification was sent.',
+        date: today,
+      });
+    }
     const generalBody = devotional?.title && devotional?.scripture_reference
       ? `${devotional.title} — ${devotional.scripture_reference}. Read it, then share today's verse with a friend.`
       : devotional?.title

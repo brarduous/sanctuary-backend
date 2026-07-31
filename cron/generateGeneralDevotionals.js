@@ -126,6 +126,27 @@ const normalizeEntry = (entry, dayOffset) => {
   };
 };
 
+const validateWeeklyEntries = (entries) => {
+  if (!Array.isArray(entries) || entries.length !== 7) {
+    throw new Error(`Weekly generation must return exactly 7 devotionals; received ${entries?.length || 0}.`);
+  }
+
+  const normalized = entries.map((entry, index) => normalizeEntry(entry, index));
+  const offsets = normalized.map(entry => entry.day_offset).sort((a, b) => a - b);
+  const expectedOffsets = [0, 1, 2, 3, 4, 5, 6];
+  if (offsets.some((offset, index) => offset !== expectedOffsets[index])) {
+    throw new Error(`Weekly generation returned invalid or duplicate day offsets: ${offsets.join(', ')}.`);
+  }
+
+  for (const entry of normalized) {
+    if (!entry.title || !entry.scripture_reference || !entry.scripture_text || !entry.content || !entry.prayer) {
+      throw new Error(`Day ${entry.day_offset + 1} is missing required devotional or scripture content.`);
+    }
+  }
+
+  return normalized;
+};
+
 const generateSingleDayEntry = async (theme, dayOffset) => {
   let lastError = null;
 
@@ -218,8 +239,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
       .single();
 
     if (themeError || !theme) {
-      console.log('[General Devotionals] No unused themes found. Generate a new syllabus.');
-      return { generated: false, reason: 'no_unused_theme' };
+      throw new Error('No unused devotional themes remain. Generate a new syllabus before the content runway expires.');
     }
 
     console.log(
@@ -228,7 +248,9 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
 
     const prompt = await getGeneralDevotionalBatchPrompt(theme);
 
-    const { entries, tokens, fallback } = await generateEntries(theme, prompt);
+    const generated = await generateEntries(theme, prompt);
+    const entries = validateWeeklyEntries(generated.entries);
+    const { tokens, fallback } = generated;
 
     for (const entry of entries) {
       const targetDate = addDays(resolvedStartDate, Number(entry.day_offset || 0));
@@ -312,4 +334,5 @@ if (require.main === module) {
 
 module.exports = {
   generateWeeklyBatch,
+  validateWeeklyEntries,
 };

@@ -15,14 +15,13 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         const generationDate = new Date().toISOString().split('T')[0];
         
         // 1. Fetch Today's General Devotional (Curriculum)
-        // We use .lte and .order to safely get the most recent one if today's isn't published yet
+        // Personalized content must use today's curriculum. Reusing the latest
+        // older row can silently repeat yesterday's scripture.
         const { data: generalDevo, error: devoErr } = await supabase
             .from('general_devotionals')
             .select('*')
-            .lte('date', generationDate)
-            .order('date', { ascending: false })
-            .limit(1)
-            .single();
+            .eq('date', generationDate)
+            .maybeSingle();
 
         if (devoErr || !generalDevo) {
             console.error("No general devotional found to base curriculum on.", devoErr);
