@@ -10,6 +10,8 @@ const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SER
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 60_000 });
 const GENERAL_DEVOTIONAL_MODEL = process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-4o-mini';
 const USE_WEEKLY_BATCH_GENERATION = process.env.GENERAL_DEVOTIONAL_BATCH_MODE === 'true';
+const DEFAULT_RUNWAY_DAYS = Math.max(7, Number.parseInt(process.env.GENERAL_DEVOTIONAL_RUNWAY_DAYS, 10) || 28);
+const DEFAULT_MAX_WEEKS_PER_RUN = Math.max(1, Number.parseInt(process.env.GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN, 10) || 2);
 
 const toDateString = (date) => date.toISOString().split('T')[0];
 
@@ -19,30 +21,54 @@ const addDays = (date, days) => {
   return nextDate;
 };
 
-const getGenerationStartDate = async (minimumRunwayDays = 3) => {
-  const today = new Date();
+const getCurriculumStatus = async ({ now = new Date(), minimumRunwayDays = DEFAULT_RUNWAY_DAYS } = {}) => {
+  const today = new Date(now);
   const todayString = toDateString(today);
   const runwayTargetString = toDateString(addDays(today, minimumRunwayDays));
 
-  const { data: latest, error } = await supabase
+  const [{ data: rows, error }, { count: unusedThemeCount, error: themeError }] = await Promise.all([
+    supabase
     .from('general_devotionals')
     .select('date')
-    .order('date', { ascending: false })
-    .limit(1)
-    .maybeSingle();
+      .gte('date', todayString)
+      .lte('date', runwayTargetString)
+      .order('date', { ascending: true }),
+    supabase.from('devotional_themes').select('week_number', { count: 'exact', head: true }).eq('is_used', false),
+  ]);
 
   if (error) throw error;
+  if (themeError) throw themeError;
 
-  if (latest?.date && latest.date >= runwayTargetString) {
-    console.log(`[General Devotionals] Runway is healthy through ${latest.date}; skipping generation.`);
+  const availableDates = new Set((rows || []).map(row => row.date));
+  const missingDates = [];
+  let runwayThrough = null;
+  for (let offset = 0; offset <= minimumRunwayDays; offset += 1) {
+    const date = toDateString(addDays(today, offset));
+    if (availableDates.has(date) && missingDates.length === 0) runwayThrough = date;
+    else if (!availableDates.has(date)) missingDates.push(date);
+  }
+
+  return {
+    today: todayString,
+    targetDate: runwayTargetString,
+    minimumRunwayDays,
+    runwayThrough,
+    healthy: missingDates.length === 0,
+    nextMissingDate: missingDates[0] || null,
+    missingDateCount: missingDates.length,
+    unusedThemeCount: unusedThemeCount || 0,
+  };
+};
+
+const getGenerationStartDate = async (minimumRunwayDays = DEFAULT_RUNWAY_DAYS) => {
+  const status = await getCurriculumStatus({ minimumRunwayDays });
+
+  if (status.healthy) {
+    console.log(`[General Devotionals] Runway is healthy through ${status.runwayThrough}; skipping generation.`);
     return null;
   }
 
-  if (latest?.date && latest.date >= todayString) {
-    return addDays(new Date(`${latest.date}T00:00:00.000Z`), 1);
-  }
-
-  return new Date(`${todayString}T00:00:00.000Z`);
+  return new Date(`${status.nextMissingDate}T00:00:00.000Z`);
 };
 
 const parseEntries = (result) => {
@@ -62,13 +88,15 @@ const parseJsonContent = (content, label) => {
   }
 };
 
-const buildSingleDayPrompt = (theme, dayOffset) => `
+const buildSingleDayPrompt = (theme, dayOffset, excludedReferences = []) => `
 Role: You are the Lead Editor for Sanctuary.
 Task: Write one Daily Devotional for day ${dayOffset + 1} of a 7-day sequence.
 Theme: "${theme.theme_title}".
 Focus Scripture Area: ${theme.scripture_focus}.
 
-Use the focus scripture area as an anchor. Choose a short scripture verse or brief excerpt.
+Use the focus scripture area as the weekly thematic anchor, but choose a distinct
+daily scripture passage that develops this theme. Do not simply repeat the weekly
+anchor verse each day.${excludedReferences.length ? `\nDo not use any of these references already assigned this week: ${excludedReferences.join(', ')}.` : ''}
 
 REQUIREMENTS:
 - Tone: Orthodox, compassionate, conversational, non-political, focused on spiritual formation.
@@ -144,27 +172,37 @@ const validateWeeklyEntries = (entries) => {
     }
   }
 
+  const references = normalized.map(entry => entry.scripture_reference.toLowerCase().replace(/\s+/g, ' ').trim());
+  if (new Set(references).size !== references.length) {
+    throw new Error('Weekly generation must use a distinct scripture reference for each day.');
+  }
+
   return normalized;
 };
 
-const generateSingleDayEntry = async (theme, dayOffset) => {
+const generateSingleDayEntry = async (theme, dayOffset, excludedReferences = []) => {
   let lastError = null;
 
   for (let attempt = 1; attempt <= 2; attempt += 1) {
     try {
       const completion = await openai.chat.completions.create({
         model: GENERAL_DEVOTIONAL_MODEL,
-        messages: [{ role: 'system', content: buildSingleDayPrompt(theme, dayOffset) }],
+        messages: [{ role: 'system', content: buildSingleDayPrompt(theme, dayOffset, excludedReferences) }],
         response_format: { type: 'json_object' },
         max_completion_tokens: 4000,
       }, { timeout: 60_000 });
 
       const result = parseJsonContent(completion.choices[0].message.content, `Single-day devotional ${dayOffset + 1}`);
       const entry = result.entry || result.devotional || result;
-      return {
+      const normalized = {
         ...normalizeEntry(entry, dayOffset),
         tokens: completion.usage?.total_tokens,
       };
+      const reference = normalized.scripture_reference.toLowerCase().replace(/\s+/g, ' ').trim();
+      if (excludedReferences.some(value => value.toLowerCase().replace(/\s+/g, ' ').trim() === reference)) {
+        throw new Error(`Scripture reference ${normalized.scripture_reference} is already used this week.`);
+      }
+      return normalized;
     } catch (error) {
       lastError = error;
       console.warn(`[General Devotionals] Single-day ${dayOffset + 1} attempt ${attempt} failed:`, error.message);
@@ -180,7 +218,7 @@ const generateEntries = async (theme, prompt) => {
     let tokens = 0;
 
     for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
-      const entry = await generateSingleDayEntry(theme, dayOffset);
+      const entry = await generateSingleDayEntry(theme, dayOffset, entries.map(item => item.scripture_reference));
       tokens += entry.tokens || 0;
       delete entry.tokens;
       entries.push(entry);
@@ -210,7 +248,7 @@ const generateEntries = async (theme, prompt) => {
     let tokens = 0;
 
     for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
-      const entry = await generateSingleDayEntry(theme, dayOffset);
+      const entry = await generateSingleDayEntry(theme, dayOffset, entries.map(item => item.scripture_reference));
       tokens += entry.tokens || 0;
       delete entry.tokens;
       entries.push(entry);
@@ -220,7 +258,36 @@ const generateEntries = async (theme, prompt) => {
   }
 };
 
-const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => {
+const getNextTheme = async (themeWeekNumber = null) => {
+  let query = supabase.from('devotional_themes').select('*').order('week_number', { ascending: true });
+  query = themeWeekNumber == null
+    ? query.eq('is_used', false).limit(1)
+    : query.eq('week_number', themeWeekNumber).limit(1);
+  let { data: theme, error } = await query.maybeSingle();
+  if (error) throw error;
+  if (theme || themeWeekNumber != null) return theme;
+
+  // A complete 52-week curriculum is reusable annually. Reset only after every
+  // theme has been consumed, then begin the next curriculum cycle at week 1.
+  const { error: resetError } = await supabase
+    .from('devotional_themes')
+    .update({ is_used: false })
+    .eq('is_used', true);
+  if (resetError) throw resetError;
+
+  ({ data: theme, error } = await supabase
+    .from('devotional_themes')
+    .select('*')
+    .eq('is_used', false)
+    .order('week_number', { ascending: true })
+    .limit(1)
+    .maybeSingle());
+  if (error) throw error;
+  if (theme) console.log('[General Devotionals] Started a new 52-week curriculum cycle.');
+  return theme;
+};
+
+const generateWeeklyBatch = async ({ force = false, startDate = null, themeWeekNumber = null } = {}) => {
   const startTime = Date.now();
 
   try {
@@ -230,23 +297,22 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
       return { generated: false, reason: 'runway_healthy' };
     }
 
-    const { data: theme, error: themeError } = await supabase
-      .from('devotional_themes')
-      .select('*')
-      .eq('is_used', false)
-      .order('week_number', { ascending: true })
-      .limit(1)
-      .single();
-
-    if (themeError || !theme) {
-      throw new Error('No unused devotional themes remain. Generate a new syllabus before the content runway expires.');
+    const theme = await getNextTheme(themeWeekNumber);
+    if (!theme) {
+      throw new Error(themeWeekNumber == null
+        ? 'The devotional curriculum has no themes.'
+        : `Devotional theme week ${themeWeekNumber} was not found.`);
     }
 
     console.log(
       `[General Devotionals] Generating week ${theme.week_number}: "${theme.theme_title}" (${theme.scripture_focus})`
     );
 
-    const prompt = await getGeneralDevotionalBatchPrompt(theme);
+    // Single-day mode builds its own prompts and should not depend on fetching
+    // the unused weekly batch template.
+    const prompt = USE_WEEKLY_BATCH_GENERATION
+      ? await getGeneralDevotionalBatchPrompt(theme)
+      : null;
 
     const generated = await generateEntries(theme, prompt);
     const entries = validateWeeklyEntries(generated.entries);
@@ -322,8 +388,32 @@ const generateWeeklyBatch = async ({ force = false, startDate = null } = {}) => 
   }
 };
 
+const ensureDevotionalRunway = async ({
+  minimumRunwayDays = DEFAULT_RUNWAY_DAYS,
+  maxWeeksPerRun = DEFAULT_MAX_WEEKS_PER_RUN,
+} = {}) => {
+  const generatedWeeks = [];
+
+  for (let week = 0; week < maxWeeksPerRun; week += 1) {
+    const startDate = await getGenerationStartDate(minimumRunwayDays);
+    if (!startDate) break;
+    generatedWeeks.push(await generateWeeklyBatch({ startDate }));
+  }
+
+  const status = await getCurriculumStatus({ minimumRunwayDays });
+  return {
+    generated: generatedWeeks.length > 0,
+    generatedWeekCount: generatedWeeks.length,
+    generatedWeeks,
+    status,
+  };
+};
+
 if (require.main === module) {
-  generateWeeklyBatch({ force: process.argv.includes('--force') })
+  const command = process.argv.includes('--force')
+    ? generateWeeklyBatch({ force: true })
+    : ensureDevotionalRunway();
+  command
     .then((result) => {
       console.log('[General Devotionals] Result:', result);
     })
@@ -333,6 +423,8 @@ if (require.main === module) {
 }
 
 module.exports = {
+  ensureDevotionalRunway,
   generateWeeklyBatch,
+  getCurriculumStatus,
   validateWeeklyEntries,
 };

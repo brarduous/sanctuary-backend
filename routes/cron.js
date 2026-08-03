@@ -1,5 +1,5 @@
 const express = require('express');
-const { generateWeeklyBatch } = require('../cron/generateGeneralDevotionals');
+const { ensureDevotionalRunway, generateWeeklyBatch, getCurriculumStatus } = require('../cron/generateGeneralDevotionals');
 const supabase = require('../config/supabase');
 const { sendPushToAll, sendPushToUsers } = require('../utils/push');
 
@@ -23,7 +23,9 @@ const handleGeneralDevotionalsCron = async (req, res) => {
 
   try {
     const force = req.body?.force === true;
-    const result = await generateWeeklyBatch({ force });
+    const result = force
+      ? await generateWeeklyBatch({ force: true })
+      : await ensureDevotionalRunway();
     res.json({ success: true, ...result });
   } catch (error) {
     console.error('[Cron] General devotional generation failed:', error);
@@ -33,6 +35,16 @@ const handleGeneralDevotionalsCron = async (req, res) => {
 
 router.get('/general-devotionals', handleGeneralDevotionalsCron);
 router.post('/general-devotionals', handleGeneralDevotionalsCron);
+
+router.get('/general-devotionals/status', async (req, res) => {
+  if (!hasValidCronSecret(req)) return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const status = await getCurriculumStatus();
+    res.status(status.healthy ? 200 : 503).json({ success: status.healthy, ...status });
+  } catch (error) {
+    res.status(500).json({ error: error.message || 'Failed to inspect general devotional runway' });
+  }
+});
 
 router.get('/notifications/daily-devotional', async (req, res) => {
   if (!hasValidCronSecret(req)) return res.status(401).json({ error: 'Unauthorized' });

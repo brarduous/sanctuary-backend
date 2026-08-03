@@ -16,3 +16,7 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      - key: GENERAL_DEVOTIONAL_RUNWAY_DAYS
+        value: 28
+      - key: GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN
+        value: 2

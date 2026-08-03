@@ -35,3 +35,9 @@ test('weekly devotional validation rejects duplicate dates', () => {
   entries[6].day_offset = 5;
   assert.throws(() => validateWeeklyEntries(entries), /invalid or duplicate day offsets/);
 });
+
+test('weekly devotional validation rejects repeated scripture references', () => {
+  const entries = Array.from({ length: 7 }, (_, index) => entry(index));
+  entries[6].scripture_reference = entries[0].scripture_reference;
+  assert.throws(() => validateWeeklyEntries(entries), /distinct scripture reference/);
+});
