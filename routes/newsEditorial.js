@@ -58,8 +58,9 @@ router.get('/queue', async (req, res, next) => {
             const correctionCount = openCorrections.get(article.id) || 0;
             const confidenceScore = score?.confidence_score ?? 0;
             const truthfulnessScore = score?.truthfulness_score ?? 50;
+            const moderationStatus = article.ai_outlook?.editorialReview?.status;
             const priority = Math.round((article.news_impact_score || 0) * 0.35 + (100 - confidenceScore) * 0.3 + (100 - truthfulnessScore) * 0.2 + Math.min(15, correctionCount * 5));
-            return { ...article, ai_outlook: undefined, editorialStatus: review?.decision || 'pending', reviewerDisplayName: review?.reviewer_display_name || null, truthfulnessScore, truthfulnessBand: score?.truthfulness_band || null, confidenceScore, confidenceFactors: score?.confidence_factors || {}, unresolvedEvidenceGaps: score?.unresolved_evidence_gaps || [], assessmentVersion: score?.version || null, openCorrectionCount: correctionCount, reviewAlert: !review || review.decision !== 'approved' ? confidenceScore < 60 : false, queuePriority: priority };
+            return { ...article, ai_outlook: undefined, editorialStatus: moderationStatus === 'archived' ? 'archived' : (review?.decision || 'pending'), reviewerDisplayName: review?.reviewer_display_name || null, truthfulnessScore, truthfulnessBand: score?.truthfulness_band || null, confidenceScore, confidenceFactors: score?.confidence_factors || {}, unresolvedEvidenceGaps: score?.unresolved_evidence_gaps || [], assessmentVersion: score?.version || null, openCorrectionCount: correctionCount, reviewAlert: (!review || review.decision !== 'approved') && moderationStatus !== 'archived' ? confidenceScore < 60 : false, queuePriority: priority };
         }).filter((item) => !req.query.status || req.query.status === 'all' || item.editorialStatus === req.query.status).sort((a, b) => b.queuePriority - a.queuePriority).slice(0, limit);
         res.json(queue);
     } catch (error) { next(error); }
@@ -114,6 +115,31 @@ router.post('/articles/:id/decisions', async (req, res, next) => {
         await supabase.from('scriptural_outlooks').update({ ai_outlook: aiOutlook }).eq('id', req.params.id);
         await logEvent('audit', 'news', req.user.id, 'review_news_article', `News article ${decision}`, { outlookId: req.params.id, reviewId: review.id });
         res.status(201).json(review);
+    } catch (error) { next(error); }
+});
+
+router.post('/bulk', async (req, res, next) => {
+    try {
+        const ids = [...new Set((Array.isArray(req.body.ids) ? req.body.ids : []).map(Number).filter(Number.isInteger))].slice(0, 100);
+        const action = String(req.body.action || '');
+        const reviewerDisplayName = String(req.body.reviewerDisplayName || req.user.user_metadata?.full_name || req.user.email || '').trim().slice(0, 120);
+        if (!ids.length || !['approved', 'rejected', 'archived'].includes(action)) return res.status(400).json({ error: { code: 'BULK_ACTION_INVALID', message: 'Select articles and a valid moderation action.', requestId: req.requestId } });
+        if (action !== 'archived' && reviewerDisplayName.length < 2) return res.status(400).json({ error: { code: 'REVIEWER_NAME_REQUIRED', message: 'A public reviewer name is required.', requestId: req.requestId } });
+        const { data: articles, error } = await supabase.from('scriptural_outlooks').select('id,ai_outlook').in('id', ids);
+        if (error) throw error;
+        const reviewedAt = new Date().toISOString();
+        if (action !== 'archived') {
+            const rows = (articles || []).map((article) => ({ outlook_id: article.id, decision: action, reviewer_user_id: req.user.id, reviewer_display_name: reviewerDisplayName, note: `Bulk ${action} through the Sanctuary News editorial desk.` }));
+            const { error: decisionError } = await supabase.from('news_review_decisions').insert(rows);
+            if (decisionError) throw decisionError;
+        }
+        for (const article of articles || []) {
+            const aiOutlook = { ...(article.ai_outlook || {}), editorialReview: { status: action === 'approved' ? 'reviewed' : action, reviewerName: reviewerDisplayName || null, reviewedAt } };
+            const { error: updateError } = await supabase.from('scriptural_outlooks').update({ ai_outlook: aiOutlook }).eq('id', article.id);
+            if (updateError) throw updateError;
+        }
+        await logEvent('audit', 'news', req.user.id, 'bulk_moderate_news', `News articles bulk ${action}`, { ids, count: articles?.length || 0 });
+        res.json({ action, count: articles?.length || 0 });
     } catch (error) { next(error); }
 });
 

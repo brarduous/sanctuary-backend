@@ -25,7 +25,9 @@ function publicNewsOutlook(outlook) {
 }
 
 function publicNewsArticle(article) {
-    return article ? { ...article, ai_outlook: publicNewsOutlook(article.ai_outlook) } : article;
+    if (!article) return article;
+    if (['rejected', 'archived'].includes(article.ai_outlook?.editorialReview?.status)) return null;
+    return { ...article, ai_outlook: publicNewsOutlook(article.ai_outlook) };
 }
 
 router.get('/news/source-image/:publisher.svg', (req, res) => {
@@ -424,7 +426,9 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
             .single();
 
         if (error) return res.status(404).json({ error: 'Article not found' });
-        res.json(publicNewsArticle(await hydratePublicVerification(data)));
+        const article = publicNewsArticle(await hydratePublicVerification(data));
+        if (!article) return res.status(404).json({ error: 'Article not found' });
+        res.json(article);
     } catch (error) {
         console.error('Server error:', error);
         res.status(500).json({ error: 'Internal Server Error' });
@@ -523,7 +527,7 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
         if (error) throw error;
 
-        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => publicNewsArticle(outlook));
+        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => publicNewsArticle(outlook)).filter(Boolean);
 
         if (useWeightedSort) {
             cleanedData = cleanedData
