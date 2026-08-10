@@ -28,12 +28,21 @@ function sourceComparison(source) {
   };
 }
 
-async function assessSourceComparison(sources) {
+function relevantExcerpt(value, clusterTitle, sourceTitle) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  const focus = `${clusterTitle} ${sourceTitle}`;
+  const sentences = text.split(/(?<=[.!?])\s+/).filter(Boolean);
+  const relevant = sentences.map((sentence, index) => ({ sentence, index, score: overlapScore(focus, sentence) })).filter((item) => item.score >= 0.08 || item.index === 0).sort((a, b) => b.score - a.score || a.index - b.index).slice(0, 8).sort((a, b) => a.index - b.index).map((item) => item.sentence).join(' ');
+  return (relevant || text).slice(0, 3500);
+}
+
+async function assessSourceComparison(sources, clusterTitle) {
   if (!process.env.OPENAI_API_KEY || !sources.length) return sources.map(sourceComparison);
   const outlookIds = [...new Set(sources.map((source) => source.outlook_id).filter(Boolean))];
   const { data: outlooks } = await supabase.from('scriptural_outlooks').select('id,article_body,ai_outlook').in('id', outlookIds);
   const byId = new Map((outlooks || []).map((outlook) => [outlook.id, outlook]));
-  const inputs = sources.map((source) => ({ id: source.id, publisher: source.publisher, title: source.title, url: source.url, suppliedText: String(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '').slice(0, 3500) }));
+  const inputs = sources.map((source) => ({ id: source.id, publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', clusterTitle, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Assess only the supplied text for each report. Return JSON {"sources": [...]} with exactly one item per source: sourceId, publisher, title, url, distinctiveContribution, framing, omissionsOrUncertainties, reportingQualityScore (0-100), reportingQualityRationale, christianVirtuesAlignmentScore (0-100), christianVirtuesRationale. Reporting quality measures evidence, attribution, specificity, context, and acknowledged uncertainty. Christian-virtues alignment separately measures truthfulness, human dignity, compassion, justice, peacemaking, humility, and care for vulnerable people. Never infer a publisher's religion, motives, or politics. Religious words confer no points. Use concrete evidence from supplied text, acknowledge insufficient excerpts, and rank every source; scores may tie.` }, { role: 'user', content: JSON.stringify(inputs) }] });
@@ -55,10 +64,10 @@ async function regenerateCanonicalOutlook(cluster, sources, comparison) {
     supabase.from('scriptural_outlooks').select('ai_outlook').eq('id', cluster.canonical_outlook_id).single(),
   ]);
   const byId = new Map((sourceOutlooks || []).map((outlook) => [outlook.id, outlook]));
-  const sourceInputs = sources.map((source) => ({ publisher: source.publisher, title: source.title, url: source.url, suppliedText: String(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '').slice(0, 3500) }));
+  const sourceInputs = sources.map((source) => ({ publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', cluster.title, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Create a unified Sanctuary News update from the supplied reports. Return JSON fields: title, newsSummary, sourceAndFramingAnalysis, outlook, citedPassages (reference/context/application), faithfulResponse, reflectionQuestions, closingPrayer, confirmedDetails, singlyReportedDetails, disputedDetails, unresolvedQuestions. Attribute source-specific details and disagreements. Do not invent facts, URLs, quotations, Scripture text, or consensus. The Christian outlook must center truth, mercy, justice, peacemaking, humility, dignity, and care for vulnerable neighbors; keep it distinct from factual reporting. Use contextual Scripture without proof-texting.` }, { role: 'user', content: JSON.stringify({ currentCanonical: canonical?.ai_outlook || {}, reports: sourceInputs, sourceComparison: comparison }) }] });
+    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Create a unified Sanctuary News update about the single core story named by clusterTitle. Return JSON fields: title, newsSummary, sourceAndFramingAnalysis, outlook, citedPassages (reference/context/application), faithfulResponse, reflectionQuestions, closingPrayer, confirmedDetails, singlyReportedDetails, disputedDetails, unresolvedQuestions. The title and every section must remain exclusively about clusterTitle. Ignore unrelated headlines or events embedded in live blogs, news wraps, navigation, or page excerpts. Attribute source-specific details and disagreements. Do not invent facts, URLs, quotations, Scripture text, or consensus. The Christian outlook must center truth, mercy, justice, peacemaking, humility, dignity, and care for vulnerable neighbors; keep it distinct from factual reporting. Use contextual Scripture without proof-texting.` }, { role: 'user', content: JSON.stringify({ clusterTitle: cluster.title, currentCanonical: canonical?.ai_outlook || {}, reports: sourceInputs, sourceComparison: comparison }) }] });
     const generated = JSON.parse(response.choices[0]?.message?.content || '{}');
     const nextOutlook = { ...(canonical?.ai_outlook || {}), ...generated, sources: sources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' })), additionalSourcesNeeded: new Set(sources.map((source) => source.publisher)).size < 2, clusterSynthesis: { confirmedDetails: generated.confirmedDetails || [], singlyReportedDetails: generated.singlyReportedDetails || [], disputedDetails: generated.disputedDetails || [], unresolvedQuestions: generated.unresolvedQuestions || [], generatedAt: new Date().toISOString() } };
     await supabase.from('scriptural_outlooks').update({ article_title: generated.title || cluster.title, ai_outlook: nextOutlook }).eq('id', cluster.canonical_outlook_id);
@@ -70,11 +79,12 @@ async function regenerateCanonicalOutlook(cluster, sources, comparison) {
 async function refreshCluster(clusterId, attempt = 0) {
   const { data: cluster, error: clusterError } = await supabase.from('news_story_clusters').select('*').eq('id', clusterId).single();
   if (clusterError) throw clusterError;
-  const { data: sources, error: sourceError } = await supabase.from('news_article_sources').select('id,outlook_id,publisher,title,url,published_at,is_independent').eq('story_cluster_id', clusterId).order('published_at', { ascending: false, nullsFirst: false });
+  const { data: sourceRows, error: sourceError } = await supabase.from('news_article_sources').select('id,outlook_id,publisher,title,url,published_at,is_independent').eq('story_cluster_id', clusterId).order('published_at', { ascending: false, nullsFirst: false });
   if (sourceError) throw sourceError;
+  const sources = [...new Map((sourceRows || []).map((source) => [source.url, source])).values()];
   const uniquePublishers = new Set((sources || []).map((source) => source.publisher));
   const timeline = (sources || []).map((source) => ({ publishedAt: source.published_at, publisher: source.publisher, title: source.title, url: source.url }));
-  const comparison = (await assessSourceComparison(sources || [])).sort((a, b) => b.christianVirtuesAlignmentScore - a.christianVirtuesAlignmentScore || b.reportingQualityScore - a.reportingQualityScore);
+  const comparison = (await assessSourceComparison(sources, cluster.title)).sort((a, b) => b.christianVirtuesAlignmentScore - a.christianVirtuesAlignmentScore || b.reportingQualityScore - a.reportingQualityScore);
   const status = uniquePublishers.size >= 2 ? 'corroborated' : 'provisional';
   const latest = (sources || []).map((source) => source.published_at).filter(Boolean).sort().at(-1) || cluster.latest_reported_at;
   const earliest = (sources || []).map((source) => source.published_at).filter(Boolean).sort().at(0) || cluster.first_reported_at;
