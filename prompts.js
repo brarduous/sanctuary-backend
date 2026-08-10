@@ -100,8 +100,18 @@ Return these fields in the same JSON object. Do not omit them and do not collaps
   - "confidenceFactors": 0-100 integers for "evidenceCoverage", "publisherIndependence", "sourceQuality", "claimSpecificity", "freshness", and "conflictResolution"
   - "unresolvedEvidenceGaps": an array of specific missing evidence
 
+CLAIM ASSESSMENT RUBRIC:
+- Assess whether the supplied source supports what Sanctuary says the source reported. Do not require Sanctuary to independently prove every underlying event.
+- Mark a claim "supported" when the supplied source explicitly states it or clearly attributes it to a named person, agency, document, or identified group. A missing direct quotation, transcript, credential list, or second publisher does not by itself reduce truthfulness.
+- Put missing independent corroboration, source breadth, or primary documentation in confidenceFactors and unresolvedEvidenceGaps. Those are confidence limitations, not evidence that a faithfully attributed claim is false.
+- Mark "partially_supported" only when the source supports the core claim but leaves a material qualifier, scope, timeframe, or attribution unresolved.
+- Mark "unverifiable" only when the claim cannot be traced to the supplied source text or the source explicitly presents it as unresolved speculation.
+- Mark "unsupported" only when the supplied source does not support a material assertion it presents as fact. Mark "contradicted" only when supplied evidence affirmatively conflicts with it.
+- Treat openly attributed opinion, prediction, disagreement, and allegation as accurately reported when the source supports that attribution; do not score the underlying opinion or allegation as established fact.
+- Scrutinize high-consequence anonymous allegations, numerical claims, quotations, and claims that materially overstate the source. Do not apply the same suspicion to routine attributed reporting.
+
 Never invent a URL, author, quotation, reviewer, publication, biblical citation, or corroborating source. If the supplied reporting is insufficient, say so explicitly. Denominationally disputed applications must be labeled as such rather than presented as settled Christian doctrine.
-Truthfulness concerns evidentiary support for factual claims, never the publisher's honesty, motives, theology, or politics. Use "unverifiable" when supplied evidence cannot resolve a claim.
+Truthfulness concerns faithful support in the supplied source, never the publisher's honesty, motives, theology, or politics. Independent verification is reflected separately in confidence. Use "unverifiable" only under the rubric above.
 `;
 
 // --- EXPORTED GENERATORS (Now Async) ---

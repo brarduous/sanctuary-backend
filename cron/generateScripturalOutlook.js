@@ -1047,8 +1047,8 @@ async function generateAndSaveScripturalOutlook() {
 
         try {
             const verification = await persistNewsVerification(outlookId, article, aiResponse.originalArticleAssessment || {});
-            if (verification.confidenceScore < 90) {
-                await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review', { outlookId, confidenceScore: verification.confidenceScore, threshold: 90 });
+            if (verification.confidenceScore < 60) {
+                await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review', { outlookId, confidenceScore: verification.confidenceScore, threshold: 60 });
             }
             aiResponse.originalArticleAssessment = {
                 truthfulnessScore: verification.truthfulnessScore,

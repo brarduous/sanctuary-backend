@@ -173,7 +173,7 @@ async function hydratePublicVerification(outlook) {
     if (results.some((result) => result.error?.code === '42P01' || result.error?.code === 'PGRST205')) return outlook;
     for (const result of results) if (result.error) throw result.error;
     const review = reviews.data?.[0];
-    const hasHighAutomatedConfidence = (scores.data?.[0]?.confidence_score ?? 0) >= 90;
+    const hasHighAutomatedConfidence = (scores.data?.[0]?.confidence_score ?? 0) >= 60;
     return {
         ...outlook,
         verification: publicAssessment(scores.data?.[0], claims.data, sources.data, notices.data),
