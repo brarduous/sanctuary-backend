@@ -4,6 +4,7 @@ const authenticateUser = require('../middleware/auth');
 const requireAdmin = require('../middleware/adminAuth');
 const { logEvent } = require('../utils/helpers');
 const { normalizeVerificationAssessment } = require('../utils/newsVerification');
+const { refreshCluster } = require('../utils/newsClusters');
 
 const router = express.Router();
 router.use(authenticateUser, requireAdmin);
@@ -32,6 +33,91 @@ router.get('/candidates', async (req, res, next) => {
         const { data, error } = await query;
         if (error) throw error;
         res.json(data || []);
+    } catch (error) { next(error); }
+});
+
+router.get('/clusters', async (req, res, next) => {
+    try {
+        const limit = boundedLimit(req.query.limit);
+        const { data, error } = await supabase.from('news_story_clusters').select('id,slug,title,canonical_outlook_id,status,first_reported_at,latest_reported_at,representative_image_url,source_comparison,timeline,content_version,clustering_metadata,updated_at').order('updated_at', { ascending: false }).limit(limit);
+        if (error) throw error;
+        res.json((data || []).map((cluster) => ({ ...cluster, sourceCount: Array.isArray(cluster.source_comparison) ? cluster.source_comparison.length : 0 })));
+    } catch (error) { next(error); }
+});
+
+router.patch('/clusters/:id/image', async (req, res, next) => {
+    try {
+        const imageUrl = String(req.body.imageUrl || '').trim();
+        if (!/^https:\/\//i.test(imageUrl)) return res.status(400).json({ error: { code: 'CLUSTER_IMAGE_INVALID', message: 'A secure image URL is required.', requestId: req.requestId } });
+        const { data: cluster, error } = await supabase.from('news_story_clusters').update({ representative_image_url: imageUrl, updated_at: new Date().toISOString() }).eq('id', req.params.id).select('*').single();
+        if (error) throw error;
+        if (cluster.canonical_outlook_id) await supabase.from('scriptural_outlooks').update({ article_thumbnail_url: imageUrl }).eq('id', cluster.canonical_outlook_id);
+        await logEvent('audit', 'news', req.user.id, 'news_cluster_image_changed', 'Story cluster representative image changed', { clusterId: cluster.id });
+        res.json(cluster);
+    } catch (error) { next(error); }
+});
+
+router.post('/clusters/:id/sources/:sourceId/move', async (req, res, next) => {
+    try {
+        const targetClusterId = String(req.body.targetClusterId || '');
+        const { data: source, error } = await supabase.from('news_article_sources').update({ story_cluster_id: targetClusterId }).eq('id', req.params.sourceId).eq('story_cluster_id', req.params.id).select('*').single();
+        if (error) throw error;
+        const [fromCluster, toCluster] = await Promise.all([refreshCluster(req.params.id), refreshCluster(targetClusterId)]);
+        await logEvent('audit', 'news', req.user.id, 'news_cluster_source_moved', 'Source moved between story clusters', { sourceId: source.id, fromClusterId: req.params.id, targetClusterId });
+        res.json({ source, fromCluster, toCluster });
+    } catch (error) { next(error); }
+});
+
+router.post('/clusters/:id/merge', async (req, res, next) => {
+    try {
+        const targetClusterId = String(req.body.targetClusterId || '');
+        if (!targetClusterId || targetClusterId === req.params.id) return res.status(400).json({ error: { code: 'CLUSTER_MERGE_INVALID', message: 'Choose a different target cluster.', requestId: req.requestId } });
+        const [sourceResult, targetResult] = await Promise.all([supabase.from('news_story_clusters').select('*').eq('id', req.params.id).single(), supabase.from('news_story_clusters').select('*').eq('id', targetClusterId).single()]);
+        if (sourceResult.error || targetResult.error) throw sourceResult.error || targetResult.error;
+        const targetCanonicalId = targetResult.data.canonical_outlook_id;
+        await supabase.from('news_article_sources').update({ story_cluster_id: targetClusterId }).eq('story_cluster_id', req.params.id);
+        await supabase.from('scriptural_outlooks').update({ story_cluster_id: targetClusterId, superseded_by_outlook_id: targetCanonicalId }).eq('story_cluster_id', req.params.id).neq('id', targetCanonicalId);
+        await supabase.from('news_story_clusters').update({ status: 'archived', updated_at: new Date().toISOString() }).eq('id', req.params.id);
+        const cluster = await refreshCluster(targetClusterId);
+        await logEvent('audit', 'news', req.user.id, 'news_clusters_merged', 'Story clusters merged', { sourceClusterId: req.params.id, targetClusterId });
+        res.json(cluster);
+    } catch (error) { next(error); }
+});
+
+router.post('/clusters/:id/split', async (req, res, next) => {
+    try {
+        const sourceIds = [...new Set((Array.isArray(req.body.sourceIds) ? req.body.sourceIds : []).map(String))].slice(0, 100);
+        const title = String(req.body.title || '').trim();
+        if (!sourceIds.length || title.length < 8) return res.status(400).json({ error: { code: 'CLUSTER_SPLIT_INVALID', message: 'Select sources and provide the new story title.', requestId: req.requestId } });
+        const { data: oldCluster, error: oldError } = await supabase.from('news_story_clusters').select('*').eq('id', req.params.id).single();
+        if (oldError) throw oldError;
+        const { data: sources, error: sourceError } = await supabase.from('news_article_sources').select('*').eq('story_cluster_id', req.params.id).in('id', sourceIds);
+        if (sourceError) throw sourceError;
+        const canonicalSource = (sources || []).find((source) => source.outlook_id !== oldCluster.canonical_outlook_id);
+        if (!canonicalSource) return res.status(409).json({ error: { code: 'CLUSTER_SPLIT_CANONICAL_REQUIRED', message: 'The selected sources need an independent outlook before they can be split.', requestId: req.requestId } });
+        const slug = `${title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 72)}-${Date.now().toString(36)}`;
+        const { data: newCluster, error: createError } = await supabase.from('news_story_clusters').insert({ slug, title, canonical_outlook_id: canonicalSource.outlook_id, status: 'provisional', first_reported_at: canonicalSource.published_at, latest_reported_at: canonicalSource.published_at, representative_image_url: null, clustering_metadata: { manuallySplitFrom: req.params.id } }).select('*').single();
+        if (createError) throw createError;
+        await supabase.from('news_article_sources').update({ story_cluster_id: newCluster.id }).in('id', sourceIds);
+        const outlookIds = [...new Set((sources || []).map((source) => source.outlook_id))];
+        await supabase.from('scriptural_outlooks').update({ story_cluster_id: newCluster.id, superseded_by_outlook_id: canonicalSource.outlook_id }).in('id', outlookIds).neq('id', canonicalSource.outlook_id);
+        await supabase.from('scriptural_outlooks').update({ story_cluster_id: newCluster.id, superseded_by_outlook_id: null }).eq('id', canonicalSource.outlook_id);
+        const [fromCluster, splitCluster] = await Promise.all([refreshCluster(req.params.id), refreshCluster(newCluster.id)]);
+        await logEvent('audit', 'news', req.user.id, 'news_cluster_split', 'Sources split into a new story cluster', { sourceClusterId: req.params.id, newClusterId: newCluster.id, sourceIds });
+        res.status(201).json({ fromCluster, splitCluster });
+    } catch (error) { next(error); }
+});
+
+router.post('/clusters/:id/regenerate', async (req, res, next) => {
+    try {
+        const requestedAt = new Date().toISOString();
+        const { data: current, error: currentError } = await supabase.from('news_story_clusters').select('clustering_metadata').eq('id', req.params.id).single();
+        if (currentError) throw currentError;
+        const clusteringMetadata = { ...(current.clustering_metadata || {}), regenerationRequestedAt: requestedAt, regenerationRequestedBy: req.user.id };
+        const { data, error } = await supabase.from('news_story_clusters').update({ clustering_metadata: clusteringMetadata, updated_at: requestedAt }).eq('id', req.params.id).select('*').single();
+        if (error) throw error;
+        await logEvent('audit', 'news', req.user.id, 'news_cluster_regeneration_requested', 'Story cluster regeneration requested', { clusterId: req.params.id });
+        res.status(202).json(data);
     } catch (error) { next(error); }
 });
 

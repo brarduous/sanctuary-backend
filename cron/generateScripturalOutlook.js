@@ -15,6 +15,7 @@ const { logEvent } = require('../utils/helpers');
 const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
 const { normalizeVerificationAssessment } = require('../utils/newsVerification');
 const { assessEvidencePackage, discoveryRankFor, wordCount } = require('../utils/newsEvidence');
+const { reconcileOutlookCluster, processRequestedClusterRegenerations } = require('../utils/newsClusters');
 const {
     getScripturalOutlookPrompt,
     getScripturalOutlookArticleInputPrompt,
@@ -943,6 +944,12 @@ async function saveDiscoveryCandidate(article, evidence, evidenceStatus = 'await
 
 async function generateAndSaveScripturalOutlook(options = {}) {
   console.log('Starting scriptural outlook generation cron job...');
+    try {
+      const regenerated = await processRequestedClusterRegenerations();
+      if (regenerated) console.log(`Regenerated ${regenerated} editorially requested story clusters.`);
+    } catch (error) {
+      console.error('Could not process requested story cluster regenerations:', error.message);
+    }
     const startTime = Date.now();
   const requestedLimit = Math.min(24, Math.max(1, Number.parseInt(process.env.NEWS_CRON_LIMIT, 10) || 24));
   const articles = Array.isArray(options.articles) ? options.articles : await fetchTopNewsStories(requestedLimit);
@@ -1101,6 +1108,14 @@ async function generateAndSaveScripturalOutlook(options = {}) {
                     .insert(topicRelations);
                 if (relationError) console.error('Error inserting topic relations:', relationError);
             }
+        }
+
+        try {
+            const clusterResult = await reconcileOutlookCluster(outlookId, article, aiResponse);
+            await logEvent('info', 'news', null, clusterResult.superseded ? 'news_cluster_source_attached' : 'news_cluster_created', clusterResult.superseded ? 'Source report attached to canonical story cluster' : 'Canonical story cluster created', { outlookId, clusterId: clusterResult.cluster.id, canonicalOutlookId: clusterResult.canonicalOutlookId, matchScore: clusterResult.matchScore, sourceCount: clusterResult.cluster.source_comparison.length });
+        } catch (clusterError) {
+            console.error(`Failed to cluster outlook ${outlookId}:`, clusterError);
+            await logEvent('error', 'news', null, 'news_cluster_failed', 'Story clustering failed without blocking article publication', { outlookId, error: clusterError.message });
         }
 
         console.log(`Successfully processed outlook and taxonomies for: ${article.title}`);

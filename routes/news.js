@@ -57,8 +57,34 @@ const NEWS_LIST_COLUMNS = [
     'slug',
     'ai_outlook',
     'news_impact_score',
-    'news_impact_summary'
+    'news_impact_summary',
+    'story_cluster_id',
+    'superseded_by_outlook_id'
 ].join(', ');
+
+async function hydrateStoryCluster(article) {
+    if (!article?.story_cluster_id) return article;
+    const { data: cluster, error } = await supabase.from('news_story_clusters').select('id,slug,title,canonical_outlook_id,status,first_reported_at,latest_reported_at,representative_image_url,source_comparison,timeline,content_version,updated_at').eq('id', article.story_cluster_id).single();
+    if (error || !cluster) return article;
+    let canonicalSlug = article.slug;
+    if (cluster.canonical_outlook_id && cluster.canonical_outlook_id !== article.id) {
+        const { data: canonical } = await supabase.from('scriptural_outlooks').select('slug').eq('id', cluster.canonical_outlook_id).single();
+        canonicalSlug = canonical?.slug || canonicalSlug;
+    }
+    return { ...article, story_cluster: { ...cluster, source_count: Array.isArray(cluster.source_comparison) ? cluster.source_comparison.length : 0, canonical_slug: canonicalSlug, canonical_url: `/article/${canonicalSlug}` } };
+}
+
+async function hydrateStoryClusters(articles) {
+    const clusterIds = [...new Set((articles || []).map((article) => article.story_cluster_id).filter(Boolean))];
+    if (!clusterIds.length) return articles;
+    const { data: clusters, error } = await supabase.from('news_story_clusters').select('id,slug,status,canonical_outlook_id,source_comparison,updated_at').in('id', clusterIds);
+    if (error) return articles;
+    const byId = new Map((clusters || []).map((cluster) => [cluster.id, cluster]));
+    return articles.map((article) => {
+        const cluster = byId.get(article.story_cluster_id);
+        return cluster ? { ...article, story_cluster: { ...cluster, source_count: Array.isArray(cluster.source_comparison) ? cluster.source_comparison.length : 0, canonical_slug: article.slug, canonical_url: `/article/${article.slug}` } } : article;
+    });
+}
 
 function getWeightedNewsScore(outlook) {
     const impactScore = Number(outlook.news_impact_score) || 0;
@@ -426,7 +452,11 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
             .single();
 
         if (error) return res.status(404).json({ error: 'Article not found' });
-        const article = publicNewsArticle(await hydratePublicVerification(data));
+        if (data.superseded_by_outlook_id) {
+            const { data: canonical } = await supabase.from('scriptural_outlooks').select('id,slug').eq('id', data.superseded_by_outlook_id).single();
+            return res.status(308).set('Location', `/scriptural-outlooks/${canonical?.slug || canonical?.id}`).json({ canonical: true, canonicalId: canonical?.id, canonicalSlug: canonical?.slug, canonicalUrl: `/article/${canonical?.slug || canonical?.id}` });
+        }
+        const article = publicNewsArticle(await hydrateStoryCluster(await hydratePublicVerification(data)));
         if (!article) return res.status(404).json({ error: 'Article not found' });
         res.json(article);
     } catch (error) {
@@ -496,7 +526,8 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
 
         let query = supabase
             .from('scriptural_outlooks')
-            .select(selectQuery);
+            .select(selectQuery)
+            .is('superseded_by_outlook_id', null);
 
         if (filteredOutlookIds) query = query.in('id', filteredOutlookIds);
 
@@ -540,6 +571,7 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         }
 
         cleanedData = await hydrateOutlookTaxonomies(cleanedData);
+        cleanedData = await hydrateStoryClusters(cleanedData);
         
         logEvent('info', 'backend', req.user?.id ?? null, 'fetch_scriptural_outlooks', 'Fetched outlooks list', { page, limit, hasTopicFilter, hasCategoryFilter }, Date.now() - startTime);
         res.json(cleanedData);
