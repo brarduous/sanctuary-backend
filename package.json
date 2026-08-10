@@ -14,6 +14,7 @@
     "refresh-taxonomy-breakdowns": "node scripts/refreshTaxonomyBreakdowns.js",
     "backfill-news-impact": "node scripts/backfillNewsImpactScores.js",
     "backfill-news-verification": "node scripts/backfillRecentNewsVerification.js",
+    "backfill-cbs-news-images": "node scripts/backfillCbsNewsImages.js",
     "replay-news-gap": "node scripts/replayNewsGap.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",

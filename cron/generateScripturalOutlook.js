@@ -159,7 +159,7 @@ function attachCorroboratingSources(articles) {
 
 const NEWS_SOURCES = [
     { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
+    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true, preferPublisherImage: true },
     { publisher: 'CNN', kind: 'rss', url: 'http://rss.cnn.com/rss/cnn_topstories.rss', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
     { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
     { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
@@ -208,6 +208,13 @@ async function publisherImageUrl(articleUrl) {
         console.warn(`Could not resolve publisher image for ${articleUrl}: ${error.message}`);
         return null;
     }
+}
+
+async function sourceImageUrl(source, item, articleUrl) {
+    if (source.preferPublisherImage) {
+        return await publisherImageUrl(articleUrl) || feedImageUrl(item);
+    }
+    return feedImageUrl(item) || await publisherImageUrl(articleUrl);
 }
 
 function publisherFallbackImageUrl(publisher) {
@@ -276,7 +283,7 @@ async function smokeTestNewsSources() {
             const item = items[0];
             if (!item) throw new Error('source returned no articles');
             const excerpt = stripHtml(item.description?.[0] || '');
-            const firstImage = feedImageUrl(item) || await publisherImageUrl(item.link?.[0]);
+            const firstImage = await sourceImageUrl(source, item, item.link?.[0]);
             const authorizedBody = source.accessMode === 'us_government_full_text'
                 ? await fetchAuthorizedFullText(source, item)
                 : null;
@@ -630,8 +637,7 @@ async function fetchTopNewsStories(limit = 24) {
 
                 console.log(`Processing article: ${title} - ${link}`);
                 const description = item.description? item.description[0] : '';
-                const thumbnail_url = feedImageUrl(item)
-                    || await publisherImageUrl(link)
+                const thumbnail_url = await sourceImageUrl(source, item, link)
                     || publisherFallbackImageUrl(source.publisher);
                 
                 let final_url = link;
