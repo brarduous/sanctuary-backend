@@ -5,10 +5,15 @@ const supabase = require('../config/supabase');
 require('dotenv').config();
 
 const PAGE_SIZE = 200;
+const CONCURRENCY = Math.max(1, Number(process.env.CBS_IMAGE_BACKFILL_CONCURRENCY || 12));
+
+function isFullSizeCbsImage(imageUrl) {
+    return /\/thumbnail\/(?:1200x630|1200x630g\d*|1280x720|1920x1080)\//i.test(imageUrl || '');
+}
 
 async function publisherImageUrl(articleUrl) {
     const response = await axios.get(articleUrl, {
-        timeout: 15000,
+        timeout: 10000,
         maxRedirects: 5,
         headers: { 'User-Agent': 'SanctuaryNewsBot/1.0 (+https://sanctuarynews.org)' },
     });
@@ -37,28 +42,41 @@ async function fetchCbsArticles() {
 
 async function backfillCbsNewsImages() {
     const articles = await fetchCbsArticles();
-    console.log(`Found ${articles.length} CBS News articles.`);
+    const candidates = articles.filter((article) => !isFullSizeCbsImage(article.article_thumbnail_url));
+    console.log(`Found ${articles.length} CBS News articles; ${candidates.length} need a full-size image.`);
     let updated = 0;
     let unchanged = 0;
     let failed = 0;
 
-    for (const article of articles) {
-        try {
-            const imageUrl = await publisherImageUrl(article.article_url);
-            if (!imageUrl || imageUrl === article.article_thumbnail_url) {
-                unchanged++;
-                continue;
+    for (let offset = 0; offset < candidates.length; offset += CONCURRENCY) {
+        const batch = candidates.slice(offset, offset + CONCURRENCY);
+        await Promise.all(batch.map(async (article) => {
+            try {
+                const imageUrl = await publisherImageUrl(article.article_url);
+                if (!imageUrl || imageUrl === article.article_thumbnail_url) {
+                    unchanged++;
+                    return;
+                }
+                const { error } = await supabase
+                    .from('scriptural_outlooks')
+                    .update({ article_thumbnail_url: imageUrl })
+                    .eq('id', article.id);
+                if (error) throw error;
+                updated++;
+            } catch (error) {
+                failed++;
+                console.error(`Failed: ${article.article_title}: ${error.message}`);
             }
-            const { error } = await supabase
-                .from('scriptural_outlooks')
-                .update({ article_thumbnail_url: imageUrl })
-                .eq('id', article.id);
-            if (error) throw error;
-            updated++;
-            console.log(`Updated: ${article.article_title} -> ${imageUrl}`);
-        } catch (error) {
-            failed++;
-            console.error(`Failed: ${article.article_title}: ${error.message}`);
+        }));
+        console.log(`Processed ${Math.min(offset + batch.length, candidates.length)}/${candidates.length}; updated ${updated}, failed ${failed}.`);
+    }
+
+    if (!candidates.length) {
+        console.log('All CBS News articles already use full-size images.');
+    } else {
+        unchanged += articles.length - candidates.length;
+        if (updated + failed + unchanged < articles.length) {
+            unchanged += articles.length - (updated + failed + unchanged);
         }
     }
 
