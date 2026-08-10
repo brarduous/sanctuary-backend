@@ -29,6 +29,27 @@ test('an excerpt-only package is never eligible for analysis', () => {
     assert.match(result.reason, /No authorized full-text evidence/);
 });
 
+test('a substantive publisher-supplied feed excerpt is eligible', () => {
+    const result = assessEvidencePackage(report('NPR', {
+        accessMode: 'publisher_feed_excerpt',
+        publisherExcerpt: true,
+        fullTextAuthorized: false,
+        body: words(80),
+    }));
+    assert.equal(result.eligible, true);
+    assert.equal(result.publisherExcerptCount, 1);
+});
+
+test('a thin publisher feed item remains ineligible', () => {
+    const result = assessEvidencePackage(report('CBS News', {
+        accessMode: 'publisher_feed_excerpt',
+        publisherExcerpt: true,
+        fullTextAuthorized: false,
+        body: words(30),
+    }));
+    assert.equal(result.eligible, false);
+});
+
 test('two authorized substantive reports make a package eligible', () => {
     const result = assessEvidencePackage({
         ...report('CNN'),
@@ -48,6 +69,17 @@ test('one substantive report plus an authorized primary document is eligible', (
         })],
     });
     assert.equal(result.eligible, true);
+    assert.equal(result.primaryDocumentCount, 1);
+});
+
+test('one complete authorized primary document is eligible for analysis', () => {
+    const result = assessEvidencePackage(report('Federal Register', {
+        sourceType: 'official_document',
+        isIndependent: false,
+        body: words(200),
+    }));
+    assert.equal(result.eligible, true);
+    assert.equal(result.substantiveReportingCount, 0);
     assert.equal(result.primaryDocumentCount, 1);
 });
 
