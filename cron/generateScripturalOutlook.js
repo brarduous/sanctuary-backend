@@ -158,7 +158,6 @@ function attachCorroboratingSources(articles) {
 }
 
 const NEWS_SOURCES = [
-    { publisher: 'Federal Register', kind: 'federal-register', url: 'https://www.federalregister.gov/api/v1/documents.json?per_page=40&order=newest', fetchFullText: true, accessMode: 'us_government_full_text', analysisEligible: true, fullTextAuthorized: true, sourceType: 'official_document', isIndependent: false },
     { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
     { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
     { publisher: 'CNN', kind: 'rss', url: 'http://rss.cnn.com/rss/cnn_topstories.rss', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
