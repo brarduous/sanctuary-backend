@@ -935,11 +935,11 @@ async function saveDiscoveryCandidate(article, evidence, evidenceStatus = 'await
     }
 }
 
-async function generateAndSaveScripturalOutlook() {
+async function generateAndSaveScripturalOutlook(options = {}) {
   console.log('Starting scriptural outlook generation cron job...');
     const startTime = Date.now();
   const requestedLimit = Math.min(24, Math.max(1, Number.parseInt(process.env.NEWS_CRON_LIMIT, 10) || 24));
-  const articles = await fetchTopNewsStories(requestedLimit);
+  const articles = Array.isArray(options.articles) ? options.articles : await fetchTopNewsStories(requestedLimit);
   if (articles.length === 0) {
     console.error('Failed to get any news articles. Exiting.');
     return;
