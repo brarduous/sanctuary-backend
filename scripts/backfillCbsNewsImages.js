@@ -31,7 +31,7 @@ async function fetchCbsArticles() {
             .from('scriptural_outlooks')
             .select('id,article_title,article_url,article_thumbnail_url')
             .ilike('article_url', '%cbsnews.com%')
-            .order('created_at', { ascending: true })
+            .order('created_at', { ascending: false })
             .range(offset, offset + PAGE_SIZE - 1);
         if (error) throw error;
         articles.push(...(data || []));
