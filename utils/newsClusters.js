@@ -18,13 +18,15 @@ function sourceComparison(source) {
     publisher: source.publisher,
     title: source.title,
     url: source.url,
-    reportingQualityScore: 50,
+    reportingQualityScore: 70,
     reportingQualityRationale: 'Not yet assessed beyond the supplied source metadata.',
-    christianVirtuesAlignmentScore: 50,
+    christianVirtuesAlignmentScore: 70,
     christianVirtuesRationale: 'Not yet assessed beyond the supplied source metadata; religious vocabulary receives no preference.',
     distinctiveContribution: source.title,
     framing: 'Review the linked report for its emphasis and framing.',
     omissionsOrUncertainties: 'The source package may not include every relevant primary document or perspective.',
+    calibrationVersion: 2,
+    assessedAt: new Date().toISOString(),
   };
 }
 
@@ -45,11 +47,15 @@ async function assessSourceComparison(sources, clusterTitle) {
   const inputs = sources.map((source) => ({ id: source.id, publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', clusterTitle, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Assess only the supplied text for each report. Return JSON {"sources": [...]} with exactly one item per source: sourceId, publisher, title, url, distinctiveContribution, framing, omissionsOrUncertainties, reportingQualityScore (0-100), reportingQualityRationale, christianVirtuesAlignmentScore (0-100), christianVirtuesRationale. Reporting quality measures evidence, attribution, specificity, context, and acknowledged uncertainty. Christian-virtues alignment separately measures truthfulness, human dignity, compassion, justice, peacemaking, humility, and care for vulnerable people. Never infer a publisher's religion, motives, or politics. Religious words confer no points. Use concrete evidence from supplied text, acknowledge insufficient excerpts, and rank every source; scores may tie.` }, { role: 'user', content: JSON.stringify(inputs) }] });
+    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Assess only the supplied text for each report. Return JSON {"sources": [...]} with exactly one item per source: sourceId, publisher, title, url, distinctiveContribution, framing, omissionsOrUncertainties, reportingQualityScore (0-100), reportingQualityRationale, christianVirtuesAlignmentScore (0-100), christianVirtuesRationale.
+
+Reporting quality measures whether the report responsibly accomplishes its apparent purpose using accurate wording, attribution, specificity, context, and honest uncertainty. Calibrate generously and proportionately: 85-100 exceptional depth; 70-84 solid and responsible; 55-69 adequate with meaningful limitations; below 55 only for substantive problems such as unsupported consequential assertions, materially misleading framing, serious attribution failures, or sensationalism. An accurate concise brief should ordinarily score around 70. Do not punish a brief merely for not being a long investigation, and do not treat unavailable full-page text as evidence of poor journalism.
+
+Christian-virtues alignment separately measures truthfulness, human dignity, compassion, justice, peacemaking, humility, and care for vulnerable people. Neutral, accurate, non-dehumanizing reporting should ordinarily score around 70 even without explicit moral or religious language. Use 80+ for unusually strong care, dignity, justice, truth-correction, or constructive context. Score below 55 only for concrete distortion, dehumanization, exploitation of suffering, reckless fear, or disregard for vulnerable people. Never infer a publisher's religion, motives, or politics. Religious words confer no points. Distinguish limitations of the supplied excerpt from faults in the underlying report. Use concrete evidence and rank every source; scores may tie.` }, { role: 'user', content: JSON.stringify(inputs) }] });
     const parsed = JSON.parse(response.choices[0]?.message?.content || '{}');
     const rows = Array.isArray(parsed.sources) ? parsed.sources : [];
     const allowed = new Map(sources.map((source) => [source.id, source]));
-    return rows.filter((row) => allowed.has(row.sourceId)).map((row) => ({ ...row, publisher: allowed.get(row.sourceId).publisher, title: allowed.get(row.sourceId).title, url: allowed.get(row.sourceId).url, reportingQualityScore: Math.max(0, Math.min(100, Math.round(Number(row.reportingQualityScore) || 0))), christianVirtuesAlignmentScore: Math.max(0, Math.min(100, Math.round(Number(row.christianVirtuesAlignmentScore) || 0))) })).concat(sources.filter((source) => !rows.some((row) => row.sourceId === source.id)).map(sourceComparison));
+    return rows.filter((row) => allowed.has(row.sourceId)).map((row) => ({ ...row, publisher: allowed.get(row.sourceId).publisher, title: allowed.get(row.sourceId).title, url: allowed.get(row.sourceId).url, reportingQualityScore: Math.max(0, Math.min(100, Math.round(Number(row.reportingQualityScore) || 0))), christianVirtuesAlignmentScore: Math.max(0, Math.min(100, Math.round(Number(row.christianVirtuesAlignmentScore) || 0))), calibrationVersion: 2, assessedAt: new Date().toISOString() })).concat(sources.filter((source) => !rows.some((row) => row.sourceId === source.id)).map(sourceComparison));
   } catch (error) {
     console.warn(`Could not assess cluster source comparison: ${error.message}`);
     return sources.map(sourceComparison);

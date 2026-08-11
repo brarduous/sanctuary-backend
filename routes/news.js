@@ -71,7 +71,9 @@ async function hydrateStoryCluster(article) {
         const { data: canonical } = await supabase.from('scriptural_outlooks').select('slug').eq('id', cluster.canonical_outlook_id).single();
         canonicalSlug = canonical?.slug || canonicalSlug;
     }
-    return { ...article, story_cluster: { ...cluster, source_count: Array.isArray(cluster.source_comparison) ? cluster.source_comparison.length : 0, canonical_slug: canonicalSlug, canonical_url: `/article/${canonicalSlug}` } };
+    const sourceCount = Array.isArray(cluster.source_comparison) ? cluster.source_comparison.length : 0;
+    const verification = article.verification ? { ...article.verification, scope: 'cluster', sourceCount, assessmentSummary: `This developing story combines ${sourceCount} unique source report${sourceCount === 1 ? '' : 's'}. The claim-support score measures whether the displayed factual findings are supported by supplied reporting; source breadth, framing, and disagreements are assessed separately below.`, automatedAssessmentNotice: 'This automated cluster score measures claim support in the supplied reporting. It does not establish absolute truth, intent, or publisher honesty.' } : null;
+    return { ...article, verification, editorialStatus: cluster.status === 'corroborated' ? 'automated_high_confidence' : article.editorialStatus, story_cluster: { ...cluster, source_count: sourceCount, canonical_slug: canonicalSlug, canonical_url: `/article/${canonicalSlug}` } };
 }
 
 async function hydrateStoryClusters(articles) {
