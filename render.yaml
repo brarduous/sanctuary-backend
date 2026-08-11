@@ -1,22 +1,5 @@
 services:
   - type: cron
-    name: sanctuary-church-content-dispatch
-    runtime: node
-    plan: starter
-    region: oregon
-    schedule: "*/5 * * * *"
-    buildCommand: npm install
-    startCommand: npm run cron-church-content
-    envVars:
-      - key: NODE_VERSION
-        value: 22
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
-      - key: EXPO_ACCESS_TOKEN
-        sync: false
-  - type: cron
     name: sanctuary-general-devotionals-daily
     runtime: node
     plan: starter

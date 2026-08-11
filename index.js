@@ -12,7 +12,7 @@ const { logEvent } = require('./utils/helpers');
 
 const adminRouter = require('./routes/admin'); // <--- Add this
 const notificationsRouter = require('./routes/notifications');
-const { router: contentPacksRouter } = require('./routes/contentPacks');
+const { router: contentPacksRouter, dispatchDuePublicationNotifications } = require('./routes/contentPacks');
 
 // Initialize Stripe (needed for webhooks)
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
@@ -468,6 +468,9 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3001;
 if (require.main === module) {
     app.listen(PORT, () => console.log(`Backend server running on port ${PORT}`));
+    const dispatchChurchContent = () => dispatchDuePublicationNotifications(new Date()).catch((error) => console.error('[Church Content] Scheduled dispatch failed:', error));
+    setTimeout(dispatchChurchContent, 10000).unref();
+    setInterval(dispatchChurchContent, 60000).unref();
 }
 
 module.exports = app;

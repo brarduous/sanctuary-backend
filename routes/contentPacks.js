@@ -303,10 +303,13 @@ async function dispatchDuePublicationNotifications(now = new Date(), publication
   const summary = { attempted: 0, accepted: 0, suppressed: 0, failed: 0 };
   for (const delivery of data || []) {
     if (delivery.church_content_publications?.status !== 'published') { await supabase.from('church_content_notification_deliveries').update({ status: 'cancelled' }).eq('id', delivery.id); continue; }
+    const { data: claimed, error: claimError } = await supabase.from('church_content_notification_deliveries').update({ status: 'attempted', attempted_at: now.toISOString(), updated_at: now.toISOString() }).eq('id', delivery.id).eq('status', 'planned').select('id').maybeSingle();
+    if (claimError) throw claimError;
+    if (!claimed) continue;
     const { data: profile } = await supabase.from('user_profiles').select('user_preferences').eq('user_id', delivery.user_id).maybeSingle();
     const preference = delivery.metadata?.preference || 'churchJourneys';
     const enabled = profile?.user_preferences?.notifications?.[preference] !== false;
-    if (!enabled) { summary.suppressed++; await supabase.from('church_content_notification_deliveries').update({ status: 'suppressed', updated_at: now.toISOString() }).eq('id', delivery.id); continue; }
+    if (!enabled) { summary.suppressed++; await supabase.from('church_content_notification_deliveries').update({ status: 'suppressed', updated_at: now.toISOString() }).eq('id', delivery.id).eq('status', 'attempted'); continue; }
     summary.attempted++;
     try {
       const pub = delivery.church_content_publications;
@@ -314,9 +317,9 @@ async function dispatchDuePublicationNotifications(now = new Date(), publication
       const result = await sendPushToUsers({ userIds: [delivery.user_id], title: isReminder ? 'Today’s church reflection is ready' : pub.push_title || 'A new weekly journey is ready', body: isReminder ? pub.title : pub.push_body || pub.title, data: { url: `/church/journey/${delivery.publication_id}${delivery.item_id ? `?step=${delivery.item_id}` : ''}`, contentType: 'church_journey', journeyId: delivery.publication_id, stepId: delivery.item_id, congregationId: delivery.congregation_id, notificationDeliveryId: delivery.id }, preference });
       const accepted = result.sent > 0;
       summary[accepted ? 'accepted' : 'suppressed']++;
-      await supabase.from('church_content_notification_deliveries').update({ status: accepted ? 'accepted' : 'suppressed', attempted_at: now.toISOString(), accepted_at: accepted ? now.toISOString() : null, updated_at: now.toISOString() }).eq('id', delivery.id).eq('status', 'planned');
+      await supabase.from('church_content_notification_deliveries').update({ status: accepted ? 'accepted' : 'suppressed', accepted_at: accepted ? now.toISOString() : null, updated_at: now.toISOString() }).eq('id', delivery.id).eq('status', 'attempted');
     } catch (pushError) {
-      summary.failed++; await supabase.from('church_content_notification_deliveries').update({ status: 'failed', attempted_at: now.toISOString(), failure_code: pushError.code || 'PUSH_FAILED', metadata: { error: pushError.message }, updated_at: now.toISOString() }).eq('id', delivery.id);
+      summary.failed++; await supabase.from('church_content_notification_deliveries').update({ status: 'failed', failure_code: pushError.code || 'PUSH_FAILED', metadata: { error: pushError.message }, updated_at: now.toISOString() }).eq('id', delivery.id).eq('status', 'attempted');
     }
   }
   return summary;
