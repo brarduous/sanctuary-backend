@@ -19,6 +19,7 @@
     "replay-news-gap": "node scripts/replayNewsGap.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
+    "cron-church-content": "node cron/dispatchChurchContent.js",
     "seed-demo": "node scripts/resetDemoData.js",
     "seed:congregation-demo": "node scripts/seedCongregationDemoData.js",
     "reset:production-account": "node scripts/resetProductionAccount.js",

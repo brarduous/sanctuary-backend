@@ -16,6 +16,7 @@ const {
     getVoiceSourceTexts,
 } = require('../utils/pastorVoice');
 const { generateContentImage } = require('../utils/contentImages');
+const { YoutubeTranscript } = require('youtube-transcript');
 const { generationRequestsMatch } = require('../utils/generationRequests');
 const {
     generateTopicSermonPrompt,
@@ -584,6 +585,19 @@ router.post('/generate-sermon-series', authenticateUser, aiLimiter, async (req, 
 });
 
 // --- Standard Sermon Endpoints ---
+router.post('/sermon-import/youtube', authenticateUser, aiLimiter, async (req, res, next) => {
+    const sourceUrl = String(req.body?.url || '').trim();
+    if (!/^https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)\//i.test(sourceUrl)) return res.status(400).json({ error: { code: 'YOUTUBE_URL_INVALID', message: 'Enter a valid YouTube URL.', requestId: req.requestId } });
+    try {
+        const segments = await YoutubeTranscript.fetchTranscript(sourceUrl);
+        const transcript = segments.map((segment) => segment.text).join(' ').replace(/\s+/g, ' ').trim();
+        if (!transcript) return res.status(422).json({ error: { code: 'TRANSCRIPT_UNAVAILABLE', message: 'No authorized transcript was available for this video.', requestId: req.requestId } });
+        res.json({ data: { sourceUrl, transcript, timestamps: segments.slice(0, 500).map((segment) => ({ offset: segment.offset, duration: segment.duration, text: segment.text })) } });
+    } catch (error) {
+        error.status = 422; error.code = 'TRANSCRIPT_UNAVAILABLE'; error.message = 'This YouTube video does not provide an accessible transcript.'; next(error);
+    }
+});
+
 router.post('/sermon-drafts', authenticateUser, async (req, res, next) => {
     const title = String(req.body?.title || '').trim() || 'Untitled Sermon';
     const body = String(req.body?.sermon_body || '');
