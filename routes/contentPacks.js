@@ -48,7 +48,11 @@ async function generateItems(sermon, selectedSlots = requiredSlots) {
     schema: packSchema, schemaName: 'sermon_content_pack', maxOutputTokens: 18000,
   });
   const allowed = new Set(selectedSlots.map(([type, sequence]) => `${type}:${sequence}`));
-  return { response, items: response.data.items.filter((item) => allowed.has(`${item.itemType}:${item.sequence}`)) };
+  const items = response.data.items.filter((item) => allowed.has(`${item.itemType}:${item.sequence}`));
+  const returned = new Set(items.map((item) => `${item.itemType}:${item.sequence}`));
+  const missing = [...allowed].filter((slot) => !returned.has(slot));
+  if (missing.length) throw Object.assign(new Error(`Content Pack generation was incomplete. Missing: ${missing.join(', ')}.`), { code: 'CONTENT_PACK_INCOMPLETE' });
+  return { response, items };
 }
 
 router.post('/sermons/:sermonId/content-pack/generate', authenticateUser, aiLimiter, requireCapability('content.write'), async (req, res, next) => {
@@ -204,10 +208,10 @@ router.post('/content-packs/:packId/publish', authenticateUser, loadPack, requir
     if (firstNotificationAt) {
       const userIds = await resolveUsers(req.pack.congregation_id, preview.recipientScope);
       const key = `${publication.id}:launch`;
-      const dailyItems = preview.approvedItems.filter((item) => item.item_type === 'daily_devotional').sort((a, b) => a.sequence - b.sequence);
+      const dailyItems = preview.approvedItems.filter((item) => item.item_type === 'daily_devotional' && item.sequence > 1).sort((a, b) => a.sequence - b.sequence);
       const deliveries = userIds.flatMap((userId) => [
         { publication_id: publication.id, congregation_id: req.pack.congregation_id, user_id: userId, delivery_key: key, scheduled_for: firstNotificationAt.toISOString(), metadata: { type: 'journey_launch', preference: 'churchJourneys' } },
-        ...dailyItems.map((item) => ({ publication_id: publication.id, congregation_id: req.pack.congregation_id, user_id: userId, item_id: item.id, delivery_key: `${publication.id}:day:${Math.max(0, item.sequence - 1)}`, scheduled_for: journeyReminderAt(startsAt, Math.max(0, item.sequence - 1), payload.daily_release_time).toISOString(), metadata: { type: 'journey_reminder', preference: 'journeyReminders' } })),
+        ...dailyItems.map((item) => ({ publication_id: publication.id, congregation_id: req.pack.congregation_id, user_id: userId, item_id: item.id, delivery_key: `${publication.id}:day:${Math.max(0, item.sequence - 1)}`, scheduled_for: journeyReminderAt(startsAt, Math.max(0, item.sequence - 1), payload.daily_release_time, payload.time_zone).toISOString(), metadata: { type: 'journey_reminder', preference: 'journeyReminders' } })),
       ]);
       if (deliveries.length) await supabase.from('church_content_notification_deliveries').upsert(deliveries, { onConflict: 'delivery_key,user_id', ignoreDuplicates: true });
       if (pushMode === 'now') await dispatchDuePublicationNotifications(new Date(), publication.id);
