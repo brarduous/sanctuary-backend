@@ -27,6 +27,9 @@ function sourceComparison(source) {
     omissionsOrUncertainties: 'The source package may not include every relevant primary document or perspective.',
     calibrationVersion: 2,
     assessedAt: new Date().toISOString(),
+    usefulForCluster: true,
+    utilityRationale: 'Retained because it is the available report for this source record.',
+    contributionType: 'context',
   };
 }
 
@@ -44,10 +47,12 @@ async function assessSourceComparison(sources, clusterTitle) {
   const outlookIds = [...new Set(sources.map((source) => source.outlook_id).filter(Boolean))];
   const { data: outlooks } = await supabase.from('scriptural_outlooks').select('id,article_body,ai_outlook').in('id', outlookIds);
   const byId = new Map((outlooks || []).map((outlook) => [outlook.id, outlook]));
-  const inputs = sources.map((source) => ({ id: source.id, publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', clusterTitle, source.title) }));
+  const inputs = sources.map((source) => ({ id: source.id, publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(source.evidence_excerpt || byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', clusterTitle, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Assess only the supplied text for each report. Return JSON {"sources": [...]} with exactly one item per source: sourceId, publisher, title, url, distinctiveContribution, framing, omissionsOrUncertainties, reportingQualityScore (0-100), reportingQualityRationale, christianVirtuesAlignmentScore (0-100), christianVirtuesRationale.
+    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Assess only the supplied text for each report. Return JSON {"sources": [...]} with exactly one item per source: sourceId, publisher, title, url, usefulForCluster (boolean), utilityRationale, contributionType ("corroboration", "distinct_detail", "context", "conflict", or "no_material_value"), distinctiveContribution, framing, omissionsOrUncertainties, reportingQualityScore (0-100), reportingQualityRationale, christianVirtuesAlignmentScore (0-100), christianVirtuesRationale.
+
+A partial-access source is useful only when the supplied excerpt independently corroborates a material fact, adds a distinct material detail or perspective, documents a meaningful disagreement, or supplies important context. A headline, teaser, or excerpt that merely repeats information already represented is not useful. Limited access alone is not a reason to reject a source, and publisher identity is not a reason to accept it. Set usefulForCluster=false and contributionType="no_material_value" when its available content adds nothing material. Do not rely on content that is not supplied.
 
 Reporting quality measures whether the report responsibly accomplishes its apparent purpose using accurate wording, attribution, specificity, context, and honest uncertainty. Calibrate generously and proportionately: 85-100 exceptional depth; 70-84 solid and responsible; 55-69 adequate with meaningful limitations; below 55 only for substantive problems such as unsupported consequential assertions, materially misleading framing, serious attribution failures, or sensationalism. An accurate concise brief should ordinarily score around 70. Do not punish a brief merely for not being a long investigation, and do not treat unavailable full-page text as evidence of poor journalism.
 
@@ -70,7 +75,7 @@ async function regenerateCanonicalOutlook(cluster, sources, comparison) {
     supabase.from('scriptural_outlooks').select('ai_outlook').eq('id', cluster.canonical_outlook_id).single(),
   ]);
   const byId = new Map((sourceOutlooks || []).map((outlook) => [outlook.id, outlook]));
-  const sourceInputs = sources.map((source) => ({ publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', cluster.title, source.title) }));
+  const sourceInputs = sources.map((source) => ({ publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(source.evidence_excerpt || byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', cluster.title, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Create a unified Sanctuary News update about the single core story named by clusterTitle. Return JSON fields: title, newsSummary, sourceAndFramingAnalysis, outlook, citedPassages (reference/context/application), faithfulResponse, reflectionQuestions, closingPrayer, confirmedDetails, singlyReportedDetails, disputedDetails, unresolvedQuestions. The title and every section must remain exclusively about clusterTitle. Ignore unrelated headlines or events embedded in live blogs, news wraps, navigation, or page excerpts. Attribute source-specific details and disagreements. Do not invent facts, URLs, quotations, Scripture text, or consensus. The Christian outlook must center truth, mercy, justice, peacemaking, humility, dignity, and care for vulnerable neighbors; keep it distinct from factual reporting. Use contextual Scripture without proof-texting.` }, { role: 'user', content: JSON.stringify({ clusterTitle: cluster.title, currentCanonical: canonical?.ai_outlook || {}, reports: sourceInputs, sourceComparison: comparison }) }] });
@@ -85,22 +90,26 @@ async function regenerateCanonicalOutlook(cluster, sources, comparison) {
 async function refreshCluster(clusterId, attempt = 0) {
   const { data: cluster, error: clusterError } = await supabase.from('news_story_clusters').select('*').eq('id', clusterId).single();
   if (clusterError) throw clusterError;
-  const { data: sourceRows, error: sourceError } = await supabase.from('news_article_sources').select('id,outlook_id,publisher,title,url,published_at,is_independent').eq('story_cluster_id', clusterId).order('published_at', { ascending: false, nullsFirst: false });
+  const { data: sourceRows, error: sourceError } = await supabase.from('news_article_sources').select('id,outlook_id,publisher,title,url,published_at,is_independent,evidence_excerpt').eq('story_cluster_id', clusterId).order('published_at', { ascending: false, nullsFirst: false });
   if (sourceError) throw sourceError;
   const sources = [...new Map((sourceRows || []).map((source) => [source.url, source])).values()];
-  const uniquePublishers = new Set((sources || []).map((source) => source.publisher));
-  const timeline = (sources || []).map((source) => ({ publishedAt: source.published_at, publisher: source.publisher, title: source.title, url: source.url }));
-  const comparison = (await assessSourceComparison(sources, cluster.title)).sort((a, b) => b.christianVirtuesAlignmentScore - a.christianVirtuesAlignmentScore || b.reportingQualityScore - a.reportingQualityScore);
+  const assessedComparison = await assessSourceComparison(sources, cluster.title);
+  const rejectedSourceIds = assessedComparison.filter((source) => source.usefulForCluster === false).map((source) => source.sourceId);
+  if (rejectedSourceIds.length) await supabase.from('news_article_sources').update({ story_cluster_id: null }).in('id', rejectedSourceIds);
+  const usefulSources = sources.filter((source) => !rejectedSourceIds.includes(source.id));
+  const uniquePublishers = new Set(usefulSources.map((source) => source.publisher));
+  const timeline = usefulSources.map((source) => ({ publishedAt: source.published_at, publisher: source.publisher, title: source.title, url: source.url }));
+  const comparison = assessedComparison.filter((source) => source.usefulForCluster !== false).sort((a, b) => b.christianVirtuesAlignmentScore - a.christianVirtuesAlignmentScore || b.reportingQualityScore - a.reportingQualityScore);
   const status = uniquePublishers.size >= 2 ? 'corroborated' : 'provisional';
-  const latest = (sources || []).map((source) => source.published_at).filter(Boolean).sort().at(-1) || cluster.latest_reported_at;
-  const earliest = (sources || []).map((source) => source.published_at).filter(Boolean).sort().at(0) || cluster.first_reported_at;
+  const latest = usefulSources.map((source) => source.published_at).filter(Boolean).sort().at(-1) || cluster.latest_reported_at;
+  const earliest = usefulSources.map((source) => source.published_at).filter(Boolean).sort().at(0) || cluster.first_reported_at;
   const { data: updated, error } = await supabase.from('news_story_clusters').update({ status, first_reported_at: earliest, latest_reported_at: latest, source_comparison: comparison, timeline, content_version: cluster.content_version + 1, updated_at: new Date().toISOString() }).eq('id', clusterId).eq('content_version', cluster.content_version).select('*').maybeSingle();
   if (error) throw error;
   if (!updated) {
     if (attempt >= 3) throw new Error(`Cluster ${clusterId} changed repeatedly during regeneration.`);
     return refreshCluster(clusterId, attempt + 1);
   }
-  await regenerateCanonicalOutlook(updated, sources || [], comparison);
+  await regenerateCanonicalOutlook(updated, usefulSources, comparison);
   return updated;
 }
 

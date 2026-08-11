@@ -319,6 +319,7 @@ async function persistNewsVerification(outlookId, article, assessment) {
             : (index === 0 ? 'primary_reporting' : 'additional_reporting'),
         is_independent: Boolean(source.isIndependent && index > 0),
         extracted_text_checksum: crypto.createHash('sha256').update(source.body || '').digest('hex'),
+        evidence_excerpt: String(source.body || source.description || '').replace(/\s+/g, ' ').trim().slice(0, 5000) || null,
     }));
     const { data: savedSources, error: sourceError } = await supabase.from('news_article_sources').insert(sourceRows).select('id,url');
     if (sourceError) throw sourceError;
