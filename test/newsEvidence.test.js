@@ -40,6 +40,37 @@ test('a substantive publisher-supplied feed excerpt is eligible', () => {
     assert.equal(result.publisherExcerptCount, 1);
 });
 
+test('a concise but substantive publisher-supplied excerpt is eligible', () => {
+    const result = assessEvidencePackage(report('NPR', {
+        accessMode: 'publisher_feed_excerpt',
+        publisherExcerpt: true,
+        fullTextAuthorized: false,
+        body: words(35),
+    }));
+    assert.equal(result.eligible, true);
+    assert.equal(result.publisherExcerptCount, 1);
+});
+
+test('two independent concise excerpts can corroborate each other', () => {
+    const result = assessEvidencePackage({
+        ...report('NPR', {
+            accessMode: 'publisher_feed_excerpt',
+            publisherExcerpt: true,
+            fullTextAuthorized: false,
+            body: words(25),
+        }),
+        corroboratingSources: [report('PBS NewsHour', {
+            accessMode: 'publisher_feed_excerpt',
+            publisherExcerpt: true,
+            fullTextAuthorized: false,
+            body: words(25),
+        })],
+    });
+    assert.equal(result.eligible, true);
+    assert.equal(result.publisherExcerptCount, 0);
+    assert.equal(result.independentExcerptPublisherCount, 2);
+});
+
 test('a thin publisher feed item remains ineligible', () => {
     const result = assessEvidencePackage(report('CBS News', {
         accessMode: 'publisher_feed_excerpt',
@@ -48,6 +79,26 @@ test('a thin publisher feed item remains ineligible', () => {
         body: words(30),
     }));
     assert.equal(result.eligible, false);
+    assert.match(result.reason, /too brief/);
+});
+
+test('two excerpts from the same publisher do not count as independent corroboration', () => {
+    const result = assessEvidencePackage({
+        ...report('CBS News', {
+            accessMode: 'publisher_feed_excerpt',
+            publisherExcerpt: true,
+            fullTextAuthorized: false,
+            body: words(25),
+        }),
+        corroboratingSources: [report('CBS News', {
+            accessMode: 'publisher_feed_excerpt',
+            publisherExcerpt: true,
+            fullTextAuthorized: false,
+            body: words(25),
+        })],
+    });
+    assert.equal(result.eligible, false);
+    assert.equal(result.independentExcerptPublisherCount, 1);
 });
 
 test('two authorized substantive reports make a package eligible', () => {

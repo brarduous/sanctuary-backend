@@ -1132,9 +1132,11 @@ async function generateAndSaveScripturalOutlook(options = {}) {
   }
 
   if (eligibleArticleCount === 0) {
-    const message = `News cron found ${articles.length} candidates but none had an eligible evidence package.`;
-    await logEvent('error', 'news', null, 'news_no_eligible_evidence', message, { candidateCount: articles.length });
-    throw new Error(message);
+    const message = `News cron queued ${articles.length} candidates for more evidence; no articles were eligible for generation in this run.`;
+    console.warn(message);
+    await logEvent('warning', 'news', null, 'news_no_eligible_evidence', message, { candidateCount: articles.length });
+    console.log('Cron job completed without generation.');
+    return { candidateCount: articles.length, eligibleArticleCount: 0, generatedArticleCount: 0 };
   }
 
   // After all articles are processed, check thresholds for touched taxonomies
