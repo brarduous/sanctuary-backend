@@ -25,6 +25,7 @@ const safeguardingMigration = fs.readFileSync(path.join(__dirname, '../../supaba
 const eventSource = fs.readFileSync(path.join(__dirname, '../../routes/events.js'), 'utf8');
 const sermonSource = fs.readFileSync(path.join(__dirname, '../../routes/sermons.js'), 'utf8');
 const studySource = fs.readFileSync(path.join(__dirname, '../../routes/bibleStudies.js'), 'utf8');
+const contentPacksSource = fs.readFileSync(path.join(__dirname, '../../routes/contentPacks.js'), 'utf8');
 const operationsMigration = fs.readFileSync(path.join(__dirname, '../../supabase/migrations/20260718100000_production_operations.sql'), 'utf8');
 const careSource = fs.readFileSync(path.join(__dirname, '../../routes/care.js'), 'utf8');
 const givingSource = fs.readFileSync(path.join(__dirname, '../../routes/giving.js'), 'utf8');
@@ -284,6 +285,15 @@ test('message routes derive authorship and require congregation capabilities', (
   assert.match(messageSource, /author_id: req\.user\.id/);
   assert.match(messageSource, /congregation_id: req\.congregationId/);
   assert.doesNotMatch(messageSource, /author_id:\s*req\.body/);
+});
+
+test('staff journey index applies capability unions, ready derivation, and privacy-safe aggregates', () => {
+  assert.match(contentPacksSource, /router\.get\('\/staff\/journeys'/);
+  for (const capability of ['content.read', 'content.write', 'communications.write']) assert.match(contentPacksSource, new RegExp(capability.replace('.', '\\.')));
+  assert.match(contentPacksSource, /approvedItemCount > 0/);
+  assert.match(contentPacksSource, /isStaffJourneyVisible/);
+  assert.match(contentPacksSource, /aggregate: \{ opens:.*starts:.*completions:/s);
+  assert.doesNotMatch(contentPacksSource.slice(contentPacksSource.indexOf("router.get('/staff/journeys'"), contentPacksSource.indexOf('async function previewPublication')), /response:/);
 });
 
 test('personal growth is separated, owner-only, exportable, and deletable', () => {

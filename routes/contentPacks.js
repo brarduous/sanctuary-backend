@@ -6,6 +6,7 @@ const { aiLimiter } = require('../middleware/limiters');
 const { callStructuredResponse, QUALITY_MODEL } = require('../utils/openaiResponses');
 const { sendPushToUsers } = require('../utils/push');
 const { ITEM_TYPES, requiredSlots, slugify, journeyReminderAt, extractScriptureReferences } = require('../utils/contentPacks');
+const { isStaffJourneyVisible } = require('../utils/staffJourneys');
 
 const router = express.Router();
 const ITEM_STATES = new Set(['draft','in_review','approved','rejected','published']);
@@ -173,6 +174,90 @@ async function resolveUsers(congregationId, scope) {
   if (error) throw error;
   return [...new Set((data || []).map((row) => row.user_id).filter(Boolean))];
 }
+
+async function staffJourneyCapabilities(userId, congregationId) {
+  const requested = ['content.read', 'content.write', 'communications.write'];
+  const checks = await Promise.all(requested.map(async (capability) => {
+    const { data, error } = await supabase.rpc('has_congregation_capability', {
+      requested_congregation_id: congregationId,
+      requested_capability: capability,
+      requested_user_id: userId,
+      requested_campus_id: null,
+    });
+    if (error && !['PGRST202', '42883'].includes(error.code)) throw error;
+    return [capability, Boolean(data)];
+  }));
+  const capabilities = new Set(checks.filter(([, allowed]) => allowed).map(([capability]) => capability));
+  if (!capabilities.size) {
+    const { data: congregation, error } = await supabase.from('congregations').select('leader_user_id').eq('congregation_id', congregationId).maybeSingle();
+    if (error) throw error;
+    if (congregation?.leader_user_id === userId) requested.forEach((capability) => capabilities.add(capability));
+  }
+  return capabilities;
+}
+
+router.get('/staff/journeys', authenticateUser, async (req, res, next) => {
+  try {
+    const congregationId = Number(req.query.congregationId);
+    if (!Number.isInteger(congregationId) || congregationId <= 0) return res.status(400).json({ error: { code: 'CONGREGATION_REQUIRED', message: 'Congregation context is required.', requestId: req.requestId } });
+    const capabilities = await staffJourneyCapabilities(req.user.id, congregationId);
+    if (![...capabilities].some((capability) => ['content.read', 'content.write', 'communications.write'].includes(capability))) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You do not have permission to view journeys.', requestId: req.requestId } });
+
+    const { data: packs, error: packError } = await supabase.from('sermon_content_packs').select('id,sermon_id,owner_user_id,title,status,generation_error,created_at,updated_at,sermons(title)').eq('congregation_id', congregationId).order('updated_at', { ascending: false });
+    if (packError) throw packError;
+    const packIds = (packs || []).map((pack) => pack.id);
+    if (!packIds.length) return res.json({ data: [] });
+    const [{ data: items, error: itemError }, { data: publications, error: publicationError }] = await Promise.all([
+      supabase.from('content_pack_items').select('pack_id,status').in('pack_id', packIds),
+      supabase.from('church_content_publications').select('id,pack_id,title,status,starts_at,first_notification_at,published_at,cancelled_at,unpublished_at,updated_at').in('pack_id', packIds),
+    ]);
+    if (itemError) throw itemError;
+    if (publicationError) throw publicationError;
+    const publicationIds = (publications || []).map((publication) => publication.id);
+    const { data: progress, error: progressError } = publicationIds.length
+      ? await supabase.from('church_content_progress').select('publication_id,user_id,opened_at,completed_at').in('publication_id', publicationIds)
+      : { data: [], error: null };
+    if (progressError) throw progressError;
+
+    const publicationByPack = new Map((publications || []).map((publication) => [publication.pack_id, publication]));
+    const itemsByPack = new Map();
+    for (const item of items || []) itemsByPack.set(item.pack_id, [...(itemsByPack.get(item.pack_id) || []), item]);
+    const progressByPublication = new Map();
+    for (const row of progress || []) progressByPublication.set(row.publication_id, [...(progressByPublication.get(row.publication_id) || []), row]);
+
+    const summaries = (packs || []).map((pack) => {
+      const publication = publicationByPack.get(pack.id) || null;
+      const packItems = itemsByPack.get(pack.id) || [];
+      const approvedItemCount = packItems.filter((item) => ['approved', 'published'].includes(item.status)).length;
+      const publicationProgress = publication ? progressByPublication.get(publication.id) || [] : [];
+      const uniqueStarts = new Set(publicationProgress.filter((row) => row.opened_at).map((row) => row.user_id)).size;
+      let workflowStatus = pack.status;
+      if (publication) workflowStatus = publication.status;
+      else if (approvedItemCount > 0) workflowStatus = 'ready';
+      return {
+        packId: pack.id,
+        publicationId: publication?.id || null,
+        sermonId: pack.sermon_id,
+        sermonTitle: pack.sermons?.title || 'Untitled sermon',
+        journeyTitle: publication?.title || pack.title,
+        owner: { userId: pack.owner_user_id, label: pack.owner_user_id === req.user.id ? 'You' : 'Staff author' },
+        status: workflowStatus,
+        approvedItemCount,
+        totalItemCount: packItems.length,
+        scheduledAt: publication?.status === 'scheduled' ? publication.starts_at : null,
+        firstNotificationAt: publication?.first_notification_at || null,
+        publishedAt: publication?.published_at || null,
+        updatedAt: publication?.updated_at || pack.updated_at,
+        failureSummary: pack.generation_error ? String(pack.generation_error).slice(0, 240) : null,
+        aggregate: { opens: publicationProgress.filter((row) => row.opened_at).length, starts: uniqueStarts, completions: publicationProgress.filter((row) => row.completed_at).length },
+      };
+    }).filter((summary) => {
+      const own = (packs || []).find((pack) => pack.id === summary.packId)?.owner_user_id === req.user.id;
+      return isStaffJourneyVisible({ capabilities, isOwner: own, status: summary.status });
+    });
+    res.json({ data: summaries });
+  } catch (error) { next(error); }
+});
 
 async function previewPublication(pack, body) {
   const { data: approved, error } = await supabase.from('content_pack_items').select('*').eq('pack_id', pack.id).eq('status', 'approved');
