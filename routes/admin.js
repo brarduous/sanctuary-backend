@@ -466,8 +466,7 @@ router.patch('/users/:id', async (req, res) => {
 
         const { data, error } = await supabase
             .from('user_profiles')
-            .update(updates)
-            .eq('user_id', id)
+            .upsert({ user_id: id, ...updates }, { onConflict: 'user_id' })
             .select()
             .single();
 
@@ -492,9 +491,9 @@ router.patch('/users/:id', async (req, res) => {
 
 // Adds email to whitelist AND promotes user to 'pro' if they exist
 router.post('/whitelist', async (req, res) => {
-    const { email } = req.body;
+    const email = String(req.body.email || '').trim().toLowerCase();
 
-    if (!email || !email.includes('@')) {
+    if (!email.includes('@')) {
         return res.status(400).json({ error: 'Valid email is required' });
     }
 
@@ -506,34 +505,36 @@ router.post('/whitelist', async (req, res) => {
 
         if (whitelistError) throw whitelistError;
 
-        // 2. Find the User ID associated with this email
-        // We search the 'user_profiles' via a join or just list users if needed.
-        // Since we can't query auth.users directly with a simple select easily in all setups,
-        // we'll try to find a profile that matches (if you sync emails to profiles) 
-        // OR use the Auth Admin API.
-        
-        // Strategy: Use Auth Admin API to find the ID
-        // Note: listUsers is not efficient for 1 user, but it's the safest admin way
-        // without raw SQL permissions on auth schema.
-        // However, a simpler way is just to rely on the user logging in next time (your login logic checks whitelist).
-        // BUT, you requested immediate update.
-        
-        // Let's try to find them in the auth table directly (if Service Role has access)
-        const { data: authUser } = await supabase
-            .from('auth.users')
-            .select('id')
-            .eq('email', email)
-            .single();
+        // 2. Resolve the existing account through the Auth Admin API. The auth
+        // schema is not exposed as a regular PostgREST table.
+        let authUser = null;
+        for (let page = 1; !authUser; page += 1) {
+            const { data, error: authError } = await supabase.auth.admin.listUsers({
+                page,
+                perPage: 1000
+            });
+            if (authError) throw authError;
 
-        let userId = authUser?.id;
+            const users = data?.users || [];
+            authUser = users.find(user => user.email?.toLowerCase() === email) || null;
+            if (users.length < 1000) break;
+        }
 
-        // If direct select didn't work, try the new search endpoint logic or skip
-        if (userId) {
-            // 3. Update their profile immediately
-            await supabase
+        if (authUser) {
+            // 3. Initial sign-in may not have created a profile yet. Create only
+            // the minimal row here; onboarding can fill the remaining fields.
+            const { data: profile, error: profileError } = await supabase
                 .from('user_profiles')
-                .update({ subscription_tier: 'pro' })
-                .eq('user_id', userId);
+                .upsert({
+                    user_id: authUser.id,
+                    email,
+                    tier: 'pro',
+                    subscription_tier: 'pro'
+                }, { onConflict: 'user_id' })
+                .select('user_id, email, tier, subscription_tier')
+                .single();
+
+            if (profileError) throw profileError;
                 
             // Log it
             await supabase.from('system_logs').insert({
@@ -543,19 +544,20 @@ router.post('/whitelist', async (req, res) => {
                 action: 'whitelist_user',
                 message: `Whitelisted and promoted ${email}`,
             });
-        } else {
-            // User hasn't signed up yet. They will be Pro automatically when they do 
-            // because of your existing login/signup whitelist check logic.
-            await supabase.from('system_logs').insert({
-                level: 'info',
-                source: 'admin_dashboard',
-                user_id: req.user.id,
-                action: 'whitelist_user',
-                message: `Whitelisted ${email} (User not yet registered)`,
-            });
+            return res.json({ success: true, userFound: true, profile });
         }
 
-        res.json({ success: true, userFound: !!userId });
+        // The whitelist entry is retained so signup/onboarding can promote the
+        // account later if the email has not registered yet.
+        await supabase.from('system_logs').insert({
+            level: 'info',
+            source: 'admin_dashboard',
+            user_id: req.user.id,
+            action: 'whitelist_user',
+            message: `Whitelisted ${email} (User not yet registered)`,
+        });
+
+        res.json({ success: true, userFound: false });
 
     } catch (err) {
         console.error('Whitelist Error:', err);
