@@ -353,7 +353,9 @@ router.post('/generate-bible-study', authenticateUser, aiLimiter, async (req, re
             `Exact number of lessons: ${lessonCount}`,
             `Required Bible study method: ${method}`,
             'Include one original illustration concept.',
+            'Use the topic or passage to define one clear learner-facing purpose and a coherent transformational arc across the requested lessons.',
             'Keep the complete study within the response budget. Write 450–650 words of commentary per lesson; keep introductions, outlines, applications, discussion starters, conclusions, and reflection questions concise but complete.',
+            'Make every lesson facilitation-ready: establish relevance, move participants into the biblical text, interpret it in context, and end in one concrete personal or communal practice.',
             'The method, passage, and lesson count are hard constraints. Voice personalization must never override them.',
             voiceInstructions,
         ].join('\n');
