@@ -89,23 +89,55 @@ const parseJsonContent = (content, label) => {
 };
 
 const buildSingleDayPrompt = (theme, dayOffset, excludedReferences = []) => `
-Role: You are the Lead Editor for Sanctuary.
-Task: Write one Daily Devotional for day ${dayOffset + 1} of a 7-day sequence.
-Theme: "${theme.theme_title}".
-Focus Scripture Area: ${theme.scripture_focus}.
+# SANCTUARY DAILY DEVOTIONAL PLAYBOOK
+
+## Mission
+Create one brief, biblically grounded practice that helps a reader encounter God,
+understand Scripture in context, and carry one faithful response into ordinary life.
+
+## Assignment
+- Day: ${dayOffset + 1} of a 7-day sequence
+- Weekly theme: "${theme.theme_title}"
+- Focus Scripture Area: ${theme.scripture_focus}
 
 Use the focus scripture area as the weekly thematic anchor, but choose a distinct
 daily scripture passage that develops this theme. Do not simply repeat the weekly
 anchor verse each day.${excludedReferences.length ? `\nDo not use any of these references already assigned this week: ${excludedReferences.join(', ')}.` : ''}
 
-REQUIREMENTS:
-- Tone: Orthodox, compassionate, conversational, non-political, focused on spiritual formation.
-- Full devotional content should be approximately 120-160 words.
+## Formation sequence
+Write the content as a seamless 120-160 word reflection that does all five moves:
+1. Arrive: open with one calm, concrete sentence that helps the reader become present.
+2. Read in context: explain what the passage says in its literary or historical setting; do not proof-text.
+3. Reflect honestly: name a recognizable desire, fear, pressure, or habit without diagnosing the reader.
+4. Respond: show how God's character and the passage invite trust, repentance, hope, courage, or love of neighbor.
+5. Practice: end with one small action or reflection the reader can complete today. When natural, invite a conversation, shared prayer, or local church connection rather than isolated consumption.
+
+## Pastoral and theological guardrails
+- Sound like a wise Christian companion: orthodox, compassionate, conversational, humble, and non-political.
+- Keep God, Scripture, and spiritual formation central. Do not reduce the passage to self-help or promise that faith removes distress.
+- Present God as loving and trustworthy. Do not use shame, fear, divine punishment, or a broken habit streak as motivation.
+- Make room for lament, suffering, sacrifice, and uncertainty; do not force a cheerful resolution.
+- Never claim that prayer or a devotional replaces medical, mental-health, crisis, or pastoral care.
+- Use accessible language and avoid insider jargon, culture-war framing, clickbait, and invented historical claims.
+
+## Short-form story playbook
+- Slide 1 — Notice: a clear 6-12 word hook naming the spiritual tension or promise.
+- Slide 2 — Ground: the Scripture truth in context, stated accurately and accessibly.
+- Slide 3 — Practice: one specific response or prayer for today.
+- Each slide must stand alone, remain aligned with the full devotional, and stay under 35 words.
+
+## Quality check before returning
+- The selected passage is distinct within the week and genuinely supports the message.
+- The body completes all five formation moves and ends with a doable practice.
+- The prayer addresses God and reflects the passage without pretending certainty about outcomes.
+- The title is clear and specific, not sensational.
+
+## Output contract
 - scripture_text must be a short excerpt under 160 characters.
 - prayer must be 1-2 sentences.
-- short_form.slides must contain exactly 3 slides, each under 35 words.
+- Return compact valid JSON only. Do not add commentary or Markdown fences.
 
-Return compact valid JSON only with this exact shape:
+Use this exact shape:
 {
   "day_offset": ${dayOffset},
   "title": "Title String",
@@ -117,9 +149,9 @@ Return compact valid JSON only with this exact shape:
   "short_form": {
     "format": "instagram_story_3_slide",
     "slides": [
-      { "slide": 1, "text": "Under 30 words" },
-      { "slide": 2, "text": "Under 30 words" },
-      { "slide": 3, "text": "Under 30 words" }
+      { "slide": 1, "text": "6-12 word hook" },
+      { "slide": 2, "text": "Scripture truth in context, under 35 words" },
+      { "slide": 3, "text": "Specific practice or prayer, under 35 words" }
     ]
   }
 }
@@ -423,6 +455,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  buildSingleDayPrompt,
   ensureDevotionalRunway,
   generateWeeklyBatch,
   getCurriculumStatus,
