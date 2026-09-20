@@ -75,8 +75,49 @@ const mapTrack = (track) => ({
   previewUrl: track.preview_url || null,
   durationMs: track.duration_ms || null,
   popularity: track.popularity || 0,
+  explicit: track.explicit !== false,
+  artistIds: (track.artists || []).map((artist) => artist.id).filter(Boolean),
+  artistNames: (track.artists || []).map((artist) => artist.name).filter(Boolean),
+  genres: [],
   provider: 'spotify',
 });
+
+const MINISTRY_GENRE_TERMS = [
+  'christian',
+  'gospel',
+  'worship',
+  'praise',
+  'hymn',
+  'ccm',
+];
+
+const normalizeArtistName = (value) => String(value || '').trim().toLowerCase();
+
+const isMinistrySafeTrack = (track, { favoriteArtists = [] } = {}) => {
+  if (!track || track.explicit !== false) return false;
+
+  const hasMinistryGenre = (track.genres || []).some((genre) => {
+    const normalized = String(genre || '').toLowerCase();
+    return MINISTRY_GENRE_TERMS.some((term) => normalized.includes(term));
+  });
+
+  return hasMinistryGenre;
+};
+
+const selectMinistrySafeTrack = (tracks, options = {}) => {
+  const eligible = (tracks || []).filter((track) => isMinistrySafeTrack(track, options));
+  const favoriteNames = new Set((options.favoriteArtists || [])
+    .map((artist) => normalizeArtistName(typeof artist === 'string' ? artist : artist?.name))
+    .filter(Boolean));
+  const ranked = eligible.map((track, index) => ({
+    track,
+    index,
+    preferred: (track.artistNames || []).some((name) => favoriteNames.has(normalizeArtistName(name))),
+  })).sort((a, b) => Number(b.preferred) - Number(a.preferred)
+    || Number(Boolean(b.track.previewUrl)) - Number(Boolean(a.track.previewUrl))
+    || a.index - b.index);
+  return ranked[0]?.track || null;
+};
 
 const searchSpotifyArtists = async (query, limit = 8) => {
   if (!query || !query.trim()) return [];
@@ -101,10 +142,21 @@ const searchSpotifyTracks = async (query, limit = 10) => {
     limit,
   });
 
-  return (data.tracks?.items || []).map(mapTrack);
+  const tracks = (data.tracks?.items || []).map(mapTrack);
+  const artistIds = [...new Set(tracks.flatMap((track) => track.artistIds))].slice(0, 50);
+  if (!artistIds.length) return tracks;
+
+  const artistData = await spotifyGet('/artists', { ids: artistIds.join(',') });
+  const genresByArtistId = new Map((artistData.artists || []).map((artist) => [artist.id, artist.genres || []]));
+  return tracks.map((track) => ({
+    ...track,
+    genres: [...new Set(track.artistIds.flatMap((id) => genresByArtistId.get(id) || []))],
+  }));
 };
 
 module.exports = {
+  isMinistrySafeTrack,
+  selectMinistrySafeTrack,
   searchSpotifyArtists,
   searchSpotifyTracks,
 };

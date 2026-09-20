@@ -5,13 +5,25 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
-const { searchSpotifyTracks } = require('../utils/spotify');
+const { searchSpotifyTracks, selectMinistrySafeTrack } = require('../utils/spotify');
+
+const normalizeStringList = (value, limit = 25) => Array.isArray(value)
+    ? [...new Set(value.map((item) => String(item || '').trim()).filter(Boolean))].slice(0, limit)
+    : [];
+
+const normalizeFavoriteGospelArtists = (value) => Array.isArray(value)
+    ? value.map((artist) => ({
+        id: String(typeof artist === 'string' ? '' : artist?.id || '').trim(),
+        name: String(typeof artist === 'string' ? artist : artist?.name || '').trim(),
+    })).filter((artist) => artist.name).slice(0, 20)
+    : [];
 
 //Endpoint to initiate Daily Devotional generation
 router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
-        const { userId, focusAreas, improvementAreas, recentDevotionals } = req.body;
+        const { focusAreas, improvementAreas, recentDevotionals } = req.body;
+        const userId = req.user.id;
         const generationDate = new Date().toISOString().split('T')[0];
         
         // 1. Fetch Today's General Devotional (Curriculum)
@@ -28,12 +40,32 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             return res.status(400).json({ error: 'Daily curriculum not available yet. Please try again later.' });
         }
 
-        // 2. Fetch User's CRM Profile for deep personalization
-        const { data: userProfile } = await supabase
-            .from('church_crm_profiles')
-            .select('first_name, last_name') // Add pastoral_notes here if your schema links them directly!
-            .eq('user_id', userId)
-            .single();
+        // 2. Fetch private, server-owned personalization context. Request values
+        // remain a compatibility fallback, never the identity authority.
+        const [crmResult, growthResult, preferenceResult] = await Promise.all([
+            supabase.from('church_crm_profiles').select('first_name, last_name').eq('user_id', userId).maybeSingle(),
+            supabase.from('personal_growth_profiles').select('focus_areas, improvement_areas').eq('user_id', userId).maybeSingle(),
+            supabase.from('user_profiles').select('user_preferences, ai_tuning_notes').eq('user_id', userId).maybeSingle(),
+        ]);
+        const userProfile = crmResult.data;
+        const savedPreferences = preferenceResult.data?.user_preferences || {};
+        const savedFocusAreas = normalizeStringList(growthResult.data?.focus_areas);
+        const savedImprovementAreas = normalizeStringList(growthResult.data?.improvement_areas);
+        const effectiveFocusAreas = savedFocusAreas.length
+            ? savedFocusAreas
+            : normalizeStringList(focusAreas?.length ? focusAreas : savedPreferences.focusAreas);
+        const effectiveImprovementAreas = savedImprovementAreas.length
+            ? savedImprovementAreas
+            : normalizeStringList(improvementAreas?.length ? improvementAreas : savedPreferences.improvementAreas);
+        const favoriteGospelArtists = normalizeFavoriteGospelArtists(
+            savedPreferences.musicPreferences?.favoriteGospelArtists
+        );
+        const recentContext = Array.isArray(recentDevotionals)
+            ? recentDevotionals.slice(0, 7).map((item) => ({
+                title: String(item?.title || '').trim(),
+                scripture: String(item?.scripture || item?.scripture_reference || '').trim(),
+            })).filter((item) => item.title || item.scripture)
+            : [];
 
         // 3. Create placeholders in the database
         const { data: newDevotional, error: insertError } = await supabase
@@ -76,14 +108,19 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         // 5. Start AI generation in the background
         const userData = {
             first_name: userProfile?.first_name || '',
-            focusAreas: focusAreas || [],
-            improvementAreas: improvementAreas || [],
-            // You can fetch pastoral notes and inject them here to give the AI pastoral context!
+            focusAreas: effectiveFocusAreas,
+            improvementAreas: effectiveImprovementAreas,
+            recentDevotionals: recentContext,
+            favoriteGospelArtists,
         };
 
         try {
             // Use the new dynamic prompt!
-            const systemPrompt = await getPersonalizedDevotionalPrompt(userData, generalDevo);
+            const systemPrompt = await getPersonalizedDevotionalPrompt(
+                userData,
+                generalDevo,
+                preferenceResult.data?.ai_tuning_notes || ''
+            );
             
             // Note: Keep user prompt simple since the system prompt now holds the context
             const userPrompt = `Please write today's personalized devotional.`;
@@ -109,8 +146,12 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             let songData = {};
             if (song_search_query) {
                 try {
-                    const tracks = await searchSpotifyTracks(`${song_search_query} gospel worship christian`, 10);
-                    const track = tracks.find((item) => item.previewUrl) || tracks[0];
+                    const artistPreference = favoriteGospelArtists.slice(0, 2).map((artist) => artist.name).join(' ');
+                    const tracks = await searchSpotifyTracks(
+                        `${song_search_query} ${artistPreference} gospel worship christian`.trim(),
+                        20
+                    );
+                    const track = selectMinistrySafeTrack(tracks, { favoriteArtists: favoriteGospelArtists });
                     if (track) {
                         songData = {
                             song_title: track.title,

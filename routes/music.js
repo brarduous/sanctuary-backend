@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const supabase = require('../config/supabase');
 const auth = require('../middleware/auth');
-const { searchSpotifyArtists, searchSpotifyTracks } = require('../utils/spotify');
+const { searchSpotifyArtists, searchSpotifyTracks, selectMinistrySafeTrack } = require('../utils/spotify');
 
 // Helper to format JS array to Postgres array string
 const toPgArray = (arr) => {
@@ -146,8 +146,7 @@ router.post('/spotify/recommend-track', auth, async (req, res) => {
     });
 
     const tracks = await searchSpotifyTracks(query, 10);
-    const previewTrack = tracks.find((track) => track.previewUrl);
-    const track = previewTrack || tracks[0] || null;
+    const track = selectMinistrySafeTrack(tracks, { favoriteArtists: favoriteGospelArtists });
 
     res.json({
       query,

@@ -127,7 +127,12 @@ const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuning
         curriculum_core_message: generalDevoData.content,
         user_focus_areas: userData.focusAreas?.join(', ') || 'General spiritual growth',
         user_improvement_areas: userData.improvementAreas?.join(', ') || 'None specified',
-        user_pastoral_notes: userData.pastoral_notes || 'None available.'
+        user_pastoral_notes: userData.pastoral_notes || 'None available.',
+        user_recent_devotionals: userData.recentDevotionals?.length
+            ? JSON.stringify(userData.recentDevotionals)
+            : 'None supplied.',
+        user_music_preferences: userData.favoriteGospelArtists?.map((artist) => artist.name).join(', ')
+            || 'No preferred gospel artists supplied.'
     });
 };
 
