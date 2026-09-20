@@ -16,6 +16,7 @@ const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
 const { normalizeVerificationAssessment } = require('../utils/newsVerification');
 const { assessEvidencePackage, discoveryRankFor, wordCount } = require('../utils/newsEvidence');
 const { reconcileOutlookCluster, processRequestedClusterRegenerations } = require('../utils/newsClusters');
+const { evaluatePublicationEligibility, REVIEW_THRESHOLD } = require('../utils/newsEditorialPolicy');
 const {
     getScripturalOutlookPrompt,
     getScripturalOutlookArticleInputPrompt,
@@ -549,7 +550,10 @@ async function saveScripturalOutlook(outlook) {
                 slug: await generateUniqueSlug('scriptural_outlooks', outlook.article_title),
                 ai_outlook: outlook.ai_outlook, // Full AI content including message, prayer, etc.
                 news_impact_score: outlook.news_impact_score,
-                news_impact_summary: outlook.news_impact_summary
+                news_impact_summary: outlook.news_impact_summary,
+                publication_status: outlook.publication_status || 'pending_review',
+                publication_review_reasons: outlook.publication_review_reasons || ['verification_pending'],
+                publication_checked_at: new Date().toISOString()
             }
         ])
         .select('id')
@@ -1030,7 +1034,9 @@ async function generateAndSaveScripturalOutlook(options = {}) {
             article_body: article.body,
             article_thumbnail_url: article.thumbnail_url,
             publish_date: article.publish_date,
-            ai_outlook: aiResponse // Full AI content
+            ai_outlook: aiResponse,
+            publication_status: 'pending_review',
+            publication_review_reasons: ['verification_pending']
         };
         let impact = getGeneratedImpact(aiResponse);
         if (!impact) {
@@ -1060,8 +1066,13 @@ async function generateAndSaveScripturalOutlook(options = {}) {
 
         try {
             const verification = await persistNewsVerification(outlookId, article, aiResponse.originalArticleAssessment || {});
-            if (verification.confidenceScore < 60) {
-                await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review', { outlookId, confidenceScore: verification.confidenceScore, threshold: 60 });
+            const publication = evaluatePublicationEligibility({ article, generated: aiResponse, verification });
+            aiResponse.editorialReview = publication.eligible
+                ? { status: 'automated_approved', reviewerName: 'Sanctuary News Editorial Desk', reviewedAt: new Date().toISOString() }
+                : { status: 'pending_human_review', reviewerName: null, reviewedAt: null, reasons: publication.reasons };
+            if (!publication.eligible) {
+                await supabase.from('editorial_alerts').upsert({ outlook_id: outlookId, alert_type: 'publication_review', reasons: publication.reasons, last_detected_at: new Date().toISOString() }, { onConflict: 'outlook_id,alert_type' });
+                await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review before publication', { outlookId, confidenceScore: verification.confidenceScore, threshold: REVIEW_THRESHOLD, reasons: publication.reasons });
             }
             aiResponse.originalArticleAssessment = {
                 truthfulnessScore: verification.truthfulnessScore,
@@ -1070,7 +1081,7 @@ async function generateAndSaveScripturalOutlook(options = {}) {
                 assessedAt: new Date().toISOString(),
                 assessmentVersion: 1,
             };
-            await supabase.from('scriptural_outlooks').update({ ai_outlook: aiResponse }).eq('id', outlookId);
+            await supabase.from('scriptural_outlooks').update({ ai_outlook: aiResponse, publication_status: publication.eligible ? 'published' : 'pending_review', publication_review_reasons: publication.reasons, publication_checked_at: new Date().toISOString() }).eq('id', outlookId);
         } catch (verificationError) {
             console.error(`Failed to persist verification for outlook ${outlookId}:`, verificationError);
         }

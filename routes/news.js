@@ -60,6 +60,7 @@ const NEWS_LIST_COLUMNS = [
     'news_impact_summary',
     'story_cluster_id',
     'superseded_by_outlook_id'
+    ,'publication_status'
 ].join(', ');
 
 async function hydrateStoryCluster(article) {
@@ -203,7 +204,7 @@ async function hydratePublicVerification(outlook) {
     if (results.some((result) => result.error?.code === '42P01' || result.error?.code === 'PGRST205')) return outlook;
     for (const result of results) if (result.error) throw result.error;
     const review = reviews.data?.[0];
-    const hasHighAutomatedConfidence = (scores.data?.[0]?.confidence_score ?? 0) >= 60;
+    const hasHighAutomatedConfidence = (scores.data?.[0]?.confidence_score ?? 0) >= 85;
     return {
         ...outlook,
         verification: publicAssessment(scores.data?.[0], claims.data, sources.data, notices.data),
@@ -228,6 +229,7 @@ router.get('/search', optionalAuth, async (req, res) => {
         const { data, error } = await supabase
             .from('scriptural_outlooks')
             .select('id, article_title, article_url, article_thumbnail_url, created_at, publish_date, slug, ai_outlook, article_body')
+            .eq('publication_status', 'published')
             .or(`article_title.ilike.${pattern},article_body.ilike.${pattern},ai_outlook->>synopsis.ilike.${pattern}`)
             .limit(limit);
 
@@ -425,6 +427,7 @@ router.get('/scriptural-outlooks/:id/clergy/:congregationId', authenticateUser, 
             [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
             .single();
         if (error) return res.status(404).json({ error: 'Article not found' });
+        if (data.publication_status && data.publication_status !== 'published') return res.status(404).json({ error: 'Article not found' });
         const outlook = data.ai_outlook || {};
         res.json({
             id: data.id,
@@ -451,11 +454,12 @@ router.get('/scriptural-outlooks/:id', optionalAuth , async (req, res) => {
             .from('scriptural_outlooks')
             .select('*')
             [isNumeric ? 'eq' : 'eq'](isNumeric ? 'id' : 'slug', id)
+            .eq('publication_status', 'published')
             .single();
 
         if (error) return res.status(404).json({ error: 'Article not found' });
         if (data.superseded_by_outlook_id) {
-            const { data: canonical } = await supabase.from('scriptural_outlooks').select('id,slug').eq('id', data.superseded_by_outlook_id).single();
+            const { data: canonical } = await supabase.from('scriptural_outlooks').select('id,slug').eq('id', data.superseded_by_outlook_id).eq('publication_status', 'published').single();
             return res.status(308).set('Location', `/scriptural-outlooks/${canonical?.slug || canonical?.id}`).json({ canonical: true, canonicalId: canonical?.id, canonicalSlug: canonical?.slug, canonicalUrl: `/article/${canonical?.slug || canonical?.id}` });
         }
         const article = publicNewsArticle(await hydrateStoryCluster(await hydratePublicVerification(data)));
@@ -529,7 +533,8 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
         let query = supabase
             .from('scriptural_outlooks')
             .select(selectQuery)
-            .is('superseded_by_outlook_id', null);
+            .is('superseded_by_outlook_id', null)
+            .eq('publication_status', 'published');
 
         if (filteredOutlookIds) query = query.in('id', filteredOutlookIds);
 
