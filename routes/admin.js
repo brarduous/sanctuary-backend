@@ -565,6 +565,79 @@ router.post('/whitelist', async (req, res) => {
     }
 });
 
+// POST /admin/ambassadors
+// Grant complimentary mobile Pro access, without creating a Stripe subscription.
+// The ambassador first signs up with this email; no account is created here.
+router.post('/ambassadors', async (req, res) => {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) {
+        return res.status(400).json({ error: 'Valid ambassador email is required' });
+    }
+
+    try {
+        const { data: existing, error: lookupError } = await supabase
+            .from('whitelist')
+            .select('email, grant_type')
+            .eq('email', email)
+            .maybeSingle();
+        if (lookupError) throw lookupError;
+        if (existing && existing.grant_type !== 'ambassador') {
+            return res.status(409).json({ error: 'Email already has another complimentary access grant' });
+        }
+
+        const { error: grantError } = await supabase
+            .from('whitelist')
+            .upsert({ email, grant_type: 'ambassador', granted_by: req.user.id }, { onConflict: 'email' });
+        if (grantError) throw grantError;
+
+        let authUser = null;
+        for (let page = 1; !authUser; page += 1) {
+            const { data, error } = await supabase.auth.admin.listUsers({ page, perPage: 1000 });
+            if (error) throw error;
+            const users = data?.users || [];
+            authUser = users.find(user => user.email?.trim().toLowerCase() === email) || null;
+            if (users.length < 1000) break;
+        }
+
+        if (authUser) {
+            const { error: profileError } = await supabase
+                .from('user_profiles')
+                .upsert({ user_id: authUser.id, email, tier: 'pro', subscription_tier: 'pro' }, { onConflict: 'user_id' });
+            if (profileError) throw profileError;
+        }
+
+        await supabase.from('system_logs').insert({
+            level: 'info',
+            source: 'admin_dashboard',
+            user_id: req.user.id,
+            action: 'grant_ambassador_access',
+            message: `Granted complimentary ambassador access to ${email}`,
+        });
+
+        return res.status(existing ? 200 : 201).json({
+            success: true,
+            email,
+            grant_type: 'ambassador',
+            userFound: Boolean(authUser),
+            access: authUser ? 'active' : 'pending_signup',
+        });
+    } catch (err) {
+        console.error('Ambassador Grant Error:', err);
+        return res.status(500).json({ error: 'Failed to grant ambassador access' });
+    }
+});
+
+// GET /admin/ambassadors
+router.get('/ambassadors', async (req, res) => {
+    const { data, error } = await supabase
+        .from('whitelist')
+        .select('email, created_at, granted_by')
+        .eq('grant_type', 'ambassador')
+        .order('created_at', { ascending: false });
+    if (error) return res.status(500).json({ error: 'Failed to list ambassadors' });
+    return res.json(data || []);
+});
+
 // GET /admin/prayers?status=pending
 router.get('/prayers', async (req, res) => {
     const status = req.query.status || 'pending';
