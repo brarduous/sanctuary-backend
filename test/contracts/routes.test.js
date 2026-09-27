@@ -239,7 +239,7 @@ test('news verification separates public truthfulness from private editorial con
   assert.match(newsEditorialSource, /requireAdmin/);
   assert.match(newsSource, /correctionLimiter/);
   assert.match(newsSource, /automated_high_confidence/);
-  assert.match(newsSource, /confidence_score.*>= 60/);
+  assert.match(newsSource, /confidence_score.*>= 85/);
   assert.match(newsEditorialSource, /reviewAlert/);
   assert.match(newsEditorialSource, /confidenceScore < 60/);
   assert.match(newsGeneratorSource, /news_low_confidence_review_required/);

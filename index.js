@@ -13,6 +13,8 @@ const { logEvent } = require('./utils/helpers');
 const adminRouter = require('./routes/admin'); // <--- Add this
 const notificationsRouter = require('./routes/notifications');
 const { router: contentPacksRouter, dispatchDuePublicationNotifications } = require('./routes/contentPacks');
+const newsletterRouter = require('./routes/newsletter');
+const { Resend } = require('resend');
 
 // Initialize Stripe (needed for webhooks)
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
@@ -336,6 +338,36 @@ app.post('/webhook-layperson', express.raw({ type: 'application/json' }), async 
     res.json({ received: true });
 });
 
+app.post('/webhooks/resend', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+        if (!process.env.RESEND_API_KEY || !process.env.RESEND_WEBHOOK_SECRET) return res.status(503).json({ error: 'Resend webhook is not configured.' });
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const event = resend.webhooks.verify({
+            payload: req.body.toString('utf8'),
+            headers: {
+                id: req.headers['svix-id'],
+                timestamp: req.headers['svix-timestamp'],
+                signature: req.headers['svix-signature'],
+            },
+            webhookSecret: process.env.RESEND_WEBHOOK_SECRET,
+        });
+        const statusByEvent = { 'email.bounced': 'bounced', 'email.complained': 'complained', 'email.suppressed': 'suppressed' };
+        const subscriberStatus = statusByEvent[event.type];
+        const recipients = Array.isArray(event.data?.to) ? event.data.to.map((email) => String(email).toLowerCase()) : [];
+        if (subscriberStatus && recipients.length) {
+            await supabase.from('newsletter_subscribers').update({ status: subscriberStatus, updated_at: new Date().toISOString() }).in('email', recipients);
+        }
+        if (event.data?.email_id) {
+            const deliveryStatus = event.type.replace('email.', '');
+            await supabase.from('newsletter_deliveries').update({ status: deliveryStatus, updated_at: new Date().toISOString(), error_message: event.data?.bounce?.message || event.data?.failed?.reason || event.data?.suppressed?.message || null }).eq('resend_email_id', event.data.email_id);
+        }
+        return res.json({ received: true });
+    } catch (error) {
+        console.error('Invalid Resend webhook:', error);
+        return res.status(400).json({ error: 'Invalid webhook signature.' });
+    }
+});
+
 app.use(express.json());
 
 // Logging middleware
@@ -403,6 +435,7 @@ app.use('/api', studyDeliveriesRouter);
 app.use('/', prayersRouter);
 app.use('/', adviceRouter);
 app.use('/', newsRouter);
+app.use('/', newsletterRouter);
 app.use('/', userRouter);
 app.use('/', communityRouter);
 app.use('/', videoRoutes);
@@ -439,6 +472,7 @@ app.use('/api/v1', studyDeliveriesRouter);
 app.use('/api/v1', prayersRouter);
 app.use('/api/v1', adviceRouter);
 app.use('/api/v1', newsRouter);
+app.use('/api/v1', newsletterRouter);
 app.use('/api/v1', userRouter);
 app.use('/api/v1', communityRouter);
 app.use('/api/v1', videoRoutes);

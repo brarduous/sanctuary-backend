@@ -1,5 +1,51 @@
 services:
   - type: cron
+    name: sanctuary-news-editorial-audit
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "0 * * * *"
+    buildCommand: npm install
+    startCommand: npm run cron-editorial-audit
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: NEWSLETTER_FROM
+        sync: false
+      - key: EDITORIAL_ALERT_EMAIL
+        sync: false
+      - key: NEWSLETTER_TOKEN_SECRET
+        sync: false
+      - key: RESEND_WEBHOOK_SECRET
+        sync: false
+  - type: cron
+    name: sanctuary-news-daily-briefing
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "15 * * * *"
+    buildCommand: npm install
+    startCommand: npm run cron-daily-briefing
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: NEWSLETTER_FROM
+        sync: false
+      - key: NEWSLETTER_TOKEN_SECRET
+        sync: false
+  - type: cron
     name: sanctuary-general-devotionals-daily
     runtime: node
     plan: starter
