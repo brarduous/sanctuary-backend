@@ -16,7 +16,13 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      - key: GENERAL_DEVOTIONAL_MODEL
+        value: gpt-5-mini
       - key: GENERAL_DEVOTIONAL_RUNWAY_DAYS
         value: 28
       - key: GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN
         value: 2
+      - key: GENERAL_DEVOTIONAL_CURRICULUM_V2_START_DATE
+        value: "2026-09-28"
+      - key: GENERAL_DEVOTIONAL_CURRICULUM_V2_START_THEME_WEEK
+        value: 31

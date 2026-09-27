@@ -18,6 +18,7 @@
     "backfill-news-clusters": "node scripts/backfillNewsClusters.js",
     "replay-news-gap": "node scripts/replayNewsGap.js",
     "generate-devotional-syllabus": "node scripts/generateSyllabus.js",
+    "regenerate-future-devotionals": "node scripts/regenerateFutureDevotionals.js",
     "cron-general-devotionals": "node cron/generateGeneralDevotionals.js",
     "cron-church-content": "node cron/dispatchChurchContent.js",
     "seed-demo": "node scripts/resetDemoData.js",

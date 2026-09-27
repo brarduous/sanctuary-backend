@@ -63,6 +63,16 @@ const formatTuning = (notes) => {
   `;
 };
 
+const DEVOTIONAL_PERSONALIZATION_QUALITY_OVERLAY = `
+CURRICULUM QUALITY REQUIREMENTS:
+- Preserve the curriculum passage, its contextual meaning, and the devotional's concrete closing practice.
+- Select at most one relevant application context for today. Never enumerate or awkwardly combine unrelated profile concerns.
+- Sound like a trusted pastoral guide by offering a precise, compassionate observation rather than generic motivation.
+- The final practice must remain observable and completable today, with an action plus a time, setting, or recipient.
+- Preserve a natural relational, service, or church dimension when the curriculum includes one; never append a forced request to share.
+- Do not attribute language, stories, or claims from another biblical passage to today's selected passage.
+`;
+
 const NEWS_IMPACT_JSON_INSTRUCTIONS = `
 NEWS IMPACT SCORE REQUIREMENT:
 In the same JSON object you return for the scriptural outlook, include:
@@ -118,7 +128,7 @@ Truthfulness concerns faithful support in the supplied source, never the publish
 const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuningNotes = "") => {
     const basePrompt = await fetchPrompt('daily_devotional_generator');
 
-    return await getRenderedPrompt('daily_devotional_personalization_wrapper', {
+    const rendered = await getRenderedPrompt('daily_devotional_personalization_wrapper', {
         base_prompt: basePrompt,
         tuning_instructions: formatTuning(tuningNotes),
         curriculum_title: generalDevoData.title,
@@ -134,6 +144,7 @@ const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuning
         user_music_preferences: userData.favoriteGospelArtists?.map((artist) => artist.name).join(', ')
             || 'No preferred gospel artists supplied.'
     });
+    return `${rendered}\n\n${DEVOTIONAL_PERSONALIZATION_QUALITY_OVERLAY}`;
 };
 
 const generateTopicSermonPrompt = async (tuningNotes = "") => {
