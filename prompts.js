@@ -73,6 +73,24 @@ CURRICULUM QUALITY REQUIREMENTS:
 - Do not attribute language, stories, or claims from another biblical passage to today's selected passage.
 `;
 
+const ADVICE_GUIDANCE_QUALITY_OVERLAY = `
+GUIDANCE OUTPUT REQUIREMENTS:
+- Be compassionate, direct, and practical. Avoid vague encouragement, clichés, and sermon-like exposition.
+- Return valid JSON with exactly these top-level fields:
+  - "situation_summary": a brief, sensitive summary of the user's situation.
+  - "acknowledgment": 1-2 compassionate sentences that name the weight or complexity of the situation without promising it can be fixed quickly.
+  - "advice_points": exactly 3 short, distinct, actionable steps. Each step must tell the user what to do and, when useful, when or how to do it.
+  - "scripture_reading": an object with "reference" and "reason". Suggest one focused Bible passage to read after the three steps, and briefly explain why it fits its biblical context. Do not fabricate or paraphrase a quotation as though it were verbatim.
+  - "prayer": a concise closing prayer tailored to the situation.
+  - "follow_up_question": one concise question only when an answer would materially improve the guidance; otherwise null. Never ask merely to prolong the interaction.
+  - "suggested_growth_area": a short, non-diagnostic theme suitable for a private spiritual growth journey when the request reveals a recurring formation opportunity; otherwise null. Do not repeat an area already listed in the user's current growth journey.
+- Do not hide the practical action inside the Scripture suggestion or prayer; the three steps must stand on their own.
+- Never frame grief, trauma, abuse, chronic illness, mental-health distress, or a complex relationship as something that can be "fixed" in three steps. Present the steps as modest next actions, not a complete solution.
+- Never claim certainty about God's private will or promise a particular outcome.
+- Treat a growth-area suggestion as an invitation requiring the user's explicit consent. Never imply that it has already been added.
+- For urgent danger, abuse, self-harm, medical, legal, or financial risk, clearly encourage appropriate qualified or emergency help in the relevant action step. Guidance is not a substitute for professional care.
+`;
+
 const NEWS_IMPACT_JSON_INSTRUCTIONS = `
 NEWS IMPACT SCORE REQUIREMENT:
 In the same JSON object you return for the scriptural outlook, include:
@@ -167,7 +185,8 @@ const getDailyPrayerPrompt = async () => {
 };
 
 const getAdviceGuidancePrompt = async () => {
-    return await fetchPrompt('advice_guidance_generator');
+    const basePrompt = await fetchPrompt('advice_guidance_generator');
+    return `${basePrompt}\n\n${ADVICE_GUIDANCE_QUALITY_OVERLAY}`;
 };
 
 const getDailyDevotionalPrompt = async () => {

@@ -5,21 +5,103 @@ const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getAdviceGuidancePrompt } = require('../prompts');
+const rateLimit = require('express-rate-limit');
+const crypto = require('crypto');
+const { escapeHtml, sendEmailWithRetry } = require('../services/newsletter');
+const openai = require('../config/openai');
 
 const FREE_TIER_ADVICE_LIMIT = 1; // 1 advice per month for free users
+const tryGuidanceLimiter = rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 3,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'Too many guidance requests. Please try again later.' },
+});
+
+const appStoreUrl = 'https://apps.apple.com/us/app/sanctuary-daily-faith-focus/id6757966099';
+const googlePlayUrl = 'https://play.google.com/store/apps/details?id=us.sanctuaryapp.app';
+const urgentSafetyPattern = /\b(kill myself|end my life|suicid(?:e|al)|self[- ]?harm|hurt myself|overdos(?:e|ed|ing)|in immediate danger|being abused|domestic violence|sexual assault|can'?t breathe|chest pain|medical emergency)\b/i;
+
+router.post('/try-guidance', tryGuidanceLimiter, async (req, res) => {
+    const email = String(req.body?.email || '').trim().toLowerCase();
+    const situation = String(req.body?.situation || '').trim();
+    const marketingConsent = req.body?.marketingConsent === true;
+    const honeypot = String(req.body?.website || '').trim();
+
+    if (honeypot) return res.status(202).json({ ok: true });
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).json({ error: 'Enter a valid email address.' });
+    if (situation.length < 15 || situation.length > 2000) return res.status(400).json({ error: 'Share between 15 and 2,000 characters.' });
+
+    try {
+        const moderation = await openai.moderations.create({ model: 'omni-moderation-latest', input: situation });
+        const categories = moderation.results?.[0]?.categories || {};
+        const needsImmediateHelp = urgentSafetyPattern.test(situation)
+            || categories['self-harm']
+            || categories['self-harm/intent']
+            || categories['self-harm/instructions'];
+        if (needsImmediateHelp) {
+            return res.status(422).json({
+                code: 'IMMEDIATE_SUPPORT_NEEDED',
+                error: 'You deserve immediate, human support. If you may hurt yourself or someone else, call emergency services now. In the U.S. or Canada, call or text 988. If abuse or danger is involved, move to a safer place if you can and contact local emergency or crisis services. Sanctuary cannot safely address an emergency by email.',
+            });
+        }
+
+        const systemPrompt = await getAdviceGuidancePrompt();
+        const guidance = await callOpenAIAndProcessResult(
+            systemPrompt,
+            `Situation: ${situation}\nCurrent private spiritual growth journey: No areas selected.`,
+            'gpt-4.1-2025-04-14',
+            2500,
+            'json_object',
+        );
+        const steps = Array.isArray(guidance.advice_points) ? guidance.advice_points.slice(0, 3) : [];
+        const reading = guidance.scripture_reading || {};
+        if (steps.length !== 3 || !guidance.acknowledgment || !reading.reference || !reading.reason || !guidance.prayer) {
+            throw new Error('Guidance response did not pass the delivery quality gate');
+        }
+
+        if (marketingConsent) {
+            const { error: leadError } = await supabase.from('trial_guidance_leads').upsert({
+                email,
+                marketing_consented_at: new Date().toISOString(),
+                source: 'marketing_try_guidance',
+                status: 'subscribed',
+                updated_at: new Date().toISOString(),
+            }, { onConflict: 'email' });
+            if (leadError) console.error('Could not save try-guidance marketing consent:', leadError);
+        }
+
+        const stepHtml = steps.map((step, index) => `<li style="margin-bottom:14px;padding-left:6px">${escapeHtml(step)}</li>`).join('');
+        const emailHtml = `<div style="font-family:Arial,sans-serif;max-width:620px;margin:auto;padding:32px;color:#17231d;line-height:1.6"><p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#6b5a35;font-weight:700">Sanctuary Guidance</p><h1 style="font-family:Georgia,serif;font-size:32px">Personalized biblical guidance for what you’re facing</h1>${guidance.acknowledgment ? `<p style="font-size:17px;color:#405449">${escapeHtml(guidance.acknowledgment)}</p>` : ''}<h2 style="font-family:Georgia,serif">Three practical next steps</h2><ol style="padding-left:24px">${stepHtml}</ol>${reading.reference ? `<div style="background:#f4f0e6;padding:20px;margin:24px 0"><strong>Scripture to read in context</strong><p style="margin-bottom:0"><b>${escapeHtml(reading.reference)}</b>${reading.reason ? ` — ${escapeHtml(reading.reason)}` : ''}</p></div>` : ''}${guidance.prayer ? `<h2 style="font-family:Georgia,serif">A brief prayer</h2><p>${escapeHtml(guidance.prayer)}</p>` : ''}<div style="border-top:1px solid #e2d8c6;margin-top:32px;padding-top:24px"><h2 style="font-family:Georgia,serif">Continue with Sanctuary</h2><p>Save your guidance, return to it, explore personalized devotionals, and find practical biblical direction whenever life changes.</p><p><a href="${appStoreUrl}?utm_source=try_guidance_email&utm_medium=email&utm_campaign=personalized_guidance" style="display:inline-block;background:#17231d;color:white;padding:12px 16px;text-decoration:none;margin-right:8px">Continue on iPhone</a><a href="${googlePlayUrl}&utm_source=try_guidance_email&utm_medium=email&utm_campaign=personalized_guidance" style="display:inline-block;background:#17231d;color:white;padding:12px 16px;text-decoration:none">Continue on Android</a></p></div><p style="font-size:12px;color:#6b7280;margin-top:28px">Sanctuary offers Scripture-centered reflection and practical guidance. It does not replace pastoral care, professional counseling, medical care, legal advice, or emergency support.${marketingConsent ? ' You opted in to occasional Sanctuary product emails; every marketing email will include an unsubscribe option.' : ' This one-time email does not subscribe you to marketing.'}</p></div>`;
+        const requestHash = crypto.createHash('sha256').update(`${email}:${situation}`).digest('hex').slice(0, 24);
+        await sendEmailWithRetry({
+            from: process.env.GUIDANCE_FROM_EMAIL || 'Sanctuary Guidance <guidance@sanctuaryapp.us>',
+            to: email,
+            subject: 'Your Sanctuary scriptural guidance',
+            html: emailHtml,
+        }, `try-guidance-${requestHash}`);
+
+        res.json({ ok: true });
+    } catch (error) {
+        console.error('Try guidance failed:', error);
+        res.status(502).json({ error: 'We could not prepare your guidance right now. Please try again.' });
+    }
+});
 
 // Updated Endpoint: Generate Advice/Guidance with Freemium Checks
 router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) => {
     try {
         const startTime = Date.now();
         const { userId, situation } = req.body;
+        if (userId !== req.user.id) return res.status(403).json({ error: 'You can only generate guidance for your own account.' });
 
         // --- 1. FREEMIUM CHECK START ---
         
         // Fetch user profile to check tier and usage
         const { data: profile, error: profileError } = await supabase
             .from('user_profiles')
-            .select('subscription_tier, advice_usage_count, advice_reset_date')
+            .select('subscription_tier, advice_usage_count, advice_reset_date, user_preferences')
             .eq('user_id', userId)
             .single();
 
@@ -88,7 +170,15 @@ router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) =>
 
         // 3. Start AI generation (Existing Code)
         const systemPrompt = await getAdviceGuidancePrompt();
-        const userPrompt = `Situation: ${situation}`;   
+        const { data: growthProfile } = await supabase
+            .from('personal_growth_profiles')
+            .select('focus_areas, improvement_areas')
+            .eq('user_id', userId)
+            .maybeSingle();
+        const currentGrowthAreas = growthProfile?.improvement_areas
+            || profile.user_preferences?.improvementAreas
+            || [];
+        const userPrompt = `Situation: ${situation}\nCurrent private spiritual growth journey: ${currentGrowthAreas.length ? currentGrowthAreas.join(', ') : 'No areas selected.'}`;
         try {
             const generatedAdvice = await callOpenAIAndProcessResult(
                 systemPrompt,
@@ -98,12 +188,23 @@ router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) =>
                 "json_object"
             );
 
+            const guidanceContent = {
+                steps: Array.isArray(generatedAdvice.advice_points)
+                    ? generatedAdvice.advice_points.slice(0, 3)
+                    : [],
+                scripture_reading: generatedAdvice.scripture_reading || null,
+                prayer: generatedAdvice.prayer || '',
+                acknowledgment: generatedAdvice.acknowledgment || '',
+                follow_up_question: generatedAdvice.follow_up_question || null,
+                suggested_growth_area: generatedAdvice.suggested_growth_area || null,
+            };
+
             // Update advice content
             const { error: updateError } = await supabase
                 .from('advice_guidance')
                 .update({
                     situation: generatedAdvice.situation_summary || situation, 
-                    advice_points: JSON.stringify(generatedAdvice.advice_points || []), 
+                    advice_points: JSON.stringify(guidanceContent),
                     status: 'completed',
                     updated_at: new Date().toISOString(),
                 })
