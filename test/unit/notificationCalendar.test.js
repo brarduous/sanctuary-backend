@@ -44,3 +44,22 @@ test('rotates copy by ISO week and folds Monday and Friday prompts into one mess
   assert.match(monday.body, /carry into this week/);
   assert.match(friday.body, /notice grace this week/);
 });
+
+test('formats action-oriented devotional titles without treating them as objects', () => {
+  const copy = devotionalCopy({
+    title: "Name What You're Trying To Fix",
+    scripture: 'Lamentations 3:25-26',
+    variant: 4,
+    weekday: 'Tue',
+  });
+  assert.equal(copy.heading, 'Pause, pray, and reflect');
+  assert.equal(copy.body, 'Today’s reflection: “Name What You\'re Trying To Fix” — Lamentations 3:25-26. Take a few minutes to read and pray.');
+  assert.doesNotMatch(copy.body, /minutes with Name/);
+});
+
+test('cleans malformed devotional fields and keeps lock-screen copy bounded', () => {
+  const copy = devotionalCopy({ title: `  A title\nwith ${'many '.repeat(30)}words  `, scripture: ' Psalm 23:1\n', variant: 2, weekday: 'Tue' });
+  assert.doesNotMatch(copy.body, /[\r\n]/);
+  assert.ok(copy.body.length <= 220);
+  assert.match(copy.body, /Psalm 23:1/);
+});

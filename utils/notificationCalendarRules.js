@@ -44,6 +44,12 @@ function copyVariant(now) { return ((isoWeek(now) - 1) % 4) + 1; }
 function cohortBucket(userId) { return crypto.createHash('sha256').update(String(userId)).digest().readUInt32BE(0) % 100; }
 function stagePercentage(stage) { return stage === '100' ? 100 : stage === '50' ? 50 : stage === '10' ? 10 : 0; }
 
+function cleanPushField(value, fallback, maxLength) {
+  const cleaned = String(value || '').replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim() || fallback;
+  if (cleaned.length <= maxLength) return cleaned;
+  return `${cleaned.slice(0, maxLength - 1).trimEnd()}…`;
+}
+
 function isInRollout(profile, stage, configuredInternalIds = new Set()) {
   if (stage === 'dry_run') return false;
   if (stage === 'internal') return profile.subscription_tier === 'admin' || configuredInternalIds.has(profile.user_id);
@@ -51,15 +57,19 @@ function isInRollout(profile, stage, configuredInternalIds = new Set()) {
 }
 
 function devotionalCopy({ title, scripture, variant, weekday }) {
-  const reference = scripture ? ` — ${scripture}` : '';
+  const safeTitle = cleanPushField(title, 'Today’s devotional', 72);
+  const safeScripture = cleanPushField(scripture, '', 48);
+  const namedDevotional = `“${safeTitle}”`;
+  const reference = safeScripture ? ` — ${safeScripture}` : '';
   const weeklyPrompt = weekday === 'Mon' ? ' What do you want to carry into this week with God?' : weekday === 'Fri' ? ' Where did you notice grace this week?' : '';
   const variants = {
-    1: { heading: 'Your daily devotional is ready', body: `${title}${reference}. Read it, then share today's verse with a friend.` },
-    2: { heading: 'A moment for Scripture', body: `Today's devotional: ${title}. Who could use this encouragement today?` },
-    3: { heading: 'Begin with what matters', body: `${title}${reference}. Share the verse with a friend.` },
-    4: { heading: 'Pause, pray, and reflect', body: `Spend a few minutes with ${title}, then invite a friend into the reflection.` },
+    1: { heading: 'Your daily devotional is ready', body: `${namedDevotional}${reference}. Read and reflect with Sanctuary.` },
+    2: { heading: 'A moment for Scripture', body: `Today’s devotional is ${namedDevotional}${reference}. Take a quiet moment with it.` },
+    3: { heading: 'Begin with what matters', body: `${namedDevotional}${reference}. Let Scripture shape one faithful step today.` },
+    4: { heading: 'Pause, pray, and reflect', body: `Today’s reflection: ${namedDevotional}${reference}. Take a few minutes to read and pray.` },
   };
-  return { ...variants[variant], body: `${variants[variant].body}${weeklyPrompt}` };
+  const selected = variants[variant] || variants[1];
+  return { ...selected, body: cleanPushField(`${selected.body}${weeklyPrompt}`, selected.body, 220) };
 }
 
 module.exports = { DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, isInRollout, isValidTimeZone, isWithinQuietHours, isWithinWindow, localParts, parseTimeMinutes, stagePercentage };
