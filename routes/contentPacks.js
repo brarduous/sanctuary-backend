@@ -333,7 +333,8 @@ async function requireMember(userId, congregationId) {
 async function hydratePublication(publication, userId) {
   const { data: links, error } = await supabase.from('church_content_publication_items').select('release_day,display_order,content_pack_items(*)').eq('publication_id', publication.id).order('display_order');
   if (error) throw error;
-  const { data: progress } = await supabase.from('church_content_progress').select('*').eq('publication_id', publication.id).eq('user_id', userId);
+  const { data: progress, error: progressError } = await supabase.from('church_content_progress').select('*').eq('publication_id', publication.id).eq('user_id', userId);
+  if (progressError) throw progressError;
   const progressByItem = new Map((progress || []).map((row) => [row.item_id, row]));
   const elapsed = Math.max(0, Math.floor((Date.now() - new Date(publication.starts_at).getTime()) / 86400000));
   return { ...publication, items: (links || []).filter((link) => link.release_day <= elapsed).map((link) => ({ ...link.content_pack_items, releaseDay: link.release_day, progress: progressByItem.get(link.content_pack_items.id) || null })) };

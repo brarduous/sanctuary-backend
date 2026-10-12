@@ -9,7 +9,7 @@ const multer = require('multer');
 const path = require('path');
 require('dotenv').config();
 
-const stripeLayperson = require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON);
+const stripeLayperson = process.env.STRIPE_SECRET_KEY_LAYPERSON ? require('stripe')(process.env.STRIPE_SECRET_KEY_LAYPERSON) : null;
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 5 * 1024 * 1024 },
@@ -663,6 +663,7 @@ router.post('/marketing/unsubscribe', async (req, res) => {
 
 // --- NEW: Create Stripe Checkout Session (Updated for Trials) ---
 router.post('/create-checkout-session', authenticateUser,async (req, res) => {
+    if (!stripeLayperson) return res.status(503).json({ error: { code: 'INTEGRATION_UNAVAILABLE', message: 'Subscriptions are not configured.', requestId: req.requestId } });
     const { userId, email, isTrial } = req.body; // Accept isTrial flag
 
     try {

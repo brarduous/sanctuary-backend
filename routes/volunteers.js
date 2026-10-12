@@ -9,22 +9,24 @@ router.get('/hub', authenticateUser, async (req, res) => {
     const userId = req.user.id;
     try {
         // 1. Get Upcoming Schedule (Pending & Accepted)
-        const { data: schedule } = await supabase
+        const { data: schedule, error: scheduleError } = await supabase
             .from('event_volunteers')
             .select(`
                 id, status, 
-                events(id, title, event_date, location), 
+                events!inner(id, title, event_date, location),
                 volunteer_roles(name, color_code)
             `)
             .eq('user_id', userId)
             .gte('events.event_date', new Date().toISOString())
-            .order('events.event_date', { ascending: true });
+            .order('events(event_date)', { ascending: true });
+        if (scheduleError) throw scheduleError;
 
         // 2. Get Teams they are currently on
-        const { data: myTeams } = await supabase
+        const { data: myTeams, error: teamsError } = await supabase
             .from('role_members')
             .select(`status, volunteer_roles(id, name, color_code)`)
             .eq('user_id', userId);
+        if (teamsError) throw teamsError;
 
         res.json({ schedule: schedule || [], myTeams: myTeams || [] });
     } catch (error) {

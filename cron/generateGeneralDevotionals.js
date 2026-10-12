@@ -6,7 +6,14 @@ const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 60_000 });
+let openaiClient;
+const openai = new Proxy({}, {
+  get(_target, property) {
+    openaiClient ||= new OpenAI({ apiKey: process.env.OPENAI_API_KEY, timeout: 60_000 });
+    const value = openaiClient[property];
+    return typeof value === 'function' ? value.bind(openaiClient) : value;
+  },
+});
 const GENERAL_DEVOTIONAL_MODEL = process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-5-mini';
 const DEFAULT_RUNWAY_DAYS = Math.max(7, Number.parseInt(process.env.GENERAL_DEVOTIONAL_RUNWAY_DAYS, 10) || 28);
 const DEFAULT_MAX_WEEKS_PER_RUN = Math.max(1, Number.parseInt(process.env.GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN, 10) || 2);
