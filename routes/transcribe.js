@@ -3,18 +3,16 @@ const router = express.Router();
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path'); // [!code ++] Import path
-const OpenAI = require('openai');
+const openai = require('../config/openai');
 const { logEvent } = require('../utils/helpers');
 
 // Configure upload storage
 const upload = multer({ dest: 'uploads/' });
 
-// Initialize OpenAI
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-router.post('/transcribe', upload.single('file'), async (req, res) => {
+router.post('/transcribe', (req, res, next) => {
+  if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: { code: 'INTEGRATION_UNAVAILABLE', message: 'Transcription is not configured.', requestId: req.requestId } });
+  next();
+}, upload.single('file'), async (req, res) => {
   const userId = req.headers['x-user-id'] || 'anonymous';
   
   if (!req.file) {

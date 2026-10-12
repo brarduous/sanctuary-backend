@@ -178,13 +178,15 @@ router.post('/checkout', authenticateUser, async (req, res) => {
 // --- MOBILE: Check if Giving is Enabled ---
 router.get('/status/:congregationId/public', authenticateUser, async (req, res) => {
     try {
-        const { data: cong } = await supabase
+        const { data: cong, error } = await supabase
             .from('congregations')
             .select('stripe_charges_enabled')
             .eq('congregation_id', req.params.congregationId)
-            .single();
+            .maybeSingle();
+        if (error) throw error;
+        if (!cong) return res.status(404).json({ error: 'Church not found.' });
 
-        res.json({ isGivingEnabled: cong?.stripe_charges_enabled || false });
+        res.json({ isGivingEnabled: cong.stripe_charges_enabled === true });
     } catch (error) {
         res.status(500).json({ error: 'Failed to check giving status.' });
     }
