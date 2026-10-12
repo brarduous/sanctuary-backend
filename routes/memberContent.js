@@ -2,7 +2,7 @@ const express = require('express');
 
 // Member reads are intentionally separate from clergy editing/review routes.
 const STUDY_FIELDS = ['study_id', 'slug', 'congregation_id', 'title', 'subtitle', 'study_method', 'created_at'];
-const LESSON_FIELDS = ['lesson_id', 'study_id', 'lesson_number', 'title', 'scripture', 'introduction', 'lesson_aims', 'study_outline', 'reflection_questions', 'discussion_starters', 'application_sidebar', 'conclusion', 'commentary'];
+const LESSON_FIELDS = ['lesson_id', 'study_id', 'lesson_number', 'title', 'scripture', 'key_verse', 'introduction', 'lesson_aims', 'study_outline', 'reflection_questions', 'discussion_starters', 'application_sidebar', 'conclusion', 'commentary'];
 const MESSAGE_FIELDS = ['message_id', 'congregation_id', 'title', 'message_type', 'message_body', 'video_playback_id', 'created_at'];
 const project = (row, fields) => Object.fromEntries(fields.filter((field) => Object.hasOwn(row, field)).map((field) => [field, row[field]]));
 const isMemberBroadcast = (row) => row.is_published === true && !row.archived_at && (!row.status || row.status === 'sent') && (!row.recipient_scope || row.recipient_scope.type === 'all');

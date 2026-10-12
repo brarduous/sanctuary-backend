@@ -14,7 +14,7 @@ const fixtures = {
     { study_id: 20, congregation_id: 2, is_published: true, title: 'Other church' }
   ],
   bible_study_lessons: [
-    { lesson_id: 100, study_id: 10, lesson_number: 2, title: 'Second', commentary: 'Member reading', generation_prompt: 'private' },
+    { lesson_id: 100, study_id: 10, lesson_number: 2, title: 'Second', commentary: 'Member reading', key_verse: 'Proverbs 25:28', generation_prompt: 'private' },
     { lesson_id: 101, study_id: 10, lesson_number: 1, title: 'First' },
     { lesson_id: 110, study_id: 11, lesson_number: 1, title: 'Draft lesson' },
     { lesson_id: 200, study_id: 20, lesson_number: 1, title: 'Other church lesson' }
@@ -96,6 +96,7 @@ test('numeric and slug study links return ordered lessons without private fields
     assert.equal(body.title, 'Published');
     assert.deepEqual(body.lessons.map((row) => row.lesson_id), [101, 100]);
     assert.equal(body.lessons[1].generation_prompt, undefined);
+    assert.equal(body.lessons[1].key_verse, 'Proverbs 25:28');
     assert.equal(body.pastor_review, undefined);
   }
 });
@@ -107,6 +108,7 @@ test('draft, missing and other-church studies and lessons are unavailable', asyn
   const { status, body } = await get('1/content/lessons/100');
   assert.equal(status, 200);
   assert.equal(body.commentary, 'Member reading');
+  assert.equal(body.key_verse, 'Proverbs 25:28');
   assert.equal(body.generation_prompt, undefined);
 });
 
