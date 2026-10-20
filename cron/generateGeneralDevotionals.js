@@ -446,7 +446,7 @@ const generateWeeklyPlan = async (theme, recentContent = []) => {
         messages: [{ role: 'system', content: buildWeeklyPlanPrompt(theme, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected complete plan.` }] : [])],
         response_format: { type: 'json_object' },
         max_completion_tokens: 7000,
-      }, { timeout: 60_000 });
+      }, { timeout: 180_000, maxRetries: 0 });
       const result = parseJsonContent(completion.choices[0].message.content, 'Weekly formation plan');
       return { plan: validateWeeklyPlan(result.plan || result), tokens: completion.usage?.total_tokens || 0 };
     } catch (error) {
@@ -467,7 +467,7 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
         messages: [{ role: 'system', content: buildSingleDayPrompt(theme, plan, dayOffset, generatedEntries, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected devotional using the fixed featured Scripture.` }] : [])],
         response_format: { type: 'json_object' },
         max_completion_tokens: 4000,
-      }, { timeout: 60_000 });
+      }, { timeout: 90_000, maxRetries: 0 });
       const result = parseJsonContent(completion.choices[0].message.content, `Single-day devotional ${dayOffset + 1}`);
       const normalized = normalizeEntry(result.entry || result.devotional || result, dayOffset);
       if (normalizeComparable(normalized.scripture_reference) !== normalizeComparable(plannedDay.scripture_reference)) {
@@ -489,12 +489,14 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
 
 const generateEntries = async (theme, recentContent = []) => {
   const planned = await generateWeeklyPlan(theme, recentContent);
+  console.log(`[General Devotionals] Validated seven-day plan for ${theme.theme_title}.`);
   const entries = [];
   let tokens = planned.tokens;
   for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
     const generated = await generateSingleDayEntry(theme, planned.plan, dayOffset, entries, recentContent);
     tokens += generated.tokens;
     entries.push(generated.entry);
+    console.log(`[General Devotionals] Prepared day ${dayOffset + 1}/7: ${generated.entry.scripture_reference}.`);
   }
   return { entries, plan: planned.plan, tokens, fallback: false };
 };
