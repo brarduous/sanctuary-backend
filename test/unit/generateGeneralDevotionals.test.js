@@ -43,6 +43,8 @@ const plan = () => ({
     human_situation: `Situation ${index + 1}`,
     central_claim: planClaims[index],
     scripture_reference: `Psalm ${index + 1}:1`,
+    scripture_text: 'The Lord is my shepherd; I shall not want.',
+    supporting_scriptures: [],
     interpretation_note: `Psalm ${index + 1} addresses its original worshiping community.`,
     practice_type: `practice-${index + 1}`,
     practice_brief: `Before dinner, write action ${index + 1} on paper.`,
@@ -111,4 +113,33 @@ test('single-day prompt applies the research-grounded formation playbook', () =>
   assert.match(prompt, /Required Scripture: Psalm 3:1/);
   assert.match(prompt, /A Familiar Title/);
   assert.match(prompt, /Other days in this week/);
+});
+
+
+test('planner rejects extended featured passages before writing', () => {
+  const weeklyPlan = plan();
+  weeklyPlan.days[0].scripture_reference = 'Psalm 23:1-6';
+  assert.throws(() => validateWeeklyPlan(weeklyPlan), /one verse or two adjacent verses/);
+  weeklyPlan.days[0].scripture_reference = 'Psalm 23:1';
+  weeklyPlan.days[0].scripture_text = 'word '.repeat(41);
+  assert.throws(() => validateWeeklyPlan(weeklyPlan), /1-40 words/);
+});
+
+test('supporting readings deepen the reflection without expanding the featured verse', () => {
+  const weeklyPlan = plan();
+  weeklyPlan.days[0].supporting_scriptures = [{reference:'Psalm 23:1-6',context:'The shepherd image places assurance within God’s care through danger.'}];
+  const validated = validateWeeklyPlan(weeklyPlan);
+  assert.deepEqual(validated.days[0].supporting_scriptures, weeklyPlan.days[0].supporting_scriptures);
+  const prompt = buildSingleDayPrompt({theme_title:'Trust'},validated,0);
+  assert.match(prompt,/Psalm 23:1-6/);
+  assert.match(prompt,/citing each explicitly/);
+  assert.match(prompt,/120-160 word reflection/);
+});
+
+test('complete quotations longer than 240 characters are preserved, excessive text is rejected', () => {
+  const entries = Array.from({length:7},(_,index)=>entry(index));
+  entries[0].scripture_text = 'faithful '.repeat(28) + 'Amen.';
+  assert.equal(validateWeeklyEntries(entries)[0].scripture_text, entries[0].scripture_text);
+  entries[0].scripture_text = 'word '.repeat(70);
+  assert.throws(() => validateWeeklyEntries(entries), /Choose a shorter complete verse/);
 });

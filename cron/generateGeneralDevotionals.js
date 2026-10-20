@@ -4,6 +4,7 @@ require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
+const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 let openaiClient;
@@ -168,6 +169,8 @@ ${recentContent.length ? recentContent.map(item => `- ${item.title} — ${item.s
 - Do not begin titles with: ${BANNED_TITLE_OPENINGS.join(', ')}.
 - Do not repeat the weekly theme word merely to signal coherence.
 
+${FEATURED_SCRIPTURE_POLICY}
+
 Before returning, read only the seven title directions, human situations, central claims, and practices. If any two days deliver the same benefit, revise them.
 
 Return valid JSON only:
@@ -184,6 +187,8 @@ Return valid JSON only:
       "human_situation": "Recognizable situation",
       "central_claim": "Passage-grounded claim",
       "scripture_reference": "Book Chapter:Verse",
+      "scripture_text": "Complete short quotation of the featured verse(s)",
+      "supporting_scriptures": [{ "reference": "Broader contextual reading", "context": "Contribution to the reflection" }],
       "interpretation_note": "Speaker/author, audience/setting, and relevant contextual claim",
       "practice_type": "attention",
       "practice_brief": "Visible action with time/setting or recipient",
@@ -206,6 +211,8 @@ const normalizePlan = plan => ({
     human_situation: String(day.human_situation || '').trim(),
     central_claim: String(day.central_claim || '').trim(),
     scripture_reference: String(day.scripture_reference || '').trim(),
+    scripture_text: String(day.scripture_text || '').trim(),
+    supporting_scriptures: day.supporting_scriptures ?? [],
     interpretation_note: String(day.interpretation_note || '').trim(),
     practice_type: String(day.practice_type || '').trim(),
     practice_brief: String(day.practice_brief || '').trim(),
@@ -222,6 +229,11 @@ const validateWeeklyPlan = rawPlan => {
   const required = ['movement', 'daily_angle', 'human_situation', 'central_claim', 'scripture_reference', 'interpretation_note', 'practice_type', 'practice_brief', 'title_direction'];
   for (const day of plan.days) {
     if (required.some(key => !day[key])) throw new Error(`Weekly plan day ${day.day_offset + 1} is incomplete.`);
+    validateFeaturedScripture(day);
+    if (!Array.isArray(day.supporting_scriptures) || day.supporting_scriptures.length > 2
+      || day.supporting_scriptures.some(item => !String(item?.reference || '').trim() || !String(item?.context || '').trim())) {
+      throw new Error(`Weekly plan day ${day.day_offset + 1} needs zero to two supporting Scriptures with reference and context.`);
+    }
     if (!['none', 'send', 'discuss', 'do_together', 'serve', 'church'].includes(day.share_mode)) {
       throw new Error(`Weekly plan day ${day.day_offset + 1} has invalid share_mode.`);
     }
@@ -231,6 +243,7 @@ const validateWeeklyPlan = rawPlan => {
       throw new Error(`Weekly plan day ${day.day_offset + 1} needs an observable practice.`);
     }
   }
+  validateFeaturedWeek(plan.days);
   const offsets = plan.days.map(day => day.day_offset).sort((a, b) => a - b);
   if (offsets.some((offset, index) => offset !== index)) throw new Error('Weekly plan must contain day offsets 0-6 exactly once.');
   for (const [field, label] of [['scripture_reference', 'Scripture references'], ['title_direction', 'title directions'], ['central_claim', 'central claims']]) {
@@ -270,13 +283,17 @@ understand Scripture in context, and carry one faithful response into ordinary l
 - Human situation: ${day.human_situation}
 - Required central claim: ${day.central_claim}
 - Required Scripture: ${day.scripture_reference}
+- Required Scripture text: ${day.scripture_text}
+- Supporting Scriptures for devotional depth: ${JSON.stringify(day.supporting_scriptures || [])}
 - Interpretation note: ${day.interpretation_note}
 - Required practice type: ${day.practice_type}
 - Required practice: ${day.practice_brief}
 - Title direction: ${day.title_direction}
 - Share mode: ${day.share_mode}
 
-The selected Scripture reference and today's contribution are fixed. Do not choose another passage, summarize the whole weekly theme, or borrow another day's contribution.
+The featured Scripture reference, its complete quotation, and today's contribution are fixed. Preserve scripture_reference and scripture_text exactly. You may draw on supplied supporting Scriptures in the devotional body, citing each explicitly and distinguishing its contribution from the featured verse. Do not summarize the whole weekly theme or borrow another day's contribution.
+
+${FEATURED_SCRIPTURE_POLICY}
 
 Other days in this week, provided to prevent overlap:
 ${otherDays.map(item => `- Day ${item.day_offset + 1}: ${item.title_direction}; ${item.central_claim}; ${item.practice_brief}`).join('\n')}
@@ -303,7 +320,7 @@ Write the content as a seamless 120-160 word reflection that does all five moves
 - Never claim that prayer or a devotional replaces medical, mental-health, crisis, or pastoral care.
 - Use accessible language and avoid insider jargon, culture-war framing, clickbait, and invented historical claims.
 - Sound like a trusted pastoral guide by offering one useful distinction or insight, not generic motivation.
-- Use only the interpretation supported by today's passage. Do not attribute another passage's language or story to it.
+- Ground the reflection in today's featured verse and its context. Supporting passages may deepen the reflection when explicitly cited; do not attribute their language or story to the featured verse.
 
 ## Short-form story playbook
 - Slide 1 — Notice: a clear 6-12 word hook naming the spiritual tension or promise.
@@ -318,7 +335,7 @@ Write the content as a seamless 120-160 word reflection that does all five moves
 - The 4-9 word title exposes today's distinctive value without a banned generic opening and is not equivalent to another title.
 
 ## Output contract
-- scripture_text must be a short excerpt under 160 characters.
+- scripture_text must preserve the complete planned quotation; never shorten it to an excerpt.
 - prayer must be 1-2 sentences.
 - Return compact valid JSON only. Do not add commentary or Markdown fences.
 
@@ -327,7 +344,7 @@ Use this exact shape:
   "day_offset": ${dayOffset},
   "title": "Title String",
   "scripture_reference": "${day.scripture_reference}",
-  "scripture_text": "Short verse excerpt",
+  "scripture_text": ${JSON.stringify(day.scripture_text)},
   "content": "The devotional body text",
   "prayer": "Prayer text",
   "topics": ["Tag1", "Tag2"],
@@ -361,7 +378,7 @@ const normalizeEntry = (entry, dayOffset) => {
     day_offset: Number(entry.day_offset ?? dayOffset),
     title: String(entry.title || fallbackTitle).trim(),
     scripture_reference: String(entry.scripture_reference || '').trim(),
-    scripture_text: String(entry.scripture_text || '').trim().slice(0, 240),
+    scripture_text: String(entry.scripture_text || '').trim(),
     content,
     prayer: String(entry.prayer || '').trim(),
     topics: Array.isArray(entry.topics) ? entry.topics : [],
@@ -376,6 +393,7 @@ const validateEntryQuality = entry => {
   if (!entry.title || !entry.scripture_reference || !entry.scripture_text || !entry.content || !entry.prayer) {
     throw new Error(`Day ${entry.day_offset + 1} is missing required devotional or scripture content.`);
   }
+  validateFeaturedScripture(entry);
   if (BANNED_TITLE_OPENINGS.some(opening => normalizeComparable(entry.title).startsWith(opening))) {
     throw new Error(`Weekly generation title uses a banned generic opening: ${entry.title}`);
   }
@@ -404,6 +422,7 @@ const validateWeeklyEntries = (entries) => {
   }
 
   normalized.forEach(validateEntryQuality);
+  validateFeaturedWeek(normalized);
 
   const references = normalized.map(entry => entry.scripture_reference.toLowerCase().replace(/\s+/g, ' ').trim());
   if (new Set(references).size !== references.length) {
@@ -424,7 +443,7 @@ const generateWeeklyPlan = async (theme, recentContent = []) => {
     try {
       const completion = await openai.chat.completions.create({
         model: GENERAL_DEVOTIONAL_MODEL,
-        messages: [{ role: 'system', content: buildWeeklyPlanPrompt(theme, recentContent) }],
+        messages: [{ role: 'system', content: buildWeeklyPlanPrompt(theme, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected complete plan.` }] : [])],
         response_format: { type: 'json_object' },
         max_completion_tokens: 7000,
       }, { timeout: 60_000 });
@@ -445,7 +464,7 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
     try {
       const completion = await openai.chat.completions.create({
         model: GENERAL_DEVOTIONAL_MODEL,
-        messages: [{ role: 'system', content: buildSingleDayPrompt(theme, plan, dayOffset, generatedEntries, recentContent) }],
+        messages: [{ role: 'system', content: buildSingleDayPrompt(theme, plan, dayOffset, generatedEntries, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected devotional using the fixed featured Scripture.` }] : [])],
         response_format: { type: 'json_object' },
         max_completion_tokens: 4000,
       }, { timeout: 60_000 });
@@ -454,6 +473,7 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
       if (normalizeComparable(normalized.scripture_reference) !== normalizeComparable(plannedDay.scripture_reference)) {
         throw new Error(`Day ${dayOffset + 1} changed planned Scripture ${plannedDay.scripture_reference} to ${normalized.scripture_reference}.`);
       }
+      if (normalized.scripture_text !== plannedDay.scripture_text) throw new Error(`Day ${dayOffset + 1} changed the planned Scripture quotation.`);
       if (generatedEntries.some(entry => normalizeComparable(entry.title) === normalizeComparable(normalized.title))) {
         throw new Error(`Day ${dayOffset + 1} repeated title ${normalized.title}.`);
       }
@@ -556,7 +576,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null, themeWeekN
         theme_title: theme.theme_title,
         formation_goal: generated.plan.formation_goal,
         plan: generated.plan,
-        prompt_version: 'weekly-formation-v2',
+        prompt_version: DEVOTIONAL_PLAN_VERSION,
         model: GENERAL_DEVOTIONAL_MODEL,
         status: 'generated',
         updated_at: new Date().toISOString(),

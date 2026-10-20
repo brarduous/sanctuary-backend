@@ -4,6 +4,7 @@ const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
 const { fetchPrompt } = require('../prompts');
+const { FEATURED_SCRIPTURE_POLICY } = require('../utils/featuredScripture');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -11,7 +12,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const generateSyllabus = async () => {
   const startTime = Date.now();
   const calendarYear = Number.parseInt(process.env.DEVOTIONAL_CURRICULUM_YEAR, 10) || new Date().getUTCFullYear() + 1;
-  const prompt = `${await fetchPrompt('devotional_syllabus_generator')}\n\nCalendar year: ${calendarYear}`;
+  const prompt = `${await fetchPrompt('devotional_syllabus_generator')}\n\nCalendar year: ${calendarYear}\n\nApply the following to daily featured verses; weekly anchor passages may remain broader.\n${FEATURED_SCRIPTURE_POLICY}`;
 
   console.log("Generating yearly syllabus...");
   const completion = await openai.chat.completions.create({

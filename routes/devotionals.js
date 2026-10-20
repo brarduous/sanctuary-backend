@@ -141,7 +141,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 parsedContent = generatedContent; // In case your helper already parsed it
             }
 
-            const { title, scripture, content, daily_prayer, song_search_query, short_form } = parsedContent;
+            const { title, content, daily_prayer, song_search_query, short_form } = parsedContent;
 
             let songData = {};
             if (song_search_query) {
@@ -172,7 +172,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 .update({
                     title: title || generalDevo.title, // Fallback to curriculum
                     content: content,
-                    scripture: scripture || generalDevo.scripture_reference,
+                    scripture: generalDevo.scripture_reference,
                     short_form: short_form || null,
                     status: 'completed',
                     updated_at: new Date().toISOString(),

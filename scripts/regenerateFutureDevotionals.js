@@ -1,5 +1,6 @@
 const { execFileSync } = require('node:child_process');
 const { createClient } = require('@supabase/supabase-js');
+const { DEVOTIONAL_PLAN_VERSION } = require('../utils/featuredScripture');
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 'cmakuvkjxknwhonfqbit';
 const START_DATE = process.env.DEVOTIONAL_REGEN_START_DATE || process.argv[2];
@@ -74,7 +75,7 @@ async function main() {
     scripture_text: entry.scripture_text,
     content: entry.content,
     prayer: entry.prayer,
-    topics: [...new Set([...(entry.topics || []), theme.theme_title])],
+    topics: [...new Set([...(entry.topics || []), theme.theme_title, 'curriculum-v2'])],
     short_form: entry.short_form,
   })));
   const planRows = preparedWeeks.map(({ weekStart, theme, plan }) => ({
@@ -84,7 +85,7 @@ async function main() {
     theme_title: theme.theme_title,
     formation_goal: plan.formation_goal,
     plan,
-    prompt_version: 'weekly-formation-v2',
+    prompt_version: DEVOTIONAL_PLAN_VERSION,
     model: process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-5-mini',
     status: 'generated',
     updated_at: new Date().toISOString(),
