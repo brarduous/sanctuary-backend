@@ -1,6 +1,12 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { featuredVerseCount, validateFeaturedScripture, validateFeaturedWeek } = require('../../utils/featuredScripture');
+const { featuredVerseCount, validateFeaturedScripture, validateFeaturedWeek, normalizeFeaturedReference } = require('../../utils/featuredScripture');
+test('featured book aliases match the mobile Bible corpus', () => {
+  assert.equal(normalizeFeaturedReference(' Psalm  51:10 '), 'Psalms 51:10');
+  assert.equal(normalizeFeaturedReference('Song of Songs 2:4'), 'Song of Solomon 2:4');
+  assert.equal(normalizeFeaturedReference('Psalms 51:10'), 'Psalms 51:10');
+  assert.equal(normalizeFeaturedReference('1 John 4:19'), '1 John 4:19');
+});
 test('featured references support numbered books and adjacent pairs', () => {
   for (const reference of ['Psalm 51:12', '1 John 4:19', 'Song of Songs 2:4']) assert.equal(featuredVerseCount(reference), 1);
   assert.equal(featuredVerseCount('Proverbs 3:5–6'), 2);

@@ -1,5 +1,9 @@
 // Editorial limits informed by the October 2026 samples in docs/VERSE_OF_THE_DAY.md.
 const DEVOTIONAL_PLAN_VERSION = 'weekly-formation-v3-short-verse';
+// Match the book titles in the Bible corpus used by the mobile verse card.
+const normalizeFeaturedReference = reference => String(reference || '').trim().replace(/\s+/g, ' ')
+  .replace(/^Psalm\s+/i, 'Psalms ')
+  .replace(/^Song of Songs\s+/i, 'Song of Solomon ');
 const FEATURED_SCRIPTURE_POLICY = `
 ## Verse of the day selection
 These rules replace any earlier instruction to return a shortened Scripture excerpt.
@@ -29,4 +33,4 @@ const validateFeaturedScripture = ({ scripture_reference, scripture_text }) => {
 const validateFeaturedWeek = days => {
   if (days.filter(day => validateFeaturedScripture(day) === 2).length > 2) throw new Error('Featured Scripture must use a single verse on at least five days per week.');
 };
-module.exports = { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, featuredVerseCount, validateFeaturedScripture, validateFeaturedWeek };
+module.exports = { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, normalizeFeaturedReference, featuredVerseCount, validateFeaturedScripture, validateFeaturedWeek };
