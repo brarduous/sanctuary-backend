@@ -1,4 +1,5 @@
 const supabase = require('./config/supabase');
+const { FEATURED_SCRIPTURE_POLICY } = require('./utils/featuredScripture');
 
 // --- CACHING SYSTEM ---
 let promptCache = {};
@@ -66,6 +67,7 @@ const formatTuning = (notes) => {
 const DEVOTIONAL_PERSONALIZATION_QUALITY_OVERLAY = `
 CURRICULUM QUALITY REQUIREMENTS:
 - Preserve the curriculum passage, its contextual meaning, and the devotional's concrete closing practice.
+- Keep scripture exactly equal to the curriculum's featured reference. Supporting passages belong in the body with explicit citations; never expand the featured reference to include them. Preserve useful supporting Scripture from the curriculum's core message.
 - Select at most one relevant application context for today. Never enumerate or awkwardly combine unrelated profile concerns.
 - Sound like a trusted pastoral guide by offering a precise, compassionate observation rather than generic motivation.
 - The final practice must remain observable and completable today, with an action plus a time, setting, or recipient.
@@ -190,7 +192,7 @@ const getAdviceGuidancePrompt = async () => {
 };
 
 const getDailyDevotionalPrompt = async () => {
-    return await fetchPrompt('daily_devotional_generator');
+    return `${await fetchPrompt('daily_devotional_generator')}\n\n${FEATURED_SCRIPTURE_POLICY}`;
 };
 
 const getCommunityPrayerPrompt = async () => {
@@ -202,10 +204,11 @@ const getDailyNewsSynopsisPrompt = async () => {
 };
 
 const getGeneralDevotionalBatchPrompt = async (themeData) => {
-    return await getRenderedPrompt('general_devotional_generator', {
+    const rendered = await getRenderedPrompt('general_devotional_generator', {
         theme_title: themeData.theme_title,
         scripture_focus: themeData.scripture_focus
     });
+    return `${rendered}\n\n${FEATURED_SCRIPTURE_POLICY}`;
 };
 
 const getScripturalOutlookPrompt = async () => {

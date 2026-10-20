@@ -15,3 +15,10 @@ test('devotional generation uses authenticated, saved personalization context', 
   assert.match(prompts, /user_recent_devotionals/);
   assert.match(prompts, /user_music_preferences/);
 });
+
+
+test('personalization cannot expand the featured reference', () => {
+  assert.match(route, /scripture: generalDevo\.scripture_reference/);
+  assert.doesNotMatch(route, /scripture: scripture \|\|/);
+  assert.match(prompts, /Supporting passages belong in the body with explicit citations/);
+});
