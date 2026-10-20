@@ -443,10 +443,12 @@ const generateWeeklyPlan = async (theme, recentContent = []) => {
     try {
       const completion = await openai.chat.completions.create({
         model: GENERAL_DEVOTIONAL_MODEL,
+        reasoning_effort: 'low',
         messages: [{ role: 'system', content: buildWeeklyPlanPrompt(theme, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected complete plan.` }] : [])],
         response_format: { type: 'json_object' },
-        max_completion_tokens: 7000,
+        max_completion_tokens: 10000,
       }, { timeout: 180_000, maxRetries: 0 });
+      if (completion.choices[0].finish_reason === 'length') throw new Error('Weekly formation plan exhausted its response token budget.');
       const result = parseJsonContent(completion.choices[0].message.content, 'Weekly formation plan');
       return { plan: validateWeeklyPlan(result.plan || result), tokens: completion.usage?.total_tokens || 0 };
     } catch (error) {
@@ -466,7 +468,7 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
         model: GENERAL_DEVOTIONAL_MODEL,
         messages: [{ role: 'system', content: buildSingleDayPrompt(theme, plan, dayOffset, generatedEntries, recentContent) }, ...(lastError ? [{ role: 'user', content: `Previous attempt failed validation: ${lastError.message}. Return a corrected devotional using the fixed featured Scripture.` }] : [])],
         response_format: { type: 'json_object' },
-        max_completion_tokens: 4000,
+        max_completion_tokens: 6000,
       }, { timeout: 90_000, maxRetries: 0 });
       const result = parseJsonContent(completion.choices[0].message.content, `Single-day devotional ${dayOffset + 1}`);
       const normalized = normalizeEntry(result.entry || result.devotional || result, dayOffset);
