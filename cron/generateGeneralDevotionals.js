@@ -4,7 +4,7 @@ require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
-const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
+const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, normalizeFeaturedReference, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 let openaiClient;
@@ -210,7 +210,7 @@ const normalizePlan = plan => ({
     daily_angle: String(day.daily_angle || '').trim(),
     human_situation: String(day.human_situation || '').trim(),
     central_claim: String(day.central_claim || '').trim(),
-    scripture_reference: String(day.scripture_reference || '').trim(),
+    scripture_reference: normalizeFeaturedReference(day.scripture_reference),
     scripture_text: String(day.scripture_text || '').trim(),
     supporting_scriptures: day.supporting_scriptures ?? [],
     interpretation_note: String(day.interpretation_note || '').trim(),
@@ -377,7 +377,7 @@ const normalizeEntry = (entry, dayOffset) => {
   return {
     day_offset: Number(entry.day_offset ?? dayOffset),
     title: String(entry.title || fallbackTitle).trim(),
-    scripture_reference: String(entry.scripture_reference || '').trim(),
+    scripture_reference: normalizeFeaturedReference(entry.scripture_reference),
     scripture_text: String(entry.scripture_text || '').trim(),
     content,
     prayer: String(entry.prayer || '').trim(),
