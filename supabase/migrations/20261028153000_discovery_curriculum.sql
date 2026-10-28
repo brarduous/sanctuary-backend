@@ -1,4 +1,7 @@
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 alter table public.discovery_reviews add column review_method text not null default 'human' check (review_method in ('human','automated_evidence'));
 alter table public.discovery_reviews drop constraint discovery_reviews_attestations_check;
 alter table public.discovery_reviews add constraint discovery_reviews_attestations_check check (

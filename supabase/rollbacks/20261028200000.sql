@@ -1,4 +1,7 @@
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 create or replace function public.discovery_complete(p_user uuid, p_events jsonb) returns jsonb language plpgsql security definer set search_path = public as $$
 declare e jsonb; c jsonb; existing public.discovery_completions; results jsonb := '[]'::jsonb;
 begin

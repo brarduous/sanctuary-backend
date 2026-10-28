@@ -1,6 +1,9 @@
 -- Personal game results. Server derives outcome and puzzle date from the reviewed
 -- revision/publication; client text never determines whether an answer is correct.
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 alter table public.discovery_completions
   add column elapsed_ms integer check (elapsed_ms between 0 and 20000),
   add column outcome text check (outcome in ('correct','incorrect','timeout','revealed')),

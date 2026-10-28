@@ -59,3 +59,19 @@ The next hosted generation run exposed a candidate validation exception with HTT
 Signed Android build 134 completed and was uploaded successfully to Google Play's internal testing track (submission b00d811c-087d-4e90-8483-8fc073e13add). Signed iOS build 63 was uploaded successfully to App Store Connect (submission be600d49-0c7c-4a92-b650-ffcdbe912725). Neither platform was publicly released by these uploads.
 
 The final clean-commit staged website URLs are https://sanctuary-layperson-webapp-8zbezsxul.vercel.app and https://sanctuary-app-home-qtr8-brj1sloxz.vercel.app. The final web page returned 200, its cron rejected missing authentication with 401, and marketing's Scripture endpoint returned the exact WEB test passage. Backend GitHub CI passed both application and complete migration/reset/lint jobs on Node 22 at 3105a407683b839e33c4f0cc7c6eec3c16ed25d7.
+
+## Final guarded migration rehearsal
+
+Small compute and seven-day PITR are now confirmed in the production dashboard. A second schema-only proof branch (`gjwvtqdfqprzcpgqrfhr`) restored 39 editorial devotional rows and four disabled notification settings from a scoped, sanitized production snapshot. No production accounts, push tokens, subscriptions or personal preferences were copied. Synthetic fixtures matched current production volumes: 46 profiles, 108 campaigns and 319 deliveries.
+
+The final migration and rollback files include transaction-scoped 3-second lock and 60-second statement timeouts. Apply, reverse rollback and reapply passed on the hosted proof database. Representative legacy profile/devotional query results and campaign/delivery counts retained the same SHA-256 throughout: `cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160`. This is a scoped production-shaped rehearsal, not a claim that the entire production database was physically restored.
+
+| Final migration | SHA-256 | Server elapsed ms |
+| --- | --- | ---: |
+| `20261028120000_daily_discoveries.sql` | `adf8faa127f3c14f172fae79f96a5f1475b9565d6d2438dbca1ce210e803ddc1` | 131.560 |
+| `20261028153000_discovery_curriculum.sql` | `e1d4774da0b2de205503426fed429d2a9a297d2227a6f3247aac9449117286c5` | 70.578 |
+| `20261028200000_discovery_game_results.sql` | `2891f118305a57ef64cc60c316718c639c1340b3e08cde042c3b71ad24e3f0d0` | 7.392 |
+| `20261028220000_discovery_question_craft.sql` | `3f05918817c19a6d0be6dcf2538402efc54d735936c206481fcc749d86132d14` | 6.234 |
+| `20261028230000_discovery_reminders.sql` | `777dd95e26867c9d6898ecd3996d24f70cf3576403d9da099f29c5598900f3b5` | 8.613 |
+
+The production migration ledger matches the repository through September 28. Only the five Discovery migrations are pending. Backend CI passed full database reset/lint and the application suite before this timeout-only hardening; the final local suite also passed 176 tests.

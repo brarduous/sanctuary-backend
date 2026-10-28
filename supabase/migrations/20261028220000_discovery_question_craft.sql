@@ -1,3 +1,6 @@
+begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
 -- Adds independent context and writing-quality gates. Existing factual thresholds remain at least 95.
 create or replace function public.discovery_curriculum_finish_attempt(p_date date,p_run uuid,p_attempt integer,p_content jsonb,p_verification jsonb,p_reasons jsonb,p_auto_approve boolean) returns jsonb language plpgsql security definer set search_path=public as $$
 declare slot public.discovery_curriculum_slots; new_id uuid; final_status text; review jsonb; c jsonb; minimum integer; source_hash text; expected_reference text; citation jsonb; measured integer:=100; rating integer; first_rating integer; second_rating integer; dimension text; craft_score integer; craft_minimum integer:=8; passage_start integer; passage_end integer;
@@ -109,3 +112,4 @@ begin
   update public.discovery_generation_attempts set status=case when final_status='scheduled' then 'auto_approved' else final_status end,candidate_sha256=encode(sha256(convert_to(p_content::text,'UTF8')),'hex'),evidence_score=(p_verification->>'evidenceScore')::int,verification=p_verification,reason_codes='[]',completed_at=now() where publication_date=p_date and generation_epoch=slot.generation_epoch and attempt=p_attempt;
   return jsonb_build_object('status',final_status,'discoveryId',new_id,'revision',1);
 end $$;
+commit;

@@ -1,4 +1,7 @@
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 -- Never turn an automated decision into a fictional human approval on rollback.
 do $$ begin
  if exists(select 1 from public.discovery_reviews where review_method='automated_evidence') then

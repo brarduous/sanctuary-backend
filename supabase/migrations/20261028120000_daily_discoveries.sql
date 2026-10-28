@@ -1,5 +1,8 @@
 -- Additive only. New objects remain private; all public projections pass through the API.
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 create table public.discoveries (
   id uuid primary key,
   slug text not null unique check (slug ~ '^[a-z][a-z0-9-]{2,79}$'),

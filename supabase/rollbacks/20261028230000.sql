@@ -1,3 +1,6 @@
+begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
 -- Disable reminders and retain delivery/audit history for recovery.
 update public.notification_runtime_settings set enabled=false,rollout_stage='dry_run' where category='discovery';
 create or replace function public.capture_notification_preference_changes()
@@ -27,3 +30,4 @@ $$;
 
 -- The additive capability column, category values and reminder dedup index are retained.
 -- They do not affect older application versions; deleting them would discard rollback evidence.
+commit;

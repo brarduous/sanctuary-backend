@@ -1,3 +1,6 @@
+begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
 -- Trivia reminders are a separate, explicit opt-in and remain disabled until rollout.
 alter table public.user_profiles add column if not exists notification_capabilities jsonb not null default '{}'::jsonb;
 alter table public.notification_runtime_settings drop constraint if exists notification_runtime_settings_category_check;
@@ -24,3 +27,4 @@ begin
   end loop;
   return new;
 end $$;
+commit;

@@ -1,6 +1,9 @@
 -- Only in the approved rollback window; disable visibility and archive discovery
 -- content, reviews, reports, completions, and metrics before removing these objects.
 begin;
+set local lock_timeout = '3s';
+set local statement_timeout = '60s';
+
 drop function if exists public.discovery_complete(uuid,jsonb);
 drop function if exists public.discovery_schedule_item(uuid,integer,date,uuid);
 drop function if exists public.discovery_restore(uuid,integer,uuid,text);
