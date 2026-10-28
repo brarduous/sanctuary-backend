@@ -75,17 +75,20 @@ async function ensureDiscoveryRunway({db,models,config=configFromEnv(),now=new D
       if(considered>=config.maxDaysPerRun || summary.totalTokens>=config.maxTokensPerRun)break;
       const plan=await getWeek(db,date,corpus);
       const day=plan.days.find(day=>day.date===date);
-      const evidence=scriptureEvidence(day.sourceReference,corpus);
-      if(evidence.sourceSha256!==day.sourceSha256)throw new Error('The persisted week plan no longer matches the trusted source.');
+      const options=day.sourceOptions || [day];
+      for(const source of options)if(scriptureEvidence(source.sourceReference,corpus).sourceSha256!==source.sourceSha256)throw new Error('The persisted week plan no longer matches the trusted source.');
       const slot=unwrap(await db.rpc('discovery_curriculum_claim',{p_date:date,p_week:plan.startDate,p_run:runId}));
       if(!slot){summary.skipped++;continue;}
       considered++;
       let failures=[],feedback=[],completed=false;
       for(let index=slot.attempts;index<3;index++) {
+        const selected=options[Math.min(index,options.length-1)];
+        const evidence=scriptureEvidence(selected.sourceReference,corpus);
+        const attemptDay={...day,...selected};
         const attempt=unwrap(await db.rpc('discovery_curriculum_begin_attempt',{p_date:date,p_run:runId,p_source_sha256:evidence.sourceSha256}));
         let content=null,verification=null,generation=null;
         try {
-          const generated=await models.generate({plan,day,evidence,recent,failures:feedback.length ? feedback:failures});
+          const generated=await models.generate({plan,day:attemptDay,evidence,recent,failures:feedback.length ? feedback:failures});
           summary.totalTokens+=generated.usage?.totalTokens || 0;
           generation={model:generated.model,responseId:generated.responseId,usage:generated.usage,writerVersion:generated.writerVersion,writerPromptSha256:generated.writerPromptSha256};
           content=validateContent(generated.content);

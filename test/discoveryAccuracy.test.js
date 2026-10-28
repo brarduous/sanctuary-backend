@@ -148,3 +148,12 @@ test('app/corpus validation shares whitespace-only canonicalization without conc
  assert.equal(canonicalVerseText('A &apos;word&apos;'),'A \'word\'');
  assert.notEqual(canonicalVerseText('He was well.'),canonicalVerseText('He was ill.'));
 });
+
+test('narrative planning does not force a devotional psalm into trivia and precommits three source choices',()=>{
+ const plan=buildWeekPlan('2026-10-26',{devotionals:[{date:'2026-10-28',scripture_reference:'Psalms 51:10'}]});
+ const day=plan.days.find(row=>row.date==='2026-10-28');
+ assert.equal(day.devotionalAligned,false);assert.equal(day.sourceReference,'John 11:32-44');
+ for(const item of plan.days){assert.equal(item.sourceOptions.length,3);assert.equal(new Set(item.sourceOptions.map(row=>row.sourceReference)).size,3);for(const option of item.sourceOptions)assert.equal(scriptureEvidence(option.sourceReference).sourceSha256,option.sourceSha256);}
+ const aligned=buildWeekPlan('2026-10-26',{devotionals:[{date:'2026-10-28',scripture_reference:'Luke 19:5'}]}).days.find(row=>row.date==='2026-10-28');
+ assert.equal(aligned.devotionalAligned,true);assert.match(aligned.sourceReference,/^Luke 19:/);
+});

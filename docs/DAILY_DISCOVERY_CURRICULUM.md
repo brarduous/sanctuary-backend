@@ -134,3 +134,13 @@ Configure the environment values documented in `.env.example`/`render.yaml`. No 
 Verification: all 162 backend tests passed; the final discovery-focused suite passed all 43 tests after the last SQL gate changes. All ten mobile discovery tests, backend/mobile/web type checks, targeted web lint, and the web production build passed. The difficulty label was also checked in the browser at phone width using a synthetic UI fixture: [preview](../../sanctuary-mobile/docs/assets/daily-discovery-difficulty-preview.png).
 
 Rejected valid drafts and generation metadata remain in the private attempt audit, separate from the publishable library. Invalid writer output also counts toward the token budget and is retained as generation provenance. Retry feedback includes the rejected draft as untrusted data alongside specific review criticism; it never lowers the evidence or craft thresholds.
+
+## Production source-quality revision
+
+The first production run produced two passing questions but exhausted dates whose devotional passages required abstract interpretation. Source policy v3 prioritizes concrete narrative details: a curated 36-scene source/angle catalogue supplies the initial narrative runway and alternate sources. Narrative devotional references can still align with the day's devotional; poetry and letters are not forced into trivia just to preserve alignment. The source/angle catalogue is planning data, not approved question copy.
+
+Each date precommits at most three source options with exact passage references and SHA-256 hashes. Candidate attempt 1 uses option 1, attempt 2 option 2, and attempt 3 option 3. Both SQL and JavaScript enforce the selected source for that attempt. A rejected draft can therefore move to a better passage without gaining another attempt or lowering the evidence/craft thresholds. Exhaustion still persists, and future cron runs cannot silently reset it.
+
+Apply `20261028234500_discovery_source_options.sql` before deploying this planner. Its rollback restores the previous source selector and full v3 evidence/craft gate. Stored v2 week plans require an explicit operator review/upgrade; retain the original plan as provenance and preserve approved schedules. An exhausted date may be reset only through the existing admin workflow after the source issue is reviewed. No reset is an approval of any question.
+
+Final local validation after this change: 178 backend tests pass, including source selection, SQL rejection of an unplanned source, persisted three-attempt limits, and executable source-options rollback. The hosted proof branch also passed apply/rollback/reapply with unchanged legacy query hashes.

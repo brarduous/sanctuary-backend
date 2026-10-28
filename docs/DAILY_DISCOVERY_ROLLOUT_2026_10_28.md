@@ -75,3 +75,11 @@ The final migration and rollback files include transaction-scoped 3-second lock 
 | `20261028230000_discovery_reminders.sql` | `777dd95e26867c9d6898ecd3996d24f70cf3576403d9da099f29c5598900f3b5` | 8.613 |
 
 The production migration ledger matches the repository through September 28. Only the five Discovery migrations are pending. Backend CI passed full database reset/lint and the application suite before this timeout-only hardening; the final local suite also passed 176 tests.
+
+## Production content evaluation and source policy v3
+
+The first actual production job (`job-dbh8abt9el5s73d2929g`) ran with the public feature and reminders disabled. It generated two auto-approved questions, rejected ten candidates, and exhausted three dates; it exited unsuccessfully as required for exhaustion. Token usage reported by the provider was 159,333; the run budget is checked between attempts, so an in-flight call can exceed the configured boundary. No failure was converted to an approval.
+
+The results exposed the cost of forcing devotional poetry/letters into trivia. Source policy `discovery-biblical-curriculum-v3` now precommits three concrete narrative source options per date. A new private SQL selector binds each attempt to the corresponding source and preserves the three-attempt ceiling and all existing factual/craft checks. The six-migration hosted proof passed reverse rollback and reapply, with identical legacy contract hashes. The final source-options migration hash is `59b15f0640708c169e70701ff86f33cf8e7dfd06175e24c04fe4bd74549c7652`. All 178 local tests passed.
+
+An abstract future question about the mirror-gazer in James was selected for an editorial hold before its release date; its factual assessment and immutable revision will be retained. The narrative-source upgrade will preserve all other approved schedules, archive the v2 plans, and explicitly reset exhausted source-policy-v2 dates under the existing global-admin workflow. This is a source-plan repair under the owner's rollout authorization, not a forged human factual review or an automatic retry-budget reset.

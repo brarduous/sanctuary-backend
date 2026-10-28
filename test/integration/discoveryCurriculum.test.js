@@ -12,6 +12,11 @@ const config={...configFromEnv({}),runwayDays:7,maxDaysPerRun:1,generatorModel:'
 async function setup({listen=false}={}) {
  const h=await createHarness({curriculum:true,listen});
  await h.db.query('insert into general_devotionals values ($1,$2)',[today,'Genesis 9:13']);
+ const plan=await getWeek(h.client,today,corpus);
+ plan.days.find(day=>day.date===today).sourceOptions=[{sourceReference:'Genesis 9:12-17',sourceSha256:scriptureEvidence('Genesis 9:12-17').sourceSha256,angle:'A covenant sign in the clouds.'},{sourceReference:'Genesis 9:13-16',sourceSha256:scriptureEvidence('Genesis 9:13-16').sourceSha256,angle:'A covenant sign in the clouds.'},{sourceReference:'Genesis 9:12-16',sourceSha256:scriptureEvidence('Genesis 9:12-16').sourceSha256,angle:'A covenant sign in the clouds.'}];
+ const first=plan.days.find(day=>day.date===today).sourceOptions[0];
+ Object.assign(plan.days.find(day=>day.date===today),first);
+ await h.db.query('update discovery_week_plans set plan=$1 where start_date=$2',[plan,plan.startDate]);
  return h;
 }
 function modelAdapter({rejectFirst=false,alwaysReject=false}={}) {
@@ -33,7 +38,8 @@ test('cron retries a rejected candidate then auto-approves and schedules only th
   const revisions=await h.db.query('select * from discovery_revisions');assert.equal(revisions.rows.length,1,'rejected drafts are discarded from the content library');assert.equal(revisions.rows[0].content.difficulty.level,'easy');
   const publicResponse=await fetch(`${h.base}/api/v1/discoveries/${revisions.rows[0].discovery_id}`);assert.equal(publicResponse.status,200);
   const projected=await publicResponse.json();assert.equal(projected.discovery.difficulty.level,'easy');assert.equal(projected.discovery.evidenceScore,undefined);assert.equal(projected.discovery.review_method,undefined,'private verification records are not public content');
-  const attempts=await h.db.query('select status,evidence_score,verification from discovery_generation_attempts order by attempt');assert.deepEqual(attempts.rows.map(row=>row.status),['rejected','auto_approved']);assert.equal(attempts.rows[0].evidence_score,94);
+  const attempts=await h.db.query('select status,evidence_score,verification,source_sha256 from discovery_generation_attempts order by attempt');assert.deepEqual(attempts.rows.map(row=>row.status),['rejected','auto_approved']);assert.equal(attempts.rows[0].evidence_score,94);
+  assert.notEqual(attempts.rows[0].source_sha256,attempts.rows[1].source_sha256,'a rejected draft moves to the next precommitted source');
   assert.equal(typeof attempts.rows[0].verification.candidateContent.prompt,'string','rejected candidates stay available in the private audit');
  }finally{await h.close();}
 });
@@ -107,7 +113,7 @@ test('a worker killed on its third attempt is reported exhausted and cannot obta
   const plan=await getWeek(h.client,today,corpus),day=plan.days.find(day=>day.date===today),run=randomUUID();
   await h.db.query('insert into discovery_generation_runs(id,policy_version,corpus_version,corpus_sha256,models) values($1,$2,$3,$4,$5)',[run,POLICY,corpus.version,corpus.sha256,{}]);
   await h.client.rpc('discovery_curriculum_claim',{p_date:today,p_week:plan.startDate,p_run:run});
-  for(let i=0;i<3;i++)assert.equal((await h.client.rpc('discovery_curriculum_begin_attempt',{p_date:today,p_run:run,p_source_sha256:day.sourceSha256})).error,null);
+  for(let i=0;i<3;i++)assert.equal((await h.client.rpc('discovery_curriculum_begin_attempt',{p_date:today,p_run:run,p_source_sha256:day.sourceOptions?.[i]?.sourceSha256 || day.sourceSha256})).error,null);
   await h.db.query("update discovery_curriculum_slots set lease_until=now()-interval '1 minute' where publication_date=$1",[today]);
   assert.ok((await curriculumStatus(h.client,{runwayDays:7})).exhaustedDates.includes(today));
   const again=await h.client.rpc('discovery_curriculum_claim',{p_date:today,p_week:plan.startDate,p_run:run});assert.equal(again.data,null);
@@ -124,5 +130,20 @@ test('invalid writer output is privately audited and still consumes the run budg
   const audit=(await h.db.query('select verification from discovery_generation_attempts')).rows[0].verification;
   assert.equal(audit.generation.responseId,'test-response');assert.equal(audit.generation.draft.prompt,'Invalid draft');
   assert.equal((await h.db.query('select * from discovery_revisions')).rows.length,0);
+ }finally{await h.close();}
+});
+
+test('SQL binds each retry to its precommitted source and source-options rollback restores the old selector',async()=>{
+ const h=await setup();
+ try {
+  const plan=await getWeek(h.client,today,corpus),day=plan.days.find(row=>row.date===today),run=randomUUID();
+  await h.db.query('insert into discovery_generation_runs(id,policy_version,corpus_version,corpus_sha256,models) values($1,$2,$3,$4,$5)',[run,POLICY,corpus.version,corpus.sha256,{}]);
+  await h.client.rpc('discovery_curriculum_claim',{p_date:today,p_week:plan.startDate,p_run:run});
+  const forged=await h.client.rpc('discovery_curriculum_begin_attempt',{p_date:today,p_run:run,p_source_sha256:day.sourceOptions[1].sourceSha256});assert.match(forged.error.message,/evidence changed/);
+  assert.equal((await h.db.query('select attempts from discovery_curriculum_slots')).rows[0].attempts,0);
+  await h.db.exec('set role authenticated');try{await assert.rejects(h.db.query('select discovery_attempt_source($1,$2,1)',[plan.startDate,today]),/permission denied/);}finally{await h.db.exec('reset role');}
+  await h.db.exec(require('fs').readFileSync(require('path').join(__dirname,'../../supabase/rollbacks/20261028234500.sql'),'utf8'));
+  assert.equal((await h.db.query("select to_regprocedure('public.discovery_attempt_source(date,date,integer)') as fn")).rows[0].fn,null);
+  assert.equal((await h.client.rpc('discovery_curriculum_begin_attempt',{p_date:today,p_run:run,p_source_sha256:day.sourceSha256})).error,null);
  }finally{await h.close();}
 });

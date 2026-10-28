@@ -1,6 +1,7 @@
 const {localDate,shiftDate}=require('./discoveries');
 const {scriptureEvidence,contextualEvidence}=require('./discoveryScripture');
-const VERSION='discovery-biblical-curriculum-v2';
+const {isNarrative,sceneFor,sourceOptions}=require('./discoverySourcePlan');
+const VERSION='discovery-biblical-curriculum-v3';
 const chapterRange=(book,count,start=1)=>Array.from({length:count},(_,i)=>`${book} ${start+i}`);
 const MODULES=[
   ['Creation and covenant','Notice the people, signs, and settings named in Genesis.',chapterRange('Genesis',28)],
@@ -30,12 +31,19 @@ function buildWeekPlan(startDate,{devotionals=[],corpus}={}) {
     const date=shiftDate(start,offset);
     const devotional=devotionals.find(row=>row.date===date);
     let evidence,aligned=false;
-    if(devotional?.scripture_reference) {
+    if(devotional?.scripture_reference && isNarrative(devotional.scripture_reference)) {
       try {evidence=contextualEvidence(devotional.scripture_reference,corpus);aligned=true;} catch { /* Use the explicit curriculum source, never invented Scripture. */ }
     }
-    if(!evidence)evidence=scriptureEvidence(chapters[cycle*7+offset],corpus);
-    return {date,angle:ANGLES[offset],targetDifficulty:DIFFICULTIES[offset],sourceReference:evidence.source.locator,sourceSha256:evidence.sourceSha256,devotionalAligned:aligned};
+    let primary;
+    if(evidence)primary={sourceReference:evidence.source.locator,sourceSha256:evidence.sourceSha256,angle:ANGLES[offset]};
+    else {
+      const daysSinceStart=Math.floor((Date.parse(date)-Date.parse('2026-10-28'))/86400000);
+      const moduleReference=chapters[cycle*7+offset];
+      if(daysSinceStart>=36 && isNarrative(moduleReference)){evidence=scriptureEvidence(moduleReference,corpus);primary={sourceReference:evidence.source.locator,sourceSha256:evidence.sourceSha256,angle:ANGLES[offset]};}
+      else primary=sceneFor(date,0,corpus);
+    }
+    return {date,...primary,targetDifficulty:DIFFICULTIES[offset],devotionalAligned:aligned,sourceOptions:sourceOptions(date,primary,corpus)};
   });
-  return {version:VERSION,startDate:start,endDate:shiftDate(start,6),weekNumber:weekIndex%52+1,theme,learningGoal:goal,corpusVersion:scriptureEvidence(days[0].sourceReference,corpus).corpusVersion,days};
+  return {version:VERSION,startDate:start,endDate:shiftDate(start,6),weekNumber:weekIndex%52+1,theme,learningGoal:goal,sourcePolicy:'Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.',corpusVersion:scriptureEvidence(days[0].sourceReference,corpus).corpusVersion,days};
 }
 module.exports={VERSION,MODULES,ANGLES,DIFFICULTIES,monday,buildWeekPlan};

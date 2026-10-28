@@ -56,6 +56,7 @@ async function createHarness({listen=false,port=0,curriculum=false}={}) {
   await db.exec('create table general_devotionals(date date primary key,scripture_reference text)');
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028153000_discovery_curriculum.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028220000_discovery_question_craft.sql'),'utf8'));
+  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028234500_discovery_source_options.sql'),'utf8'));
  }
  for(const [id,role] of [[ADMIN,'admin'],[MEMBER,'member'],[OTHER,'member']]) {
   await db.query('insert into auth.users values($1)',[id]);await db.query('insert into user_profiles values($1,$2)',[id,role]);
