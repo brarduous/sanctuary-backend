@@ -49,3 +49,13 @@ The staged web trivia shell returned successfully and the staged `/api/push/disp
 A local browser connected to the hosted-stage database completed the real generated question, displaying a 3.1-second correct answer, one-day streak and the exact Genesis 3:1–12 passage in the reader's WEB preference. Screenshot: [hosted staging result](../../sanctuary-layperson-web/docs/qa/2026-10-28/hosted-stage-result.jpg). This progress is guest data in the local test browser and did not create a production completion.
 
 Final backend verification: 176 tests passed, including 57 targeted Discovery tests and a 1,103-profile reminder audience to exercise pagination. The backend syntax checks and production dependency audit passed (zero production advisories).
+
+## Recovery approval and retry correction
+
+The user explicitly approved seven-day PITR and required Small compute during rollout. PITR was enabled on the production project through its existing Supabase account. The Management API confirms `pitr_enabled:true` with a recovery window from 2026-10-21T23:10:34Z through 2026-10-28T23:10:34Z at verification; capture a fresh latest bookmark immediately before migration. Small compute adds approximately $5.15/month over the current Micro size; the approved change is being processed.
+
+The next hosted generation run exposed a candidate validation exception with HTTP status 400 being classified as a provider configuration failure. The release now classifies `candidate_contract_invalid` before provider HTTP statuses, records its rejected draft and token usage, and feeds the contract issue into the bounded retry path. Actual authentication/configuration failures still stop the run. All 176 tests pass after the fix.
+
+Signed Android build 134 completed and was uploaded successfully to Google Play's internal testing track (submission b00d811c-087d-4e90-8483-8fc073e13add). Signed iOS build 63 was uploaded successfully to App Store Connect (submission be600d49-0c7c-4a92-b650-ffcdbe912725). Neither platform was publicly released by these uploads.
+
+The final clean-commit staged website URLs are https://sanctuary-layperson-webapp-8zbezsxul.vercel.app and https://sanctuary-app-home-qtr8-brj1sloxz.vercel.app. The final web page returned 200, its cron rejected missing authentication with 401, and marketing's Scripture endpoint returned the exact WEB test passage. Backend GitHub CI passed both application and complete migration/reset/lint jobs on Node 22 at 3105a407683b839e33c4f0cc7c6eec3c16ed25d7.

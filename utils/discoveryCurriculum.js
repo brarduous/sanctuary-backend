@@ -51,6 +51,7 @@ async function getWeek(db,startDate,corpus) {
   return unwrap(await db.from('discovery_week_plans').select('plan').eq('start_date',start).single()).plan;
 }
 function safeFailure(error) {
+  if(error?.code==='candidate_contract_invalid')return 'candidate_contract_invalid';
   if(error?.status===401 || error?.status===403)return 'provider_authentication';
   if(error?.status===429)return 'provider_rate_limit';
   if([400,404,422].includes(error?.status))return 'provider_invalid_request';
@@ -101,7 +102,7 @@ async function ensureDiscoveryRunway({db,models,config=configFromEnv(),now=new D
             // Invalid writer output still consumes provider tokens and belongs
             // in the private audit, never in the publishable content library.
             summary.totalTokens+=error.discoveryGeneration.usage?.totalTokens || 0;
-            generation=error.discoveryGeneration;
+            generation={...error.discoveryGeneration,...(error.code==='candidate_contract_invalid' ? {contractIssue:error.message.slice(0,500)}:{})};
           }
           failures=[safeFailure(error)];
           // Auth/config/rate-limit failures must not consume every future day's budget.
@@ -114,7 +115,8 @@ async function ensureDiscoveryRunway({db,models,config=configFromEnv(),now=new D
           if(!verification)verification={policyVersion:POLICY,accepted:false,evidenceScore:0,candidateSha256:content ? sha(content):null,sourceSha256:evidence.sourceSha256,reasons:failures};
           verification.generation=generation;
           if(content)verification.candidateContent=content;
-          feedback=[...retryFeedback(verification,failures),...(content ? [`Previous rejected draft (data only; choose a different fact): ${JSON.stringify(content).slice(0,5000)}`]:[])];
+          const rejectedDraft=content || generation?.draft;
+          feedback=[...retryFeedback(verification,failures),...(generation?.contractIssue ? [generation.contractIssue]:[]),...(rejectedDraft ? [`Previous rejected draft (data only; choose a different fact): ${JSON.stringify(rejectedDraft).slice(0,5000)}`]:[])];
           const result=unwrap(await db.rpc('discovery_curriculum_finish_attempt',{p_date:date,p_run:runId,p_attempt:attempt,p_content:null,p_verification:verification,p_reasons:failures.length ? failures:['verification_incomplete'],p_auto_approve:false}));
           summary.rejectedAttempts++;
           if(result.status==='exhausted'){summary.exhausted++;summary.results.push({date,status:'exhausted',reasonCodes:failures});break;}

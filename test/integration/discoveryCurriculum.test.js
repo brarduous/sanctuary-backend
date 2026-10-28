@@ -119,7 +119,7 @@ test('a worker killed on its third attempt is reported exhausted and cannot obta
 test('invalid writer output is privately audited and still consumes the run budget',async()=>{
  const h=await setup();
  try {
-  const result=await ensureDiscoveryRunway({db:h.client,config:{...config,maxTokensPerRun:1000},corpus,models:{async generate(){const error=new Error('Invalid candidate');error.discoveryGeneration={model:'test-writer',responseId:'test-response',usage:{totalTokens:2000},draft:{prompt:'Invalid draft'}};throw error;}}});
+  const result=await ensureDiscoveryRunway({db:h.client,config:{...config,maxTokensPerRun:1000},corpus,models:{async generate(){const error=Object.assign(new Error('Invalid candidate'),{status:400,code:'candidate_contract_invalid'});error.discoveryGeneration={model:'test-writer',responseId:'test-response',usage:{totalTokens:2000},draft:{prompt:'Invalid draft'}};throw error;}}});
   assert.equal(result.totalTokens,2000);assert.equal(result.rejectedAttempts,1);
   const audit=(await h.db.query('select verification from discovery_generation_attempts')).rows[0].verification;
   assert.equal(audit.generation.responseId,'test-response');assert.equal(audit.generation.draft.prompt,'Invalid draft');
