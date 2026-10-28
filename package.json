@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend for AI content generation and database interaction.",
   "main": "index.js",
+  "engines": { "node": ">=22.12.0" },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
