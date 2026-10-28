@@ -1,0 +1,522 @@
+{
+  "id": "e7236aba-dcf6-484e-8039-c7a3dd222509",
+  "recheckedAt": "2026-10-28T21:56:10.113Z",
+  "input": "contextual-pilot-v2.json",
+  "originalDraft": {
+    "id": "6af7e5a4-caeb-4817-a190-4b39534cf9ae",
+    "slug": "tears-before-the-tomb-opens",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "After Jesus wept in John's account, which man did he raise from the tomb?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Eutychus"
+        },
+        {
+          "id": "option-2",
+          "text": "Jairus"
+        },
+        {
+          "id": "option-3",
+          "text": "Lazarus"
+        },
+        {
+          "id": "option-4",
+          "text": "Bartimaeus"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Jesus called Lazarus from the tomb, and he emerged bound in wrappings with a cloth around his face.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "Lazarus",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v2.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v2",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0b7d500d9a8ae74a016ae26c37053087d2b72183c9291da87b",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_07b32e2b70ecf405016ae26c42d1c887d2bd53d74b2498e06e",
+        "resp_0cc3210c0b40a7c9016ae26c42dab087d2908efa22f7d4a50d"
+      ],
+      "policyVersion": "discovery-evidence-v2",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  },
+  "noDatabaseWrites": true,
+  "decision": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v1",
+      "minimumScore": 6,
+      "score": 5,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question gives an explicit verse range and a distinct scene (Jesus wept, then a raising). It's an interesting, well-scoped biblical detail; the choices are plausible biblical figures and only one matches John 11:32-44."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 5,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 1,
+            "fairChallenge": 1,
+            "choiceQuality": 1
+          },
+          "rationale": "The tomb scene and preceding tears provide two concise, grounded clues. The connection between Jesus' grief and the raising is worthwhile, but the question asks only for a familiar name rather than developing that connection. It is clear and fair, though directly answerable by identification. The choices are parallel personal names; Eutychus and Jairus offer plausible miracle-related confusions, but Bartimaeus is a weaker distractor for a raising from a tomb. Total: 5/8."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 90,
+    "candidateSha256": "c61e7d68a842ba0de86170617ebd12f0b28db83791d808f5dc05ad9df2584016",
+    "sourceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "0db2dde6df23f1e12a31e6d8da04bac9264cb7c472f5d99ff1577252004adbe0",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "moderate",
+      "score": 3
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "option_below_threshold",
+      "unresolved_or_complex_claim",
+      "question_craft_below_threshold"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The scene is John 11:32-44 in the World English Bible (the passage supplied).",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.”"
+              }
+            ]
+          },
+          {
+            "text": "In that passage Jesus wept (i.e., Jesus expresses grief by weeping).",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              }
+            ]
+          },
+          {
+            "text": "After Jesus wept in that account, he called a dead man to come out of the tomb.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "The man Jesus called out of the tomb was named Lazarus.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "The resurrected man came out bound with burial wrappings and a cloth around his face.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question gives an explicit verse range and a distinct scene (Jesus wept, then a raising). It's an interesting, well-scoped biblical detail; the choices are plausible biblical figures and only one matches John 11:32-44."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Eutychus is not named or mentioned anywhere in the supplied passage (John 11:32-44). The passage records the raising of Lazarus, not Eutychus.",
+            "evidence": [],
+            "confidence": 90
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Jairus is not named or mentioned in the supplied passage. The supplied text identifies the raised man as Lazarus (verses 43–44).",
+            "evidence": [],
+            "confidence": 90
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "The passage explicitly records Jesus crying aloud, 'Lazarus, come out!' and that the dead man came out bound with wrappings (John 11:43–44). This directly answers the question.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              }
+            ],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Bartimaeus is not mentioned in the supplied passage. The raised man in John 11:32–44 is named Lazarus (verses 43–44).",
+            "evidence": [],
+            "confidence": 90
+          }
+        ],
+        "difficulty": {
+          "familiarity": 0,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "This is a widely known story (familiarity 0). The answer appears directly in the passage but is connected to the prior detail that Jesus wept (evidenceNavigation 1). Only a direct identification is required (reasoningSteps 0). The distractors are plausible biblical figures relevant to miracles, so similarity is high (2). Overall this is Moderate difficulty for a general adult Christian audience."
+        },
+        "model": "gpt-5-mini-2025-08-07",
+        "requestedModel": "gpt-5-mini",
+        "responseId": "resp_09d464868fcb1e66016ae26f62f62087d2b67e679bc67f1c0f"
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Question craft scores 5/8, below the required 6/8. The scene is grounded, but the task remains straightforward name identification, and the distractors are not uniformly plausible for this tomb scene. Reject on craft, not factual accuracy."
+        ],
+        "questionPremises": [
+          {
+            "text": "The question concerns the narrative in John 11:32–44.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "Jesus wept in this scene.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              }
+            ]
+          },
+          {
+            "text": "The raising occurred after Jesus wept.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "The person raised was a dead man lying in a tomb.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 41,
+                "quote": "So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me."
+              }
+            ]
+          },
+          {
+            "text": "Jesus raised the man, who came out of the tomb at his call.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 1,
+          "fairChallenge": 1,
+          "choiceQuality": 1,
+          "rationale": "The tomb scene and preceding tears provide two concise, grounded clues. The connection between Jesus' grief and the raising is worthwhile, but the question asks only for a familiar name rather than developing that connection. It is clear and fair, though directly answerable by identification. The choices are parallel personal names; Eutychus and Jairus offer plausible miracle-related confusions, but Bartimaeus is a weaker distractor for a raising from a tomb. Total: 5/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The excerpt identifies Lazarus, not Eutychus, as the man called out and raised.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Jairus is not identified as the man raised in this scene; the named recipient is Lazarus.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Jesus calls Lazarus by name, and the next verse reports that the dead man came out.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Bartimaeus is not named as the man raised; the passage explicitly identifies Lazarus.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 0,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy (2/8). This is a widely familiar account. Two adjacent statements identify Lazarus and confirm his emergence, with no inference beyond direct identification. The alternatives are parallel biblical personal names but are not closely competing identities within the scene."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_098ecf24c029a590016ae26f62e4c487d282f07a18eaac2843"
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-5-mini-2025-08-07",
+      "responseId": "resp_09d464868fcb1e66016ae26f62f62087d2b67e679bc67f1c0f",
+      "usage": {
+        "inputTokens": 4491,
+        "outputTokens": 2446,
+        "totalTokens": 6937
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_098ecf24c029a590016ae26f62e4c487d282f07a18eaac2843",
+      "usage": {
+        "inputTokens": 4491,
+        "outputTokens": 1345,
+        "totalTokens": 5836
+      }
+    }
+  ]
+}

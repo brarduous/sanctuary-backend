@@ -1,0 +1,39 @@
+# Daily Discovery rollout record — October 28, 2026
+
+Status: staged; production database publication has not occurred.
+
+## Recovery and hosted rehearsal
+
+- Production project: `cmakuvkjxknwhonfqbit` (Sanctuary). Supabase reports physical backup `2095144859` completed at `2026-10-28T07:59:02.741Z`. **PITR is disabled.** A completed backup listing is not proof of a tested restore or a point-in-time recovery bookmark. The repository's required recovery rehearsal/approval remains open; no exception is assumed.
+- New isolated preview branch: `discovery-release-20261028`, project `nwrozzdrlwlzjpfhgtlk`, created without production data. Existing staging/snapshot branches were preserved.
+- Read-only hosted schema inventory confirmed the notification table/constraint names and existing profile columns. All five Discovery migrations applied to the cloned hosted schema, then all five rollbacks ran in reverse order, followed by a successful reapply. Commands set a 3-second lock timeout and a 60-second statement timeout. Recorded elapsed times below include network overhead; they are not measured lock duration.
+- All 13 Discovery tables enforce and force RLS; `anon` and `authenticated` lack direct SELECT grants. Existing profile policies were not broadened.
+- These schema-only hosted checks supplement isolated PostgreSQL integration tests. They do not replace production-shaped load tests, old-client acceptance, a sanitized snapshot restore, or physical-device acceptance.
+
+| Migration | SHA-256 | Apply round trip (ms) | Rollback round trip (ms) |
+| --- | --- | ---: | ---: |
+| `20261028120000_daily_discoveries.sql` | `3626a8b1a9ae06f4c896d0d947baa2c0a40f4697f833a0738a93b1f6f35723bc` | 1692 | 1593 |
+| `20261028153000_discovery_curriculum.sql` | `2f5a30e66c94d29fb8d9bd7fd94964803504c12827500fcf2ecf547e3795eede` | 1638 | 1456 |
+| `20261028200000_discovery_game_results.sql` | `088b58930dda7ab85bdf2d07ebd2b7e716ff6de402e1e261de2579e1173fc2a5` | 1583 | 1500 |
+| `20261028220000_discovery_question_craft.sql` | `b68290af57201227367d47e12fa701eac0f12da8070ccecb551b1f17f42eb133` | 1444 | 2610 |
+| `20261028230000_discovery_reminders.sql` | `308bf81c42aa70279f3837e116c67904ddacba3b504feade5f4542ae1376fdf3` | 1604 | 1930 |
+
+## Live generation rehearsal
+
+The actual cron engine, trusted corpus, writer and two independent reviewers ran against the hosted preview. Run `30abe594-221f-4fcb-b496-8f0b2d58310b` considered two dates: one auto-approved/scheduled at an evidence score of 95 after three attempts; the other exhausted three attempts and remained unscheduled. Five drafts were rejected. Provider-reported usage was 93,899 tokens. Scores are rubric judgments, not calibrated probabilities.
+
+The preview has **one contiguous scheduled day**, not a launch library. The active file bank contains four unpublished questions and is not silently merged into the cron's approved schedule. The exhausted date has not been reset. Before public launch, fill and inspect a 30-day schedule and sustain at least a 14-day contiguous runway. Never lower thresholds or silently reset retry budgets to meet the date target.
+
+The rehearsal also identified an audit gap. The release now retains rejected valid candidates in private attempt verification and includes them as untrusted retry context; invalid writer output also consumes the token budget and retains provenance. These records never enter public projections.
+
+## Application packages
+
+- Native release branch: `release/daily-discoveries-1.2.11`, commit `d58e87a`. Version 1.2.11 includes the Android generic `/discoveries` verified-link path, so a new native build is required. Android build `2b135c3e-8bce-485d-8fa6-9577b96442ba` uses version code 134.
+- iOS packaging exposed a certificate/profile that expired today. After the user's Apple verification, a new distribution certificate and provisioning profile were created for `us.sanctuaryapp.app`, team `QKQ2WNHKWS`, expiring October 28, 2027. The push key and App Store API key were preserved. iOS build `4ac1ed3f-4a3d-4ce9-aa3c-12361c5a1082` is version 1.2.11, build 63. No store release has been submitted by this rollout.
+- Staged production-environment web deployment: `https://sanctuary-layperson-webapp-oyws6mihu.vercel.app`. Separate marketing deployment: `https://sanctuary-app-home-qtr8-dabw4sxjc.vercel.app`. Both were built using `--prod --skip-domain`; the canonical domain must be promoted only after data/content readiness. `sanctuaryapp.us` belongs to the layperson web project, which also includes the Discoveries landing link and branded trivia shell.
+
+## Validation and outstanding launch gates
+
+Backend test suite and targeted Discovery tests pass; mobile has 14 passing Discovery tests plus the existing behavior checks. Both web production builds, type checks, and scoped lint pass. Compatible dependency updates and OpenAI SDK 7.45.1 remove all npm audit findings from production backend dependencies; a live strict-JSON Responses call passed on the updated SDK.
+
+Production remains gated on the recovery process above, sufficient independently approved scheduled content, representative old-client and physical-device checks, successful signed native builds, and production smoke tests before promotion/enabling. Generation and reminder settings must remain disabled until their schema is installed. See [release runbook](DAILY_DISCOVERY_RELEASE.md) for per-stage switches and rollback.

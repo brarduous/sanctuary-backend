@@ -1,0 +1,438 @@
+[
+  {
+    "id": "85f7e163-368e-4f67-96ad-a3085afd48e2",
+    "slug": "a-welcome-and-a-promise",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In Luke, Zacchaeus welcomed Jesus joyfully, then paired generosity to the poor with what restitution pledge?",
+      "heading": "A detail in Luke 19:1-10",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "twice as much"
+        },
+        {
+          "id": "option-2",
+          "text": "three times as much"
+        },
+        {
+          "id": "option-3",
+          "text": "four times as much"
+        },
+        {
+          "id": "option-4",
+          "text": "five times as much"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK19.htm",
+          "locator": "Luke 19:1-10",
+          "excerpt": "He entered and was passing through Jericho. There was a man named Zacchaeus. He was a chief tax collector, and he was rich. He was trying to see who Jesus was, and couldn’t because of the crowd, because he was short. He ran on ahead, and climbed up into a sycamore tree to see him, for he was going to pass that way. When Jesus came to the place, he looked up and saw him, and said to him, “Zacchaeus, hurry and come down, for today I must stay at your house.” He hurried, came down, and received him joyfully. When they saw it, they all murmured, saying, “He has gone in to lodge with a man who is a sinner.” Zacchaeus stood and said to the Lord, “Behold, Lord, half of my goods I give to the poor. If I have wrongfully exacted anything of anyone, I restore four times as much.” Jesus said to him, “Today, salvation has come to this house, because he also is a son of Abraham. For the Son of Man came to seek and to save that which was lost.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Zacchaeus pledged to restore four times as much if he had wrongfully exacted anything.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "He also said he gave half his goods to the poor.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "Luke 19:1-10",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "moderate",
+        "score": 3
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "4353c9e527d6abb5b56d8cedc77e054aafb5fe892a550d0cde0ccdad9be6aac5",
+      "answerText": "four times as much",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v3.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0d6fec844de075fd016ae26e689e0887d2a7c83b8c0973dc88",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_02c0538981785fa6016ae26e7bbc5487d2bdf600e60cc1da49",
+        "resp_0d490b29872a3a59016ae26e7bbaf487d2a7d4e35929ccb65b"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 7
+    }
+  },
+  {
+    "id": "751ca20e-b842-4ac5-957a-b601f27dd419",
+    "slug": "care-beyond-the-roadside",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In Luke's parable, after funding the man's care, what did the Samaritan promise to repay upon returning?",
+      "heading": "A detail in Luke 10:30-37",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "The cost of oil and wine"
+        },
+        {
+          "id": "option-2",
+          "text": "The man's travel expenses"
+        },
+        {
+          "id": "option-3",
+          "text": "Whatever you spend beyond that"
+        },
+        {
+          "id": "option-4",
+          "text": "The host's usual fee"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK10.htm",
+          "locator": "Luke 10:30-37",
+          "excerpt": "Jesus answered, “A certain man was going down from Jerusalem to Jericho, and he fell among robbers, who both stripped him and beat him, and departed, leaving him half dead. By chance a certain priest was going down that way. When he saw him, he passed by on the other side. In the same way a Levite also, when he came to the place, and saw him, passed by on the other side. But a certain Samaritan, as he traveled, came where he was. When he saw him, he was moved with compassion, came to him, and bound up his wounds, pouring on oil and wine. He set him on his own animal, brought him to an inn, and took care of him. On the next day, when he departed, he took out two denarii, gave them to the host, and said to him, ‘Take care of him. Whatever you spend beyond that, I will repay you when I return.’ Now which of these three do you think seemed to be a neighbor to him who fell among the robbers?” He said, “He who showed mercy on him.” Then Jesus said to him, “Go and do likewise.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "The Samaritan gave the host two denarii, then promised to repay “Whatever you spend beyond that” when he returned.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "Luke 10:30-37",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "e9e392279e7c914c8f1d13c6788b80bc92b64f1f49186d86224a7cfde66f4daf",
+      "answerText": "Whatever you spend beyond that",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v3.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_096f335a19848204016ae26e81fe1487d29f1cd5f521a5c3d5",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_00be54707a51d0cc016ae26e99feac87d2aefb9defaea9a3b0",
+        "resp_0685baadf0b2c623016ae26e9a137087d283411ceb727c7f46"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "d64e941a-e6cd-484d-90c0-4be602603fa9",
+    "slug": "leaving-something-behind",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "After hearing Jesus was calling him in Mark's account, what did Bartimaeus cast away before springing up?",
+      "heading": "A detail in Mark 10:46-52",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "his sandals"
+        },
+        {
+          "id": "option-2",
+          "text": "his walking staff"
+        },
+        {
+          "id": "option-3",
+          "text": "his cloak"
+        },
+        {
+          "id": "option-4",
+          "text": "his begging bowl"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MRK10.htm",
+          "locator": "Mark 10:46-52",
+          "excerpt": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road. When he heard that it was Jesus the Nazarene, he began to cry out, and say, “Jesus, you son of David, have mercy on me!” Many rebuked him, that he should be quiet, but he cried out much more, “You son of David, have mercy on me!” Jesus stood still, and said, “Call him.” They called the blind man, saying to him, “Cheer up! Get up. He is calling you!” He, casting away his cloak, sprang up, and came to Jesus. Jesus asked him, “What do you want me to do for you?” The blind man said to him, “Rabboni, that I may see again.” Jesus said to him, “Go your way. Your faith has made you well.” Immediately he received his sight, and followed Jesus on the way.",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Bartimaeus cast away his cloak, sprang up, came to Jesus, and later followed him on the way.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "Mark 10:46-52",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "moderate",
+        "score": 3
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "4df235796a5fb98c743d6f3d980e2ea45a36427e7126af8df69d0a17fd2f78da",
+      "answerText": "his cloak",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v3.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0cc06fca3dd746c2016ae26e91f00087d2b94662b6f464ffe7",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0ab05512c0468e76016ae26e99bc7887d289ab426b5b42d48d",
+        "resp_0caa7a945cef38e4016ae26e99cc0087d2a15dad72d1f7be9d"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "01d38cdb-252e-4e30-851f-a28256db16fe",
+    "slug": "an-unexpected-gardener",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In John, Mary recognized Jesus when he called her name; what worker had she thought he was?",
+      "heading": "A detail in John 20:11-18",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "a burial attendant"
+        },
+        {
+          "id": "option-2",
+          "text": "a Roman guard"
+        },
+        {
+          "id": "option-3",
+          "text": "the gardener"
+        },
+        {
+          "id": "option-4",
+          "text": "a hired servant"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN20.htm",
+          "locator": "John 20:11-18",
+          "excerpt": "But Mary was standing outside at the tomb weeping. So as she wept, she stooped and looked into the tomb, and she saw two angels in white sitting, one at the head, and one at the feet, where the body of Jesus had lain. They asked her, “Woman, why are you weeping?” She said to them, “Because they have taken away my Lord, and I don’t know where they have laid him.” When she had said this, she turned around and saw Jesus standing, and didn’t know that it was Jesus. Jesus said to her, “Woman, why are you weeping? Who are you looking for?” She, supposing him to be the gardener, said to him, “Sir, if you have carried him away, tell me where you have laid him, and I will take him away.” Jesus said to her, “Mary.” She turned and said to him, “Rabboni!” which is to say, “Teacher!” Jesus said to her, “Don’t hold me, for I haven’t yet ascended to my Father; but go to my brothers and tell them, ‘I am ascending to my Father and your Father, to my God and your God.’ ” Mary Magdalene came and told the disciples that she had seen the Lord, and that he had said these things to her.",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Mary had supposed Jesus to be the gardener.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "She recognized him after he called her name, then addressed him as “Rabboni.”",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "John 20:11-18",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 1
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "60e2a9a404bc17369fdce7f5946ee6a694936c5dc2894898e1ff0e7af56813de",
+      "answerText": "the gardener",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v3.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0323da0c63d84a35016ae26f09595c87d2b359633c534a4ef8",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_07b82e5374f46b48016ae26f14577487d2a33ac1ea2491de0a",
+        "resp_05e9a0c94704de86016ae26f14703c87d28b979e9d2fac52bd"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "62705abd-90c5-42db-ac80-2c32850fa504",
+    "slug": "after-wind-earthquake-and-fire",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In 1 Kings, after wind, earthquake, and fire, what sound did Elijah hear?",
+      "heading": "A detail in 1 Kings 19:9-13",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "the wind’s howl"
+        },
+        {
+          "id": "option-2",
+          "text": "the earthquake’s rumble"
+        },
+        {
+          "id": "option-3",
+          "text": "a still small voice"
+        },
+        {
+          "id": "option-4",
+          "text": "the fire’s roar"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1KI19.htm",
+          "locator": "1 Kings 19:9-13",
+          "excerpt": "He came to a cave there, and camped there; and behold, Yahweh’s word came to him, and he said to him, “What are you doing here, Elijah?” He said, “I have been very jealous for Yahweh, the God of Armies; for the children of Israel have forsaken your covenant, thrown down your altars, and killed your prophets with the sword. I, even I only, am left; and they seek my life, to take it away.” He said, “Go out, and stand on the mountain before Yahweh.” Behold, Yahweh passed by, and a great and strong wind tore the mountains, and broke in pieces the rocks before Yahweh; but Yahweh was not in the wind. After the wind there was an earthquake; but Yahweh was not in the earthquake. After the earthquake a fire passed; but Yahweh was not in the fire. After the fire, there was a still small voice. When Elijah heard it, he wrapped his face in his mantle, went out, and stood in the entrance of the cave. Behold, a voice came to him, and said, “What are you doing here, Elijah?”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "After the fire, Elijah heard a still small voice and wrapped his face in his mantle.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "1 Kings 19:9-13",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "f3d43a58a490731a5e8486c8658d685c2bcb8ebeda0562ff197398e584227d43",
+      "answerText": "a still small voice",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v3.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0a261742179f89d4016ae26edf372087d2812ebdb2daccecba",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0e1b2b1c647e28dc016ae26eeea77887d2b1b3134e2adf8970",
+        "resp_0532d5f5110633a4016ae26eeed02887d28dd0ca8095fd5996"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  }
+]

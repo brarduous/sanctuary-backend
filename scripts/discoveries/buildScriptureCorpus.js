@@ -1,0 +1,18 @@
+const fs=require('node:fs');
+const path=require('node:path');
+const {createHash}=require('node:crypto');
+const input=process.argv[2];
+if(!input)throw new Error('Pass the trusted WEB Bible JSON path explicitly. This command never downloads model-supplied sources.');
+const original=fs.readFileSync(input);
+const bible=JSON.parse(original);
+const codes='GEN EXO LEV NUM DEU JOS JDG RUT 1SA 2SA 1KI 2KI 1CH 2CH EZR NEH EST JOB PSA PRO ECC SNG ISA JER LAM EZK DAN HOS JOL AMO OBA JON MIC NAM HAB ZEP HAG ZEC MAL MAT MRK LUK JHN ACT ROM 1CO 2CO GAL EPH PHP COL 1TH 2TH 1TI 2TI TIT PHM HEB JAS 1PE 2PE 1JN 2JN 3JN JUD REV'.split(' ');
+const sourceBooks=[...bible.oldTestament,...bible.newTestament];
+if(sourceBooks.length!==66)throw new Error('Expected the shared 66-book WEB corpus. This is a source selection, not a statement about other Christian canons.');
+const {canonicalVerseText:decode}=require('../../utils/discoveryScripture');
+const omittedVerses=[];
+const books=sourceBooks.map((book,index)=>({name:book.title,code:codes[index],chapters:book.chapters.map(chapter=>({number:chapter.number,verses:[...chapter.content.matchAll(/<sup class="v">(\d+)<\/sup><span>(.*?)<\/span>/g)].map(match=>({number:Number(match[1]),text:decode(match[2])})).filter(verse=>{if(!verse.text)omittedVerses.push(`${book.title} ${chapter.number}:${verse.number}`);return Boolean(verse.text);})}))}));
+if(books.some(book=>book.chapters.some(chapter=>!chapter.verses.length || chapter.verses.some(verse=>!verse.text))))throw new Error('Corpus contains missing chapter/verse text.');
+const digest=createHash('sha256').update(JSON.stringify(books)).digest('hex');
+const corpus={version:'web-classic-2026-10-28-v1',translation:'WEB',publisher:'eBible.org / World English Bible',rights:'World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm',origin:'Sanctuary bundled World English Bible classic',originSha256:createHash('sha256').update(original).digest('hex'),sha256:digest,omittedVerses,books};
+fs.writeFileSync(path.join(__dirname,'../../content/discoveries/web-corpus.json'),JSON.stringify(corpus)+'\n');
+console.log(`Built versioned WEB evidence corpus: ${books.length} books, ${books.reduce((n,b)=>n+b.chapters.length,0)} chapters; SHA-256 ${digest}.`);

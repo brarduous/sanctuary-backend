@@ -1,0 +1,78 @@
+[
+  {
+    "id": "literal-rainbow",
+    "reference": "Genesis 9:13-16",
+    "draft": {
+      "prompt": "According to Genesis 9, what sign does God place in the cloud in the covenant with Noah?",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Rainbow"
+        },
+        {
+          "id": "option-2",
+          "text": "A star"
+        },
+        {
+          "id": "option-3",
+          "text": "A pillar"
+        },
+        {
+          "id": "option-4",
+          "text": "A lamp"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "claims": [
+        {
+          "id": "account",
+          "text": "In Genesis 9, God identifies the rainbow as the sign of the covenant described to Noah. The passage connects this sign with remembering the covenant between God and living creatures."
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ]
+    },
+    "expectedDecision": "accept",
+    "labelRationale": "Genesis 9:13-16 explicitly names the rainbow as the covenant sign. This fixture only checks the named text, not independent history."
+  },
+  {
+    "id": "wrong-answer-key",
+    "reference": "Genesis 9:13-16",
+    "draft": {
+      "prompt": "According to Genesis 9, what sign does God place in the cloud in the covenant with Noah?",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Rainbow"
+        },
+        {
+          "id": "option-2",
+          "text": "A star"
+        },
+        {
+          "id": "option-3",
+          "text": "A pillar"
+        },
+        {
+          "id": "option-4",
+          "text": "A lamp"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "claims": [
+        {
+          "id": "account",
+          "text": "In Genesis 9, God identifies the rainbow as the sign of the covenant described to Noah. The passage connects this sign with remembering the covenant between God and living creatures."
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ]
+    },
+    "expectedDecision": "reject",
+    "labelRationale": "The answer key has been deliberately changed to a distractor, which contradicts the explicitly named rainbow in Genesis 9:13-16."
+  }
+]

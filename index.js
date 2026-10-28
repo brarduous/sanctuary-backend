@@ -59,7 +59,7 @@ const corsOptions = {
     },
     credentials: true, // Allow cookies/auth headers
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Idempotency-Key', 'x-user-id', 'x-congregation-id', 'x-membership-id']
+    allowedHeaders: ['Content-Type', 'Authorization', 'If-None-Match', 'Idempotency-Key', 'x-user-id', 'x-congregation-id', 'x-membership-id']
 };
 
 app.use(cors(corsOptions));
@@ -425,9 +425,12 @@ const staffRouter = require('./routes/staff');
 const careRouter = require('./routes/care');
 const givingRouter = require('./routes/giving');
 const newsEditorialRouter = require('./routes/newsEditorial');
+const { router: discoveriesRouter, adminRouter: discoveryAdminRouter } = require('./routes/discoveries');
 
 // Use Routes
 app.use('/admin', adminRouter);
+app.use('/api/v1/discoveries', discoveriesRouter);
+app.use('/admin/discoveries', discoveryAdminRouter);
 app.use('/', devotionalsRouter);
 app.use('/', sermonsRouter);
 app.use('/', bibleStudiesRouter);

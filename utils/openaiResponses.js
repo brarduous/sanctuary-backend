@@ -45,6 +45,7 @@ async function callStructuredResponse({
   timeoutMs = QUALITY_TIMEOUT_MS,
   maxRetries = QUALITY_MAX_RETRIES,
   onAttempts = null,
+  requireCompleted = false,
   responseClient = openai,
 }) {
   const startedAt = Date.now();
@@ -91,6 +92,9 @@ async function callStructuredResponse({
     }
   }
   if (!response) throw finalError || new Error(`The ${model} request did not complete.`);
+  if (requireCompleted && response.status !== 'completed') {
+    throw new Error(`The ${model} structured response did not complete; no output was accepted.`);
+  }
 
   if (!response.output_text) {
     throw new Error(`The ${model} response did not contain structured output.`);
