@@ -25,7 +25,7 @@ services:
       - key: DISCOVERY_MIN_EVIDENCE_SCORE
         value: 95
       - key: DISCOVERY_RUNWAY_DAYS
-        value: 28
+        value: 30
       - key: DISCOVERY_MAX_DAYS_PER_RUN
         value: 7
       - key: DISCOVERY_MAX_TOKENS_PER_RUN
