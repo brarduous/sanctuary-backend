@@ -1,6 +1,6 @@
 # Daily Discovery rollout record — October 28, 2026
 
-Status: staged; production database publication has not occurred.
+Status: backend code deployed; website/native packages staged; production database publication has not occurred.
 
 ## Recovery and hosted rehearsal
 
@@ -37,3 +37,15 @@ The rehearsal also identified an audit gap. The release now retains rejected val
 Backend test suite and targeted Discovery tests pass; mobile has 14 passing Discovery tests plus the existing behavior checks. Both web production builds, type checks, and scoped lint pass. Compatible dependency updates and OpenAI SDK 7.45.1 remove all npm audit findings from production backend dependencies; a live strict-JSON Responses call passed on the updated SDK.
 
 Production remains gated on the recovery process above, sufficient independently approved scheduled content, representative old-client and physical-device checks, successful signed native builds, and production smoke tests before promotion/enabling. Generation and reminder settings must remain disabled until their schema is installed. See [release runbook](DAILY_DISCOVERY_RELEASE.md) for per-stage switches and rollback.
+
+## Deployed infrastructure and smoke checks
+
+Backend production deployment `dep-dbh7s9mtlv9c73eqrlj0` is live at commit `71f41546d9fa0b9bcc8af14734838daf06b99ff0`. `GET /health` returned 200. `GET /api/v1/discoveries/bundle` returned 200 with `enabled:false` and no items against the existing production schema. Unauthenticated requests to generation, capability registration and notification dispatch all returned 401.
+
+Render cron `crn-dbh7s9ek1f9s73aur280` (`sanctuary-daily-discovery-curriculum`) is provisioned on release/daily-discoveries at 08:15 UTC, with `DISCOVERY_CURRICULUM_ENABLED=false` and auto-deploy off. Its one-off disabled smoke run `job-dbh7smutlv9c73eqsqv0` succeeded without querying the missing production Discovery schema. After the DB/content gates pass, enable the environment flag and explicitly deploy the reviewed release. No separate reminder scheduler was created.
+
+The staged web trivia shell returned successfully and the staged `/api/push/dispatch` returned 401 without the cron secret. Marketing's deployed Scripture endpoint returned the bounded WEB passage. The canonical web project still targets original deployment `dpl_GK3wmKbohymfivp41ES7K9pcTTEU`; `sanctuaryapp.us`, `www` and `beta` were not promoted.
+
+A local browser connected to the hosted-stage database completed the real generated question, displaying a 3.1-second correct answer, one-day streak and the exact Genesis 3:1–12 passage in the reader's WEB preference. Screenshot: [hosted staging result](../../sanctuary-layperson-web/docs/qa/2026-10-28/hosted-stage-result.jpg). This progress is guest data in the local test browser and did not create a production completion.
+
+Final backend verification: 176 tests passed, including 57 targeted Discovery tests and a 1,103-profile reminder audience to exercise pagination. The backend syntax checks and production dependency audit passed (zero production advisories).
