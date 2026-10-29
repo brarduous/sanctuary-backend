@@ -1,6 +1,6 @@
 # Daily Discovery rollout record — October 28–29, 2026
 
-Status at 2026-10-29 05:30 UTC: production infrastructure and private generation are installed. **Public trivia, website promotion, native public releases and reminder delivery remain held for content readiness and device acceptance.** No trivia push has been sent. This record replaces intermediate checkpoints; it does not claim a completed public launch.
+Status at 2026-10-29 12:07 UTC: production infrastructure and private generation are installed. **Public trivia, website promotion, native public releases and reminder delivery remain held for content readiness and device acceptance.** No trivia push has been sent. This record replaces intermediate checkpoints; it does not claim a completed public launch.
 
 ## Production recovery and database
 
@@ -16,7 +16,7 @@ Evidence: [hosted proof](qa/2026-10-29/hosted-migration-proof.json), [pre-migrat
 
 ## Backend and generation
 
-Production API: https://api.sanctuaryapp.us. Render service: `srv-d1uqipvdiees73b0kj20`. The source-policy-v3 deployment is `dep-dbh8i5g8v5cc73fodpo0`, commit `1f9f22b1d9d1e77afa7e7e89cfdcd86a6bd71e02`; later release-branch changes align the default status/runway to 30 days and retain final evidence. Health returns 200. The public bundle returns 200 with `enabled:false` and zero items. Unauthenticated generation, capability registration and dispatch return 401.
+Production API: https://api.sanctuaryapp.us. Render service: `srv-d1uqipvdiees73b0kj20`. The final backend deployment `dep-dbhje3p42hec73ckhov0` and cron deployment `dep-dbhje45g1s2s73a82kug` are live at `64ed60bbaa30e351de9fdd6d5df361130d96e463`, including the 30-day status/runway default. Subsequent evidence-only commits do not change runtime behavior. Health returns 200. The public bundle returns 200 with `enabled:false` and zero items. Unauthenticated generation, capability registration and dispatch return 401.
 
 The active Render cron is `crn-dbh7s9ek1f9s73aur280`, `sanctuary-daily-discovery-curriculum`, at **08:15 UTC daily**. It runs `npm run cron-discoveries` on Node 22, with generation enabled, auto-approval enabled, a 30-day target, seven considered dates per run, and 150,000-token budget checked between attempts. An in-flight request can exceed that boundary. Three persisted attempts per date prevent endless retry; exhaustion produces a failed job and requires explicit reviewed repair. Auto-deploy is off; explicitly deploy the reviewed branch after changes.
 
@@ -26,7 +26,7 @@ The first production run `a8ddbf0c-abd7-4af8-a604-29dbc41102ab` accepted two can
 
 The explicit v2→v3 source-plan repair archived the old plans, preserved approved questions, reset four named dates under the owner's administrator workflow, and held the awkward future James mirror question before publication. Old attempts, reviews and immutable revisions remain. No human factual attestations were fabricated. Exhausted v3 dates have not been silently reset.
 
-At the final checkpoint there are **five scheduled questions total**, including October 28; **four are today/future**, with only **two consecutive days through October 30**. October 31–November 4 exhausted their budgets. November 7 has an expired worker lease with two attempts and can resume its remaining attempt. This is short of the 30-day initial library and sustainable 14-day runway required by the release runbook.
+At the final checkpoint there are **nine scheduled questions total**, including October 28; **eight are today/future**, with only **two consecutive days through October 30**. October 31–November 4 and November 7 exhausted their budgets. The scheduled morning run `3393b7f1-b2f9-49e9-a5de-f8796a5659e3` approved four questions, rejected seven drafts and reported 152,667 tokens. It also exhausted November 7, so the cron correctly signals an unsuccessful job despite useful accepted content. November 12 has an expired lease with one consumed attempt and can resume. This is short of the 30-day initial library and sustainable 14-day runway required by the release runbook.
 
 A separate no-database writing experiment used `gpt-6.1-sol` with `gpt-5.6-sol`/`gpt-6-astra` reviewers. It accepted four of seven planned scenes before its token bound; other drafts failed craft or contextual support. The audit is under `content/discoveries/experiments/writer-quality-comparison-2026-10-29*`. This small experiment is neither calibration nor a reason to change production models or lower thresholds. Its drafts are unpublished and not imported.
 
@@ -34,7 +34,7 @@ A separate no-database writing experiment used `gpt-6.1-sol` with `gpt-5.6-sol`/
 
 The existing Vercel `/api/push/dispatch` cron remains the only reminder scheduler, every 15 minutes. Discovery is disabled in `dry_run`, at 18:00 recipient-local time. Only explicit boolean `notifications.trivia === true` opts a user in. There is no existing-user opt-in backfill. Unsupported native versions are skipped unless web delivery is available. Completion, rollout visibility, quiet hours, six-hour spacing and daily deduplication are enforced.
 
-The authenticated production dry run returned 200: zero eligible, attempted, accepted or failed sends; all 46 profiles were outside the local send window. There are zero Discovery delivery records. This checks production wiring, not delivery acceptance on a real device. Keep the category off until content and device checks pass, then use an opted-in internal account before staged expansion.
+The authenticated production dry run returned 200 with zero eligible, attempted, accepted or failed sends. The earlier 05:30 UTC check saw all 46 profiles outside the local send window; the latest detailed skip counts are saved in the evidence JSON. There are zero Discovery delivery records. This checks production wiring, not delivery acceptance on a real device. Keep the category off until content and device checks pass, then use an opted-in internal account before staged expansion.
 
 ## Websites
 
@@ -60,7 +60,7 @@ Google Play production draft release 16 contains only bundle 134, with release n
 
 ## Validation and remaining launch work
 
-Backend application and full hosted-schema migration/reset/lint CI passed before the final test-clock repair. Local verification includes the full backend suite, mobile typecheck, 14 Discovery tests and behavior checks, both web builds/typechecks, scoped lint, hosted rollback/reapply and live API smoke checks. Backend production dependencies have zero npm audit advisories. The final reminder fixture freezes both SQL and dispatcher clocks so it remains valid after October 28.
+Backend application and complete Supabase migration/reset/lint CI both passed on the deployed final runtime commit, including the test-clock repair. Local verification includes the full backend suite, mobile typecheck, 14 Discovery tests and behavior checks, both web builds/typechecks, scoped lint, hosted rollback/reapply and live API smoke checks. Backend production dependencies have zero npm audit advisories. The final reminder fixture freezes both SQL and dispatcher clocks so it remains valid after October 28.
 
 The remaining launch work is concrete: repair exhausted source plans through the explicit editorial workflow, build and inspect the 30-day approved schedule, verify physical-device accessibility/offline/sharing/app-link/cold-notification paths, then enable the internal cohort. Promote tested websites and submit native releases only after those gates; expand content and reminder cohorts through the documented stages. Do not lower evidence/craft thresholds to force a launch date.
 
