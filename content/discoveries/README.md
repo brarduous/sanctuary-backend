@@ -50,3 +50,5 @@ The offline runner enforces three attempts per candidate, resumable audits, prom
 ## October 29 model comparison
 
 `experiments/writer-quality-comparison-2026-10-29*` records a bounded, no-database experiment with writer gpt-6.1-sol and reviewers gpt-5.6-sol/gpt-6-astra. Four of seven planned scenes passed before the token bound; the remaining scenes were incomplete. These are unpublished experimental drafts, not additional active-bank items, imports, human approvals, or a calibrated accuracy measurement. Production models and acceptance thresholds were not changed.
+
+The `experiments/sanctuary-writer-v4-*` files contain a three-scene live writer-contract pilot and six source-specific adversarial rejection probes. All three pilot drafts passed the unchanged gates, and all six probes were rejected. These files remain unpublished experiment records, not active-bank additions or empirical calibration. `source-repairs/` contains explicit operator manifests and receipts; a plan repair never approves a question.
