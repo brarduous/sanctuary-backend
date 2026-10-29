@@ -17,7 +17,7 @@ function configFromEnv(env=process.env) {
     return env[name]==='true';
   };
   const generatorModel=env.DISCOVERY_GENERATOR_MODEL || 'gpt-5.6-sol';
-  const reviewModels=[env.DISCOVERY_VERIFIER_MODEL || 'gpt-5-mini',env.DISCOVERY_ADVERSARIAL_MODEL || 'gpt-6-astra'];
+  const reviewModels=[env.DISCOVERY_VERIFIER_MODEL || 'gpt-6.1-sol',env.DISCOVERY_ADVERSARIAL_MODEL || 'gpt-6-astra'];
   if(reviewModels[0]===reviewModels[1])throw new Error('Discovery verification requires two different model IDs.');
   return {enabled:boolean('DISCOVERY_CURRICULUM_ENABLED',true),autoApprove:boolean('DISCOVERY_AUTO_APPROVE_BIBLICAL',true),minimumScore:integer('DISCOVERY_MIN_EVIDENCE_SCORE',95,95,100),runwayDays:integer('DISCOVERY_RUNWAY_DAYS',30,7,90),maxDaysPerRun:integer('DISCOVERY_MAX_DAYS_PER_RUN',7,1,14),maxTokensPerRun:integer('DISCOVERY_MAX_TOKENS_PER_RUN',150000,1000,500000),generatorModel,reviewModels};
 }

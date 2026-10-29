@@ -33,7 +33,7 @@ services:
       - key: DISCOVERY_GENERATOR_MODEL
         value: gpt-5.6-sol
       - key: DISCOVERY_VERIFIER_MODEL
-        value: gpt-5-mini
+        value: gpt-6.1-sol
       - key: DISCOVERY_ADVERSARIAL_MODEL
         value: gpt-6-astra
   - type: cron

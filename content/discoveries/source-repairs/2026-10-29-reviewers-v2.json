@@ -1,0 +1,33 @@
+{
+  "id": "reviewer-pair-repair-2026-10-29",
+  "mode": "reviewer_revision",
+  "writerVersion": "sanctuary-trivia-writer-v4",
+  "previousReviewModels": [
+    "gpt-5-mini",
+    "gpt-6-astra"
+  ],
+  "reviewModels": [
+    "gpt-6.1-sol",
+    "gpt-6-astra"
+  ],
+  "reason": "The production mini verifier assigned below-threshold confidence to an explicit source premise without identifying a factual issue. The stronger first verifier has been source-checked for Responses/strict schema support and tested on six adversarial rejection controls plus three positive drafts. All six controls were rejected; two positives passed and the third was rejected for craft, so thresholds and the independent Astra check remain intact. Perform one explicit reviewer-configuration repair for the only remaining exhausted date; preserve every earlier attempt and do not reset failures from the new pair.",
+  "days": [
+    {
+      "date": "2026-11-02",
+      "sources": [
+        [
+          "Acts 18:1-4",
+          "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials."
+        ],
+        [
+          "John 4:25-30",
+          "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location."
+        ],
+        [
+          "Matthew 2:9-12",
+          "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors."
+        ]
+      ]
+    }
+  ]
+}

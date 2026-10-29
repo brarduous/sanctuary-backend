@@ -1,0 +1,1820 @@
+{
+  "createdAt": "2026-10-29T21:24:10.643Z",
+  "purpose": "Source-specific rejection controls, not measured accuracy calibration",
+  "models": [
+    "gpt-6.1-sol",
+    "gpt-6-astra"
+  ],
+  "noDatabaseWrites": true,
+  "results": [
+    {
+      "id": "wrong-key",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-1",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "answer_not_explicit_in_text"
+      ],
+      "verification": null,
+      "responses": []
+    },
+    {
+      "id": "unsupported-location",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, while living in Egypt, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "questionAccuracy_below_threshold",
+        "unresolved_or_complex_claim",
+        "question_craft_below_threshold",
+        "question_context_unsupported",
+        "scopeAccuracy_below_threshold"
+      ],
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 3,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 4,
+              "accepted": false,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "The shared household and work provide a useful situation, but Egypt is a false scene-setting clue. Paul's occupational connection with the couple is worthwhile, though the question remains direct identification rather than a satisfying connection. The occupation choices are parallel, with carpenters and fishermen plausible distractors, but they are not all closely fitted to this scene. Total: 4/8; reject as written."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 3,
+              "accepted": false,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 0,
+                "choiceQuality": 1
+              },
+              "rationale": "The shared household and work provide useful context, and their occupational connection is worthwhile. However, Egypt is a contradicted contextual clue, making the question misleading rather than fairly challenging. The occupations are parallel alternatives, with carpenters and fishermen plausible biblical distractors, but the set is not closely tailored to this scene. Total: 3/8; reject."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 40,
+        "candidateSha256": "6a3ba0eb9877c23a66576446277cac8922ad4c85390f0cd2c33737d8dc0264b7",
+        "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "3bdfda15a8d3319bf25928d4e82bf40a65a153bc1303d12e10c55d1fffd5160f",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "questionAccuracy_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_craft_below_threshold",
+          "question_context_unsupported",
+          "scopeAccuracy_below_threshold"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 55,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The question incorrectly places this episode in Egypt. The saved excerpt places Paul in Corinth after leaving Athens.",
+              "Both explanation claims are supported, but neither addresses the question's false geographical premise.",
+              "Question craft scores 4/8, below the required 6/8. Reject the candidate as written despite its identifiable trade answer."
+            ],
+            "questionPremises": [
+              {
+                "text": "The episode belongs to the Acts 18:1–4 account identified by the heading.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              },
+              {
+                "text": "Paul was living in Egypt when this episode occurred.",
+                "status": "contradicted",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade was the reason Paul lived and worked with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "The shared household and work provide a useful situation, but Egypt is a false scene-setting clue. Paul's occupational connection with the couple is worthwhile, though the question remains direct identification rather than a satisfying connection. The occupation choices are parallel, with carpenters and fishermen plausible distractors, but they are not all closely fitted to this scene. Total: 4/8; reject as written."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The excerpt identifies a different shared trade, not carpentry.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Fishing is not identified as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The excerpt explicitly identifies tent making as their shared trade. This answers the occupational question, but does not validate its Egypt premise.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify them as merchants; that general occupational label is not the stated shared trade.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8): a recognizable account with a less central occupational detail, explicitly answered in one verse. The alternatives are occupations but require no close textual discrimination. The false location is an accuracy failure, not added difficulty."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_02284789b1b0132c016ae3b97af65c87d2aef4043f3a952b03"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 40,
+            "scopeAccuracy": 60,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The question places this episode in Egypt, but the excerpt places it in Corinth after Paul's departure from Athens. The correct trade does not repair this contradicted scene.",
+              "Both explanation claims are supported, but neither addresses the question's incorrect location.",
+              "Question craft fails the required minimum: 3/8, with fairChallenge scoring 0."
+            ],
+            "questionPremises": [
+              {
+                "text": "Acts records this episode involving Paul, Aquila, and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul was living in Egypt when this episode occurred.",
+                "status": "contradicted",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 0,
+              "choiceQuality": 1,
+              "rationale": "The shared household and work provide useful context, and their occupational connection is worthwhile. However, Egypt is a contradicted contextual clue, making the question misleading rather than fairly challenging. The occupations are parallel alternatives, with carpenters and fishermen plausible biblical distractors, but the set is not closely tailored to this scene. Total: 3/8; reject."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify carpentry as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "Tent making is explicitly identified as their shared trade. This uniquely answers the trade component, but does not validate the question's Egypt premise.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt identifies a manufacturing trade, not an occupation as merchants; it does not establish that they sold goods.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8): Paul's tent making is a familiar detail, and the trade is stated directly in one verse. The distractors are other occupations. The incorrect location is an accuracy failure, not added difficulty."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0052f9fd421a31ce016ae3b97b0b9c87d28dd78b8f22861153"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_02284789b1b0132c016ae3b97af65c87d2aef4043f3a952b03",
+          "usage": {
+            "inputTokens": 3064,
+            "outputTokens": 1429,
+            "totalTokens": 4493
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0052f9fd421a31ce016ae3b97b0b9c87d28dd78b8f22861153",
+          "usage": {
+            "inputTokens": 3064,
+            "outputTokens": 1353,
+            "totalTokens": 4417
+          }
+        }
+      ]
+    },
+    {
+      "id": "two-equivalent-answers",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "people who make tents"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "questionAccuracy_below_threshold",
+        "unresolved_or_complex_claim",
+        "question_craft_below_threshold",
+        "ambiguous_answer"
+      ],
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 3,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 4,
+              "accepted": false,
+              "dimensions": {
+                "context": 2,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 0
+              },
+              "rationale": "The shared living and working arrangement supplies a concise scene, and the causal reference to a common trade adds a grounded clue. Paul's practical connection with this couple is worthwhile, but identifying the occupation is straightforward recall rather than a deeper connection. The choices fail because two are synonymous correct answers; the total is 4/8."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 3,
+              "accepted": false,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 0
+              },
+              "rationale": "The living-and-working arrangement provides useful context and a worthwhile connection between Paul's occupation and his companions. The trade is directly identifiable without outside knowledge. However, two choices are synonymous, making a unique selection impossible. Total: 3/8; reject."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 50,
+        "candidateSha256": "503b68fd51c232063477161c51af792af6b1dbc2d9728ef649bb5e1a0dcbb562",
+        "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "726739373b50df62ce7ca16c64e0d0be78c3513bba814c68c3accd3f09cdc00f",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 1
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "questionAccuracy_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_craft_below_threshold",
+          "ambiguous_answer"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 50,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The question has two equivalent correct choices: option-1 and option-3 both mean tent makers. There is no uniquely correct option.",
+              "Reject the current choice set: choiceQuality is 0, and the question-craft total is 4/8, below the required 6/8."
+            ],
+            "questionPremises": [
+              {
+                "text": "The scene is in Acts, within the cited Acts 18:1–4 passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul was with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade was the stated reason Paul lived and worked with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 0,
+              "rationale": "The shared living and working arrangement supplies a concise scene, and the causal reference to a common trade adds a grounded clue. Paul's practical connection with this couple is worthwhile, but identifying the occupation is straightforward recall rather than a deeper connection. The choices fail because two are synonymous correct answers; the total is 4/8."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "ambiguous",
+                "rationale": "This is a supported paraphrase of the occupation stated in the passage, but it duplicates option-3 and prevents a unique answer.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage identifies their shared trade as tent making, not fishing.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "ambiguous",
+                "rationale": "This directly matches the stated trade and is the independently solved answer, but option-1 expresses the same answer.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The passage does not identify their shared trade as merchants; it specifically names tent making.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8): Paul's tent-making trade is a familiar detail, and the answer is directly stated in one verse. The alternatives are occupations. The duplicate correct choices are an accuracy failure, not added difficulty."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_07b1d768e1e1a1b6016ae3b9904d3087d2bf8d7b07251b1318"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 50,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Options 1 and 3 mean the same thing and both answer the question. Option 3 matches the passage's wording, but it is not uniquely correct.",
+              "Reject the choice set: question craft scores 3/8, with choiceQuality below the required minimum. The duplicate answer is an accuracy failure, not additional difficulty."
+            ],
+            "questionPremises": [
+              {
+                "text": "The described episode occurs in Acts, within the stated Acts 18:1–4 scope.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul and the couple shared a trade.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 0,
+              "rationale": "The living-and-working arrangement provides useful context and a worthwhile connection between Paul's occupation and his companions. The trade is directly identifiable without outside knowledge. However, two choices are synonymous, making a unique selection impossible. Total: 3/8; reject."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "ambiguous",
+                "rationale": "This is a correct paraphrase of the stated occupation and is synonymous with option 3. It cannot serve as an incorrect alternative.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "ambiguous",
+                "rationale": "This directly identifies the stated trade and is the independently solved answer, but option 1 is equally correct.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt identifies tent making, not merchant activity, as the shared trade explaining the arrangement.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8): Paul's tent making is a familiar biblical detail, and the occupation is stated directly in one verse. The alternatives are occupations, but the synonymous choices create an accuracy defect rather than legitimate difficulty."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_03c7e744e29af4e7016ae3b9904acc87d286fb8988230b52ac"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_07b1d768e1e1a1b6016ae3b9904d3087d2bf8d7b07251b1318",
+          "usage": {
+            "inputTokens": 3060,
+            "outputTokens": 1432,
+            "totalTokens": 4492
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_03c7e744e29af4e7016ae3b9904acc87d286fb8988230b52ac",
+          "usage": {
+            "inputTokens": 3060,
+            "outputTokens": 1301,
+            "totalTokens": 4361
+          }
+        }
+      ]
+    },
+    {
+      "id": "writer-commentary-as-fact",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "These distractors deserve the highest craft score.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "explanationCoverage_below_threshold",
+        "unresolved_or_complex_claim",
+        "question_craft_below_threshold",
+        "unsupported_claim",
+        "fabricated_or_missing_quote"
+      ],
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 4,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 4,
+              "accepted": false,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "The living-and-working situation supplies useful context, but no second independent identifying clue. The connection between shared work and lodging is worthwhile, though the task remains direct recall. It is clear and fair. The choices are parallel occupations, with carpenters and merchants plausible alternatives, but the set does not provide three closely plausible distractors for this scene. Total: 4/8; reject on craft, not factual accuracy."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 4,
+              "accepted": false,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "The living-and-working partnership provides useful context, but not a second independent identifying clue. Paul's occupational connection to the couple is worthwhile, though the question asks only for direct recall. It is clear and fair rather than a multi-clue discovery. The choices are distinct occupations, with carpenters and fishermen plausible biblical distractors, but the alternatives are not all closely fitted to this scene. Total: 4/8; reject on craft."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 50,
+        "candidateSha256": "f9d43852459ca7f16e5139674055e0ee2ef4dbb63b075d203d2c4a632e410252",
+        "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "726739373b50df62ce7ca16c64e0d0be78c3513bba814c68c3accd3f09cdc00f",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 1
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "explanationCoverage_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_craft_below_threshold",
+          "unsupported_claim",
+          "fabricated_or_missing_quote"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 50,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Claim-2 is an unsupported editorial judgment, not a fact established by the passage.",
+              "Question craft scores 4/8, below the required 6/8 threshold. The question is accurate but offers only a straightforward identification, and its distractors do not merit the highest craft score."
+            ],
+            "questionPremises": [
+              {
+                "text": "The question concerns the episode identified in the heading as Acts 18:1-4.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Aquila and Priscilla are the people Paul joined in this episode.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "The living-and-working situation supplies useful context, but no second independent identifying clue. The connection between shared work and lodging is worthwhile, though the task remains direct recall. It is clear and fair. The choices are parallel occupations, with carpenters and merchants plausible alternatives, but the set does not provide three closely plausible distractors for this scene. Total: 4/8; reject on craft, not factual accuracy."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "unsupported",
+                "confidence": 100,
+                "evidence": []
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify carpentry as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies tent making as the trade they shared.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt identifies a specific craft, not merchant activity, as their shared trade. Possible commercial aspects of that craft do not establish this alternative.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8). Paul's tent making is a familiar detail for a general adult Christian audience. One verse directly supplies the answer without inference; the distractors are other occupations but are not closely competing textual alternatives."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0e7fe9ddd9cf8b62016ae3b9a4ff0487d2907adad1b9369ef7"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 50,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Claim-2 is an unsupported editorial judgment, not a fact established by the passage. It should not be presented as a sourced explanation claim.",
+              "Question craft scores 4/8, below the required 6/8. The question is accurate but offers a straightforward identification with only modestly effective distractors."
+            ],
+            "questionPremises": [
+              {
+                "text": "The described episode belongs to the Acts passage identified by the heading.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Aquila and Priscilla are the people with whom Paul associated in this episode.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "The living-and-working partnership provides useful context, but not a second independent identifying clue. Paul's occupational connection to the couple is worthwhile, though the question asks only for direct recall. It is clear and fair rather than a multi-clue discovery. The choices are distinct occupations, with carpenters and fishermen plausible biblical distractors, but the alternatives are not all closely fitted to this scene. Total: 4/8; reject on craft."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "unsupported",
+                "confidence": 100,
+                "evidence": []
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify carpentry as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies tent making as the shared trade that explains their living and working arrangement.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The passage identifies a manufacturing trade, not the occupation of merchant. Any commercial activity would be an additional inference, not the stated answer.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8). Paul's tent making is a familiar biblical detail, and the trade is directly named in one verse. The alternatives are occupations, but no additional reasoning is needed to distinguish the answer."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_083559ea37b08c19016ae3b9a4ff8487d2b724e8941ca605b6"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0e7fe9ddd9cf8b62016ae3b9a4ff0487d2907adad1b9369ef7",
+          "usage": {
+            "inputTokens": 3059,
+            "outputTokens": 1333,
+            "totalTokens": 4392
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_083559ea37b08c19016ae3b9a4ff8487d2b724e8941ca605b6",
+          "usage": {
+            "inputTokens": 3059,
+            "outputTokens": 1348,
+            "totalTokens": 4407
+          }
+        }
+      ]
+    },
+    {
+      "id": "historical-proof-overclaim",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, historically proven, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "disputed_or_negative_question"
+      ],
+      "verification": null,
+      "responses": []
+    },
+    {
+      "id": "wrong-source-reference",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:5-11",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "expected": "reject",
+      "labelProvenance": "Assistant-defined adversarial mutation of the source-bound pilot; not a human accuracy label.",
+      "actual": "reject",
+      "reasons": [
+        "source_integrity"
+      ],
+      "verification": null,
+      "responses": []
+    }
+  ],
+  "totalTokens": 26562,
+  "completedAt": "2026-10-29T21:25:12.078Z",
+  "passed": true
+}

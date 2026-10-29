@@ -1,6 +1,6 @@
 const {localDate,shiftDate}=require('./discoveries');
 const {scriptureEvidence,contextualEvidence}=require('./discoveryScripture');
-const {isNarrative,sceneFor,sourceOptions}=require('./discoverySourcePlan');
+const {SCENE_CATALOG_VERSION,isNarrative,sceneFor,sourceOptions}=require('./discoverySourcePlan');
 const VERSION='discovery-biblical-curriculum-v3';
 const chapterRange=(book,count,start=1)=>Array.from({length:count},(_,i)=>`${book} ${start+i}`);
 const MODULES=[
@@ -44,6 +44,6 @@ function buildWeekPlan(startDate,{devotionals=[],corpus}={}) {
     }
     return {date,...primary,targetDifficulty:DIFFICULTIES[offset],devotionalAligned:aligned,sourceOptions:sourceOptions(date,primary,corpus)};
   });
-  return {version:VERSION,startDate:start,endDate:shiftDate(start,6),weekNumber:weekIndex%52+1,theme,learningGoal:goal,sourcePolicy:'Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.',corpusVersion:scriptureEvidence(days[0].sourceReference,corpus).corpusVersion,days};
+  return {version:VERSION,sourceCatalogVersion:SCENE_CATALOG_VERSION,startDate:start,endDate:shiftDate(start,6),weekNumber:weekIndex%52+1,theme,learningGoal:goal,sourcePolicy:'Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.',corpusVersion:scriptureEvidence(days[0].sourceReference,corpus).corpusVersion,days};
 }
 module.exports={VERSION,MODULES,ANGLES,DIFFICULTIES,monday,buildWeekPlan};

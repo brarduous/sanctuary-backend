@@ -23,7 +23,7 @@ function main(args=process.argv.slice(2)) {
       'slots',(select coalesce(jsonb_agg(t),'[]') from discovery_curriculum_slots t),
       'schedules',(select coalesce(jsonb_agg(t),'[]') from discovery_schedule t),
       'runs',(select coalesce(jsonb_agg(t),'[]') from (select id,status from discovery_generation_runs) t),
-      'attempts',(select coalesce(jsonb_agg(t),'[]') from (select publication_date,generation_epoch,attempt,status,verification#>>'{generation,writerVersion}' as writer_version from discovery_generation_attempts) t)
+      'attempts',(select coalesce(jsonb_agg(t),'[]') from (select a.publication_date,a.generation_epoch,a.attempt,a.status,a.verification#>>'{generation,writerVersion}' as writer_version,r.models->'verifiers' as review_models from discovery_generation_attempts a join discovery_generation_runs r on r.id=a.run_id) t)
     ) as snapshot;`).rows[0].snapshot;
     const repair=prepareSourceRepair({...snapshot,manifest,actor});
     const record={project,applied:false,...repair};
