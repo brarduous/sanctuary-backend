@@ -4,7 +4,7 @@ Implemented October 28, 2026. This updates the initial manual-only policy at the
 
 ## Context-first writing and live provenance — October 28 revision
 
-The original 36 candidate questions were assistant-authored starter drafts, not products of a running cron. They had only excerpt/hash/answer-containment validation. Preview approvals were explicitly synthetic. The production cron and hosted Discovery schema have not been deployed by this work.
+The original 36 candidate questions were assistant-authored starter drafts, not products of a running cron. They had only excerpt/hash/answer-containment validation and are retired. Production now runs the source-bound curriculum generator and all six Discovery migrations. Current content, deployment and visibility state is recorded in the [rollout record](DAILY_DISCOVERY_ROLLOUT_2026_10_28.md). Early synthetic preview approvals are not production approvals.
 
 The current writer is `sanctuary-trivia-writer-v4`, default model `gpt-5.6-sol`; reviewers are `gpt-6.1-sol` and `gpt-6-astra` in separate calls. Model availability was checked against the project's actual provider inventory before the live pilot. `draft:discoveries` uses the same model adapters, schemas and evidence/craft gates as the cron, without any database connection or publication. Prompt hashes, resolved model IDs, response IDs, token usage, rejected attempts and full verdicts are retained in its audit. A successful live batch is not a deployed scheduled job.
 
@@ -32,7 +32,7 @@ npm run draft:discoveries -- --live --resume --plan content/discoveries/contextu
 
 `npm run cron-discoveries` maintains 30 calendar days of approved, scheduled discoveries, filling only missing dates. By default, one run attempts up to seven dates. A cold start therefore needs at least five full seven-date runs with no rejections or budget interruptions to establish the full runway; later runs replenish it. The job never overwrites an existing publication date or restores withdrawn content automatically.
 
-`render.yaml` defines `sanctuary-daily-discovery-curriculum` at **08:15 UTC daily**, after the existing 08:00 UTC devotional job. Render cron schedules use [UTC](https://render.com/docs/cronjobs). This is checked-in configuration, not a deployed service. The existing `discovery_runtime_settings` visibility flag is separate and is not enabled by this job.
+The deployed Render service `sanctuary-daily-discovery-curriculum` runs at **08:15 UTC daily**, after the existing 08:00 UTC devotional job. Render cron schedules use [UTC](https://render.com/docs/cronjobs). The existing `discovery_runtime_settings` visibility flag is separate and is not enabled by this job. See the rollout record for the exact deployed commit and service IDs.
 
 The curriculum has 52 dated weeks built from 13 learning modules and four seven-day source selections per module: creation/covenant, Exodus/wilderness, Israel’s stories, exile/return, poetry/wisdom, prophets, Matthew, encounters with Jesus, Luke/John, John/Acts, Acts/Romans, early-church letters, and letters/hope. Each week records a learning goal, seven distinct daily angles, source references/hashes, and difficulty targets. Existing plans are reused rather than silently regenerated.
 
@@ -57,7 +57,7 @@ Review the corpus/version change and persisted plans before deployment. The depl
 The pipeline is:
 
 1. **Source first.** Fix the passage, exact source text/hash, edition, scope, and curriculum date before asking for a question.
-2. **Write a candidate.** A schema-constrained writer produces four distinct choices and 1–3 source-backed claims. It cannot supply its own sources or approval score. The server supplies the heading, source metadata, and scope statement.
+2. **Write a candidate.** The v4 schema-constrained writer produces four distinct choices and 1–2 source-backed claims, with at most 14 words per claim. It cannot supply its own sources or approval score. The server supplies the heading, source metadata, and scope statement.
 3. **Deterministic checks.** Validate content shape, source identity, complete answer phrase in the actual passage, claim/source mapping, passage attribution, textual question form, explanation coverage, and duplicate/near-duplicate exclusion. Negative/trick questions, superlatives such as “oldest,” unsupported authorship, and unqualified historical assertions are excluded.
 4. **Two verifier calls.** Different configured models independently solve the question and assess it without the answer key, target difficulty, writer confidence, or the other verifier’s response. They evaluate every claim and every option, scope, and explanatory coverage. Chapter context is available to expose misleading extraction; accepted quotations must come from the saved excerpt.
 5. **Hard rejection conditions.** Reject any unsupported/partial/uncertain/contradicted claim, missing assessment, second valid or ambiguous answer, disagreement with the key, fabricated/missing quote, unresolved issue, complex interpretive claim, malformed output, incomplete model response, or strongly conflicting difficulty ratings.

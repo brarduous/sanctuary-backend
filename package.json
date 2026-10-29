@@ -57,7 +57,8 @@
     "cron-discoveries": "node cron/generateDiscoveries.js",
     "cron-discoveries:status": "node cron/generateDiscoveries.js --status",
     "eval:discovery-accuracy": "node scripts/discoveries/evaluateAccuracy.js",
-    "draft:discoveries": "node scripts/discoveries/draftBatch.js"
+    "draft:discoveries": "node scripts/discoveries/draftBatch.js",
+    "qa:discoveries:hosted": "node scripts/discoveries/verifyHostedJourney.js"
   },
   "keywords": [],
   "author": "",

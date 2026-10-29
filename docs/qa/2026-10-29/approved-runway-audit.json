@@ -1,0 +1,690 @@
+{
+  "capturedAt": "2026-10-29T22:18:13.415Z",
+  "project": "cmakuvkjxknwhonfqbit",
+  "method": "Read-only re-evaluation of each exact scheduled revision against its original independent verdicts and the trusted corpus. No new model calls, approvals or user mutations.",
+  "healthy": true,
+  "contiguousDays": 30,
+  "through": "2026-11-27",
+  "missingDates": [],
+  "exhaustedDates": [],
+  "minimumEvidenceScore": 95,
+  "minimumCraftScore": 6,
+  "runtime": {
+    "enabled": false,
+    "rollout_percentage": 0
+  },
+  "reminders": {
+    "enabled": false,
+    "rollout_stage": "dry_run",
+    "send_local_time": "18:00:00"
+  },
+  "discoveryDeliveryCount": 0,
+  "rows": [
+    {
+      "date": "2026-10-29",
+      "id": "66a4755a-4153-456d-84e1-fbe902f35be8",
+      "revision": 1,
+      "contentSha256": "54d1fa021cd0e41fd293d5a31f081ea4b84d7a37b1f3c7df22a311e64d67f639",
+      "source": "Luke 17:1-12",
+      "sourceSha256": "357900de5ce071b253759ec20041f29ca6fbe9fed9a9d30c68e2d2baf22813db",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 25,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-10-30",
+      "id": "ac5099c6-3aa1-4cb6-94c8-bc529d66e69b",
+      "revision": 1,
+      "contentSha256": "3c38ac51932fe21b5cc0c9441bcb301de0d26a0495bfa42e990331b80810c735",
+      "source": "Mark 8:22-26",
+      "sourceSha256": "f61b24f6ab815722b5178939badaa1e37d06526d22cf9a56dc70bf7d232df0e4",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 26,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-10-31",
+      "id": "5137067d-6c2c-45c1-b74c-fa68caefffc6",
+      "revision": 1,
+      "contentSha256": "999ba4d990717581f047e885eb48d375ae32d4d126249712dcc4a12764eb6e86",
+      "source": "John 20:11-18",
+      "sourceSha256": "60e2a9a404bc17369fdce7f5946ee6a694936c5dc2894898e1ff0e7af56813de",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 14,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-01",
+      "id": "0288d420-15b5-4b02-a83b-1146c82fa548",
+      "revision": 1,
+      "contentSha256": "f347691606664d023fa54fc603d95f0738cd6ecf6b95cbc5c273c4b5545e45ac",
+      "source": "Acts 8:26-35",
+      "sourceSha256": "1ee18c207b602432fbf3a9d5e5d4f9c9c5d0b9ed678cf48d77399732cdf12217",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 19,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-02",
+      "id": "e50efd0a-c60b-4891-b24b-9076edfce609",
+      "revision": 1,
+      "contentSha256": "5efb374dd8fe0fa0f7bee658ae935363dec2d5d1606a8af80362a7ff273200ec",
+      "source": "1 Samuel 21:10-15",
+      "sourceSha256": "3e7ae55234f19ab7b1af073cc54cd3087018d9fa84f2f37734004e045840a262",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 4,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 26,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-03",
+      "id": "4ede8cb0-3e17-4fee-8b82-0791e48f0c2f",
+      "revision": 1,
+      "contentSha256": "eb047ea5de8a3183b347a83d30abd489023b13d9959c6e0af852eb05b2c99c38",
+      "source": "Daniel 6:16-23",
+      "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-04",
+      "id": "c750cbcf-407b-443a-864c-945cfc5319ae",
+      "revision": 1,
+      "contentSha256": "5a6b1138c0c6b25d4f3e880dfc2d839af0ec321c4c413f8f04b77c0c70519b37",
+      "source": "Acts 27:27-32",
+      "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214",
+      "evidenceScore": 95,
+      "craftScore": 7,
+      "difficulty": {
+        "level": "moderate",
+        "score": 3,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 27,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-05",
+      "id": "10fed907-1335-4854-b8f9-c890f4d7871f",
+      "revision": 1,
+      "contentSha256": "38fe8cb100781a4fa05a160a1a78cbd3d787341d946355802b5bd444402dce53",
+      "source": "Mark 14:12-16",
+      "sourceSha256": "85359f7c17f528c828b812bd8b8f381e21915483ea30e674dfaebdee88d2d4db",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 28,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-06",
+      "id": "22e47bdb-ac30-4c9f-b7ed-84900775843e",
+      "revision": 1,
+      "contentSha256": "af039eefed7cc38523700e55ba5ddcf2f40d5e5b687bfd7bbc00200fea638956",
+      "source": "John 21:8-14",
+      "sourceSha256": "579f2907039d8905ac666fe388c435a067f909228c83469634426f3205ec874d",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 3,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 18,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-07",
+      "id": "8f3c309f-0e42-4485-adb1-61d72cab3a8d",
+      "revision": 1,
+      "contentSha256": "27173da035ae902e03ebd3b3062ffc695127d6aefa5938dea8ddb82850dbb9a0",
+      "source": "Acts 19:23-28",
+      "sourceSha256": "fe1c307688b8b131ea0eb2e31cbf5eaaac04914f8a1ca4d1f42fdd43e801dbf0",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 3,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 13,
+      "factoidWords": 27,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-08",
+      "id": "34259804-a46b-46dd-902a-fd39bc25996b",
+      "revision": 1,
+      "contentSha256": "8090704bf6c770abbf7b954860dcb53320282284db77710f7cb51867d9907810",
+      "source": "Luke 15:8-10",
+      "sourceSha256": "3152a5c6ef4ba72c42e8aa7da376ca0f16451c8f6912a4430e79de6663fd9ea4",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 20,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-09",
+      "id": "ed02f779-b61a-4fea-b7d5-ad7c6d3f32cd",
+      "revision": 1,
+      "contentSha256": "573f3f6e7b2d680ee5f6e7289474c09efbad84ce0b364277bdd17899669c1f03",
+      "source": "2 Kings 4:38-41",
+      "sourceSha256": "cba45dd5cd3e14b21b2ece3c20546b8a44b83ba772ba787393fe5da9bf448072",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 3,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 21,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-10",
+      "id": "f8bd9c71-07aa-4f71-9275-05ea5e0ec424",
+      "revision": 1,
+      "contentSha256": "03e093f3dae49e7b4c4a57aa4e9513be0d7ac4ed981257dea002e60e316b3b31",
+      "source": "Daniel 5:1-6",
+      "sourceSha256": "05f1a885c8362ac2ef3b1b3ede36afb0acb031a93c1d09595b6ad1afc9859ee9",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 27,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-11",
+      "id": "2bce5c1a-a81a-4864-96a0-bc15d1771206",
+      "revision": 1,
+      "contentSha256": "e39a4ea319be4e21ede19f71c55cc3f41da51be737f9013aad863258af207f51",
+      "source": "Acts 12:12-17",
+      "sourceSha256": "fddb2573f778aae620099694fbf1e6cf55933766a0275fc6f645a32007589d89",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 4,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 14,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-12",
+      "id": "f9f2a0ba-8479-4085-a79e-3675d70f7103",
+      "revision": 1,
+      "contentSha256": "5dc6a00219d7e0e6e955147ec9237b1127c5f9deb0e41cf447f086284e0fa4b3",
+      "source": "Genesis 24:15-20",
+      "sourceSha256": "8858bc02d0efd31e95a338da3db2f3ada755342ef88058ba82cab2146101c8fc",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 22,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-13",
+      "id": "a82b42d3-3d44-4d9a-997d-1a397887fb9d",
+      "revision": 1,
+      "contentSha256": "270b728b7e55192eaac4d40635af711c68635db23d445d41cc552ea51fa0915c",
+      "source": "John 21:8-14",
+      "sourceSha256": "579f2907039d8905ac666fe388c435a067f909228c83469634426f3205ec874d",
+      "evidenceScore": 95,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 3,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 16,
+      "factoidWords": 22,
+      "verifiers": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-14",
+      "id": "8bc575b6-2007-4309-bee1-07bdcbbcee6d",
+      "revision": 1,
+      "contentSha256": "4ac5bfd50da8a2378be8b144b2681fd9bb6979db9c9dd32c3c3b37366a5683f2",
+      "source": "Acts 28:1-6",
+      "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 4,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 15,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-15",
+      "id": "2cf8a9e1-0074-415a-922c-19fbfca952ef",
+      "revision": 1,
+      "contentSha256": "7be4bd4a813e4eefe11261b2e054d9223a0a7f549122932a5000b82f5a853e82",
+      "source": "Numbers 22:21-31",
+      "sourceSha256": "3a9708d9af37698c0ab5a81d485d16498e0840f12a2c0aac10a1245186d7bf15",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 1,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 24,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-16",
+      "id": "feea33f4-19d1-4d03-a00d-5ffc78021438",
+      "revision": 1,
+      "contentSha256": "086149638fe18d40163b1923739c7ca17ff2978fc7e11fd4c0efb248c8c5d1e7",
+      "source": "1 Kings 17:1-6",
+      "sourceSha256": "9b8ebc0f2c342ca00e7a0cd1dcaaee1edfb40832d44fe67703957be342aacdef",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 1,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 21,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-17",
+      "id": "dc789b65-ed12-4a54-94fe-cd2ff8df4cdc",
+      "revision": 1,
+      "contentSha256": "cb1bf8730366bcba2a2aeae0fffcf3bcaca08555ac3f0d120702d63e76c4940c",
+      "source": "Acts 8:26-35",
+      "sourceSha256": "1ee18c207b602432fbf3a9d5e5d4f9c9c5d0b9ed678cf48d77399732cdf12217",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 17,
+      "factoidWords": 18,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-18",
+      "id": "d6fe0c5d-0f54-4d64-8a60-337ca8134a05",
+      "revision": 1,
+      "contentSha256": "99306efc801ccceaf3a6b21a8a1db35382c353acba30ac3f847dbb65a3c31ef4",
+      "source": "John 19:38-42",
+      "sourceSha256": "d966be1a8c7177ea862b60b42907d485a090c9572219c18ef8186ff74eb88085",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-19",
+      "id": "2a1199cb-6d0d-441a-ac90-75c3243451b2",
+      "revision": 1,
+      "contentSha256": "9353db39d8b086894f0c9ffa64cf0296a16f2ce70311c2f755a76b898fa7f8d0",
+      "source": "Acts 16:23-29",
+      "sourceSha256": "2e4efe678f64da70158f7713a175bbe0ce521a6e23f134c8c7675097be7a3a14",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 1,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-20",
+      "id": "7ebf96bc-3e0b-456a-8b21-b747a70c09bc",
+      "revision": 1,
+      "contentSha256": "78ddcd23301476730ba96fc352bca5a11d0cc6eebd11c0fc1f0ac672c63ce8f5",
+      "source": "1 Kings 19:1-8",
+      "sourceSha256": "26b576aa8b4a90085bde13fd5bae763a7130eaf613af2de47a02e16cd67d14fc",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 19,
+      "factoidWords": 19,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-21",
+      "id": "6492608d-063b-4129-a848-05dd36e29ae2",
+      "revision": 1,
+      "contentSha256": "ef6dd0dc2077b8bbf432689e397b19cc832fbf6ac0a1ed08fb8d0ce51104341c",
+      "source": "2 Kings 4:38-41",
+      "sourceSha256": "cba45dd5cd3e14b21b2ece3c20546b8a44b83ba772ba787393fe5da9bf448072",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 18,
+      "factoidWords": 22,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-22",
+      "id": "5b7891ef-e6a1-4afc-aaa3-ed8c9c8dc6b0",
+      "revision": 1,
+      "contentSha256": "fa480f4d71d44fe77f596e0cd64e6d935342742040f214edec65690f52ccdaab",
+      "source": "Daniel 5:1-6",
+      "sourceSha256": "05f1a885c8362ac2ef3b1b3ede36afb0acb031a93c1d09595b6ad1afc9859ee9",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 1,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 20,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-23",
+      "id": "72c5496e-903b-42e4-b47d-8f40267788d5",
+      "revision": 1,
+      "contentSha256": "ed84ce14c5c3d5299bfb830d9056ec1a2ea707a49632f26299b793b4e819224d",
+      "source": "Exodus 2:1-10",
+      "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "moderate",
+        "score": 4,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 15,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-24",
+      "id": "62c5e470-53a7-4a8d-b612-9f3e72b9e476",
+      "revision": 1,
+      "contentSha256": "84617681a2527950b3c56e50c1f439651a5df5186fc3ede577885b79e5e0ac25",
+      "source": "Luke 24:28-35",
+      "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9",
+      "evidenceScore": 100,
+      "craftScore": 7,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 18,
+      "factoidWords": 20,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-25",
+      "id": "ea4a903c-1120-45fb-9625-103a2e243dcf",
+      "revision": 1,
+      "contentSha256": "3093115c7356db31798f0b609e4408c096c078367d1c60929f2eefc6b80bdac7",
+      "source": "Daniel 6:16-23",
+      "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 18,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-26",
+      "id": "759f9fc0-323d-46f9-97ba-04c87e778b46",
+      "revision": 1,
+      "contentSha256": "ac7a62713c82143f604d084828b9c7c4b8b63297e50defab2922e0cd82a4f50c",
+      "source": "John 20:11-18",
+      "sourceSha256": "60e2a9a404bc17369fdce7f5946ee6a694936c5dc2894898e1ff0e7af56813de",
+      "evidenceScore": 99,
+      "craftScore": 7,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 14,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    },
+    {
+      "date": "2026-11-27",
+      "id": "72bcf1eb-c93b-425b-a48a-99712ade4359",
+      "revision": 1,
+      "contentSha256": "b02fe0989bbd949e6ae517cccf4fa4709ff90ffefd69c7e16a6559f0341023c4",
+      "source": "Acts 27:27-32",
+      "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214",
+      "evidenceScore": 100,
+      "craftScore": 6,
+      "difficulty": {
+        "level": "easy",
+        "score": 2,
+        "rubricVersion": "discovery-difficulty-v1"
+      },
+      "promptWords": 18,
+      "factoidWords": 23,
+      "verifiers": [
+        "gpt-6.1-sol",
+        "gpt-6-astra"
+      ],
+      "rechecked": true
+    }
+  ],
+  "health": 200,
+  "publicBundle": {
+    "status": 200,
+    "enabled": false,
+    "itemCount": 0
+  }
+}

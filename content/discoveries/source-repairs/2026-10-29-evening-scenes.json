@@ -1,0 +1,40 @@
+{
+  "id": "narrative-source-repair-2026-10-29-evening",
+  "reason": "Read all six rejected drafts for the two exhausted dates. November 18 failed for overlapping entrance or cloth distractors and an uninteresting port lookup; November 20 failed for an arbitrary floor count, a source contract error and an occupational lookup. Replace these exhausted source sets with distinct named-person narratives or an explicit contrast that supports concise context and mutually exclusive choices. Preserve every rejection and keep both independent verifiers, the evidence floor and craft rubric unchanged.",
+  "days": [
+    {
+      "date": "2026-11-18",
+      "sources": [
+        [
+          "John 19:38-42",
+          "Connect the earlier nighttime visit with bringing myrrh and aloes for Jesus’s burial to identify Nicodemus. Ask about the named person rather than a weight, and distinguish him from Joseph of Arimathaea, who asks Pilate for the body."
+        ],
+        [
+          "John 20:24-29",
+          "Connect absence from the earlier visit with the request to see nail marks and the later invitation to inspect Jesus’s hands and side, identifying Thomas. Do not claim that he actually touched Jesus; the excerpt records an invitation, not its acceptance."
+        ],
+        [
+          "Acts 18:24-28",
+          "Connect the eloquent Alexandrian teacher with Priscilla and Aquila explaining the way more accurately to identify Apollos. Do not identify a modern ethnicity or portray his earlier teaching as wholly false."
+        ]
+      ]
+    },
+    {
+      "date": "2026-11-20",
+      "sources": [
+        [
+          "1 Kings 19:1-8",
+          "Connect fleeing Jezebel’s threat with being awakened by an angel to eat before the journey toward Horeb, identifying Elijah. Do not add a medical diagnosis, plant taxonomy or an isolated day count."
+        ],
+        [
+          "Luke 10:38-42",
+          "Use Martha’s complaint about serving alone and listening at Jesus’s feet as paired clues to identify her sister Mary. Do not conflate this Mary with other named women or add a village name absent from the excerpt."
+        ],
+        [
+          "Mark 12:41-44",
+          "Connect the small contribution with Jesus’s explicit explanation that the poor widow gave all she had to live on while others gave from abundance. Ask about this stated contrast rather than isolated coin counts or inferred motives."
+        ]
+      ]
+    }
+  ]
+}

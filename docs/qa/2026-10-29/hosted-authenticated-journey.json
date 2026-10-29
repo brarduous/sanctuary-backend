@@ -1,0 +1,56 @@
+{
+  "startedAt": "2026-10-29T21:50:46.462Z",
+  "project": "nwrozzdrlwlzjpfhgtlk",
+  "api": "http://127.0.0.1:4013",
+  "method": "Real hosted auth, backend HTTP and private database checks using disposable staging accounts. No production users or live push delivery.",
+  "checks": [
+    "Hosted staging bundle is enabled",
+    "A real automated question is scheduled for the test date",
+    "Real JWT completion succeeds",
+    "Server derives the outcome and authenticated owner",
+    "First accepted event remains canonical",
+    "A second authenticated account cannot read the first account progress",
+    "Authenticated direct table access remains denied",
+    "Trivia is not opted in by default",
+    "Authenticated native capability registered for a disposable account",
+    "Recipient timezone registered through the real API",
+    "Authenticated native capability registered for a disposable account",
+    "Recipient timezone registered through the real API",
+    "Dry run skips the completed account",
+    "Dry run selects the opted-in, supported, unplayed account",
+    "Dry run sends no notifications",
+    "No delivery row is created by dry run"
+  ],
+  "cleanup": [
+    {
+      "accountId": "ef2af3e6-4d14-41a1-90e7-5f6a6edfeda0",
+      "deleted": true
+    },
+    {
+      "accountId": "eb02d1e6-27d2-446d-83d5-ca90c0814d88",
+      "deleted": true
+    }
+  ],
+  "reminderDryRun": {
+    "category": "discovery",
+    "dryRun": true,
+    "rolloutStage": "100",
+    "eligible": 1,
+    "attempted": 0,
+    "accepted": 0,
+    "optedOut": 0,
+    "quietHours": 0,
+    "frequencyCapped": 0,
+    "missingContent": 0,
+    "invalidEndpoint": 0,
+    "outsideWindow": 0,
+    "outsideRollout": 0,
+    "deduplicated": 0,
+    "alreadyPlayed": 1,
+    "unsupportedClient": 0,
+    "failed": 0
+  },
+  "passed": true,
+  "completionsRemainingAfterCleanup": 0,
+  "completedAt": "2026-10-29T21:50:51.555Z"
+}
