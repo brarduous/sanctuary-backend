@@ -21,7 +21,7 @@ function configFromEnv(env=process.env) {
   if(reviewModels[0]===reviewModels[1])throw new Error('Discovery verification requires two different model IDs.');
   return {enabled:boolean('DISCOVERY_CURRICULUM_ENABLED',true),autoApprove:boolean('DISCOVERY_AUTO_APPROVE_BIBLICAL',true),minimumScore:integer('DISCOVERY_MIN_EVIDENCE_SCORE',95,95,100),runwayDays:integer('DISCOVERY_RUNWAY_DAYS',30,7,90),maxDaysPerRun:integer('DISCOVERY_MAX_DAYS_PER_RUN',7,1,14),maxTokensPerRun:integer('DISCOVERY_MAX_TOKENS_PER_RUN',150000,1000,500000),generatorModel,reviewModels};
 }
-async function curriculumStatus(db,{now=new Date(),runwayDays=28}={}) {
+async function curriculumStatus(db,{now=new Date(),runwayDays=30}={}) {
   const today=localDate(now),targetDate=shiftDate(today,runwayDays-1);
   const [scheduled,slotRows]=await Promise.all([
     db.from('discovery_schedule').select('publication_date,discovery_id,revision').gte('publication_date',today).lte('publication_date',targetDate).order('publication_date'),

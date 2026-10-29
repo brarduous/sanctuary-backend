@@ -66,7 +66,7 @@ Visit `http://localhost:3010/discoveries/1f28f594-18f0-55af-860b-45169f41436e`. 
 
 ## Staging and content publication
 
-1. Follow the repository’s [database rollout process](PRODUCTION_DATABASE_ROLLOUT.md). Rehearse migration `20261028120000_daily_discoveries.sql` and rollback `supabase/rollbacks/20261028120000.sql` in an isolated environment. All new tables have forced RLS and no direct `anon`/`authenticated` grants. The four content migrations leave existing table policies unchanged. The separate reminder migration adds a capability column and expands existing notification category constraints and preference auditing; review that migration separately against the hosted schema.
+1. Follow the repository’s [database rollout process](PRODUCTION_DATABASE_ROLLOUT.md). Rehearse migration `20261028120000_daily_discoveries.sql` and rollback `supabase/rollbacks/20261028120000.sql` in an isolated environment. All new tables have forced RLS and no direct `anon`/`authenticated` grants. The five content migrations leave existing table policies unchanged. The separate reminder migration adds a capability column and expands existing notification category constraints and preference auditing; review that migration separately against the hosted schema.
 2. Deploy the backend routes while `discovery_runtime_settings.enabled=false`. An older database without the discovery settings table returns a disabled bundle. Other database failures are reported as failures.
 3. Set `DISCOVERY_ADMIN_URL` to the intended backend origin and `DISCOVERY_ADMIN_TOKEN` to the signed-in global administrator’s access token, using the normal secure local environment mechanism. Do not commit or paste the token into content or review packets.
 4. Run `node scripts/discoveries/importCandidates.js` for a dry run. Add `--apply` to import validated, unpublished revisions. Repeating the import skips unchanged latest revisions. No command automatically approves or schedules them.
@@ -92,7 +92,7 @@ The pilot is a product/release decision; it has not been started by this impleme
 
 Verified locally: guest browser question and direct-reveal paths, evidence disclosure, narrow layout, public social image rendering, and browser report submission reaching the isolated database. Automated tests cover privacy/access, draft/future filtering, exact-revision review, correction/withdrawal/restoration history, idempotent completion, account deletion, SQL rollback, offline durability, concurrent taps/sync, guest merge, account isolation, timezone/DST, and permission-free token refresh/cold notification routing.
 
-Verification results on October 28: 176 backend tests, 14 mobile Discovery tests, existing mobile behavior checks, both web builds, web/mobile type checks, and targeted web lint passed. Hosted preview migration, reverse rollback, reapply, and forced-RLS/client-grant checks passed. Hosted checks do not establish native physical-device acceptance or a production content runway.
+Verification results on October 28: 178 backend tests, 14 mobile Discovery tests, existing mobile behavior checks, both web builds, web/mobile type checks, and targeted web lint passed. Hosted preview migration, reverse rollback, reapply, and forced-RLS/client-grant checks passed. Hosted checks do not establish native physical-device acceptance or a production content runway.
 
 Native physical-device acceptance remains required: VoiceOver/TalkBack, large text, airplane-mode/restart/reconnect, native sharing, installed/uninstalled app links, and terminated-app notification routing. The existing Expo web preview currently fails in the pre-existing devotional screen’s `react-native-share` import (`getEnforcing`), so it cannot substitute for native acceptance. It was not changed as part of this feature.
 
@@ -100,7 +100,7 @@ Dedicated Discovery reminders are implemented as an explicitly opted-in notifica
 
 Offline completions are persisted before reveal and scoped to the account. An explicit guest merge is available; guest history is not silently uploaded. Sign-out attempts a sync and gives an unsynced-progress notice before removing that account’s local history. Corrupt progress is preserved for recovery rather than overwritten. Public bundle refresh uses ETags, revalidates after 15 minutes/foreground/manual refresh, retries failed work while active, and selects today using the device calendar.
 
-No production rollout or source-review completion is implied by passing the automated checks.
+Production schema and private generation are installed; current publication gates are recorded in the rollout record. Passing checks does not establish a sufficient content library or factual certainty.
 
 ## Context/craft policy revision
 

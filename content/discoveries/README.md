@@ -46,3 +46,7 @@ node scripts/discoveries/recheckDraft.js --live --input content/discoveries/draf
 ```
 
 The offline runner enforces three attempts per candidate, resumable audits, prompt/model/plan hashes, and a bounded run budget. Resuming never resets an exhausted candidate or regenerates an accepted one. Production DB leases and scheduling remain in the existing cron implementation. See `docs/DAILY_DISCOVERY_CURRICULUM.md` for the policy and calibration requirements, and `docs/PRODUCTION_DATABASE_ROLLOUT.md` for hosted rollout prerequisites.
+
+## October 29 model comparison
+
+`experiments/writer-quality-comparison-2026-10-29*` records a bounded, no-database experiment with writer gpt-6.1-sol and reviewers gpt-5.6-sol/gpt-6-astra. Four of seven planned scenes passed before the token bound; the remaining scenes were incomplete. These are unpublished experimental drafts, not additional active-bank items, imports, human approvals, or a calibrated accuracy measurement. Production models and acceptance thresholds were not changed.

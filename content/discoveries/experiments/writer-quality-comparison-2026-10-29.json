@@ -1,0 +1,362 @@
+[
+  {
+    "id": "b8a5a7db-09b3-43f6-aac0-e37e32b0e5c0",
+    "slug": "quality-eval-0",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "As Jesus orders the stone removed in John, Martha warns of a stench. How long had Lazarus been dead?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "two days"
+        },
+        {
+          "id": "option-2",
+          "text": "three days"
+        },
+        {
+          "id": "option-3",
+          "text": "four days"
+        },
+        {
+          "id": "option-4",
+          "text": "five days"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Martha said Lazarus had been dead four days, warning of a stench when Jesus ordered the tomb’s stone removed.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "four days",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-quality-candidates.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-6.1-sol",
+      "writerResponseId": "resp_07adc5877410e48e016ae28fa3e2ec87d2abb2a4d131973f67",
+      "reviewModels": [
+        "gpt-5.6-sol",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_072d039aaa461f2f016ae28fb6f93087d2b18869fed736255e",
+        "resp_080a819f77d7f647016ae28fb6ed8887d2bb16b81d0cb3e166"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "5f55bb81-6ff6-462e-ac95-940213f691ca",
+    "slug": "quality-eval-1",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "After welcoming Jesus in Luke, what repayment does Zacchaeus promise if he has wrongfully charged anyone?",
+      "heading": "A detail in Luke 19:1-10",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "twice as much"
+        },
+        {
+          "id": "option-2",
+          "text": "three times as much"
+        },
+        {
+          "id": "option-3",
+          "text": "four times as much"
+        },
+        {
+          "id": "option-4",
+          "text": "five times as much"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK19.htm",
+          "locator": "Luke 19:1-10",
+          "excerpt": "He entered and was passing through Jericho. There was a man named Zacchaeus. He was a chief tax collector, and he was rich. He was trying to see who Jesus was, and couldn’t because of the crowd, because he was short. He ran on ahead, and climbed up into a sycamore tree to see him, for he was going to pass that way. When Jesus came to the place, he looked up and saw him, and said to him, “Zacchaeus, hurry and come down, for today I must stay at your house.” He hurried, came down, and received him joyfully. When they saw it, they all murmured, saying, “He has gone in to lodge with a man who is a sinner.” Zacchaeus stood and said to the Lord, “Behold, Lord, half of my goods I give to the poor. If I have wrongfully exacted anything of anyone, I restore four times as much.” Jesus said to him, “Today, salvation has come to this house, because he also is a son of Abraham. For the Son of Man came to seek and to save that which was lost.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Zacchaeus pledges four times as much for any wrongful collections.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "He also offers half his goods to the poor.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "Luke 19:1-10",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "moderate",
+        "score": 3
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "4353c9e527d6abb5b56d8cedc77e054aafb5fe892a550d0cde0ccdad9be6aac5",
+      "answerText": "four times as much",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-quality-candidates.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-6.1-sol",
+      "writerResponseId": "resp_07ce64eee9bab0eb016ae28f5580b887d2826652d1d59e4ea6",
+      "reviewModels": [
+        "gpt-5.6-sol",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0a9aafeb5ce2a17b016ae28f69d5f087d29d4415553e3e243a",
+        "resp_08704b7536da7b4c016ae28f69e78887d2806333df46e34b29"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "546e1f56-da9a-4fbf-9c02-4ec96f0e559b",
+    "slug": "quality-eval-2",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "Called to Jesus while still blind, what did Bartimaeus throw aside in Mark’s account?",
+      "heading": "A detail in Mark 10:46-52",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "his staff"
+        },
+        {
+          "id": "option-2",
+          "text": "his bowl"
+        },
+        {
+          "id": "option-3",
+          "text": "his cloak"
+        },
+        {
+          "id": "option-4",
+          "text": "his bag"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MRK10.htm",
+          "locator": "Mark 10:46-52",
+          "excerpt": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road. When he heard that it was Jesus the Nazarene, he began to cry out, and say, “Jesus, you son of David, have mercy on me!” Many rebuked him, that he should be quiet, but he cried out much more, “You son of David, have mercy on me!” Jesus stood still, and said, “Call him.” They called the blind man, saying to him, “Cheer up! Get up. He is calling you!” He, casting away his cloak, sprang up, and came to Jesus. Jesus asked him, “What do you want me to do for you?” The blind man said to him, “Rabboni, that I may see again.” Jesus said to him, “Go your way. Your faith has made you well.” Immediately he received his sight, and followed Jesus on the way.",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Bartimaeus threw aside his cloak when called to Jesus.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "After receiving his sight, he followed Jesus on the way.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "Mark 10:46-52",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "4df235796a5fb98c743d6f3d980e2ea45a36427e7126af8df69d0a17fd2f78da",
+      "answerText": "his cloak",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-quality-candidates.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-6.1-sol",
+      "writerResponseId": "resp_0f0909a9bad710e9016ae28f80f2d887d28552ad938960d972",
+      "reviewModels": [
+        "gpt-5.6-sol",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0c8b33b3354a0ba2016ae28f9601ac87d28bfae0e9cf3df70e",
+        "resp_00f560292df95986016ae28f96053487d29dbedfffdac81583"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "de62ebfd-edc0-4490-a2d5-ba42c66211ca",
+    "slug": "quality-eval-3",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "After wind, earthquake and fire in 1 Kings, what sound does Elijah hear?",
+      "heading": "A detail in 1 Kings 19:9-13",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Rolling thunder"
+        },
+        {
+          "id": "option-2",
+          "text": "Pealing trumpets"
+        },
+        {
+          "id": "option-3",
+          "text": "still small voice"
+        },
+        {
+          "id": "option-4",
+          "text": "Rushing waters"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1KI19.htm",
+          "locator": "1 Kings 19:9-13",
+          "excerpt": "He came to a cave there, and camped there; and behold, Yahweh’s word came to him, and he said to him, “What are you doing here, Elijah?” He said, “I have been very jealous for Yahweh, the God of Armies; for the children of Israel have forsaken your covenant, thrown down your altars, and killed your prophets with the sword. I, even I only, am left; and they seek my life, to take it away.” He said, “Go out, and stand on the mountain before Yahweh.” Behold, Yahweh passed by, and a great and strong wind tore the mountains, and broke in pieces the rocks before Yahweh; but Yahweh was not in the wind. After the wind there was an earthquake; but Yahweh was not in the earthquake. After the earthquake a fire passed; but Yahweh was not in the fire. After the fire, there was a still small voice. When Elijah heard it, he wrapped his face in his mantle, went out, and stood in the entrance of the cave. Behold, a voice came to him, and said, “What are you doing here, Elijah?”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Elijah heard a still small voice after the fire.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "He then covered his face with his mantle and went outside.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "1 Kings 19:9-13",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 1
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "f3d43a58a490731a5e8486c8658d685c2bcb8ebeda0562ff197398e584227d43",
+      "answerText": "still small voice",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-quality-candidates.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v3",
+      "writerModel": "gpt-6.1-sol",
+      "writerResponseId": "resp_05b002b32c12a904016ae28f89947087d2996f7363d4453cb4",
+      "reviewModels": [
+        "gpt-5.6-sol",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0de6a3213058561b016ae28f98c25087d2a076b8b020b52634",
+        "resp_0fc7895322acde8e016ae28f98d87487d28fde367ffa68095c"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  }
+]

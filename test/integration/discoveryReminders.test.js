@@ -20,6 +20,10 @@ test('native capability is validated and bound to the current device token',()=>
 
 test('reminder dispatch respects consent, completion, content visibility, spacing, and daily deduplication',async t=>{
  const h=await createHarness();t.after(()=>h.close());
+ // Keep the SQL publication/completion guards on the same fixed clock as the
+ // injected dispatcher time below. This override exists only in this PGlite DB.
+ await h.db.exec(`create or replace function pg_catalog.now() returns timestamptz
+ language sql stable as $$select '2026-10-28T22:00:00Z'::timestamptz$$;`);
  await h.db.exec(`alter table user_profiles add user_preferences jsonb default '{}',add subscription_tier text default 'free',add expo_push_token text;
  create table push_subscriptions(id uuid primary key,user_id uuid,subscription jsonb,created_at timestamptz default now());`);
  await h.db.exec(`insert into auth.users(id) select ('10000000-0000-4000-8000-'||lpad(i::text,12,'0'))::uuid from generate_series(1,1100) i;

@@ -1,0 +1,274 @@
+{
+  "target": "gjwvtqdfqprzcpgqrfhr",
+  "snapshotCapturedAt": "2026-10-28T23:16:37.465Z",
+  "snapshotScope": "Public editorial devotional rows and notification configuration only. No production accounts, tokens, subscriptions, completions or personal preferences copied.",
+  "fixtureCounts": {
+    "profiles": 46,
+    "campaigns": 108,
+    "deliveries": 319,
+    "devotionals": 39
+  },
+  "beforeHash": "cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160",
+  "steps": [
+    {
+      "file": "20261028234500.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "833605cf766daf652ba0688d6a0671b9f24323ab303ad0cebdb5f02596dd4e92",
+      "serverElapsedMs": "7.971"
+    },
+    {
+      "file": "20261028230000.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "554d7ca9bf6b8dc9c98df9dc34b2bef2f4d3d51397837073994cdedc57fc73f7",
+      "serverElapsedMs": "3.820"
+    },
+    {
+      "file": "20261028220000.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "7b7ce43dad316b5dbe88c1d7d52a7af23a6523031a2319aa7decdde8a50e9e6a",
+      "serverElapsedMs": "5.293"
+    },
+    {
+      "file": "20261028200000.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "fcc810fe9afbd8da9e4160292d8e4f7dd636f62db00dc51b3d9ccd349b464425",
+      "serverElapsedMs": "6.923"
+    },
+    {
+      "file": "20261028153000.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "6384f92c7896cce45087488e51d5dee5919c51aa96ff499ad4c1f62acc98bb84",
+      "serverElapsedMs": "22.744"
+    },
+    {
+      "file": "20261028120000.sql",
+      "kind": "reset_previous_proof",
+      "sha256": "4593ac5a40ac72d7c5442695279c92b8e401248baac207848ac26c07e971ce93",
+      "serverElapsedMs": "29.451"
+    },
+    {
+      "file": "20261028120000_daily_discoveries.sql",
+      "kind": "apply",
+      "sha256": "adf8faa127f3c14f172fae79f96a5f1475b9565d6d2438dbca1ce210e803ddc1",
+      "serverElapsedMs": "160.513"
+    },
+    {
+      "file": "20261028153000_discovery_curriculum.sql",
+      "kind": "apply",
+      "sha256": "e1d4774da0b2de205503426fed429d2a9a297d2227a6f3247aac9449117286c5",
+      "serverElapsedMs": "79.281"
+    },
+    {
+      "file": "20261028200000_discovery_game_results.sql",
+      "kind": "apply",
+      "sha256": "2891f118305a57ef64cc60c316718c639c1340b3e08cde042c3b71ad24e3f0d0",
+      "serverElapsedMs": "6.961"
+    },
+    {
+      "file": "20261028220000_discovery_question_craft.sql",
+      "kind": "apply",
+      "sha256": "3f05918817c19a6d0be6dcf2538402efc54d735936c206481fcc749d86132d14",
+      "serverElapsedMs": "6.164"
+    },
+    {
+      "file": "20261028230000_discovery_reminders.sql",
+      "kind": "apply",
+      "sha256": "777dd95e26867c9d6898ecd3996d24f70cf3576403d9da099f29c5598900f3b5",
+      "serverElapsedMs": "8.772"
+    },
+    {
+      "file": "20261028234500_discovery_source_options.sql",
+      "kind": "apply",
+      "sha256": "59b15f0640708c169e70701ff86f33cf8e7dfd06175e24c04fe4bd74549c7652",
+      "serverElapsedMs": "7.408"
+    },
+    {
+      "file": "20261028234500.sql",
+      "kind": "rollback",
+      "sha256": "833605cf766daf652ba0688d6a0671b9f24323ab303ad0cebdb5f02596dd4e92",
+      "serverElapsedMs": "6.885"
+    },
+    {
+      "file": "20261028230000.sql",
+      "kind": "rollback",
+      "sha256": "554d7ca9bf6b8dc9c98df9dc34b2bef2f4d3d51397837073994cdedc57fc73f7",
+      "serverElapsedMs": "3.666"
+    },
+    {
+      "file": "20261028220000.sql",
+      "kind": "rollback",
+      "sha256": "7b7ce43dad316b5dbe88c1d7d52a7af23a6523031a2319aa7decdde8a50e9e6a",
+      "serverElapsedMs": "6.250"
+    },
+    {
+      "file": "20261028200000.sql",
+      "kind": "rollback",
+      "sha256": "fcc810fe9afbd8da9e4160292d8e4f7dd636f62db00dc51b3d9ccd349b464425",
+      "serverElapsedMs": "7.595"
+    },
+    {
+      "file": "20261028153000.sql",
+      "kind": "rollback",
+      "sha256": "6384f92c7896cce45087488e51d5dee5919c51aa96ff499ad4c1f62acc98bb84",
+      "serverElapsedMs": "17.721"
+    },
+    {
+      "file": "20261028120000.sql",
+      "kind": "rollback",
+      "sha256": "4593ac5a40ac72d7c5442695279c92b8e401248baac207848ac26c07e971ce93",
+      "serverElapsedMs": "26.474"
+    },
+    {
+      "file": "20261028120000_daily_discoveries.sql",
+      "kind": "reapply",
+      "sha256": "adf8faa127f3c14f172fae79f96a5f1475b9565d6d2438dbca1ce210e803ddc1",
+      "serverElapsedMs": "124.393"
+    },
+    {
+      "file": "20261028153000_discovery_curriculum.sql",
+      "kind": "reapply",
+      "sha256": "e1d4774da0b2de205503426fed429d2a9a297d2227a6f3247aac9449117286c5",
+      "serverElapsedMs": "63.353"
+    },
+    {
+      "file": "20261028200000_discovery_game_results.sql",
+      "kind": "reapply",
+      "sha256": "2891f118305a57ef64cc60c316718c639c1340b3e08cde042c3b71ad24e3f0d0",
+      "serverElapsedMs": "8.405"
+    },
+    {
+      "file": "20261028220000_discovery_question_craft.sql",
+      "kind": "reapply",
+      "sha256": "3f05918817c19a6d0be6dcf2538402efc54d735936c206481fcc749d86132d14",
+      "serverElapsedMs": "6.094"
+    },
+    {
+      "file": "20261028230000_discovery_reminders.sql",
+      "kind": "reapply",
+      "sha256": "777dd95e26867c9d6898ecd3996d24f70cf3576403d9da099f29c5598900f3b5",
+      "serverElapsedMs": "9.403"
+    },
+    {
+      "file": "20261028234500_discovery_source_options.sql",
+      "kind": "reapply",
+      "sha256": "59b15f0640708c169e70701ff86f33cf8e7dfd06175e24c04fe4bd74549c7652",
+      "serverElapsedMs": "7.471"
+    }
+  ],
+  "afterHash": "cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160",
+  "queryPlan": [
+    {
+      "QUERY PLAN": [
+        {
+          "Execution Time": 0.157,
+          "Plan": {
+            "Actual Loops": 1,
+            "Actual Rows": 7,
+            "Actual Startup Time": 0.071,
+            "Actual Total Time": 0.072,
+            "Async Capable": false,
+            "Local Dirtied Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Written Blocks": 0,
+            "Node Type": "Sort",
+            "Parallel Aware": false,
+            "Plan Rows": 7,
+            "Plan Width": 24,
+            "Plans": [
+              {
+                "Actual Loops": 1,
+                "Actual Rows": 7,
+                "Actual Startup Time": 0.02,
+                "Actual Total Time": 0.041,
+                "Alias": "notification_deliveries",
+                "Async Capable": false,
+                "Exact Heap Blocks": 6,
+                "Local Dirtied Blocks": 0,
+                "Local Hit Blocks": 0,
+                "Local Read Blocks": 0,
+                "Local Written Blocks": 0,
+                "Lossy Heap Blocks": 0,
+                "Node Type": "Bitmap Heap Scan",
+                "Parallel Aware": false,
+                "Parent Relationship": "Outer",
+                "Plan Rows": 7,
+                "Plan Width": 24,
+                "Plans": [
+                  {
+                    "Actual Loops": 1,
+                    "Actual Rows": 7,
+                    "Actual Startup Time": 0.014,
+                    "Actual Total Time": 0.014,
+                    "Async Capable": false,
+                    "Index Cond": "((user_id = '20000000-0000-4000-8000-000000000001'::uuid) AND (accepted_at >= (now() - '06:00:00'::interval)))",
+                    "Index Name": "notification_deliveries_recent_user_idx",
+                    "Local Dirtied Blocks": 0,
+                    "Local Hit Blocks": 0,
+                    "Local Read Blocks": 0,
+                    "Local Written Blocks": 0,
+                    "Node Type": "Bitmap Index Scan",
+                    "Parallel Aware": false,
+                    "Parent Relationship": "Outer",
+                    "Plan Rows": 7,
+                    "Plan Width": 0,
+                    "Shared Dirtied Blocks": 0,
+                    "Shared Hit Blocks": 1,
+                    "Shared Read Blocks": 0,
+                    "Shared Written Blocks": 0,
+                    "Startup Cost": 0,
+                    "Temp Read Blocks": 0,
+                    "Temp Written Blocks": 0,
+                    "Total Cost": 1.32
+                  }
+                ],
+                "Recheck Cond": "((user_id = '20000000-0000-4000-8000-000000000001'::uuid) AND (accepted_at >= (now() - '06:00:00'::interval)))",
+                "Relation Name": "notification_deliveries",
+                "Rows Removed by Index Recheck": 0,
+                "Shared Dirtied Blocks": 0,
+                "Shared Hit Blocks": 7,
+                "Shared Read Blocks": 0,
+                "Shared Written Blocks": 0,
+                "Startup Cost": 1.32,
+                "Temp Read Blocks": 0,
+                "Temp Written Blocks": 0,
+                "Total Cost": 6.54
+              }
+            ],
+            "Shared Dirtied Blocks": 0,
+            "Shared Hit Blocks": 10,
+            "Shared Read Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Sort Key": [
+              "accepted_at DESC"
+            ],
+            "Sort Method": "quicksort",
+            "Sort Space Type": "Memory",
+            "Sort Space Used": 25,
+            "Startup Cost": 6.64,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0,
+            "Total Cost": 6.66
+          },
+          "Planning": {
+            "Local Dirtied Blocks": 0,
+            "Local Hit Blocks": 0,
+            "Local Read Blocks": 0,
+            "Local Written Blocks": 0,
+            "Shared Dirtied Blocks": 0,
+            "Shared Hit Blocks": 213,
+            "Shared Read Blocks": 0,
+            "Shared Written Blocks": 0,
+            "Temp Read Blocks": 0,
+            "Temp Written Blocks": 0
+          },
+          "Planning Time": 0.893,
+          "Triggers": []
+        }
+      ]
+    }
+  ],
+  "rollbackHash": "cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160",
+  "reapplyHash": "cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160",
+  "completedAt": "2026-10-28T23:41:35.698Z"
+}

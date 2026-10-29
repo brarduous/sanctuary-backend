@@ -1,85 +1,67 @@
-# Daily Discovery rollout record — October 28, 2026
+# Daily Discovery rollout record — October 28–29, 2026
 
-Status: backend code deployed; website/native packages staged; production database publication has not occurred.
+Status at 2026-10-29 05:30 UTC: production infrastructure and private generation are installed. **Public trivia, website promotion, native public releases and reminder delivery remain held for content readiness and device acceptance.** No trivia push has been sent. This record replaces intermediate checkpoints; it does not claim a completed public launch.
 
-## Recovery and hosted rehearsal
+## Production recovery and database
 
-- Production project: `cmakuvkjxknwhonfqbit` (Sanctuary). Supabase reports physical backup `2095144859` completed at `2026-10-28T07:59:02.741Z`. **PITR is disabled.** A completed backup listing is not proof of a tested restore or a point-in-time recovery bookmark. The repository's required recovery rehearsal/approval remains open; no exception is assumed.
-- New isolated preview branch: `discovery-release-20261028`, project `nwrozzdrlwlzjpfhgtlk`, created without production data. Existing staging/snapshot branches were preserved.
-- Read-only hosted schema inventory confirmed the notification table/constraint names and existing profile columns. All five Discovery migrations applied to the cloned hosted schema, then all five rollbacks ran in reverse order, followed by a successful reapply. Commands set a 3-second lock timeout and a 60-second statement timeout. Recorded elapsed times below include network overhead; they are not measured lock duration.
-- All 13 Discovery tables enforce and force RLS; `anon` and `authenticated` lack direct SELECT grants. Existing profile policies were not broadened.
-- These schema-only hosted checks supplement isolated PostgreSQL integration tests. They do not replace production-shaped load tests, old-client acceptance, a sanitized snapshot restore, or physical-device acceptance.
+The owner explicitly approved seven-day PITR and the required Small compute upgrade. Both are enabled on production project `cmakuvkjxknwhonfqbit`. The dashboard confirms a seven-day recovery period. PITR adds $100/month; the dashboard estimated Small's incremental compute cost at approximately $5.15/month over Micro.
 
-| Migration | SHA-256 | Apply round trip (ms) | Rollback round trip (ms) |
-| --- | --- | ---: | ---: |
-| `20261028120000_daily_discoveries.sql` | `3626a8b1a9ae06f4c896d0d947baa2c0a40f4697f833a0738a93b1f6f35723bc` | 1692 | 1593 |
-| `20261028153000_discovery_curriculum.sql` | `2f5a30e66c94d29fb8d9bd7fd94964803504c12827500fcf2ecf547e3795eede` | 1638 | 1456 |
-| `20261028200000_discovery_game_results.sql` | `088b58930dda7ab85bdf2d07ebd2b7e716ff6de402e1e261de2579e1173fc2a5` | 1583 | 1500 |
-| `20261028220000_discovery_question_craft.sql` | `b68290af57201227367d47e12fa701eac0f12da8070ccecb551b1f17f42eb133` | 1444 | 2610 |
-| `20261028230000_discovery_reminders.sql` | `308bf81c42aa70279f3837e116c67904ddacba3b504feade5f4542ae1376fdf3` | 1604 | 1930 |
+![Production seven-day recovery](qa/2026-10-29/production-seven-day-pitr.jpg)
 
-## Live generation rehearsal
+All six migrations through `20261028234500_discovery_source_options.sql` were applied using the normal linked migration ledger after the production preflight passed. Each migration and rollback has transaction-scoped 3-second lock and 60-second statement timeouts. All 13 new tables force RLS and deny direct anonymous/authenticated SELECT access. Hosted schema comparison found no unintended legacy policy/column/index changes. The reminder migration intentionally expands notification category constraints and preference auditing.
 
-The actual cron engine, trusted corpus, writer and two independent reviewers ran against the hosted preview. Run `30abe594-221f-4fcb-b496-8f0b2d58310b` considered two dates: one auto-approved/scheduled at an evidence score of 95 after three attempts; the other exhausted three attempts and remained unscheduled. Five drafts were rejected. Provider-reported usage was 93,899 tokens. Scores are rubric judgments, not calibrated probabilities.
+A schema-only proof branch, `gjwvtqdfqprzcpgqrfhr`, restored 39 editorial devotional rows and four disabled notification settings from a scoped sanitized production snapshot. Synthetic fixtures matched 46 profiles, 108 campaigns and 319 deliveries. No production accounts, tokens, subscriptions, preferences or completions were copied. Six-migration apply, reverse rollback and reapply preserved the legacy query-result hash `cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160`. This is a scoped production-shaped rehearsal, not a full physical restore.
 
-The preview has **one contiguous scheduled day**, not a launch library. The active file bank contains four unpublished questions and is not silently merged into the cron's approved schedule. The exhausted date has not been reset. Before public launch, fill and inspect a 30-day schedule and sustain at least a 14-day contiguous runway. Never lower thresholds or silently reset retry budgets to meet the date target.
+Evidence: [hosted proof](qa/2026-10-29/hosted-migration-proof.json), [pre-migration recovery bookmark](qa/2026-10-29/pre-migration-recovery-bookmark.json), [latest runtime and dry-run checks](qa/2026-10-29/production-release-status.json). Refresh the recovery bookmark before any subsequent database rollout.
 
-The rehearsal also identified an audit gap. The release now retains rejected valid candidates in private attempt verification and includes them as untrusted retry context; invalid writer output also consumes the token budget and retains provenance. These records never enter public projections.
+## Backend and generation
 
-## Application packages
+Production API: https://api.sanctuaryapp.us. Render service: `srv-d1uqipvdiees73b0kj20`. The source-policy-v3 deployment is `dep-dbh8i5g8v5cc73fodpo0`, commit `1f9f22b1d9d1e77afa7e7e89cfdcd86a6bd71e02`; later release-branch changes align the default status/runway to 30 days and retain final evidence. Health returns 200. The public bundle returns 200 with `enabled:false` and zero items. Unauthenticated generation, capability registration and dispatch return 401.
 
-- Native release branch: `release/daily-discoveries-1.2.11`, commit `d58e87a`. Version 1.2.11 includes the Android generic `/discoveries` verified-link path, so a new native build is required. Android build `2b135c3e-8bce-485d-8fa6-9577b96442ba` uses version code 134.
-- iOS packaging exposed a certificate/profile that expired today. After the user's Apple verification, a new distribution certificate and provisioning profile were created for `us.sanctuaryapp.app`, team `QKQ2WNHKWS`, expiring October 28, 2027. The push key and App Store API key were preserved. iOS build `4ac1ed3f-4a3d-4ce9-aa3c-12361c5a1082` is version 1.2.11, build 63. No store release has been submitted by this rollout.
-- Staged production-environment web deployment: `https://sanctuary-layperson-webapp-oyws6mihu.vercel.app`. Separate marketing deployment: `https://sanctuary-app-home-qtr8-dabw4sxjc.vercel.app`. Both were built using `--prod --skip-domain`; the canonical domain must be promoted only after data/content readiness. `sanctuaryapp.us` belongs to the layperson web project, which also includes the Discoveries landing link and branded trivia shell.
+The active Render cron is `crn-dbh7s9ek1f9s73aur280`, `sanctuary-daily-discovery-curriculum`, at **08:15 UTC daily**. It runs `npm run cron-discoveries` on Node 22, with generation enabled, auto-approval enabled, a 30-day target, seven considered dates per run, and 150,000-token budget checked between attempts. An in-flight request can exceed that boundary. Three persisted attempts per date prevent endless retry; exhaustion produces a failed job and requires explicit reviewed repair. Auto-deploy is off; explicitly deploy the reviewed branch after changes.
 
-## Validation and outstanding launch gates
+Production models remain writer `gpt-5.6-sol`, verifiers `gpt-5-mini` and `gpt-6-astra`. Every question premise, claim and option verdict must score at least 95; both blind reviewers must independently agree on the key, exact source evidence and scope. Craft must reach 6/8 with no zero dimension. Difficulty is assessed independently of the assigned target. These scores are not a calibrated 95% probability of truth.
 
-Backend test suite and targeted Discovery tests pass; mobile has 14 passing Discovery tests plus the existing behavior checks. Both web production builds, type checks, and scoped lint pass. Compatible dependency updates and OpenAI SDK 7.45.1 remove all npm audit findings from production backend dependencies; a live strict-JSON Responses call passed on the updated SDK.
+The first production run `a8ddbf0c-abd7-4af8-a604-29dbc41102ab` accepted two candidates, rejected ten, exhausted three dates and correctly failed its job. The source-v3 planner subsequently precommitted three narrative source options per date; SQL binds each attempt to its source hash. Two bounded fill jobs, `job-dbh8kr0n74is73cl7iq0` and `job-dbh8kr67bikc73dt60ag`, completed unsuccessfully due to exhausted dates. No failed candidate was converted to an approval.
 
-Production remains gated on the recovery process above, sufficient independently approved scheduled content, representative old-client and physical-device checks, successful signed native builds, and production smoke tests before promotion/enabling. Generation and reminder settings must remain disabled until their schema is installed. See [release runbook](DAILY_DISCOVERY_RELEASE.md) for per-stage switches and rollback.
+The explicit v2→v3 source-plan repair archived the old plans, preserved approved questions, reset four named dates under the owner's administrator workflow, and held the awkward future James mirror question before publication. Old attempts, reviews and immutable revisions remain. No human factual attestations were fabricated. Exhausted v3 dates have not been silently reset.
 
-## Deployed infrastructure and smoke checks
+At the final checkpoint there are **five scheduled questions total**, including October 28; **four are today/future**, with only **two consecutive days through October 30**. October 31–November 4 exhausted their budgets. November 7 has an expired worker lease with two attempts and can resume its remaining attempt. This is short of the 30-day initial library and sustainable 14-day runway required by the release runbook.
 
-Backend production deployment `dep-dbh7s9mtlv9c73eqrlj0` is live at commit `71f41546d9fa0b9bcc8af14734838daf06b99ff0`. `GET /health` returned 200. `GET /api/v1/discoveries/bundle` returned 200 with `enabled:false` and no items against the existing production schema. Unauthenticated requests to generation, capability registration and notification dispatch all returned 401.
+A separate no-database writing experiment used `gpt-6.1-sol` with `gpt-5.6-sol`/`gpt-6-astra` reviewers. It accepted four of seven planned scenes before its token bound; other drafts failed craft or contextual support. The audit is under `content/discoveries/experiments/writer-quality-comparison-2026-10-29*`. This small experiment is neither calibration nor a reason to change production models or lower thresholds. Its drafts are unpublished and not imported.
 
-Render cron `crn-dbh7s9ek1f9s73aur280` (`sanctuary-daily-discovery-curriculum`) is provisioned on release/daily-discoveries at 08:15 UTC, with `DISCOVERY_CURRICULUM_ENABLED=false` and auto-deploy off. Its one-off disabled smoke run `job-dbh7smutlv9c73eqsqv0` succeeded without querying the missing production Discovery schema. After the DB/content gates pass, enable the environment flag and explicitly deploy the reviewed release. No separate reminder scheduler was created.
+## Reminders
 
-The staged web trivia shell returned successfully and the staged `/api/push/dispatch` returned 401 without the cron secret. Marketing's deployed Scripture endpoint returned the bounded WEB passage. The canonical web project still targets original deployment `dpl_GK3wmKbohymfivp41ES7K9pcTTEU`; `sanctuaryapp.us`, `www` and `beta` were not promoted.
+The existing Vercel `/api/push/dispatch` cron remains the only reminder scheduler, every 15 minutes. Discovery is disabled in `dry_run`, at 18:00 recipient-local time. Only explicit boolean `notifications.trivia === true` opts a user in. There is no existing-user opt-in backfill. Unsupported native versions are skipped unless web delivery is available. Completion, rollout visibility, quiet hours, six-hour spacing and daily deduplication are enforced.
 
-A local browser connected to the hosted-stage database completed the real generated question, displaying a 3.1-second correct answer, one-day streak and the exact Genesis 3:1–12 passage in the reader's WEB preference. Screenshot: [hosted staging result](../../sanctuary-layperson-web/docs/qa/2026-10-28/hosted-stage-result.jpg). This progress is guest data in the local test browser and did not create a production completion.
+The authenticated production dry run returned 200: zero eligible, attempted, accepted or failed sends; all 46 profiles were outside the local send window. There are zero Discovery delivery records. This checks production wiring, not delivery acceptance on a real device. Keep the category off until content and device checks pass, then use an opted-in internal account before staged expansion.
 
-Final backend verification: 176 tests passed, including 57 targeted Discovery tests and a 1,103-profile reminder audience to exercise pagination. The backend syntax checks and production dependency audit passed (zero production advisories).
+## Websites
 
-## Recovery approval and retry correction
+Both production-environment builds are staged using `--prod --skip-domain`:
 
-The user explicitly approved seven-day PITR and required Small compute during rollout. PITR was enabled on the production project through its existing Supabase account. The Management API confirms `pitr_enabled:true` with a recovery window from 2026-10-21T23:10:34Z through 2026-10-28T23:10:34Z at verification; capture a fresh latest bookmark immediately before migration. Small compute adds approximately $5.15/month over the current Micro size; the approved change is being processed.
+- Main/canonical web project: https://sanctuary-layperson-webapp-8zbezsxul.vercel.app
+- Separate marketing project: https://sanctuary-app-home-qtr8-brj1sloxz.vercel.app
 
-The next hosted generation run exposed a candidate validation exception with HTTP status 400 being classified as a provider configuration failure. The release now classifies `candidate_contract_invalid` before provider HTTP statuses, records its rejected draft and token usage, and feeds the contract issue into the bounded retry path. Actual authentication/configuration failures still stop the run. All 176 tests pass after the fix.
+`sanctuaryapp.us`, `www` and `beta` belong to the layperson project and remain on the prior deployment `dpl_GK3wmKbohymfivp41ES7K9pcTTEU`. The separate marketing project has no custom domain. Staged trivia returns 200, missing cron authentication returns 401, and marketing's Scripture endpoint returns an exact bounded WEB passage. No preview or loopback environment values were placed in production builds.
 
-Signed Android build 134 completed and was uploaded successfully to Google Play's internal testing track (submission b00d811c-087d-4e90-8483-8fc073e13add). Signed iOS build 63 was uploaded successfully to App Store Connect (submission be600d49-0c7c-4a92-b650-ffcdbe912725). Neither platform was publicly released by these uploads.
+A browser connected to the hosted staging database completed an actual generated question, showing 3.1 seconds, one correct-day streak and the preferred WEB passage. [QA screenshot](../../sanctuary-layperson-web/docs/qa/2026-10-28/hosted-stage-result.jpg). This guest test did not create a production completion.
 
-The final clean-commit staged website URLs are https://sanctuary-layperson-webapp-8zbezsxul.vercel.app and https://sanctuary-app-home-qtr8-brj1sloxz.vercel.app. The final web page returned 200, its cron rejected missing authentication with 401, and marketing's Scripture endpoint returned the exact WEB test passage. Backend GitHub CI passed both application and complete migration/reset/lint jobs on Node 22 at 3105a407683b839e33c4f0cc7c6eec3c16ed25d7.
+## Native store drafts
 
-## Final guarded migration rehearsal
+Version **1.2.11** is signed and uploaded:
 
-Small compute and seven-day PITR are now confirmed in the production dashboard. A second schema-only proof branch (`gjwvtqdfqprzcpgqrfhr`) restored 39 editorial devotional rows and four disabled notification settings from a scoped, sanitized production snapshot. No production accounts, push tokens, subscriptions or personal preferences were copied. Synthetic fixtures matched current production volumes: 46 profiles, 108 campaigns and 319 deliveries.
+- iOS build **63**: EAS `4ac1ed3f-4a3d-4ce9-aa3c-12361c5a1082`; successful upload `be600d49-0c7c-4a92-b650-ffcdbe912725`.
+- Android code **134**: EAS `2b135c3e-8bce-485d-8fa6-9577b96442ba`; successful internal-track upload `b00d811c-087d-4e90-8483-8fc073e13add`.
 
-The final migration and rollback files include transaction-scoped 3-second lock and 60-second statement timeouts. Apply, reverse rollback and reapply passed on the hosted proof database. Representative legacy profile/devotional query results and campaign/delivery counts retained the same SHA-256 throughout: `cd9826c60ff0b4ca16ff902dd5a7f59371f743eac680e1eaf0c509f4b63f8160`. This is a scoped production-shaped rehearsal, not a claim that the entire production database was physically restored.
+The expired iOS certificate/profile were renewed through October 28, 2027 for the existing bundle/team. Push and App Store API keys were preserved. App Store metadata and six existing screenshots synced successfully after correcting a PNG filename mismatch. Existing age-rating answers were preserved. Build 63 was attached to the 1.2.11 draft and saved with manual release selected; the browser session later expired. No App Review submission was made.
 
-| Final migration | SHA-256 | Server elapsed ms |
-| --- | --- | ---: |
-| `20261028120000_daily_discoveries.sql` | `adf8faa127f3c14f172fae79f96a5f1475b9565d6d2438dbca1ce210e803ddc1` | 131.560 |
-| `20261028153000_discovery_curriculum.sql` | `e1d4774da0b2de205503426fed429d2a9a297d2227a6f3247aac9449117286c5` | 70.578 |
-| `20261028200000_discovery_game_results.sql` | `2891f118305a57ef64cc60c316718c639c1340b3e08cde042c3b71ad24e3f0d0` | 7.392 |
-| `20261028220000_discovery_question_craft.sql` | `3f05918817c19a6d0be6dcf2538402efc54d735936c206481fcc749d86132d14` | 6.234 |
-| `20261028230000_discovery_reminders.sql` | `777dd95e26867c9d6898ecd3996d24f70cf3576403d9da099f29c5598900f3b5` | 8.613 |
+Google Play production draft release 16 contains only bundle 134, with release notes saved. Preliminary checks passed. Its only bundle warning is the absent optional deobfuscation file. The publishing overview says the change can be sent for review. It has **not** been sent for review or released. Current Android production remains 133/1.2.10. See [native release record](../../sanctuary-mobile/docs/releases/1.2.11.md).
 
-The production migration ledger matches the repository through September 28. Only the five Discovery migrations are pending. Backend CI passed full database reset/lint and the application suite before this timeout-only hardening; the final local suite also passed 176 tests.
+## Validation and remaining launch work
 
-## Production content evaluation and source policy v3
+Backend application and full hosted-schema migration/reset/lint CI passed before the final test-clock repair. Local verification includes the full backend suite, mobile typecheck, 14 Discovery tests and behavior checks, both web builds/typechecks, scoped lint, hosted rollback/reapply and live API smoke checks. Backend production dependencies have zero npm audit advisories. The final reminder fixture freezes both SQL and dispatcher clocks so it remains valid after October 28.
 
-The first actual production job (`job-dbh8abt9el5s73d2929g`) ran with the public feature and reminders disabled. It generated two auto-approved questions, rejected ten candidates, and exhausted three dates; it exited unsuccessfully as required for exhaustion. Token usage reported by the provider was 159,333; the run budget is checked between attempts, so an in-flight call can exceed the configured boundary. No failure was converted to an approval.
+The remaining launch work is concrete: repair exhausted source plans through the explicit editorial workflow, build and inspect the 30-day approved schedule, verify physical-device accessibility/offline/sharing/app-link/cold-notification paths, then enable the internal cohort. Promote tested websites and submit native releases only after those gates; expand content and reminder cohorts through the documented stages. Do not lower evidence/craft thresholds to force a launch date.
 
-The results exposed the cost of forcing devotional poetry/letters into trivia. Source policy `discovery-biblical-curriculum-v3` now precommits three concrete narrative source options per date. A new private SQL selector binds each attempt to the corresponding source and preserves the three-attempt ceiling and all existing factual/craft checks. The six-migration hosted proof passed reverse rollback and reapply, with identical legacy contract hashes. The final source-options migration hash is `59b15f0640708c169e70701ff86f33cf8e7dfd06175e24c04fe4bd74549c7652`. All 178 local tests passed.
-
-An abstract future question about the mirror-gazer in James was selected for an editorial hold before its release date; its factual assessment and immutable revision will be retained. The narrative-source upgrade will preserve all other approved schedules, archive the v2 plans, and explicitly reset exhausted source-policy-v2 dates under the existing global-admin workflow. This is a source-plan repair under the owner's rollout authorization, not a forged human factual review or an automatic retry-budget reset.
+Related draft PRs: [backend #17](https://github.com/brarduous/sanctuary-backend/pull/17), [mobile #3](https://github.com/brarduous/sanctuary-mobile/pull/3), [web #3](https://github.com/brarduous/sanctuary-layperson-web/pull/3), [marketing #2](https://github.com/brarduous/sanctuary-marketing-home/pull/2).

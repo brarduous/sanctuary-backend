@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "quality-eval-0",
+    "sourceReference": "John 11:32-44",
+    "targetDifficulty": "easy",
+    "angle": "Use Martha’s warning about the tomb as context for the explicit number of days Lazarus had been dead."
+  },
+  {
+    "slug": "quality-eval-1",
+    "sourceReference": "Luke 19:1-10",
+    "targetDifficulty": "easy",
+    "angle": "Connect Zacchaeus’s restitution pledge to its explicitly stated multiple."
+  },
+  {
+    "slug": "quality-eval-2",
+    "sourceReference": "Mark 10:46-52",
+    "targetDifficulty": "easy",
+    "angle": "Connect Bartimaeus’s response to being called with the object he throws aside."
+  },
+  {
+    "slug": "quality-eval-3",
+    "sourceReference": "1 Kings 19:9-13",
+    "targetDifficulty": "easy",
+    "angle": "Use the sequence of wind, earthquake and fire as context for the sound that follows. Preserve the account’s wording."
+  },
+  {
+    "slug": "quality-eval-4",
+    "sourceReference": "John 2:1-10",
+    "targetDifficulty": "easy",
+    "angle": "Connect the Cana wedding’s stone water pots with the purpose John explicitly gives for them before they hold wine. Do not quiz an isolated pot count."
+  },
+  {
+    "slug": "quality-eval-5",
+    "sourceReference": "Judges 7:4-8",
+    "targetDifficulty": "easy",
+    "angle": "Connect Gideon’s selection by the water with the explicit manner of drinking, rather than an isolated headcount."
+  },
+  {
+    "slug": "quality-eval-6",
+    "sourceReference": "Mark 4:35-41",
+    "targetDifficulty": "easy",
+    "angle": "Use the storm and sleeping on a cushion to ask about Jesus’s explicitly named position in the boat."
+  }
+]
