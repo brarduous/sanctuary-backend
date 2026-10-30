@@ -11,18 +11,21 @@ Owner direction through October 30, 2026: call the feature **Trivia**; publish t
 - The twenty-second timer and existing answer elimination are currently retained. Validate their interaction with three questions and with the proposed difficulty bands before freezing the release.
 - Broader reference research supports original Biblical trivia. Non-Biblical examples are writing benchmarks; they are not an instruction to turn the production feature into a general-knowledge feed.
 
-## Actual state, October 30 release continuation
+## Final release state, October 30, 2026
 
-- Real API generation and independent reviews are working. Credits are no longer a blocker; no billing changes were made.
-- Seven daily sets (21 questions) passed individual factual/craft checks and separate closed-book difficulty checks. The new rolling-week editor caught leakage in the Lydia and Peter-departure reveals. Both were revised and independently rechecked. All seven final sets now pass both rolling-week editors and the real saved-review local SQL publication gate. Original approvals, rejections and changed manuscripts are retained. The final bank is `content/discoveries/reviewed-launch-bank-v3.json`.
-- Writer v9, daily difficulty v2, set editor v4 and rolling-week v1 are versioned. Daily questions require evidence >=95, craft >=7/8, full fairness, no zero dimension, two independently solved keys, agreed difficulty, then two bound set/week approvals. Legacy v1 ratings remain valid for existing saved games.
-- Backend full suite passed 205 tests; targeted worker checks passed 11. Final hosted staging rollback/roll-forward retained data and grants, and eight real JWT daily-set/privacy checks passed with both disposable accounts cleaned up. Production migration/publication remain pending until the recorded release checkpoint says otherwise.
-- Mobile changes are merged into main at `3ade2a1672c8ffdea8ac7e17fcd62cb454f98b8a`. Production builds iOS 67 and Android 139 are processing from that commit. This is not yet a new store review submission. Native simulator QA exercised the actual hosted staging set, mixed results, share cancellation and cached restart with the API unavailable. Physical-device VoiceOver/TalkBack checks have not been performed.
-- Web final lint, typecheck and production build passed. `/trivia?date=YYYY-MM-DD` is the browser sharing route; public promotion is pending.
-- The private reference pilot stores 15 original/extracted objects and an index of 95 entries from seven source editions. Retrieval is wired into future writing as research, not as permission to publish external claims.
-- Both clients use the exact CTA **Share your Results**. CMO copy and a native screenshot are in mobile `docs/releases/TRIVIA_SOCIAL_BRIEF.md`.
+The three-question browser game is live at https://sanctuaryapp.us/trivia. The production database has seven complete reviewed daily sets (21 questions), October 30–November 5, with no missing or exhausted dates in that runway. Backend and mobile source is merged into `main`; web source is merged into `master`. The backend and scheduled worker use the same question, separate difficulty, set and rolling-week gates.
 
-Historical prototype evidence stays in [the original checkpoint](qa/2026-10-30-trivia/prototype-checkpoint.json). It records the earlier state, not the current release verdict. Actual model reviews and rejected revisions live in `docs/qa/2026-10-30-trivia/evaluations/`.
+Apple 1.2.11 (67) is **Waiting for Review**, submission `0f3b5b3a-6eea-4e3b-8f22-b4266f0530ec`. Google Play release 19, **139 (1.2.11) · Trivia**, is **In review**, contains only build 139 and deactivates 138. Apple manual release and Google managed publishing remain enabled. These are review submissions, not public native availability.
+
+The [release checkpoint](qa/2026-10-30-trivia/release-checkpoint.json) records actual deployment IDs, commits, validation, the brief rollout compatibility mismatch and its resolution, and remaining measurement limits. The CMO brief and real production/native/store screenshots are in mobile `docs/releases/TRIVIA_SOCIAL_BRIEF.md`.
+
+Validation: 205 full backend tests; 42 focused tests after the final rejected-draft retention fix; syntax checks; 20 mobile Trivia tests plus behavior/content-sharing checks; web lint, typecheck and production build. Hosted rollback/roll-forward preserved publications, attempts, completions and legacy schedules. Eight real hosted JWT/privacy checks passed and both disposable accounts were cleaned up. Production guest play exercised correct, incorrect and revealed outcomes and the exact **Share your Results** CTA.
+
+The new rolling-week editors caught two cross-day answer leaks in the launch bank. Changed manuscripts passed every affected gate, with original reviews and rejections retained. A separate fresh scheduled-writer trial accepted Easy/Medium drafts but withheld the entire day when all three Hard attempts failed their gates. That isolated test changed no production content; it demonstrates the hold behavior, not guaranteed unattended generation success. Monitor missing/exhausted runway dates and use the concrete revised-plan operator retry when editorial intervention is needed. The token ceiling is checked between complete candidate/review operations, so an in-flight review can exceed that checkpoint limit.
+
+The reference pilot stores 15 private original/extracted objects and an index of 95 entries from seven source editions. Retrieval is wired into future writing as research. Published claims still require the saved WEB passage. Difficulty remains estimated; physical-device accessibility and a recruited reader study have not been claimed.
+
+Historical [prototype evidence](qa/2026-10-30-trivia/prototype-checkpoint.json) and all actual model audits remain available; no history was rewritten to make the final release appear cleaner.
 
 ## Scheduled runs use the same standards
 

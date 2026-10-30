@@ -1,0 +1,87 @@
+{
+  "verifiedAt": "2026-10-30T19:15:41.498941+00:00",
+  "productionURL": "https://sanctuaryapp.us/trivia",
+  "backend": {
+    "commit": "9ca5f643ebd2f192ee9a87b79e1bfa0af99a372b",
+    "deployment": "dep-dbienfou01pc73c7ldp0",
+    "status": "live"
+  },
+  "cron": {
+    "commit": "9ca5f643ebd2f192ee9a87b79e1bfa0af99a372b",
+    "deployment": "dep-dbieng3l550s73c291ng",
+    "status": "live",
+    "schedule": "15 8 * * *",
+    "generator": "gpt-6.1-sol",
+    "lastJob": "job-dbieh9om7kps73fj0220",
+    "lastJobStatus": "succeeded"
+  },
+  "web": {
+    "commit": "5c54be9519c6890161c5989511838c3c1a2c2e9e",
+    "deployment": "dpl_HkkY3xjaGN7qokfW3pwmsQ7jNhFr",
+    "productionJourney": [
+      "correct",
+      "incorrect",
+      "revealed"
+    ],
+    "score": "1/3"
+  },
+  "database": {
+    "migration": "20261030150000",
+    "bank": "reviewed-launch-bank-v3",
+    "publishedSets": 7,
+    "questions": 21,
+    "through": "2026-11-05",
+    "healthy": true
+  },
+  "stores": {
+    "ios": {
+      "build": 67,
+      "status": "Waiting for Review",
+      "submission": "0f3b5b3a-6eea-4e3b-8f22-b4266f0530ec",
+      "manualRelease": true
+    },
+    "android": {
+      "build": 139,
+      "release": 19,
+      "status": "In review",
+      "managedPublishing": true,
+      "deactivated": [
+        138
+      ]
+    }
+  },
+  "validation": {
+    "fullBackendTests": 205,
+    "postAuditFixTargetedTests": 42,
+    "mobileTriviaTests": 20,
+    "web": [
+      "lint",
+      "typecheck",
+      "production build"
+    ],
+    "hostedPrivacyChecks": 8,
+    "hostedRollbackRehearsal": true
+  },
+  "scheduledWriterTrial": {
+    "isolated": true,
+    "date": "2026-11-06",
+    "published": 0,
+    "exhausted": 1,
+    "acceptedPositions": [
+      1,
+      2
+    ],
+    "result": "Hard drafts failed accuracy/craft or assessed Medium. Entire day withheld; no labels forced, no production mutations. Prior attempts retained.",
+    "tokens": 162870,
+    "budgetSemantics": "150000 is checked between complete candidate/review operations; the final in-flight review can exceed that checkpoint budget."
+  },
+  "deploymentIncident": {
+    "description": "The reviewed bank was published while the compatible backend was still rolling. The prior validator briefly rejected v2 grading.",
+    "resolution": "Compatible backend became live; both new and legacy responses were rechecked successfully. Future releases must make the compatible API live before publishing v2 content."
+  },
+  "limitations": [
+    "Difficulty is editorial/model-estimated, not measured audience performance.",
+    "Physical-device VoiceOver/TalkBack checks were not performed.",
+    "External reference facts still require a future multi-source approval contract."
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "completedAt": "2026-10-30T18:56:05.040Z",
+  "project": "cmakuvkjxknwhonfqbit.supabase.co",
+  "today": "2026-10-30",
+  "summary": {
+    "bankVersion": "reviewed-daily-bank-v3",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "sets": [
+      {
+        "date": "2026-10-30",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "f9f2cf07-03c3-4366-b5c3-8a8ce3870175",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "e3d0e0e5-dc71-44ae-b6da-0e7572c64adc",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "4a9b57ca-afa1-4e66-9024-334a4e635009",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-10-31",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "bf48a66c-3051-4e12-a4df-8d1cc5ae6d1e",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "70258532-b1f0-4e14-ba65-de16787db8bf",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "84a4666c-1821-4a13-98ca-0161ae8dbc67",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-11-01",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "b57c779d-86e0-48a7-8215-1b8533699a91",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "e6629927-33e0-4f17-9083-0e72091b8b4b",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "b5f1604a-454f-420c-bb93-d5dc7e931b81",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-11-02",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "9b650ac5-9495-4b82-baf8-206f0f15fb10",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "bb30afa6-e44d-47ca-9370-61613872c3bf",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "e355415c-21c3-4fdf-9714-6fc5c357b6c0",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-11-03",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "f2f29a33-352f-4056-9d1d-b9f6576d3540",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "05f1d917-bacf-4356-94ec-b581762ff77b",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "02c14b35-df04-41a4-9b8a-4eec2c9f9281",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-11-04",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "54a9e19f-d9cc-4e26-9137-4e8615c33d64",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "7e47df3a-0566-456a-914b-660ea77ae56a",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "046c46ea-fe1b-484b-9520-87298f5fb4b0",
+            "revision": 1
+          }
+        ]
+      },
+      {
+        "date": "2026-11-05",
+        "published": 1,
+        "alreadyPublished": false,
+        "items": [
+          {
+            "position": 1,
+            "discovery_id": "c0b0b955-e983-4ac7-a2f7-5dacdd153745",
+            "revision": 1
+          },
+          {
+            "position": 2,
+            "discovery_id": "a88762ac-4655-420d-90eb-d16cd8a1f98e",
+            "revision": 1
+          },
+          {
+            "position": 3,
+            "discovery_id": "ad4c419a-baa9-4eaa-bf08-bed86c4b0d2f",
+            "revision": 1
+          }
+        ]
+      }
+    ],
+    "legacyReplacements": []
+  }
+}
