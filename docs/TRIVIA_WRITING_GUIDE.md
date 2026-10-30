@@ -1,6 +1,6 @@
 # Write a question someone would enjoy sharing
 
-> October 30 continuation: the owner now wants **Trivia**, with three daily questions in Easy → Medium → Hard order and three spoiler-free result squares. The [excellence benchmarks](TRIVIA_EXCELLENCE_BENCHMARKS.md), [reference-library design](TRIVIA_REFERENCE_LIBRARY_PLAN.md), and [execution plan](TRIVIA_EXECUTION_PLAN.md) define the next work. The existing prompt changes are prototypes; the benchmark and difficulty calibration are not yet frozen, and no daily three has been published.
+> Current release standard: **Trivia**, three daily questions in Easy → Medium → Hard order, three spoiler-free squares, and **Share your Results**. See [the execution plan](TRIVIA_EXECUTION_PLAN.md) for actual release status. Weekly and catch-up generation use the same gates as launch content.
 
 Audience: late teens and young adults, including people new to church. A question must be true, clear, fair **and worth playing**. Source verification does not establish that last property.
 
@@ -34,11 +34,15 @@ Youth appeal means understandable situations, vivid details, and satisfying disc
 
 [ACF's question-writing guidance](https://acf-quizbowl.com/guidelines/packet-sub/#question-writing-philosophy) emphasizes audience-appropriate topics and discourages questions likely to go unanswered. Its long, progressively clued tossup format should not be copied into our 20-second multiple-choice game.
 
-## Initial editorial draft
+## Current versioned editorial gates
 
-The initial writer-v6 draft incorporated this workflow. An experimental writer-v7 daily-set prototype now lives on `feature/daily-trivia-three`; it has not been deployed. `discoveryEditorial.js` supplies shared editorial calibration to the writer and both independent reviewers. Craft v2 retains its JSON shape, 6/8 minimum, and no-zero rule; its descriptions now reward concise sufficient context and explicitly reject predictable outcomes without a distinctive discovery. No database gate, evidence threshold, or historical approval is changed. Prompt hashes preserve the exact instructions used for future attempts.
+Writer v9 uses the shared editorial guide. For daily-three content, two different models independently solve and verify every premise, claim and option at evidence confidence >=95. Craft requires >=7/8, full marks for fair challenge and no zero dimension. Two separate blinded calls then estimate closed-book difficulty; locating quotations during factual verification is not used as a player-difficulty proxy.
 
-New draft evaluations are development artifacts. They do not replace scheduled production questions or establish audience preference by themselves.
+Daily difficulty v2 weights familiarity twice: `2*familiarity + evidenceNavigation + reasoningSteps + distractorSimilarity`, each dimension 0–2. Easy is 0–3, Medium 4–6, Hard 7–10. The two models must agree on the band. These are estimates, not audience-measured success rates. Existing v1 content is neither relabeled nor silently regraded.
+
+Two final editors then assess the complete set and rolling week. A useful geographical/relational distinction can earn modest interest without being dramatic; fair Hard questions do not require obscure names or arbitrary counts. Compare the actual questions, choices and reveals across dates: a different target in the same passage still fails if its reveal exposes an earlier answer. Preserve partial-week limits in the audit. Bind approval to full manuscripts and exact published context before atomic publication.
+
+Weekly regression checks include the disliked predictable healing outcome, chronology ambiguity, overlapping choices, lexical fallacies and uncertain geography stated as fact. Never resample an unchanged rejected candidate for a favorable verdict. Revise the specific defect, retain the rejection and run every affected gate again.
 
 ## October 30 calibration check
 

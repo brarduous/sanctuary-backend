@@ -1,0 +1,674 @@
+{
+  "reason": "Remove purple-goods answer leakage identified by both rolling-week editors.",
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Acts, Lydia came from Thyatira; in which city did she invite Paul’s group home after baptism?",
+    "heading": "A detail in Acts 16:6-15",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Troas"
+      },
+      {
+        "id": "option-2",
+        "text": "Neapolis"
+      },
+      {
+        "id": "option-3",
+        "text": "Thyatira"
+      },
+      {
+        "id": "option-4",
+        "text": "Philippi"
+      }
+    ],
+    "correctOptionId": "option-4",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT16.htm",
+        "locator": "Acts 16:6-15",
+        "excerpt": "When they had gone through the region of Phrygia and Galatia, they were forbidden by the Holy Spirit to speak the word in Asia. When they had come opposite Mysia, they tried to go into Bithynia, but the Spirit didn’t allow them. Passing by Mysia, they came down to Troas. A vision appeared to Paul in the night. There was a man of Macedonia standing, begging him, and saying, “Come over into Macedonia and help us.” When he had seen the vision, immediately we sought to go out to Macedonia, concluding that the Lord had called us to preach the Good News to them. Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis; and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city. On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together. A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "Lydia and her household were baptized.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "At Philippi, she persuaded Paul’s group to stay at her house after baptism.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-2",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Acts 16:6-15",
+    "translation": "WEB",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 8
+    }
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 6,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 7,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 1,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The scene clearly identifies Lydia, her invitation, and the distinction between her origin and the episode's setting. The worthwhile detail is that the woman from Thyatira offered hospitality during the group's stay at Philippi; this is a modest geographic connection rather than a particularly vivid discovery. Everyday expectations cannot identify the answer. All three distractors are credible: two are stops on the same journey, and one is Lydia's explicitly stated hometown. Total: 7/8; passes."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 6,
+          "accepted": true,
+          "dimensions": {
+            "context": 1,
+            "interest": 1,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "Context: Lydia's invitation supplies a clear situation, but the wording blurs the city with the riverside outside it. Interest: distinguishing her city of origin from the place associated with her hospitality is a worthwhile concrete connection, though not especially striking. Fair challenge: recalling that distinction is fair, and everyday expectations alone do not reveal the answer. Choices: all four are credible cities from the account, with earlier travel stops and Lydia's origin providing plausible mistakes. Craft totals 6/8, but the geographic wording still needs correction."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 92,
+    "candidateSha256": "30e9a3cd8e21b9a973765c887f6107045b86dfd10fa268c63ccc71c55d5088f2",
+    "sourceSha256": "95d4b07fc4815d0ae201bdf91447a331f019c0ebc8190b3083f484d2195584b9",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "1a5732c332e350a355eca9fbe1146751d3ed80cda26d9aa62433057b725b4a99",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 8
+    },
+    "difficultyTargetMet": true,
+    "reasons": [
+      "questionAccuracy_below_threshold",
+      "unresolved_or_complex_claim",
+      "daily_set_editorial_gate",
+      "question_context_unsupported"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The episode belongs to the Acts 16 passage identified in the heading.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "Lydia came from Thyatira.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              }
+            ]
+          },
+          {
+            "text": "Paul was present with the group Lydia addressed.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "Lydia was baptized before inviting the group to stay at her house.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "The invitation occurred during the group's stay at Philippi, rather than in Lydia's city of origin.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 1,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The scene clearly identifies Lydia, her invitation, and the distinction between her origin and the episode's setting. The worthwhile detail is that the woman from Thyatira offered hospitality during the group's stay at Philippi; this is a modest geographic connection rather than a particularly vivid discovery. Everyday expectations cannot identify the answer. All three distractors are credible: two are stops on the same journey, and one is Lydia's explicitly stated hometown. Total: 7/8; passes."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Troas is an earlier departure point, not the setting of Lydia's invitation. Its place on the same journey makes it a credible location mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis;"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Neapolis is the stop immediately before Philippi, not the setting of the invitation. That proximity makes it a plausible distractor.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis;"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Thyatira identifies Lydia's origin, not where this encounter occurs. Confusing a person's hometown with the location of her house makes this a credible alternative, although the prompt helps distinguish them.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "Philippi establishes the setting for the riverside encounter and Lydia's subsequent invitation. No intervening journey changes that setting.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 1,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Philippi, a relatively little-known setting for Lydia’s baptism and hospitality. Players must distinguish her hometown, Thyatira, from the city where Paul’s group met her, connecting the episode to Philippi. The alternatives are closely related: her hometown and two nearby stops on Paul’s journey."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_01f2d76deac0b1b5016ae4e63706d487d2b399f17aa7201d20",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_088f14f8691ecf2d016ae4e652f36c87d29d7128a769e298da",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "cefb3d0ac1b54ac929d4cafd62df4e2775fb8fc35774f9e5db5ba62da601dc6a",
+          "usage": {
+            "inputTokens": 1603,
+            "outputTokens": 194,
+            "totalTokens": 1797
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "Medium, 6/10. Closed-book play requires a relatively little-known Lydia–Philippi association, but only direct identification, not reconstruction of the journey. The alternatives are closely related locations: two nearby itinerary stops and Lydia's city of origin."
+        }
+      },
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 92,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Philippi is the clear city associated with this episode, but 'in which city did she invite' is geographically overprecise: the encounter occurs outside the city by a riverside, and the excerpt does not explicitly relocate the group before Lydia's invitation. This wording should be clarified."
+        ],
+        "questionPremises": [
+          {
+            "text": "The episode concerns Lydia and Paul's group in Acts.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "Lydia came from Thyatira.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              }
+            ]
+          },
+          {
+            "text": "Lydia was baptized.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "Lydia invited Paul's group to her house.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "Her invitation followed baptism.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "text": "The invitation took place within a city.",
+            "status": "partially_supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 1,
+          "interest": 1,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "Context: Lydia's invitation supplies a clear situation, but the wording blurs the city with the riverside outside it. Interest: distinguishing her city of origin from the place associated with her hospitality is a worthwhile concrete connection, though not especially striking. Fair challenge: recalling that distinction is fair, and everyday expectations alone do not reveal the answer. Choices: all four are credible cities from the account, with earlier travel stops and Lydia's origin providing plausible mistakes. Craft totals 6/8, but the geographic wording still needs correction."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 98,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Troas is an earlier departure point, not the setting of Lydia's invitation. It is a credible distractor because it belongs to the same journey.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis;"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Neapolis precedes Philippi in the itinerary. Its proximity in the travel account makes it a plausible location mix-up, but the group moves onward before meeting Lydia.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis;"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Thyatira identifies Lydia's origin, not the setting of this encounter. Confusing someone's origin with the location of their home invitation is a credible mistake.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "Philippi is the group's current city and the narrative setting for the riverside meeting and subsequent invitation. It is uniquely supported as the city intended, although the question should not imply that the invitation demonstrably occurred inside its boundaries.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 14,
+                "quote": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 15,
+                "quote": "When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us."
+              }
+            ],
+            "confidence": 99
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 1,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Philippi. Lydia’s location at baptism and invitation is a relatively little-known geographical detail. Players must distinguish her hometown, Thyatira, from the setting of her encounter with Paul, connecting the invitation to the group’s stay in Philippi. The distractors are closely related locations: her hometown and two preceding journey stops. Reconstructing the entire journey is unnecessary."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0dfb48c41c057f1a016ae4e637054887d282a092f7863c7501",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_08592f283b7405b3016ae4e652e41087d2af3611ca41c97319",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "cefb3d0ac1b54ac929d4cafd62df4e2775fb8fc35774f9e5db5ba62da601dc6a",
+          "usage": {
+            "inputTokens": 1603,
+            "outputTokens": 176,
+            "totalTokens": 1779
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 6/10: the tested city association is relatively little-known for newcomers. Players must distinguish Lydia's origin from the episode's setting, but need not reconstruct the whole journey or perform an inference. The alternatives are plausible cities rather than interchangeable roles."
+        }
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_01f2d76deac0b1b5016ae4e63706d487d2b399f17aa7201d20",
+      "usage": {
+        "inputTokens": 6628,
+        "outputTokens": 1758,
+        "totalTokens": 8386
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0dfb48c41c057f1a016ae4e637054887d282a092f7863c7501",
+      "usage": {
+        "inputTokens": 6628,
+        "outputTokens": 2093,
+        "totalTokens": 8721
+      }
+    }
+  ]
+}

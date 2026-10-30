@@ -1,0 +1,77 @@
+{
+  "project": "nwrozzdrlwlzjpfhgtlk",
+  "production": false,
+  "steps": [
+    {
+      "label": "Apply final v2 validation and rolling-week publication gates",
+      "sha256": "bc16578851a36fef6f7cd9eda0c5f582313864c767225a58ef4b2cc63a256310",
+      "rows": []
+    },
+    {
+      "label": "Before rollback",
+      "sha256": "661732f743f47d9f5fe1aeb99eee249d9aca502571321a880d52002deb4f1155",
+      "rows": [
+        {
+          "anonymous_worker": false,
+          "attempts": 3,
+          "completions": 0,
+          "daily_completion": true,
+          "forced_rls": true,
+          "items": 3,
+          "legacy_schedule": 5,
+          "publication_hash": "e4f0851659a232853d2a28ca37649499",
+          "service_worker": true,
+          "sets": 1
+        }
+      ]
+    },
+    {
+      "label": "Compatibility rollback",
+      "sha256": "0c7a02979ad88f989771718018424479aeb4b057e9f38f5390d1f14d9607c715",
+      "rows": []
+    },
+    {
+      "label": "After rollback",
+      "sha256": "661732f743f47d9f5fe1aeb99eee249d9aca502571321a880d52002deb4f1155",
+      "rows": [
+        {
+          "anonymous_worker": false,
+          "attempts": 3,
+          "completions": 0,
+          "daily_completion": false,
+          "forced_rls": true,
+          "items": 3,
+          "legacy_schedule": 5,
+          "publication_hash": "e4f0851659a232853d2a28ca37649499",
+          "service_worker": false,
+          "sets": 1
+        }
+      ]
+    },
+    {
+      "label": "Restore compatibility",
+      "sha256": "02e3cdcd4fe9ab337be3eea43e177862d14ca9e931d899b67bf4b1e63dea20a7",
+      "rows": []
+    },
+    {
+      "label": "After roll-forward",
+      "sha256": "661732f743f47d9f5fe1aeb99eee249d9aca502571321a880d52002deb4f1155",
+      "rows": [
+        {
+          "anonymous_worker": false,
+          "attempts": 3,
+          "completions": 0,
+          "daily_completion": true,
+          "forced_rls": true,
+          "items": 3,
+          "legacy_schedule": 5,
+          "publication_hash": "e4f0851659a232853d2a28ca37649499",
+          "service_worker": true,
+          "sets": 1
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "completedAt": "2026-10-30T18:48:39Z"
+}

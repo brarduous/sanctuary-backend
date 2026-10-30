@@ -1,0 +1,636 @@
+{
+  "noProductionWrites": true,
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In 2 Samuel, which priest was to send David secret reports through his son Ahimaaz?",
+    "heading": "A detail in 2 Samuel 15:22-37",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Ahimelech"
+      },
+      {
+        "id": "option-2",
+        "text": "Abiathar"
+      },
+      {
+        "id": "option-3",
+        "text": "Azariah"
+      },
+      {
+        "id": "option-4",
+        "text": "Zadok"
+      }
+    ],
+    "correctOptionId": "option-4",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/2SA15.htm",
+        "locator": "2 Samuel 15:22-37",
+        "excerpt": "David said to Ittai, “Go and pass over.” Ittai the Gittite passed over, and all his men, and all the little ones who were with him. All the country wept with a loud voice, and all the people passed over. The king also himself passed over the brook Kidron, and all the people passed over, toward the way of the wilderness. Behold, Zadok also came, and all the Levites with him, bearing the ark of the covenant of God; and they set down God’s ark; and Abiathar went up, until all the people finished passing out of the city. The king said to Zadok, “Carry God’s ark back into the city. If I find favor in Yahweh’s eyes, he will bring me again, and show me both it, and his habitation; but if he says, ‘I have no delight in you;’ behold, here I am. Let him do to me as seems good to him.” The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar. Behold, I will stay at the fords of the wilderness, until word comes from you to inform me.” Zadok therefore and Abiathar carried God’s ark to Jerusalem again; and they stayed there. David went up by the ascent of the Mount of Olives, and wept as he went up; and he had his head covered, and went barefoot. All the people who were with him each covered his head, and they went up, weeping as they went up. Someone told David, saying, “Ahithophel is among the conspirators with Absalom.” David said, “Yahweh, please turn the counsel of Ahithophel into foolishness.” When David had come to the top, where God was worshiped, behold, Hushai the Archite came to meet him with his tunic torn, and earth on his head. David said to him, “If you pass on with me, then you will be a burden to me; but if you return to the city, and tell Absalom, ‘I will be your servant, O king. As I have been your father’s servant in time past, so I will now be your servant; then will you defeat for me the counsel of Ahithophel.’ Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests. Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.” So Hushai, David’s friend, came into the city; and Absalom came into Jerusalem.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "Zadok’s son Ahimaaz was to carry reports to David.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "Jonathan, Abiathar’s son, was part of the same reporting plan.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "2 Samuel 15:22-37",
+    "translation": "WEB"
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 7,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 7,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 1
+          },
+          "rationale": "The question supplies a clear situation without unexplained jargon. Its retellable connection is a priest and his son participating in David's covert reporting network. Identifying the father is a fair recall challenge with no everyday-logic giveaway. The alternatives are parallel priestly names: Abiathar is especially credible as the other participant, and Ahimelech offers a plausible name confusion. Azariah is a weaker scene-specific distractor, so the choices do not earn full marks. Total: 7/8; passes."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The reporting assignment supplies a clear situation without requiring church jargon. The memorable connection is a priest and his son participating in David's intelligence network, not merely a detached genealogy. Identifying the father requires actual knowledge rather than everyday guessing. All alternatives are credible priestly names, with Abiathar especially tempting because he shares the assignment. Total: 8/8."
+        }
+      ]
+    },
+    "accepted": true,
+    "minimumScore": 95,
+    "evidenceScore": 95,
+    "candidateSha256": "f4332a9f3e07d3c020fc74d1ece1381bf65c0655ec322b1889be9185c5a43298",
+    "sourceSha256": "05c176c252af2e2d2df795592a7001a4f8a0ee1288044909d2fccc25486c32ac",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "9540724a506376e34152bdea5e7bf62894009846b98891e8336b6c3267a64386",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 7
+    },
+    "difficultyTargetMet": true,
+    "reasons": [],
+    "reviews": [
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 98,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The reporting arrangement occurs within the cited passage in 2 Samuel.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "The person being identified was a priest.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              }
+            ]
+          },
+          {
+            "text": "David planned to receive reports through the priests and their sons.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 28,
+                "quote": "Behold, I will stay at the fords of the wilderness, until word comes from you to inform me.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "Ahimaaz was the son of the priest sought by the question.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "The reports were secret intelligence rather than ordinary public messages.",
+            "status": "supported",
+            "confidence": 97,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 34,
+                "quote": "but if you return to the city, and tell Absalom, ‘I will be your servant, O king. As I have been your father’s servant in time past, so I will now be your servant; then will you defeat for me the counsel of Ahithophel.’"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 1,
+          "rationale": "The question supplies a clear situation without unexplained jargon. Its retellable connection is a priest and his son participating in David's covert reporting network. Identifying the father is a fair recall challenge with no everyday-logic giveaway. The alternatives are parallel priestly names: Abiathar is especially credible as the other participant, and Ahimelech offers a plausible name confusion. Azariah is a weaker scene-specific distractor, so the choices do not earn full marks. Total: 7/8; passes."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The excerpt does not identify Ahimelech as Ahimaaz's father or as the priest in this arrangement. The similar name makes him a credible recall distractor.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Abiathar participates in the reporting plan, making him a strong distractor, but his son is Jonathan, not Ahimaaz. The question's father-son qualification excludes him.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Azariah is not named in the excerpt or assigned this role. He is a comparable priestly-name alternative, though less closely connected to this scene than Abiathar.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "Zadok is explicitly identified as a priest and Ahimaaz's father. The plan routes intelligence through the priests and their sons to David.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "Zadok is the answer. This tests a little-known priest–son relationship within David’s reporting plan. Players must distinguish Zadok and Ahimaaz from Abiathar and Jonathan, the other priest–son pair serving in the same plan. Identification is direct once that relationship is recalled, with no further inference needed."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_0a5182e7ce49bb1d016ae4dda7bf0c87d2a0a11b114468ce29",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0b5f69737e32f6b9016ae4ddc3018c87d298cc035dc89f285a",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "5e6bc6bdc51df9e65bcfd31c4f552959f2d5757df04331ac18cdad0bb6b2c05d",
+          "usage": {
+            "inputTokens": 2227,
+            "outputTokens": 245,
+            "totalTokens": 2472
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 6/10. The tested father-son detail is relatively obscure for the intended audience. Players must distinguish the two priests' sons within the reporting arrangement, but the answer requires direct identification rather than additional inference. The options are plausible names in the same category, with Abiathar the closest competitor."
+        }
+      },
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 97,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The reporting arrangement occurs in the cited narrative in 2 Samuel.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "The person sought was a priest.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              }
+            ]
+          },
+          {
+            "text": "Ahimaaz was the son of the priest being identified.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "David planned to receive reports through Ahimaaz as part of a reporting network involving his father.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 28,
+                "quote": "Behold, I will stay at the fords of the wilderness, until word comes from you to inform me.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "text": "The reports were secret intelligence rather than ordinary public messages.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 34,
+                "quote": "but if you return to the city, and tell Absalom, ‘I will be your servant, O king. As I have been your father’s servant in time past, so I will now be your servant; then will you defeat for me the counsel of Ahithophel.’"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The reporting assignment supplies a clear situation without requiring church jargon. The memorable connection is a priest and his son participating in David's intelligence network, not merely a detached genealogy. Identifying the father requires actual knowledge rather than everyday guessing. All alternatives are credible priestly names, with Abiathar especially tempting because he shares the assignment. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Ahimelech is not identified as Ahimaaz's father or assigned this reporting role. He is a credible priestly-name distractor, and his similar name could attract a mistaken association.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Abiathar participates in the same network, making him a strong distractor, but his son is Jonathan rather than Ahimaaz.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Azariah is a credible biblical priestly name, but the excerpt gives him neither this assignment nor the stated relationship to Ahimaaz.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "Zadok is explicitly identified as both a priest and Ahimaaz's father; the reporting instructions connect the priests with their sons as messengers to David.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 27,
+                "quote": "The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.”"
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Zadok. This tests a little-known priest–son relationship, distinguishing Zadok and Ahimaaz from Abiathar and Jonathan within the same reporting plan. Abiathar is a closely related distractor, but identifying Ahimaaz’s father requires direct recall rather than multi-step inference."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0ea20628be472238016ae4dda75a3c87d2acc27c5a680dd901",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_0828be9270bfa3de016ae4ddc30c7887d299058b6002e83722",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "5e6bc6bdc51df9e65bcfd31c4f552959f2d5757df04331ac18cdad0bb6b2c05d",
+          "usage": {
+            "inputTokens": 2227,
+            "outputTokens": 156,
+            "totalTokens": 2383
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 5/10: the tested father-son association is relatively obscure, but solving requires only direct identification. The alternatives are comparable priestly names; only Abiathar is a closely competing participant in this particular arrangement."
+        }
+      }
+    ]
+  },
+  "reviews": [
+    {
+      "approved": true,
+      "issues": [],
+      "rationale": "All three answers and explanation claims are supported by the supplied passages. The set offers distinct discoveries: a mysterious hand writing on a palace wall, Benaiah’s lion encounter and captured spear, and a father–son link in David’s secret reporting network. Each question presents a clear situation and three credible alternatives, without giving away another answer. The estimated progression is defensible: a familiar scene detail, identification of a less familiar warrior, then the finer distinction between Zadok–Ahimaaz and Abiathar–Jonathan. The final question has modest but worthwhile relational interest and is fairly source-supported, not a trick.",
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_0e73181becaafdd2016ae4ddc9db8887d2b7458906df692529",
+      "usage": {
+        "inputTokens": 3578,
+        "outputTokens": 290,
+        "totalTokens": 3868
+      },
+      "setEditorialVersion": "sanctuary-trivia-set-editor-v3",
+      "reviewerPromptSha256": "f9d23ba0f4632398863ee8390f8cb2c115bc1fc5aa31e9ca47eb23e13d468603",
+      "questionPromptHashes": [
+        "bba919b6d43ef4e490c56d886e5dfcfb0713b454cc485f3dc5d110d3e811bb5c",
+        "a79ec6d99e849424789b86439cc3467ef48738fa1267e80a1c73399ce581e245",
+        "5e6bc6bdc51df9e65bcfd31c4f552959f2d5757df04331ac18cdad0bb6b2c05d"
+      ]
+    },
+    {
+      "approved": true,
+      "issues": [],
+      "rationale": "All three answers and explanation claims are supported by the supplied passages. The set offers distinct discoveries: a mysterious hand writing on a palace wall as the king’s knees knock; Benaiah’s snowy-pit lion encounter and capture of an opponent’s spear; and the father–son connections in David’s covert reporting network. The situations are understandable without the excerpts, and no question gives away another answer. The alternatives are credible: other physical surfaces for the writing, fellow warriors for Benaiah’s exploits, and priestly names for Zadok, with Abiathar providing a particularly meaningful distinction because his messenger son was Jonathan. None makes the key selectable through an obvious success-versus-failure contrast. The estimated progression is defensible: familiar scene recognition, less-familiar warrior identification, then a precise relationship within a reporting plan. The Hard item’s discovery is modest but worthwhile, rather than an arbitrary detail or trick. This is an editorial assessment, not audience-validated difficulty or preference.",
+      "model": "gpt-6-astra",
+      "responseId": "resp_044fa4c02e57bdea016ae4ddc9db6c87d2a6d3ba514622bbf0",
+      "usage": {
+        "inputTokens": 3578,
+        "outputTokens": 382,
+        "totalTokens": 3960
+      },
+      "setEditorialVersion": "sanctuary-trivia-set-editor-v3",
+      "reviewerPromptSha256": "f9d23ba0f4632398863ee8390f8cb2c115bc1fc5aa31e9ca47eb23e13d468603",
+      "questionPromptHashes": [
+        "bba919b6d43ef4e490c56d886e5dfcfb0713b454cc485f3dc5d110d3e811bb5c",
+        "a79ec6d99e849424789b86439cc3467ef48738fa1267e80a1c73399ce581e245",
+        "5e6bc6bdc51df9e65bcfd31c4f552959f2d5757df04331ac18cdad0bb6b2c05d"
+      ]
+    }
+  ],
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_0a5182e7ce49bb1d016ae4dda7bf0c87d2a0a11b114468ce29",
+      "usage": {
+        "inputTokens": 8526,
+        "outputTokens": 1878,
+        "totalTokens": 10404
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0ea20628be472238016ae4dda75a3c87d2acc27c5a680dd901",
+      "usage": {
+        "inputTokens": 8526,
+        "outputTokens": 1570,
+        "totalTokens": 10096
+      }
+    }
+  ]
+}

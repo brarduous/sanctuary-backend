@@ -1,0 +1,983 @@
+{
+  "version": "trivia-editorial-benchmark-v6",
+  "frozen": "2026-10-30",
+  "difficultyRubric": "discovery-difficulty-v2",
+  "method": "Original factual/craft reviews remain unchanged; separate blinded closed-book ratings use their own real response IDs. Negative defects remain factual/craft failures regardless of band. No audience success rate is claimed.",
+  "positiveAnchors": [
+    {
+      "id": "david-armor",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In 1 Samuel, who faced Goliath after taking off the armor Saul offered?",
+        "heading": "A detail in 1 Samuel 17:23-40",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Jonathan"
+          },
+          {
+            "id": "option-2",
+            "text": "David"
+          },
+          {
+            "id": "option-3",
+            "text": "Abner"
+          },
+          {
+            "id": "option-4",
+            "text": "Joab"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/1SA17.htm",
+            "locator": "1 Samuel 17:23-40",
+            "excerpt": "As he talked with them, behold, the champion, the Philistine of Gath, Goliath by name, came up out of the ranks of the Philistines, and said the same words; and David heard them. All the men of Israel, when they saw the man, fled from him, and were terrified. The men of Israel said, “Have you seen this man who has come up? He has surely come up to defy Israel. The king will give great riches to the man who kills him, and will give him his daughter, and make his father’s house free in Israel.” David spoke to the men who stood by him, saying, “What shall be done to the man who kills this Philistine, and takes away the reproach from Israel? For who is this uncircumcised Philistine, that he should defy the armies of the living God?” The people answered him in this way, saying, “So shall it be done to the man who kills him.” Eliab his oldest brother heard when he spoke to the men; and Eliab’s anger burned against David, and he said, “Why have you come down? With whom have you left those few sheep in the wilderness? I know your pride, and the naughtiness of your heart; for you have come down that you might see the battle.” David said, “What have I now done? Is there not a cause?” He turned away from him toward another, and spoke like that again; and the people answered him again the same way. When the words were heard which David spoke, they rehearsed them before Saul; and he sent for him. David said to Saul, “Let no man’s heart fail because of him. Your servant will go and fight with this Philistine.” Saul said to David, “You are not able to go against this Philistine to fight with him; for you are but a youth, and he a man of war from his youth.” David said to Saul, “Your servant was keeping his father’s sheep; and when a lion or a bear came, and took a lamb out of the flock, I went out after him, and struck him, and rescued it out of his mouth. When he arose against me, I caught him by his beard, and struck him, and killed him. Your servant struck both the lion and the bear. This uncircumcised Philistine shall be as one of them, since he has defied the armies of the living God.” David said, “Yahweh who delivered me out of the paw of the lion, and out of the paw of the bear, he will deliver me out of the hand of this Philistine.” Saul said to David, “Go! Yahweh will be with you.” Saul dressed David with his clothing. He put a helmet of bronze on his head, and he clad him with a coat of mail. David strapped his sword on his clothing, and he tried to move; for he had not tested it. David said to Saul, “I can’t go with these; for I have not tested them.” Then David took them off. He took his staff in his hand, and chose for himself five smooth stones out of the brook, and put them in the pouch of his shepherd’s bag which he had. His sling was in his hand; and he came near to the Philistine.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "David removed Saul’s armor because he hadn’t tried it.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He went toward the Philistine carrying a sling.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "1 Samuel 17:23-40",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/1SA17.htm",
+        "locator": "1 Samuel 17:23-40",
+        "excerpt": "As he talked with them, behold, the champion, the Philistine of Gath, Goliath by name, came up out of the ranks of the Philistines, and said the same words; and David heard them. All the men of Israel, when they saw the man, fled from him, and were terrified. The men of Israel said, “Have you seen this man who has come up? He has surely come up to defy Israel. The king will give great riches to the man who kills him, and will give him his daughter, and make his father’s house free in Israel.” David spoke to the men who stood by him, saying, “What shall be done to the man who kills this Philistine, and takes away the reproach from Israel? For who is this uncircumcised Philistine, that he should defy the armies of the living God?” The people answered him in this way, saying, “So shall it be done to the man who kills him.” Eliab his oldest brother heard when he spoke to the men; and Eliab’s anger burned against David, and he said, “Why have you come down? With whom have you left those few sheep in the wilderness? I know your pride, and the naughtiness of your heart; for you have come down that you might see the battle.” David said, “What have I now done? Is there not a cause?” He turned away from him toward another, and spoke like that again; and the people answered him again the same way. When the words were heard which David spoke, they rehearsed them before Saul; and he sent for him. David said to Saul, “Let no man’s heart fail because of him. Your servant will go and fight with this Philistine.” Saul said to David, “You are not able to go against this Philistine to fight with him; for you are but a youth, and he a man of war from his youth.” David said to Saul, “Your servant was keeping his father’s sheep; and when a lion or a bear came, and took a lamb out of the flock, I went out after him, and struck him, and rescued it out of his mouth. When he arose against me, I caught him by his beard, and struck him, and killed him. Your servant struck both the lion and the bear. This uncircumcised Philistine shall be as one of them, since he has defied the armies of the living God.” David said, “Yahweh who delivered me out of the paw of the lion, and out of the paw of the bear, he will deliver me out of the hand of this Philistine.” Saul said to David, “Go! Yahweh will be with you.” Saul dressed David with his clothing. He put a helmet of bronze on his head, and he clad him with a coat of mail. David strapped his sword on his clothing, and he tried to move; for he had not tested it. David said to Saul, “I can’t go with these; for I have not tested them.” Then David took them off. He took his staff in his hand, and chose for himself five smooth stones out of the brook, and put them in the pouch of his shepherd’s bag which he had. His sling was in his hand; and he came near to the Philistine.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 7,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "easy",
+          "score": 1
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "noah-olive",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Genesis, which bird returned to Noah carrying an olive leaf?",
+        "heading": "A detail in Genesis 8:6-12",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Raven"
+          },
+          {
+            "id": "option-2",
+            "text": "Dove"
+          },
+          {
+            "id": "option-3",
+            "text": "Eagle"
+          },
+          {
+            "id": "option-4",
+            "text": "Sparrow"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/GEN08.htm",
+            "locator": "Genesis 8:6-12",
+            "excerpt": "At the end of forty days, Noah opened the window of the ship which he had made, and he sent out a raven. It went back and forth, until the waters were dried up from the earth. He himself sent out a dove to see if the waters were abated from the surface of the ground, but the dove found no place to rest her foot, and she returned into the ship to him, for the waters were on the surface of the whole earth. He put out his hand, and took her, and brought her to him into the ship. He waited yet another seven days; and again he sent the dove out of the ship. The dove came back to him at evening and, behold, in her mouth was a freshly plucked olive leaf. So Noah knew that the waters were abated from the earth. He waited yet another seven days, and sent out the dove; and she didn’t return to him any more.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "The dove returned to Noah carrying a freshly plucked olive leaf.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Noah knew the waters had receded.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Genesis 8:6-12",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/GEN08.htm",
+        "locator": "Genesis 8:6-12",
+        "excerpt": "At the end of forty days, Noah opened the window of the ship which he had made, and he sent out a raven. It went back and forth, until the waters were dried up from the earth. He himself sent out a dove to see if the waters were abated from the surface of the ground, but the dove found no place to rest her foot, and she returned into the ship to him, for the waters were on the surface of the whole earth. He put out his hand, and took her, and brought her to him into the ship. He waited yet another seven days; and again he sent the dove out of the ship. The dove came back to him at evening and, behold, in her mouth was a freshly plucked olive leaf. So Noah knew that the waters were abated from the earth. He waited yet another seven days, and sent out the dove; and she didn’t return to him any more.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 7,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "easy",
+          "score": 1
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "daniel-den",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Daniel, which animals shared the den where the king ordered Daniel thrown?",
+        "heading": "A detail in Daniel 6:14-23",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Bears"
+          },
+          {
+            "id": "option-2",
+            "text": "Wolves"
+          },
+          {
+            "id": "option-3",
+            "text": "Lions"
+          },
+          {
+            "id": "option-4",
+            "text": "Leopards"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/DAN06.htm",
+            "locator": "Daniel 6:14-23",
+            "excerpt": "Then the king, when he heard these words, was very displeased, and set his heart on Daniel to deliver him; and he labored until the going down of the sun to rescue him. Then these men assembled together to the king, and said to the king, “Know, O king, that it is a law of the Medes and Persians, that no decree nor statute which the king establishes may be changed.” Then the king commanded, and they brought Daniel, and cast him into the den of lions. The king spoke and said to Daniel, “Your God whom you serve continually, he will deliver you.” A stone was brought, and laid on the mouth of the den; and the king sealed it with his own signet, and with the signet of his lords; that nothing might be changed concerning Daniel. Then the king went to his palace, and passed the night fasting. No musical instruments were brought before him; and his sleep fled from him. Then the king arose very early in the morning, and went in haste to the den of lions. When he came near to the den to Daniel, he cried with a troubled voice. The king spoke and said to Daniel, “Daniel, servant of the living God, is your God, whom you serve continually, able to deliver you from the lions?” Then Daniel said to the king, “O king, live forever! My God has sent his angel, and has shut the lions’ mouths, and they have not hurt me; because as before him innocence was found in me; and also before you, O king, I have done no harm.” Then the king was exceedingly glad, and commanded that they should take Daniel up out of the den. So Daniel was taken up out of the den, and no kind of harm was found on him, because he had trusted in his God.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Daniel was thrown into a den of lions.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "The king sealed its entrance with his own signet.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Daniel 6:14-23",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/DAN06.htm",
+        "locator": "Daniel 6:14-23",
+        "excerpt": "Then the king, when he heard these words, was very displeased, and set his heart on Daniel to deliver him; and he labored until the going down of the sun to rescue him. Then these men assembled together to the king, and said to the king, “Know, O king, that it is a law of the Medes and Persians, that no decree nor statute which the king establishes may be changed.” Then the king commanded, and they brought Daniel, and cast him into the den of lions. The king spoke and said to Daniel, “Your God whom you serve continually, he will deliver you.” A stone was brought, and laid on the mouth of the den; and the king sealed it with his own signet, and with the signet of his lords; that nothing might be changed concerning Daniel. Then the king went to his palace, and passed the night fasting. No musical instruments were brought before him; and his sleep fled from him. Then the king arose very early in the morning, and went in haste to the den of lions. When he came near to the den to Daniel, he cried with a troubled voice. The king spoke and said to Daniel, “Daniel, servant of the living God, is your God, whom you serve continually, able to deliver you from the lions?” Then Daniel said to the king, “O king, live forever! My God has sent his angel, and has shut the lions’ mouths, and they have not hurt me; because as before him innocence was found in me; and also before you, O king, I have done no harm.” Then the king was exceedingly glad, and commanded that they should take Daniel up out of the den. So Daniel was taken up out of the den, and no kind of harm was found on him, because he had trusted in his God.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 8,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "easy",
+          "score": 1
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "siloam",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In John, Jesus sent a man born blind to wash in which pool?",
+        "heading": "A detail in John 9:1-11",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Bethesda"
+          },
+          {
+            "id": "option-2",
+            "text": "Heshbon"
+          },
+          {
+            "id": "option-3",
+            "text": "Siloam"
+          },
+          {
+            "id": "option-4",
+            "text": "Gibeon"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/JHN09.htm",
+            "locator": "John 9:1-11",
+            "excerpt": "As he passed by, he saw a man blind from birth. His disciples asked him, “Rabbi, who sinned, this man or his parents, that he was born blind?” Jesus answered, “This man didn’t sin, nor did his parents; but, that the works of God might be revealed in him. I must work the works of him who sent me while it is day. The night is coming, when no one can work. While I am in the world, I am the light of the world.” When he had said this, he spat on the ground, made mud with the saliva, anointed the blind man’s eyes with the mud, and said to him, “Go, wash in the pool of Siloam” (which means “Sent”). So he went away, washed, and came back seeing. The neighbors therefore, and those who saw that he was blind before, said, “Isn’t this he who sat and begged?” Others were saying, “It is he.” Still others were saying, “He looks like him.” He said, “I am he.” They therefore were asking him, “How were your eyes opened?” He answered, “A man called Jesus made mud, anointed my eyes, and said to me, ‘Go to the pool of Siloam and wash.’ So I went away and washed, and I received sight.”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Jesus told the man to wash in the pool of Siloam.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "The pool’s name means “Sent.”",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "John 9:1-11",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/JHN09.htm",
+        "locator": "John 9:1-11",
+        "excerpt": "As he passed by, he saw a man blind from birth. His disciples asked him, “Rabbi, who sinned, this man or his parents, that he was born blind?” Jesus answered, “This man didn’t sin, nor did his parents; but, that the works of God might be revealed in him. I must work the works of him who sent me while it is day. The night is coming, when no one can work. While I am in the world, I am the light of the world.” When he had said this, he spat on the ground, made mud with the saliva, anointed the blind man’s eyes with the mud, and said to him, “Go, wash in the pool of Siloam” (which means “Sent”). So he went away, washed, and came back seeing. The neighbors therefore, and those who saw that he was blind before, said, “Isn’t this he who sat and begged?” Others were saying, “It is he.” Still others were saying, “He looks like him.” He said, “I am he.” They therefore were asking him, “How were your eyes opened?” He answered, “A man called Jesus made mud, anointed my eyes, and said to me, ‘Go to the pool of Siloam and wash.’ So I went away and washed, and I received sight.”",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 7,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "moderate",
+          "score": 6
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "lydia-purple",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Lydia welcomed Paul into her home; what color goods did she sell?",
+        "heading": "A detail in Acts 16:11-18",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Scarlet"
+          },
+          {
+            "id": "option-2",
+            "text": "Purple"
+          },
+          {
+            "id": "option-3",
+            "text": "Blue"
+          },
+          {
+            "id": "option-4",
+            "text": "White"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT16.htm",
+            "locator": "Acts 16:11-18",
+            "excerpt": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis; and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city. On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together. A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us. As we were going to prayer, a certain girl having a spirit of divination met us, who brought her masters much gain by fortune telling. Following Paul and us, she cried out, “These men are servants of the Most High God, who proclaim to us a way of salvation!” She was doing this for many days. But Paul, becoming greatly annoyed, turned and said to the spirit, “I command you in the name of Jesus Christ to come out of her!” It came out that very hour.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Lydia was a seller of purple from Thyatira.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "She persuaded Paul and his companions to stay at her house.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 16:11-18",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT16.htm",
+        "locator": "Acts 16:11-18",
+        "excerpt": "Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis; and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city. On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together. A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us. As we were going to prayer, a certain girl having a spirit of divination met us, who brought her masters much gain by fortune telling. Following Paul and us, she cried out, “These men are servants of the Most High God, who proclaim to us a way of salvation!” She was doing this for many days. But Paul, becoming greatly annoyed, turned and said to the spirit, “I command you in the name of Jesus Christ to come out of her!” It came out that very hour.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 99,
+        "craftScore": 7,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "moderate",
+          "score": 5
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "malta-viper",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, on which island did a viper fasten onto Paul’s hand beside a fire?",
+        "heading": "A detail in Acts 28:1-10",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Crete"
+          },
+          {
+            "id": "option-2",
+            "text": "Cyprus"
+          },
+          {
+            "id": "option-3",
+            "text": "Patmos"
+          },
+          {
+            "id": "option-4",
+            "text": "Malta"
+          }
+        ],
+        "correctOptionId": "option-4",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT28.htm",
+            "locator": "Acts 28:1-10",
+            "excerpt": "When we had escaped, then they learned that the island was called Malta. The natives showed us uncommon kindness; for they kindled a fire and received us all, because of the present rain and because of the cold. But when Paul had gathered a bundle of sticks and laid them on the fire, a viper came out because of the heat, and fastened on his hand. When the natives saw the creature hanging from his hand, they said to one another, “No doubt this man is a murderer, whom, though he has escaped from the sea, yet Justice has not allowed to live.” However he shook off the creature into the fire, and wasn’t harmed. But they expected that he would have swollen or fallen down dead suddenly, but when they watched for a long time and saw nothing bad happen to him, they changed their minds, and said that he was a god. Now in the neighborhood of that place were lands belonging to the chief man of the island, named Publius, who received us, and courteously entertained us for three days. The father of Publius lay sick of fever and dysentery. Paul entered in to him, prayed, and laying his hands on him, healed him. Then when this was done, the rest also who had diseases in the island came and were cured. They also honored us with many honors, and when we sailed, they put on board the things that we needed.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "On Malta, a viper fastened onto Paul’s hand beside a fire.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He shook it into the fire without being harmed.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 28:1-10",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT28.htm",
+        "locator": "Acts 28:1-10",
+        "excerpt": "When we had escaped, then they learned that the island was called Malta. The natives showed us uncommon kindness; for they kindled a fire and received us all, because of the present rain and because of the cold. But when Paul had gathered a bundle of sticks and laid them on the fire, a viper came out because of the heat, and fastened on his hand. When the natives saw the creature hanging from his hand, they said to one another, “No doubt this man is a murderer, whom, though he has escaped from the sea, yet Justice has not allowed to live.” However he shook off the creature into the fire, and wasn’t harmed. But they expected that he would have swollen or fallen down dead suddenly, but when they watched for a long time and saw nothing bad happen to him, they changed their minds, and said that he was a god. Now in the neighborhood of that place were lands belonging to the chief man of the island, named Publius, who received us, and courteously entertained us for three days. The father of Publius lay sick of fever and dysentery. Paul entered in to him, prayed, and laying his hands on him, healed him. Then when this was done, the rest also who had diseases in the island came and were cured. They also honored us with many honors, and when we sailed, they put on board the things that we needed.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 8,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "moderate",
+          "score": 5
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "hushai-cover",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In 2 Samuel, who was to pose as Absalom’s servant while secretly reporting to David?",
+        "heading": "A detail in 2 Samuel 15:22-37",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Zadok"
+          },
+          {
+            "id": "option-2",
+            "text": "Hushai"
+          },
+          {
+            "id": "option-3",
+            "text": "Abiathar"
+          },
+          {
+            "id": "option-4",
+            "text": "Ahithophel"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/2SA15.htm",
+            "locator": "2 Samuel 15:22-37",
+            "excerpt": "David said to Ittai, “Go and pass over.” Ittai the Gittite passed over, and all his men, and all the little ones who were with him. All the country wept with a loud voice, and all the people passed over. The king also himself passed over the brook Kidron, and all the people passed over, toward the way of the wilderness. Behold, Zadok also came, and all the Levites with him, bearing the ark of the covenant of God; and they set down God’s ark; and Abiathar went up, until all the people finished passing out of the city. The king said to Zadok, “Carry God’s ark back into the city. If I find favor in Yahweh’s eyes, he will bring me again, and show me both it, and his habitation; but if he says, ‘I have no delight in you;’ behold, here I am. Let him do to me as seems good to him.” The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar. Behold, I will stay at the fords of the wilderness, until word comes from you to inform me.” Zadok therefore and Abiathar carried God’s ark to Jerusalem again; and they stayed there. David went up by the ascent of the Mount of Olives, and wept as he went up; and he had his head covered, and went barefoot. All the people who were with him each covered his head, and they went up, weeping as they went up. Someone told David, saying, “Ahithophel is among the conspirators with Absalom.” David said, “Yahweh, please turn the counsel of Ahithophel into foolishness.” When David had come to the top, where God was worshiped, behold, Hushai the Archite came to meet him with his tunic torn, and earth on his head. David said to him, “If you pass on with me, then you will be a burden to me; but if you return to the city, and tell Absalom, ‘I will be your servant, O king. As I have been your father’s servant in time past, so I will now be your servant; then will you defeat for me the counsel of Ahithophel.’ Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests. Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.” So Hushai, David’s friend, came into the city; and Absalom came into Jerusalem.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "David asked Hushai to undermine Ahithophel’s advice.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Reports were to reach David through the priests’ sons.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "2 Samuel 15:22-37",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/2SA15.htm",
+        "locator": "2 Samuel 15:22-37",
+        "excerpt": "David said to Ittai, “Go and pass over.” Ittai the Gittite passed over, and all his men, and all the little ones who were with him. All the country wept with a loud voice, and all the people passed over. The king also himself passed over the brook Kidron, and all the people passed over, toward the way of the wilderness. Behold, Zadok also came, and all the Levites with him, bearing the ark of the covenant of God; and they set down God’s ark; and Abiathar went up, until all the people finished passing out of the city. The king said to Zadok, “Carry God’s ark back into the city. If I find favor in Yahweh’s eyes, he will bring me again, and show me both it, and his habitation; but if he says, ‘I have no delight in you;’ behold, here I am. Let him do to me as seems good to him.” The king said also to Zadok the priest, “Aren’t you a seer? Return into the city in peace, and your two sons with you, Ahimaaz your son, and Jonathan the son of Abiathar. Behold, I will stay at the fords of the wilderness, until word comes from you to inform me.” Zadok therefore and Abiathar carried God’s ark to Jerusalem again; and they stayed there. David went up by the ascent of the Mount of Olives, and wept as he went up; and he had his head covered, and went barefoot. All the people who were with him each covered his head, and they went up, weeping as they went up. Someone told David, saying, “Ahithophel is among the conspirators with Absalom.” David said, “Yahweh, please turn the counsel of Ahithophel into foolishness.” When David had come to the top, where God was worshiped, behold, Hushai the Archite came to meet him with his tunic torn, and earth on his head. David said to him, “If you pass on with me, then you will be a burden to me; but if you return to the city, and tell Absalom, ‘I will be your servant, O king. As I have been your father’s servant in time past, so I will now be your servant; then will you defeat for me the counsel of Ahithophel.’ Don’t you have Zadok and Abiathar the priests there with you? Therefore whatever you hear out of the king’s house, tell it to Zadok and Abiathar the priests. Behold, they have there with them their two sons, Ahimaaz, Zadok’s son, and Jonathan, Abiathar’s son. Send to me everything that you shall hear by them.” So Hushai, David’s friend, came into the city; and Absalom came into Jerusalem.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 99,
+        "craftScore": 8,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "challenging",
+          "score": 7
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "judah-substitution",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Genesis, which brother offered himself as Joseph’s slave so their youngest brother could go home?",
+        "heading": "A detail in Genesis 44:15-34",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Reuben"
+          },
+          {
+            "id": "option-2",
+            "text": "Simeon"
+          },
+          {
+            "id": "option-3",
+            "text": "Judah"
+          },
+          {
+            "id": "option-4",
+            "text": "Levi"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/GEN44.htm",
+            "locator": "Genesis 44:15-34",
+            "excerpt": "Joseph said to them, “What deed is this that you have done? Don’t you know that such a man as I can indeed do divination?” Judah said, “What will we tell my lord? What will we speak? How will we clear ourselves? God has found out the iniquity of your servants. Behold, we are my lord’s slaves, both we and he also in whose hand the cup is found.” He said, “Far be it from me that I should do so. The man in whose hand the cup is found, he will be my slave; but as for you, go up in peace to your father.” Then Judah came near to him, and said, “Oh, my lord, please let your servant speak a word in my lord’s ears, and don’t let your anger burn against your servant; for you are even as Pharaoh. My lord asked his servants, saying, ‘Have you a father, or a brother?’ We said to my lord, ‘We have a father, an old man, and a child of his old age, a little one; and his brother is dead, and he alone is left of his mother; and his father loves him.’ You said to your servants, ‘Bring him down to me, that I may set my eyes on him.’ We said to my lord, ‘The boy can’t leave his father, for if he should leave his father, his father would die.’ You said to your servants, ‘Unless your youngest brother comes down with you, you will see my face no more.’ When we came up to your servant my father, we told him the words of my lord. Our father said, ‘Go again and buy us a little food.’ We said, ‘We can’t go down. If our youngest brother is with us, then we will go down: for we may not see the man’s face, unless our youngest brother is with us.’ Your servant, my father, said to us, ‘You know that my wife bore me two sons. One went out from me, and I said, “Surely he is torn in pieces;” and I haven’t seen him since. If you take this one also from me, and harm happens to him, you will bring down my gray hairs with sorrow to Sheol.’ Now therefore when I come to your servant my father, and the boy is not with us; since his life is bound up in the boy’s life; it will happen, when he sees that the boy is no more, that he will die. Your servants will bring down the gray hairs of your servant, our father, with sorrow to Sheol. For your servant became collateral for the boy to my father, saying, ‘If I don’t bring him to you, then I will bear the blame to my father forever.’ Now therefore, please let your servant stay instead of the boy, my lord’s slave; and let the boy go up with his brothers. For how will I go up to my father, if the boy isn’t with me?—lest I see the evil that will come on my father.”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Judah offered to remain as a slave in his brother’s place.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He feared returning to their father without the boy.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Genesis 44:15-34",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/GEN44.htm",
+        "locator": "Genesis 44:15-34",
+        "excerpt": "Joseph said to them, “What deed is this that you have done? Don’t you know that such a man as I can indeed do divination?” Judah said, “What will we tell my lord? What will we speak? How will we clear ourselves? God has found out the iniquity of your servants. Behold, we are my lord’s slaves, both we and he also in whose hand the cup is found.” He said, “Far be it from me that I should do so. The man in whose hand the cup is found, he will be my slave; but as for you, go up in peace to your father.” Then Judah came near to him, and said, “Oh, my lord, please let your servant speak a word in my lord’s ears, and don’t let your anger burn against your servant; for you are even as Pharaoh. My lord asked his servants, saying, ‘Have you a father, or a brother?’ We said to my lord, ‘We have a father, an old man, and a child of his old age, a little one; and his brother is dead, and he alone is left of his mother; and his father loves him.’ You said to your servants, ‘Bring him down to me, that I may set my eyes on him.’ We said to my lord, ‘The boy can’t leave his father, for if he should leave his father, his father would die.’ You said to your servants, ‘Unless your youngest brother comes down with you, you will see my face no more.’ When we came up to your servant my father, we told him the words of my lord. Our father said, ‘Go again and buy us a little food.’ We said, ‘We can’t go down. If our youngest brother is with us, then we will go down: for we may not see the man’s face, unless our youngest brother is with us.’ Your servant, my father, said to us, ‘You know that my wife bore me two sons. One went out from me, and I said, “Surely he is torn in pieces;” and I haven’t seen him since. If you take this one also from me, and harm happens to him, you will bring down my gray hairs with sorrow to Sheol.’ Now therefore when I come to your servant my father, and the boy is not with us; since his life is bound up in the boy’s life; it will happen, when he sees that the boy is no more, that he will die. Your servants will bring down the gray hairs of your servant, our father, with sorrow to Sheol. For your servant became collateral for the boy to my father, saying, ‘If I don’t bring him to you, then I will bear the blame to my father forever.’ Now therefore, please let your servant stay instead of the boy, my lord’s slave; and let the boy go up with his brothers. For how will I go up to my father, if the boy isn’t with me?—lest I see the evil that will come on my father.”",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 100,
+        "craftScore": 8,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "challenging",
+          "score": 7
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    },
+    {
+      "id": "lydia-hospitality-city",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Lydia came from Thyatira; in which city did she invite Paul’s group home after baptism?",
+        "heading": "A detail in Acts 16:6-15",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Troas"
+          },
+          {
+            "id": "option-2",
+            "text": "Neapolis"
+          },
+          {
+            "id": "option-3",
+            "text": "Thyatira"
+          },
+          {
+            "id": "option-4",
+            "text": "Philippi"
+          }
+        ],
+        "correctOptionId": "option-4",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT16.htm",
+            "locator": "Acts 16:6-15",
+            "excerpt": "When they had gone through the region of Phrygia and Galatia, they were forbidden by the Holy Spirit to speak the word in Asia. When they had come opposite Mysia, they tried to go into Bithynia, but the Spirit didn’t allow them. Passing by Mysia, they came down to Troas. A vision appeared to Paul in the night. There was a man of Macedonia standing, begging him, and saying, “Come over into Macedonia and help us.” When he had seen the vision, immediately we sought to go out to Macedonia, concluding that the Lord had called us to preach the Good News to them. Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis; and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city. On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together. A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Lydia sold purple goods and came from Thyatira.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "At Philippi, she persuaded Paul’s group to stay at her house after baptism.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-2",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 16:6-15",
+        "translation": "WEB"
+      },
+      "source": {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT16.htm",
+        "locator": "Acts 16:6-15",
+        "excerpt": "When they had gone through the region of Phrygia and Galatia, they were forbidden by the Holy Spirit to speak the word in Asia. When they had come opposite Mysia, they tried to go into Bithynia, but the Spirit didn’t allow them. Passing by Mysia, they came down to Troas. A vision appeared to Paul in the night. There was a man of Macedonia standing, begging him, and saying, “Come over into Macedonia and help us.” When he had seen the vision, immediately we sought to go out to Macedonia, concluding that the Lord had called us to preach the Good News to them. Setting sail therefore from Troas, we made a straight course to Samothrace, and the day following to Neapolis; and from there to Philippi, which is a city of Macedonia, the foremost of the district, a Roman colony. We were staying some days in this city. On the Sabbath day we went outside of the city by a riverside, where we supposed there was a place of prayer, and we sat down and spoke to the women who had come together. A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      },
+      "authorship": "Original Sanctuary research manuscript written by the assistant.",
+      "rights": "Original question wording; World English Bible source is public domain.",
+      "observedSuccessRate": null,
+      "actualAssessment": {
+        "accepted": true,
+        "evidenceScore": 98,
+        "craftScore": 7,
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "level": "challenging",
+          "score": 8
+        }
+      },
+      "audit": "docs/qa/2026-10-30-trivia/evaluations/closed-book-v2.json"
+    }
+  ],
+  "negativeCases": [
+    {
+      "id": "predictable-healing",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Mark 8:22-26",
+      "prompt": "In Mark’s account, what happened after Jesus laid hands on the man’s eyes again?",
+      "choices": [
+        "He saw everyone clearly",
+        "He stayed completely blind",
+        "His sight became worse",
+        "He refused to look"
+      ],
+      "correct": "He saw everyone clearly",
+      "claims": [
+        "The man saw everyone clearly after Jesus laid hands on his eyes again."
+      ],
+      "rationale": "Expected healing outcome with three failure alternatives gives away the answer without knowledge.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Mark 8:22-26",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "ambiguous-weapon",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "1 Samuel 17:38-51",
+      "prompt": "In 1 Samuel, what weapon did David use to kill Goliath?",
+      "choices": [
+        "Sling",
+        "Sword",
+        "Spear",
+        "Bow"
+      ],
+      "correct": "Sling",
+      "claims": [
+        "David struck the Philistine with a sling and a stone."
+      ],
+      "rationale": "Broad kill wording is ambiguous across the sling and subsequent sword action; chronology must reject.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "1 Samuel 17:38-51",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "invented-lexicon",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "John 9:1-11",
+      "prompt": "In John, which pool’s Hebrew name literally means “new beginning”?",
+      "choices": [
+        "Bethesda",
+        "Siloam",
+        "Gibeon",
+        "Heshbon"
+      ],
+      "correct": "Siloam",
+      "claims": [
+        "Siloam literally means “new beginning.”"
+      ],
+      "rationale": "Invented meaning contradicts the supplied text; reject regardless of style.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "John 9:1-11",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "uncertain-geography",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Genesis 11:1-9",
+      "prompt": "In Genesis, which tower has been conclusively identified by archaeology at Etemenanki?",
+      "choices": [
+        "Babel",
+        "David",
+        "Siloam",
+        "Hananel"
+      ],
+      "correct": "Babel",
+      "claims": [
+        "Archaeology has conclusively proved the tower of Babel was Etemenanki."
+      ],
+      "rationale": "External archaeological certainty cannot be established from a Bible passage; historical identification is disputed.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 11:1-9",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "overlapping-options",
+      "split": "holdout",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Genesis 8:6-12",
+      "prompt": "In Genesis, what returned to Noah carrying an olive leaf?",
+      "choices": [
+        "Dove",
+        "Bird",
+        "Raven",
+        "Eagle"
+      ],
+      "correct": "Dove",
+      "claims": [
+        "A dove returned to Noah carrying an olive leaf."
+      ],
+      "rationale": "Bird includes dove, producing overlapping correct options.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 8:6-12",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "answer-in-stem",
+      "split": "holdout",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "John 9:1-11",
+      "prompt": "In John, Jesus sent the blind man to Siloam; which pool did he name?",
+      "choices": [
+        "Bethesda",
+        "Siloam",
+        "Gibeon",
+        "Heshbon"
+      ],
+      "correct": "Siloam",
+      "claims": [
+        "Jesus sent the man to the pool of Siloam."
+      ],
+      "rationale": "The stem directly gives away the answer; no legitimate knowledge challenge.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "John 9:1-11",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    }
+  ],
+  "historicalProposals": "editorial-benchmark-v1.json and editorial-benchmark-v5.json preserve rejected and superseded proposals."
+}

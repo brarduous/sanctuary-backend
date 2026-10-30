@@ -5,8 +5,9 @@ set local statement_timeout='60s';
 
 create function public.discovery_validate_set_candidate(p_content jsonb,p_verification jsonb,source_hash text,expected_reference text,p_corpus_sha256 text,p_difficulty text) returns void
 language plpgsql security definer set search_path=public as $$
-declare review jsonb; c jsonb; minimum integer; citation jsonb; measured integer:=100; rating integer; first_rating integer; second_rating integer; dimension text; craft_score integer; craft_minimum integer:=8; passage_start integer; passage_end integer;
+declare review jsonb; c jsonb; minimum integer; citation jsonb; measured integer:=100; rating integer; first_rating integer; second_rating integer; dimension text; craft_score integer; craft_minimum integer:=8; passage_start integer; passage_end integer; rubric text;
 begin
+  rubric:=p_content->'difficulty'->>'rubricVersion';
   passage_start:=substring(p_content->>'scriptureReference' from ':([0-9]+)')::int;
   passage_end:=coalesce(substring(p_content->>'scriptureReference' from '-([0-9]+)$')::int,passage_start);
   -- Missing/NULL verdicts fail closed. No arithmetic average can hide one weak claim.
@@ -25,13 +26,21 @@ begin
     or not exists(select 1 from jsonb_array_elements(p_content->'choices') item where item->>'id'=p_content->>'correctOptionId' and length(btrim(item->>'text'))>0 and position(lower(item->>'text') in lower(p_content->'sources'->0->>'excerpt'))>0)
     or not exists(select 1 from jsonb_array_elements(p_content->'explanationClaimIds') item where item#>>'{}'=p_content->>'answerClaimId') then raise exception 'Answer and explanation structure is invalid'; end if;
   if p_verification->>'sourceSha256' is distinct from source_hash or encode(sha256(convert_to(p_content->'sources'->0->>'excerpt','UTF8')),'hex') is distinct from source_hash then raise exception 'Source hash mismatch'; end if;
+  if not exists(select 1 from jsonb_array_elements(p_content->'claims') claim cross join lateral jsonb_array_elements(p_content->'choices') choice
+    where claim->>'id'=p_content->>'answerClaimId' and choice->>'id'=p_content->>'correctOptionId'
+    and position(' '||regexp_replace(regexp_replace(lower(choice->>'text'),'^(a|an|the|his|her|its|their) ','','i'),'[^[:alnum:]]+',' ','g')||' '
+      in ' '||regexp_replace(lower(claim->>'text'),'[^[:alnum:]]+',' ','g')||' ')>0) then raise exception 'Answer claim must identify the keyed answer'; end if;
   if p_content->>'scriptureReference' is distinct from expected_reference or p_content->'sources'->0->>'locator' is distinct from expected_reference then raise exception 'Source reference differs from the curriculum'; end if;
   if p_verification->>'corpusSha256' is distinct from p_corpus_sha256 then raise exception 'Corpus version differs from the run'; end if;
   minimum:=greatest(95,(p_verification->>'minimumScore')::integer);
-  if p_content->'difficulty' is distinct from p_verification->'difficulty' or p_content->'difficulty'->>'rubricVersion' is distinct from 'discovery-difficulty-v1' or (p_content->'difficulty'->>'score')::int not between 0 and 8 or p_content->'difficulty'->>'level' is distinct from (case when (p_content->'difficulty'->>'score')::int<=2 then 'easy' when (p_content->'difficulty'->>'score')::int<=5 then 'moderate' else 'challenging' end) then raise exception 'Difficulty must match the independently assessed rubric'; end if;
+  if p_content->'difficulty' is distinct from p_verification->'difficulty' or coalesce(rubric,'') not in ('discovery-difficulty-v1','discovery-difficulty-v2') or (p_content->'difficulty'->>'score')::int not between 0 and (case when rubric='discovery-difficulty-v2' then 10 else 8 end) or p_content->'difficulty'->>'level' is distinct from (case when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v2' then 3 else 2 end) then 'easy' when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v2' then 6 else 5 end) then 'moderate' else 'challenging' end) then raise exception 'Difficulty must match the independently assessed rubric'; end if;
   if (select count(distinct r->>'model') from jsonb_array_elements(p_verification->'reviews') r)<>2
     or (select count(distinct r->>'requestedModel') from jsonb_array_elements(p_verification->'reviews') r)<>2 then raise exception 'Two distinct review models are required'; end if;
   for review in select value from jsonb_array_elements(p_verification->'reviews') loop
+    if rubric='discovery-difficulty-v2' and (review->'difficultyAssessment'->>'rubricVersion' is distinct from rubric
+      or review->'difficultyAssessment'->>'model' is distinct from review->>'model'
+      or coalesce(length(review->'difficultyAssessment'->>'responseId'),0)<5
+      or review->'difficultyAssessment'->>'questionPromptSha256' is distinct from encode(sha256(convert_to(p_content->>'prompt','UTF8')),'hex')) then raise exception 'Closed-book difficulty review is missing or not bound to this question'; end if;
     if coalesce((review->>'questionAccuracy')::int,0) not between minimum and 100 or coalesce((review->>'scopeAccuracy')::int,0) not between minimum and 100 or coalesce((review->>'explanationCoverage')::int,0) not between minimum and 100
       or (review->>'simpleTextualFact')::boolean is distinct from true or review->>'solvedOptionId' is distinct from p_content->>'correctOptionId'
       or coalesce(jsonb_array_length(review->'unresolvedIssues'),1)<>0 or coalesce(jsonb_array_length(review->'claims'),0)<>jsonb_array_length(p_content->'claims')
@@ -56,7 +65,7 @@ begin
     rating:=0;
     foreach dimension in array array['familiarity','evidenceNavigation','reasoningSteps','distractorSimilarity'] loop
       if coalesce((review->'difficulty'->>dimension)::int,-1) not between 0 and 2 then raise exception 'Difficulty dimension outside the rubric'; end if;
-      rating:=rating+(review->'difficulty'->>dimension)::int;
+      rating:=rating+(review->'difficulty'->>dimension)::int*(case when rubric='discovery-difficulty-v2' and dimension='familiarity' then 2 else 1 end);
     end loop;
     if first_rating is null then first_rating:=rating; else second_rating:=rating; end if;
     if (select count(distinct item->>'claimId') from jsonb_array_elements(review->'claims') item)<>jsonb_array_length(p_content->'claims')
@@ -97,6 +106,8 @@ end $$;
 create table public.discovery_daily_jobs (
   publication_date date primary key,
   plan jsonb not null,
+  epoch integer not null default 0 check(epoch between 0 and 2),
+  retry_history jsonb not null default '[]',
   status text not null default 'pending' check(status in ('pending','generating','published','exhausted')),
   set_review jsonb,
   lease_owner uuid references public.discovery_generation_runs(id),
@@ -105,6 +116,7 @@ create table public.discovery_daily_jobs (
 );
 create table public.discovery_daily_attempts (
   publication_date date not null references public.discovery_daily_jobs(publication_date),
+  epoch integer not null default 0 check(epoch between 0 and 2),
   position integer not null check(position between 1 and 3),
   attempt integer not null check(attempt between 1 and 3),
   run_id uuid not null references public.discovery_generation_runs(id),
@@ -116,9 +128,9 @@ create table public.discovery_daily_attempts (
   discovery_id uuid references public.discoveries(id),
   created_at timestamptz not null default now(),
   completed_at timestamptz,
-  primary key(publication_date,position,attempt)
+  primary key(publication_date,epoch,position,attempt)
 );
-create unique index discovery_daily_one_accepted on public.discovery_daily_attempts(publication_date,position) where status='accepted';
+create unique index discovery_daily_one_accepted on public.discovery_daily_attempts(publication_date,epoch,position) where status='accepted';
 create table public.discovery_daily_sets (
   publication_date date primary key,
   revision integer not null default 1 check(revision>0),
@@ -135,6 +147,14 @@ create table public.discovery_daily_set_items (
 );
 create trigger discovery_daily_sets_immutable before update or delete on public.discovery_daily_sets for each row execute function public.discovery_immutable();
 create trigger discovery_daily_items_immutable before update or delete on public.discovery_daily_set_items for each row execute function public.discovery_immutable();
+-- A fixed published day's retired revision must never reappear when an editor
+-- restores a newer revision of the same question for another use.
+create function public.discovery_daily_keep_withdrawn() returns trigger language plpgsql security definer set search_path=public as $$
+begin
+  if old.withdrawn and not new.withdrawn and exists(select 1 from public.discovery_daily_set_items where discovery_id=old.id) then raise exception 'A withdrawn fixed-set question stays withheld; use a new question ID for corrected future content'; end if;
+  return new;
+end $$;
+create trigger discovery_daily_keep_withdrawn before update of withdrawn on public.discoveries for each row execute function public.discovery_daily_keep_withdrawn();
 
 create function public.discovery_daily_claim(p_date date,p_plan jsonb,p_run uuid) returns jsonb language plpgsql security definer set search_path=public as $$
 declare job public.discovery_daily_jobs;
@@ -147,9 +167,9 @@ begin
   select * into job from public.discovery_daily_jobs where publication_date=p_date for update;
   if job.status in ('published','exhausted') then return null; end if;
   if job.lease_until>now() and job.lease_owner is distinct from p_run and exists(select 1 from public.discovery_generation_runs where id=job.lease_owner and status='running') then return null; end if;
-  if exists(select 1 from public.discovery_daily_attempts where publication_date=p_date group by position having count(*)>=3 and count(*) filter(where status='accepted')=0) then
+  if exists(select 1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch group by position having count(*)>=3 and count(*) filter(where status='accepted')=0) then
     update public.discovery_daily_jobs set status='exhausted',lease_until=null,updated_at=now() where publication_date=p_date;
-    update public.discovery_daily_attempts set status='rejected',reason_codes='["worker_interrupted"]',completed_at=now() where publication_date=p_date and status='running';
+    update public.discovery_daily_attempts set status='rejected',reason_codes='["worker_interrupted"]',completed_at=now() where publication_date=p_date and epoch=job.epoch and status='running';
     return null;
   end if;
   update public.discovery_daily_jobs set status='generating',lease_owner=p_run,lease_until=now()+interval '15 minutes',updated_at=now() where publication_date=p_date returning * into job;
@@ -160,13 +180,13 @@ declare job public.discovery_daily_jobs; n integer; source jsonb;
 begin
   select * into job from public.discovery_daily_jobs where publication_date=p_date for update;
   if not found or job.status<>'generating' or job.lease_owner is distinct from p_run or job.lease_until<now() or p_position not between 1 and 3 then raise exception 'Daily generation lease unavailable'; end if;
-  if exists(select 1 from public.discovery_daily_attempts where publication_date=p_date and position=p_position and status='accepted') then raise exception 'Daily question already accepted'; end if;
-  select coalesce(max(attempt),0)+1 into n from public.discovery_daily_attempts where publication_date=p_date and position=p_position;
+  if exists(select 1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and position=p_position and status='accepted') then raise exception 'Daily question already accepted'; end if;
+  select coalesce(max(attempt),0)+1 into n from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and position=p_position;
   if n>3 then raise exception 'Daily question retry budget exhausted'; end if;
   source:=job.plan->'slots'->(p_position-1)->'sourceOptions'->(n-1);
   if source->>'sourceSha256' is distinct from p_source_sha256 then raise exception 'Daily source differs from frozen plan'; end if;
-  update public.discovery_daily_attempts set status='rejected',reason_codes='["worker_interrupted"]',completed_at=now() where publication_date=p_date and position=p_position and status='running';
-  insert into public.discovery_daily_attempts(publication_date,position,attempt,run_id,source_sha256) values(p_date,p_position,n,p_run,p_source_sha256);
+  update public.discovery_daily_attempts set status='rejected',reason_codes='["worker_interrupted"]',completed_at=now() where publication_date=p_date and epoch=job.epoch and position=p_position and status='running';
+  insert into public.discovery_daily_attempts(publication_date,epoch,position,attempt,run_id,source_sha256) values(p_date,job.epoch,p_position,n,p_run,p_source_sha256);
   update public.discovery_daily_jobs set lease_until=now()+interval '15 minutes',updated_at=now() where publication_date=p_date;
   return n;
 end $$;
@@ -175,11 +195,11 @@ declare job public.discovery_daily_jobs; a public.discovery_daily_attempts; sour
 begin
   select * into job from public.discovery_daily_jobs where publication_date=p_date for update;
   if not found or job.status<>'generating' or job.lease_owner is distinct from p_run or job.lease_until<now() then raise exception 'Daily generation lease changed'; end if;
-  select * into a from public.discovery_daily_attempts where publication_date=p_date and position=p_position and attempt=p_attempt for update;
+  select * into a from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and position=p_position and attempt=p_attempt for update;
   if not found or a.status<>'running' or a.run_id is distinct from p_run then raise exception 'Daily attempt is not active'; end if;
   if p_content is null then
     if jsonb_typeof(p_reasons) is distinct from 'array' or jsonb_array_length(p_reasons)<1 then raise exception 'Rejection reasons required'; end if;
-    update public.discovery_daily_attempts set status='rejected',verification=p_verification,reason_codes=p_reasons,completed_at=now() where publication_date=p_date and position=p_position and attempt=p_attempt;
+    update public.discovery_daily_attempts set status='rejected',verification=p_verification,reason_codes=p_reasons,completed_at=now() where publication_date=p_date and epoch=job.epoch and position=p_position and attempt=p_attempt;
     if p_attempt=3 then update public.discovery_daily_jobs set status='exhausted',lease_until=null,updated_at=now() where publication_date=p_date; end if;
     return jsonb_build_object('status',case when p_attempt=3 then 'exhausted' else 'retry' end);
   end if;
@@ -192,21 +212,35 @@ begin
   insert into public.discoveries(id,slug) values(new_id,'daily-'||p_date::text||'-'||p_position::text||'-'||left(new_id::text,8));
   insert into public.discovery_revisions(discovery_id,revision,content) values(new_id,1,p_content);
   insert into public.discovery_reviews(discovery_id,revision,review_method,note,attestations) values(new_id,1,'automated_evidence','Approved under the daily-set editorial and evidence gates after two independent blinded reviews; not a human review or measured audience approval.',jsonb_build_object('sourceTextExact',true,'twoVerifierAgreement',true,'allClaimsSupported',true,'oneUnambiguousAnswer',true,'difficultyAssessed',true,'questionCraftAssessed',true,'questionCraftPolicy',p_verification->'questionCraft'->>'policyVersion','policyVersion',p_verification->>'policyVersion','runId',p_run,'evidenceScore',(p_verification->>'evidenceScore')::int,'dailySetPosition',p_position));
-  update public.discovery_daily_attempts set status='accepted',content=p_content,verification=p_verification,discovery_id=new_id,completed_at=now() where publication_date=p_date and position=p_position and attempt=p_attempt;
+  update public.discovery_daily_attempts set status='accepted',content=p_content,verification=p_verification,discovery_id=new_id,completed_at=now() where publication_date=p_date and epoch=job.epoch and position=p_position and attempt=p_attempt;
   return jsonb_build_object('status','accepted','discoveryId',new_id,'revision',1);
 end $$;
 
+-- The same rolling-week packet is read by the editor and rechecked at publication.
+-- Serializing publications prevents two workers from approving unseen neighbors.
+create function public.discovery_daily_week_context(p_date date) returns jsonb language sql stable security definer set search_path=public as $$
+ select coalesce(jsonb_agg(jsonb_build_object('date',i.publication_date,'position',i.position,'content',r.content) order by i.publication_date,i.position),'[]'::jsonb)
+ from public.discovery_daily_set_items i join public.discovery_revisions r on r.discovery_id=i.discovery_id and r.revision=i.revision
+ where i.publication_date between p_date-6 and p_date+6 and i.publication_date<>p_date
+$$;
+
 create function public.discovery_daily_publish(p_date date,p_run uuid,p_reviews jsonb) returns jsonb language plpgsql security definer set search_path=public as $$
-declare job public.discovery_daily_jobs; r jsonb; hashes jsonb;
+declare job public.discovery_daily_jobs; r jsonb; hashes jsonb; manuscripts jsonb; week_context jsonb;
 begin
+  perform pg_advisory_xact_lock(67240103);
   select * into job from public.discovery_daily_jobs where publication_date=p_date for update;
   if not found or job.status<>'generating' or job.lease_owner is distinct from p_run or job.lease_until<now() then raise exception 'Daily publication lease changed'; end if;
-  if (select count(*) from public.discovery_daily_attempts where publication_date=p_date and status='accepted')<>3 then raise exception 'Daily publication requires three accepted questions'; end if;
-  select jsonb_agg(encode(sha256(convert_to(content->>'prompt','UTF8')),'hex') order by position) into hashes from public.discovery_daily_attempts where publication_date=p_date and status='accepted';
+  week_context:=public.discovery_daily_week_context(p_date);
+  if (select count(*) from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status='accepted')<>3 then raise exception 'Daily publication requires three accepted questions'; end if;
+  if exists(select 1 from public.discovery_daily_attempts a join public.discoveries d on d.id=a.discovery_id where a.publication_date=p_date and a.epoch=job.epoch and a.status='accepted' and (d.withdrawn or d.correction_notice is not null)) then raise exception 'A reviewed question has been withheld or corrected; do not publish its retired revision'; end if;
+  select jsonb_agg(encode(sha256(convert_to(content->>'prompt','UTF8')),'hex') order by position) into hashes from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status='accepted';
+  select jsonb_agg(content order by position) into manuscripts from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status='accepted';
   if jsonb_typeof(p_reviews) is distinct from 'array' or jsonb_array_length(p_reviews)<>2
     or (select count(distinct x->>'model') from jsonb_array_elements(p_reviews) x)<>2 then raise exception 'Two independent daily set reviews required'; end if;
   for r in select value from jsonb_array_elements(p_reviews) loop
-    if r->'questionPromptHashes' is distinct from hashes or coalesce(length(r->>'responseId'),0)<5
+    if r->'questionContents' is distinct from manuscripts or r->'questionPromptHashes' is distinct from hashes or coalesce(length(r->>'responseId'),0)<5
+      or r->>'weekReviewVersion' is distinct from 'sanctuary-trivia-rolling-week-v1' or r->'weekContext' is distinct from week_context
+      or r->>'setEditorialVersion' is distinct from 'sanctuary-trivia-set-editor-v4'
       or jsonb_typeof(r->'issues') is distinct from 'array' or coalesce(length(btrim(r->>'rationale')),0)<15 then raise exception 'Set review is not bound to these questions'; end if;
   end loop;
   update public.discovery_daily_jobs set set_review=p_reviews,updated_at=now() where publication_date=p_date;
@@ -214,11 +248,37 @@ begin
     update public.discovery_daily_jobs set status='exhausted',lease_until=null where publication_date=p_date;
     return '{"status":"exhausted","reason":"daily_set_review"}'::jsonb;
   end if;
-  if (select count(distinct lower(btrim(choice->>'text'))) from public.discovery_daily_attempts a cross join lateral jsonb_array_elements(a.content->'choices') choice where a.publication_date=p_date and a.status='accepted' and choice->>'id'=a.content->>'correctOptionId')<>3 then raise exception 'Daily answers must be distinct'; end if;
+  if (select count(distinct lower(btrim(choice->>'text'))) from public.discovery_daily_attempts a cross join lateral jsonb_array_elements(a.content->'choices') choice where a.publication_date=p_date and a.epoch=job.epoch and a.status='accepted' and choice->>'id'=a.content->>'correctOptionId')<>3 then raise exception 'Daily answers must be distinct'; end if;
   insert into public.discovery_daily_sets(publication_date) values(p_date);
-  insert into public.discovery_daily_set_items(publication_date,position,discovery_id,revision) select p_date,position,discovery_id,1 from public.discovery_daily_attempts where publication_date=p_date and status='accepted';
+  insert into public.discovery_daily_set_items(publication_date,position,discovery_id,revision) select p_date,position,discovery_id,1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status='accepted';
+  -- Older clients receive the same rigorously reviewed Easy question. The existing
+  -- history trigger retains any replaced, already-released legacy revision.
+  insert into public.discovery_schedule(publication_date,locale,discovery_id,revision)
+    select p_date,'en',discovery_id,1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and position=1 and status='accepted'
+    on conflict(publication_date,locale) do update set discovery_id=excluded.discovery_id,revision=excluded.revision;
   update public.discovery_daily_jobs set status='published',lease_until=null,updated_at=now() where publication_date=p_date;
   return '{"status":"published"}'::jsonb;
+end $$;
+
+
+-- An explicit operational retry starts a new bounded epoch. Old source plans,
+-- reviews and attempts remain inspectable; no published set can be rewritten.
+create function public.discovery_daily_retry(p_date date,p_plan jsonb,p_reason text,p_operator text) returns jsonb language plpgsql security definer set search_path=public as $$
+declare job public.discovery_daily_jobs;
+begin
+  select * into job from public.discovery_daily_jobs where publication_date=p_date for update;
+  if not found or job.status<>'exhausted' then raise exception 'Only an exhausted unpublished day can be retried'; end if;
+  if exists(select 1 from public.discovery_daily_sets where publication_date=p_date) then raise exception 'Published daily sets are immutable'; end if;
+  if job.epoch>=2 then raise exception 'Daily editorial epoch budget exhausted; investigate before further generation'; end if;
+  if p_date<(now() at time zone 'UTC')::date or p_date>(now() at time zone 'UTC')::date+90 then raise exception 'Date outside bounded daily generation window'; end if;
+  if length(btrim(coalesce(p_reason,'')))<20 or length(p_reason)>1000 or length(btrim(coalesce(p_operator,'')))<3 or length(p_operator)>200 then raise exception 'A named operator and concrete editorial reason are required'; end if;
+  if jsonb_typeof(p_plan->'slots') is distinct from 'array' or jsonb_array_length(p_plan->'slots')<>3 or p_plan->>'date' is distinct from p_date::text or coalesce(length(p_plan->>'version'),0)<5 or (p_plan->>'corpusSha256') is distinct from (job.plan->>'corpusSha256') then raise exception 'A reviewed plan for the same date and corpus is required'; end if;
+  if p_plan is not distinct from job.plan then raise exception 'Retry requires a revised source plan or editorial version, not resampling'; end if;
+  update public.discovery_daily_jobs set
+    retry_history=retry_history||jsonb_build_array(jsonb_build_object('epoch',epoch,'plan',plan,'setReview',set_review,'operator',p_operator,'reason',p_reason,'retriedAt',now())),
+    epoch=epoch+1,plan=p_plan,status='pending',set_review=null,lease_owner=null,lease_until=null,updated_at=now()
+    where publication_date=p_date returning * into job;
+  return to_jsonb(job);
 end $$;
 
 alter table public.discovery_completions add column set_position integer check(set_position between 1 and 3);
@@ -274,6 +334,8 @@ alter table public.discovery_daily_set_items enable row level security;
 alter table public.discovery_daily_set_items force row level security;
 revoke all on public.discovery_daily_jobs,public.discovery_daily_attempts,public.discovery_daily_sets,public.discovery_daily_set_items from public,anon,authenticated;
 grant all on public.discovery_daily_jobs,public.discovery_daily_attempts,public.discovery_daily_sets,public.discovery_daily_set_items to service_role;
-revoke all on function public.discovery_validate_set_candidate(jsonb,jsonb,text,text,text,text),public.discovery_daily_claim(date,jsonb,uuid),public.discovery_daily_begin(date,integer,uuid,text),public.discovery_daily_finish(date,integer,uuid,integer,jsonb,jsonb,jsonb),public.discovery_daily_publish(date,uuid,jsonb) from public,anon,authenticated;
-grant execute on function public.discovery_validate_set_candidate(jsonb,jsonb,text,text,text,text),public.discovery_daily_claim(date,jsonb,uuid),public.discovery_daily_begin(date,integer,uuid,text),public.discovery_daily_finish(date,integer,uuid,integer,jsonb,jsonb,jsonb),public.discovery_daily_publish(date,uuid,jsonb) to service_role;
+revoke all on function public.discovery_validate_set_candidate(jsonb,jsonb,text,text,text,text),public.discovery_daily_claim(date,jsonb,uuid),public.discovery_daily_begin(date,integer,uuid,text),public.discovery_daily_finish(date,integer,uuid,integer,jsonb,jsonb,jsonb),public.discovery_daily_publish(date,uuid,jsonb),public.discovery_daily_week_context(date),public.discovery_daily_retry(date,jsonb,text,text) from public,anon,authenticated;
+grant execute on function public.discovery_validate_set_candidate(jsonb,jsonb,text,text,text,text),public.discovery_daily_claim(date,jsonb,uuid),public.discovery_daily_begin(date,integer,uuid,text),public.discovery_daily_finish(date,integer,uuid,integer,jsonb,jsonb,jsonb),public.discovery_daily_publish(date,uuid,jsonb),public.discovery_daily_week_context(date),public.discovery_daily_retry(date,jsonb,text,text) to service_role;
+revoke all on function public.discovery_daily_keep_withdrawn() from public,anon,authenticated;
+grant execute on function public.discovery_daily_keep_withdrawn() to service_role;
 commit;

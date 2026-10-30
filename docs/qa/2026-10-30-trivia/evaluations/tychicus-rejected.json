@@ -1,0 +1,580 @@
+{
+  "noProductionWrites": true,
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Colossians, who was sent with Onesimus to bring news and encourage the readers?",
+    "heading": "A detail in Colossians 4:7-18",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Aristarchus"
+      },
+      {
+        "id": "option-2",
+        "text": "Epaphras"
+      },
+      {
+        "id": "option-3",
+        "text": "Tychicus"
+      },
+      {
+        "id": "option-4",
+        "text": "Archippus"
+      }
+    ],
+    "correctOptionId": "option-3",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/COL04.htm",
+        "locator": "Colossians 4:7-18",
+        "excerpt": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord. I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts, together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here. Aristarchus, my fellow prisoner, greets you, and Mark, the cousin of Barnabas (concerning whom you received commandments, “if he comes to you, receive him”), and Jesus who is called Justus. These are my only fellow workers for God’s Kingdom who are of the circumcision, men who have been a comfort to me. Epaphras, who is one of you, a servant of Christ, salutes you, always striving for you in his prayers, that you may stand perfect and complete in all the will of God. For I testify about him that he has great zeal for you, and for those in Laodicea, and for those in Hierapolis. Luke the beloved physician and Demas greet you. Greet the brothers who are in Laodicea, and Nymphas, and the assembly that is in his house. When this letter has been read among you, cause it to be read also in the assembly of the Laodiceans, and that you also read the letter from Laodicea. Tell Archippus, “Take heed to the ministry which you have received in the Lord, that you fulfill it.” The salutation of me, Paul, with my own hand: remember my bonds. Grace be with you. Amen.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "Tychicus was sent with Onesimus to share news and encourage their hearts.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "The letter was also to be read in Laodicea.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Colossians 4:7-18",
+    "translation": "WEB"
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 6,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 6,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 0,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The sending situation and purpose are clear without requiring church jargon. However, identifying a messenger who brings news and encouragement remains routine personnel recall; no distinctive discovery makes this particular association worth retelling. The question is fair direct recall, with no everyday-expectation shortcut. All three distractors are credible named associates in the same closing passage, and each has a clearly different stated role. Total: 6/8, but the zero for interest rejects the item."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 6,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 0,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "Context: the messenger assignment supplies a clear situation without church jargon or unnecessary padding. Interest: the target is an obscure name attached to routine news-bearing and encouragement; there is no vivid action, unexpected contrast, or connection worth retelling. Fair challenge: this is a clean, supported identification, and everyday expectations cannot reveal the correct name. Choice quality: all four are actual people in the same letter closing with distinct roles, making the three alternatives credible name-and-role confusions. Total: 6/8, but the zero for interest requires rejection."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 100,
+    "candidateSha256": "b285677a19f6b82757cde00966d6a6cd6825685e08cd308ed6757a47b158431d",
+    "sourceSha256": "576d0d066568aeefcf590660787d596cc06dd1f04bc77f650f46414e0a4024d8",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "f6ee47d3203f76b77bad2a0ef33368009e53935848017436f4f7e0c45b8cd4d2",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 7
+    },
+    "difficultyTargetMet": true,
+    "reasons": [
+      "unresolved_or_complex_claim",
+      "question_craft_below_threshold",
+      "daily_set_editorial_gate"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Editorial rejection: interest scores 0. The question tests a routine messenger-name association without a distinctive action, contrast, or rewarding connection. Its 6/8 craft total does not override the zero-dimension rule."
+        ],
+        "questionPremises": [
+          {
+            "text": "The question concerns the sending of a messenger to the readers in the cited passage of Colossians.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              }
+            ]
+          },
+          {
+            "text": "The messenger was sent together with Onesimus.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "text": "Their mission included bringing news to the readers.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "text": "The messenger was sent to encourage the readers.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 0,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The sending situation and purpose are clear without requiring church jargon. However, identifying a messenger who brings news and encouragement remains routine personnel recall; no distinctive discovery makes this particular association worth retelling. The question is fair direct recall, with no everyday-expectation shortcut. All three distractors are credible named associates in the same closing passage, and each has a clearly different stated role. Total: 6/8, but the zero for interest rejects the item."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 16,
+                "quote": "When this letter has been read among you, cause it to be read also in the assembly of the Laodiceans, and that you also read the letter from Laodicea."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Aristarchus sends greetings and is identified as a fellow prisoner, not the messenger accompanying Onesimus. As another named associate in the closing greetings, he is a credible mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 10,
+                "quote": "Aristarchus, my fellow prisoner, greets you, and Mark, the cousin of Barnabas (concerning whom you received commandments, “if he comes to you, receive him”),"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Epaphras sends greetings and prays for the readers; he is not identified as Onesimus's traveling companion. His connection to the readers makes him a plausible distractor.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Epaphras, who is one of you, a servant of Christ, salutes you, always striving for you in his prayers, that you may stand perfect and complete in all the will of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "For I testify about him that he has great zeal for you, and for those in Laodicea, and for those in Hierapolis."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Tychicus is named as the news bearer, then identified as being sent to comfort the readers together with Onesimus.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Archippus receives an instruction to fulfill his ministry, rather than being named as the departing messenger. His named ministry role in the same closing passage makes him a credible alternative.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 17,
+                "quote": "Tell Archippus, “Take heed to the ministry which you have received in the Lord, that you fulfill it.”"
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Tychicus, a little-known coworker identified through his partnership with Onesimus and their news-bearing mission. Players must distinguish the dispatched messenger from other people named in the same closing passage. This requires recalling a specific relationship and role, but no further inference."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_0e68f0bd28142dd4016ae4d9b7b2dc87d295b3d98eca76e751",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_02b6cb175d0ca05d016ae4d9cf697087d28735c0b1e3ec3b0f",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "e6848aa9fc506862c9f78ae269dcfc8625aaa8318ada4c89fb12f7272043e3df",
+          "usage": {
+            "inputTokens": 1693,
+            "outputTokens": 238,
+            "totalTokens": 1931
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium: weighted score 5/10. The tested companion-name association is relatively obscure for the intended audience, but answering requires only direct identification. The alternatives are comparable named associates, not closely competing travelers whose roles require multiple connections to distinguish."
+        }
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Editorial rejection: interest scores 0. Identifying an obscure messenger by his routine assignment offers no distinctive discovery or memorable connection. The craft total is 6/8, but a zero in any dimension rejects the item."
+        ],
+        "questionPremises": [
+          {
+            "text": "The question concerns a messenger assignment described in Colossians.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "text": "Someone was being sent to the letter's recipients together with Onesimus.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "text": "The messengers were to bring news about the sender's circumstances.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "text": "Encouraging the recipients was a purpose of the assignment.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 0,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "Context: the messenger assignment supplies a clear situation without church jargon or unnecessary padding. Interest: the target is an obscure name attached to routine news-bearing and encouragement; there is no vivid action, unexpected contrast, or connection worth retelling. Fair challenge: this is a clean, supported identification, and everyday expectations cannot reveal the correct name. Choice quality: all four are actual people in the same letter closing with distinct roles, making the three alternatives credible name-and-role confusions. Total: 6/8, but the zero for interest requires rejection."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 16,
+                "quote": "When this letter has been read among you, cause it to be read also in the assembly of the Laodiceans, and that you also read the letter from Laodicea."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Aristarchus sends greetings as a fellow prisoner; he is not identified as Onesimus's accompanying messenger. His presence among the named associates makes him a credible role-confusion distractor.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 10,
+                "quote": "Aristarchus, my fellow prisoner, greets you, and Mark, the cousin of Barnabas (concerning whom you received commandments, “if he comes to you, receive him”),"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Epaphras sends greetings and prays for the recipients rather than being named as the messenger. His connection to the recipients and concern for them make him a plausible alternative.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Epaphras, who is one of you, a servant of Christ, salutes you, always striving for you in his prayers, that you may stand perfect and complete in all the will of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "For I testify about him that he has great zeal for you, and for those in Laodicea, and for those in Hierapolis."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Tychicus is named as the news-bearer, and the following sentences identify his assignment to comfort the recipients and his accompaniment by Onesimus.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "All my affairs will be made known to you by Tychicus, the beloved brother, faithful servant, and fellow bondservant in the Lord."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "I am sending him to you for this very purpose, that he may know your circumstances and comfort your hearts,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "together with Onesimus, the faithful and beloved brother, who is one of you. They will make known to you everything that is going on here."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Archippus is the intended recipient of an instruction about fulfilling his ministry, not the accompanying messenger. As another named person with an assignment in this closing, he is a credible name-and-role mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 17,
+                "quote": "Tell Archippus, “Take heed to the ministry which you have received in the Lord, that you fulfill it.”"
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Tychicus. His assignment alongside Onesimus is a little-known relational detail. Players must distinguish the traveling messenger from other associates named in the same closing passage, making the alternatives closely related. The answer requires direct recall, not a multistep inference."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_01db2222311e3540016ae4d9b7d22c87d2ab7da31b3d4eacd7",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_0116ee3ad3cfd681016ae4d9cf73ac87d2b84103839ea0c673",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "e6848aa9fc506862c9f78ae269dcfc8625aaa8318ada4c89fb12f7272043e3df",
+          "usage": {
+            "inputTokens": 1693,
+            "outputTokens": 163,
+            "totalTokens": 1856
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, estimated score 5/10: identifying Tychicus in this assignment tests a little-known personal role, but requires only direct recall of one association. The alternatives are plausible people from the same letter, not competing participants in a complex sequence."
+        }
+      }
+    ]
+  },
+  "reviews": null,
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_0e68f0bd28142dd4016ae4d9b7b2dc87d295b3d98eca76e751",
+      "usage": {
+        "inputTokens": 6169,
+        "outputTokens": 1745,
+        "totalTokens": 7914
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_01db2222311e3540016ae4d9b7d22c87d2ab7da31b3d4eacd7",
+      "usage": {
+        "inputTokens": 6169,
+        "outputTokens": 1572,
+        "totalTokens": 7741
+      }
+    }
+  ]
+}

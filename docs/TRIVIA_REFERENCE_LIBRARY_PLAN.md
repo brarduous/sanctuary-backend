@@ -1,6 +1,6 @@
 # Trivia reference library: a curated research system
 
-Decision proposal, October 30, 2026. The recommended first step is a small licensed library with precise retrieval, attribution, and evaluation. A large collection becomes useful only when its relevant evidence can be found and verified reliably.
+Implemented phase-one research pilot, October 30, 2026. The recommended first step is a small licensed library with precise retrieval, attribution, and evaluation. A large collection becomes useful only when its relevant evidence can be found and verified reliably.
 
 ## Store originals and make a structured research layer
 
@@ -31,7 +31,7 @@ Primary sources checked: [STEPBible data](https://github.com/STEPBible/STEPBible
 
 CCEL states that many underlying works are public domain in the US but its editions can contain separately protected material, and commercial reuse/republication requires permission. Bible.org also has specific electronic-reuse restrictions. Therefore neither entire site should be bulk imported on the assumption that free reading permits commercial redistribution. [CCEL policy](https://www.ccel.org/about/copyright.html), [Bible.org policy](https://bible.org/article/trademark-and-copyright-information).
 
-Start with the WEB corpus, one Greek/Hebrew lexicon family, the two geography datasets, and two carefully selected commentary editions. This is a pilot collection, not a request to purchase subscriptions or upload unlicensed books. No external library has yet been ingested into production.
+Start with the WEB corpus, one Greek/Hebrew lexicon family, the two geography datasets, and two carefully selected commentary editions. This is a pilot collection, not a request to purchase subscriptions or upload unlicensed books. The bounded pilot is now stored privately: 15 original/extracted objects, seven editions and 95 indexed entries. The source registry is `content/discoveries/reference-pilot-index.json`; storage proof is `docs/qa/2026-10-30-trivia/reference-storage.json`. It uses WEB, STEPBible TBESG, selected OpenBible geography, two Pleiades records, and CrossWire-distributed Matthew Henry Concise 2.2 and Wesley 1.1 editions whose distribution notices explicitly identify them as public domain. Those notices and extraction changes are retained; no entire CCEL website edition was imported.
 
 ## Research tools for the generator and reviewers
 
@@ -68,3 +68,9 @@ Phase one can use references for discovery and alternatives while keeping publis
 ## Grow based on evidence
 
 Measure relevant-passage retrieval, citation correctness, unanswerable/contested cases, duplicate source lineage, OCR errors, question acceptance, genuine topic diversity, cost per approved question, reader enjoyment, and disputes. Expand the collection where those measurements reveal a gap. Embeddings, more books, or a knowledge graph should earn their complexity through better retrieval and better questions.
+
+## Implemented retrieval boundary
+
+`utils/triviaReferences.js` provides bounded search, context expansion, Greek lexeme lookup, exact WEB concordance, period-aware place lookup and evidence comparison. Unknown senses/places return no answer; related sources do not become independent corroboration. `buildResearchPacket` is called by the scheduled writer, with packet hashes and citation IDs saved in its audit. Three retrieval tests cover lineage, Greek lookup, geography and no-answer behavior. Originals are in the private `trivia-references` bucket, with anonymous public access denied. The small index is versioned with server code; no embedding service or massive database is required for this pilot.
+
+These references suggest better original questions and believable alternatives. Published factual claims must still be supported by the saved WEB excerpt. External geography, lexical interpretations and commentary-only assertions remain outside automatic publication until the separate multi-source gate exists.

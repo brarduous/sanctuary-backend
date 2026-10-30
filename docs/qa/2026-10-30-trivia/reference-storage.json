@@ -1,0 +1,102 @@
+{
+  "bucket": "trivia-references",
+  "public": false,
+  "indexVersion": "trivia-reference-pilot-v1",
+  "indexSha256": "7f4a612ba0ec7be640a1cf501ca7cb17f4c99d182b3871af1d2e9d8e93bdc7ac",
+  "uploads": [
+    {
+      "sourceId": "web",
+      "file": "web-corpus.json",
+      "object": "originals/00a12b4ef1482a44e719d04140a7328dc83583192ce1e5fbcf65e7dffd573b5a/web-corpus.json",
+      "bytes": 4762790
+    },
+    {
+      "sourceId": "step-tbesg",
+      "file": "step-tbesg.txt",
+      "object": "originals/312f723d7b8ef263bbdfb0451c9b8057125804dfff390b6f8544cff2a84b57f4/step-tbesg.txt",
+      "bytes": 4736912
+    },
+    {
+      "sourceId": "openbible-geo",
+      "file": "openbible-ancient.jsonl",
+      "object": "originals/b8187aa4737e8517ccc090f765d2be11da4c548cd2a59d3cdcb62e952cb8c0f2/openbible-ancient.jsonl",
+      "bytes": 11550193
+    },
+    {
+      "sourceId": "pleiades-501482",
+      "file": "pleiades-501482.json",
+      "object": "originals/16e59f09cb0e98fe5727ba189af7bada5199f6b0fd56748e33e018a4c7e3e66d/pleiades-501482.json",
+      "bytes": 64751
+    },
+    {
+      "sourceId": "pleiades-678299",
+      "file": "pleiades-678299.json",
+      "object": "originals/7a75d7f7f29630f9d60472d05a4c63a6d1c1817d501228d9c8ee081c89387d47/pleiades-678299.json",
+      "bytes": 15522
+    },
+    {
+      "sourceId": "sword-mhc",
+      "file": "MHC.zip",
+      "object": "originals/6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b/MHC.zip",
+      "bytes": 15195123
+    },
+    {
+      "sourceId": "sword-mhc",
+      "file": "sword-MHC-John-9-7.txt",
+      "object": "originals/23022d5bff58e1457a825b22943b49ceac07be80961665a5f7db636a988b360e/sword-MHC-John-9-7.txt",
+      "bytes": 24391
+    },
+    {
+      "sourceId": "sword-mhc",
+      "file": "sword-MHC-Acts-16-14.txt",
+      "object": "originals/623ca0fc15f9e971e2b274b8956dbd649b083cc07f8af5e493630409726afc27/sword-MHC-Acts-16-14.txt",
+      "bytes": 25480
+    },
+    {
+      "sourceId": "sword-mhc",
+      "file": "sword-MHC-Acts-9-36.txt",
+      "object": "originals/7e63dc95f8c99114d4b9d8eb1b6f36c49c35f89a81578c73a08718e4a0e8bda2/sword-MHC-Acts-9-36.txt",
+      "bytes": 15371
+    },
+    {
+      "sourceId": "sword-mhc",
+      "file": "sword-MHC-Ruth-4-7.txt",
+      "object": "originals/f54ed38b0871d8d5f91aa336421931caef53dd03ad4896a7083f80d5dc5f1734/sword-MHC-Ruth-4-7.txt",
+      "bytes": 9759
+    },
+    {
+      "sourceId": "sword-wesley",
+      "file": "Wesley.zip",
+      "object": "originals/d4423b084bfc2a4dd00f7ed0b2004113d62010317ddb14a62c1b31801fff360e/Wesley.zip",
+      "bytes": 1895943
+    },
+    {
+      "sourceId": "sword-wesley",
+      "file": "sword-Wesley-John-9-7.txt",
+      "object": "originals/e0120210e4c1d4b565cb14d959cc282e696dc60e9ae40729495631d06591a01e/sword-Wesley-John-9-7.txt",
+      "bytes": 1105
+    },
+    {
+      "sourceId": "sword-wesley",
+      "file": "sword-Wesley-Acts-16-14.txt",
+      "object": "originals/b051f1c5b53e7390dfd9c62ea378b52ade014d9bfebb1dff9b006610c3cd6592/sword-Wesley-Acts-16-14.txt",
+      "bytes": 261
+    },
+    {
+      "sourceId": "sword-wesley",
+      "file": "sword-Wesley-Acts-9-36.txt",
+      "object": "originals/792542dfac1320c580142cdada16dba0ff0524a252f92c594964edfd3e6b4a95/sword-Wesley-Acts-9-36.txt",
+      "bytes": 256
+    },
+    {
+      "sourceId": "sword-wesley",
+      "file": "sword-Wesley-Ruth-4-7.txt",
+      "object": "originals/6f6b6932de0fb22994e0bf236bf3f48eeda5258c5296129694c3a10b81c6aca0/sword-Wesley-Ruth-4-7.txt",
+      "bytes": 659
+    }
+  ],
+  "completedAt": "2026-10-30T17:02:47.340Z",
+  "productionContentWrites": false,
+  "manifestObject": "manifests/a6dcc8bca7b200e2111083aa82ae86e666c80a7cf86eee0c1cde3d2aa95f5560.json",
+  "publicReadStatus": 400
+}

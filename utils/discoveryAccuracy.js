@@ -1,9 +1,10 @@
 const {validateContent}=require('./discoveries');
 const {sha,normalize}=require('./discoveryScripture');
-const {consensusDifficulty}=require('./discoveryDifficulty');
+const {consensusDifficulty,DAILY_VERSION}=require('./discoveryDifficulty');
 const {copyIssues}=require('./discoveryCopy');
 const {VERSION:CRAFT_POLICY,questionCraftIssues,assessQuestionCraft,hasBiblicalFrame}=require('./discoveryQuestionCraft');
 const {COPY_POLICY}=require('./discoveryCopy');
+const {isDeepStrictEqual}=require('node:util');
 const POLICY='discovery-evidence-v3';
 const MIN_SCORE=95;
 const SCOPE='This discovery describes what the cited passage says in the World English Bible.';
@@ -29,10 +30,13 @@ function deterministicChecks(content,evidence,{recent=[],targetDifficulty}={}) {
   try {validateContent(content);}catch{reasons.push('invalid_content');return reasons;}
   reasons.push(...copyIssues(content));
   if(content.kind!=='biblical_text' || content.translation!=='WEB' || content.traditionLabel || content.sources.length!==1 || content.scopeNote!==SCOPE)reasons.push('not_simple_biblical_text');
-  if(content.scriptureReference!==evidence.source.locator || JSON.stringify(content.sources[0])!==JSON.stringify(evidence.source) || sha(content.sources[0].excerpt)!==evidence.sourceSha256)reasons.push('source_integrity');
+  if(content.scriptureReference!==evidence.source.locator || !isDeepStrictEqual(content.sources[0],evidence.source) || sha(content.sources[0].excerpt)!==evidence.sourceSha256)reasons.push('source_integrity');
   if(content.claims.some(claim=>claim.sourceIds.length!==1 || claim.sourceIds[0]!=='passage'))reasons.push('claim_source_mismatch');
   const correct=content.choices.find(choice=>choice.id===content.correctOptionId)?.text;
   if(!correct || !(` ${normalize(evidence.source.excerpt)} `).includes(` ${normalize(correct)} `))reasons.push('answer_not_explicit_in_text');
+  const answerClaim=content.claims.find(claim=>claim.id===content.answerClaimId);
+  const answerWords=normalize(correct).replace(/^(?:a|an|the|his|her|its|their) /,'');
+  if(!answerWords || !(` ${normalize(answerClaim?.text)} `).includes(` ${answerWords} `))reasons.push('answer_claim_does_not_identify_key');
   if(/\b(not|except|least|never|first ever|oldest|shortest|only person|authored|written by|historically proven)\b/i.test(content.prompt))reasons.push('disputed_or_negative_question');
   if(!hasBiblicalFrame(content.prompt,evidence.source.locator))reasons.push('question_reference_mismatch');
   reasons.push(...questionCraftIssues(content));
@@ -49,6 +53,7 @@ function assessCandidate(content,evidence,reviews,options={}) {
   const recordScore=(score,reason)=>{if(!Number.isInteger(score) || score<0 || score>100){reasons.push('malformed_assessment');scores.push(0);}else{scores.push(score);if(score<threshold)reasons.push(reason);}};
   if(!Array.isArray(reviews) || reviews.length!==2 || new Set(reviews.map(row=>row.model)).size!==2 || new Set(reviews.map(row=>row.requestedModel)).size!==2)reasons.push('two_distinct_review_models_required');
   for(const review of reviews || []) {
+    if(options.dailySet && (review.difficultyAssessment?.rubricVersion!==DAILY_VERSION || review.difficultyAssessment?.model!==review.model || typeof review.difficultyAssessment?.responseId!=='string' || review.difficultyAssessment.responseId.length<5 || review.difficultyAssessment.questionPromptSha256!==sha(content.prompt)))reasons.push('daily_difficulty_review_missing');
     for(const field of ['questionAccuracy','scopeAccuracy','explanationCoverage'])recordScore(review[field],`${field}_below_threshold`);
     if(review.simpleTextualFact!==true || !Array.isArray(review.unresolvedIssues) || review.unresolvedIssues.length)reasons.push('unresolved_or_complex_claim');
     try {const rating=assessQuestionCraft(review.questionCraft);craft.push(rating);if(!rating.accepted)reasons.push('question_craft_below_threshold');if(options.dailySet && (rating.score<7 || rating.dimensions.fairChallenge!==2))reasons.push('daily_set_editorial_gate');}catch{reasons.push('question_craft_missing_or_invalid');}
@@ -77,7 +82,7 @@ function assessCandidate(content,evidence,reviews,options={}) {
     }
   }
   let difficulty=null;
-  try {difficulty=consensusDifficulty(reviews);}catch{reasons.push('difficulty_disagreement');}
+  try {difficulty=consensusDifficulty(reviews,options.dailySet ? DAILY_VERSION:undefined);}catch{reasons.push('difficulty_disagreement');}
   if(options.dailySet && difficulty?.level!==options.targetDifficulty)reasons.push('daily_set_difficulty_mismatch');
   return {policyVersion:POLICY,copyPolicyVersion:COPY_POLICY,questionCraft:{policyVersion:CRAFT_POLICY,minimumScore:6,score:craft.length===2 ? Math.min(...craft.map(rating=>rating.score)):0,assessments:craft},accepted:reasons.length===0,minimumScore:threshold,evidenceScore:scores.length ? Math.min(...scores) : 0,candidateSha256:sha(content),sourceSha256:evidence.sourceSha256,corpusVersion:evidence.corpusVersion,corpusSha256:evidence.corpusSha256,questionFingerprint:fingerprint(content),difficulty,difficultyTargetMet:difficulty?.level===options.targetDifficulty,reasons:[...new Set(reasons)],reviews};
 }

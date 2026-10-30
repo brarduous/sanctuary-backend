@@ -24,6 +24,29 @@ test('a fully sourced candidate passes with separate assessed difficulty',()=>{
  const result=assessCandidate(content,evidence,reviews(),{targetDifficulty:'challenging'});
  assert.equal(result.accepted,true);assert.equal(result.evidenceScore,99);assert.equal(result.difficulty.level,'easy');assert.equal(result.difficultyTargetMet,false,'a curriculum target must never inflate the label');
 });
+test('source integrity tolerates database object key ordering but rejects changed source values',()=>{
+ const reordered=structuredClone(content);reordered.sources[0]=Object.fromEntries(Object.entries(reordered.sources[0]).reverse());
+ assert.deepEqual(deterministicChecks(reordered,evidence),[]);
+ reordered.sources[0].url='https://example.invalid/different-source';
+ assert.ok(deterministicChecks(reordered,evidence).includes('source_integrity'));
+});
+test('daily difficulty is a separate blinded closed-book task with independently bound response IDs',async()=>{
+ const calls=[];
+ const client={responses:{async create(request){
+  const input=JSON.parse(request.input);assert.equal(input.candidate.correctOptionId,undefined);assert.equal(input.candidate.difficulty,undefined);assert.equal(input.targetDifficulty,undefined);
+  calls.push(request.text.format.name);
+  const data=request.text.format.name==='discovery_closed_book_difficulty' ? {familiarity:0,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:1,rationale:'A familiar image; no additional knowledge connections are required.'}:modelReviewFor(content,evidence,request.model);
+  return {status:'completed',model:request.model,id:request.text.format.name+'-'+request.model,output_text:JSON.stringify(data),usage:{input_tokens:10,output_tokens:10,total_tokens:20}};
+ }}};
+ const adapter=createDiscoveryModels({generatorModel:'writer',reviewModels:['test-a','test-b'],client});
+ const result=await adapter.review({content,evidence,dailySet:true});
+ assert.equal(calls.filter(name=>name==='discovery_verification').length,2);assert.equal(calls.filter(name=>name==='discovery_closed_book_difficulty').length,2);
+ assert.equal(result[0].usage.totalTokens,40);assert.ok(result[0].data.verificationDifficulty);
+ assert.equal(result[0].data.difficultyAssessment.rubricVersion,'discovery-difficulty-v2');
+ assert.notEqual(result[0].data.responseId,result[0].data.difficultyAssessment.responseId);
+ const assessed=assessCandidate(content,evidence,result.map(r=>r.data),{dailySet:true,targetDifficulty:'easy'});assert.equal(assessed.accepted,true);
+ result[0].data.difficultyAssessment.questionPromptSha256='changed';assert.ok(assessCandidate(content,evidence,result.map(r=>r.data),{dailySet:true,targetDifficulty:'easy'}).reasons.includes('daily_difficulty_review_missing'));
+});
 test('one score of 94 rejects even when every other score is 100; 95 is inclusive',()=>{
  const r=reviews();r[0].claims[0].confidence=94;
  assert.equal(assessCandidate(content,evidence,r).accepted,false);assert.equal(assessCandidate(content,evidence,r).evidenceScore,94);

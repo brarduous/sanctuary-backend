@@ -24,6 +24,11 @@ function unwrap(result) {
 function itemId(value) { if (!UUID.test(value)) invalid('A discovery UUID is required.'); return value; }
 function revision(value) { if (!Number.isInteger(value) || value < 1) invalid('A positive revision is required.'); return value; }
 function missingSchema(error) { return ['42P01','PGRST205'].includes(error?.code); }
+function legacyProjection(item) {
+  const {setPosition,setDifficulty,...compatible}=item;
+  if(compatible.difficulty?.rubricVersion==='discovery-difficulty-v2')delete compatible.difficulty;
+  return compatible;
+}
 async function settings() {
   const result = await supabase.from('discovery_runtime_settings').select('*').eq('singleton', true).maybeSingle();
   if (missingSchema(result.error)) return { enabled: false, rollout_percentage: 0, internal_user_ids: [] };
@@ -51,7 +56,7 @@ async function releasedRows(id, rev) {
     if (rev) query = query.eq('revision',rev);
     return query.order('publication_date',{ascending:false}).limit(100);
   });
-  return (await Promise.all(queries)).flatMap(result=>missingSchema(result.error) ? []:unwrap(result)).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision);
+  return (await Promise.all(queries)).flatMap(result=>missingSchema(result.error) ? []:unwrap(result)).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision || (b.position || 0)-(a.position || 0));
 }
 async function dailySetRows(today,requestedDate) {
   const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').gte('publication_date',requestedDate || shiftDate(today,-1)).lte('publication_date',requestedDate || shiftDate(today,7)).order('publication_date').order('position'));
@@ -83,6 +88,7 @@ router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
       ]);
       [items, evergreen] = await Promise.all([projectSchedule(unwrap(scheduled)),projectSchedule(unwrap(fallback))]);
       evergreen = evergreen.slice(0,1);
+      items=items.map(legacyProjection);evergreen=evergreen.map(legacyProjection);
       withdrawnIds = unwrap(withdrawn).map(row => row.id);
     }
     const body = { schemaVersion: 1, enabled: Boolean(enabled), items, evergreen, withdrawnIds };
@@ -125,7 +131,7 @@ router.get('/:id',readLimiter, async (req,res,next) => {
     const items = await projectSchedule(schedule);
     if (!items.length) return res.status(410).json({error:{code:'DISCOVERY_WITHDRAWN',message:'This discovery has been withdrawn for review.'}});
     // Revalidate on every online visit so a withdrawal/correction is respected.
-    res.set('Cache-Control','no-store').json({ discovery: items[0] });
+    res.set('Cache-Control','no-store').json({ discovery: req.query.dailySet==='1' ? items[0]:legacyProjection(items[0]) });
   } catch(error) { next(error); }
 });
 router.post('/:id/reports',reportLimiter,optionalAuth,async (req,res,next) => {
@@ -142,6 +148,25 @@ router.post('/:id/reports',reportLimiter,optionalAuth,async (req,res,next) => {
 });
 
 adminRouter.use(auth,requireAdmin);
+adminRouter.get('/daily-sets',async (_req,res,next)=>{
+  try {
+    const [jobs,attempts]=await Promise.all([
+      supabase.from('discovery_daily_jobs').select('*').order('publication_date',{ascending:false}).limit(30),
+      supabase.from('discovery_daily_attempts').select('*').order('created_at',{ascending:false}).limit(120),
+    ]);
+    res.set('Cache-Control','no-store').json({jobs:unwrap(jobs),attempts:unwrap(attempts)});
+  }catch(error){next(error);}
+});
+adminRouter.post('/daily-sets/:date/retry',async (req,res,next)=>{
+  try {
+    if(!date(req.params.date))invalid('A valid daily-set date is required.');
+    const reason=typeof req.body.reason==='string' ? req.body.reason.trim():'';
+    if(reason.length<20 || reason.length>1000)invalid('Explain the concrete editorial revision in 20–1000 characters.');
+    const {buildDailySetPlan}=require('../utils/discoveryDailyPlan');
+    const job=unwrap(await supabase.rpc('discovery_daily_retry',{p_date:req.params.date,p_plan:buildDailySetPlan(req.params.date),p_reason:reason,p_operator:req.user.id}));
+    res.json({retried:true,date:req.params.date,epoch:job.epoch});
+  }catch(error){next(error);}
+});
 adminRouter.get('/curriculum',async (_req,res,next)=>{
   try {
     const [runs,attempts,plans]=await Promise.all([

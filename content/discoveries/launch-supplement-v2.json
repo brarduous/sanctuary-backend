@@ -1,0 +1,106 @@
+{
+  "version": "trivia-launch-supplement-v2",
+  "purpose": "Additional original manuscripts; freeze before blind review. Prior failed drafts are preserved.",
+  "cases": [
+    {
+      "id": "naaman-request",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "2 Kings 5:9-19",
+      "prompt": "In 2 Kings, what did Naaman request after the prophet refused his gift?",
+      "choices": [
+        "Water",
+        "Oil",
+        "Earth",
+        "Salt"
+      ],
+      "correct": "Earth",
+      "claims": [
+        "Naaman requested earth after the gift was refused.",
+        "He said he would offer sacrifices only to Yahweh."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "daniel-toes",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Daniel 2:31-45",
+      "prompt": "In Daniel’s interpretation, which statue part pictured a kingdom that was partly strong and partly broken?",
+      "choices": [
+        "Arms",
+        "Head",
+        "Toes",
+        "Thighs"
+      ],
+      "correct": "Toes",
+      "claims": [
+        "The toes were partly iron and partly clay.",
+        "Daniel connected them to a kingdom partly strong and partly broken."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "demetrius-livelihood",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 19:23-41",
+      "prompt": "In Acts, who tied his coworkers’ livelihood to the honor of a goddess, helping spark a riot?",
+      "choices": [
+        "Alexander",
+        "Demetrius",
+        "Gaius",
+        "Aristarchus"
+      ],
+      "correct": "Demetrius",
+      "claims": [
+        "Demetrius made silver shrines of Diana.",
+        "He warned that their trade and her temple’s standing were in danger."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "sosthenes-court",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 18:1-17",
+      "prompt": "In Acts, who was beaten before the judgment seat after Gallio dismissed the case against Paul?",
+      "choices": [
+        "Crispus",
+        "Aquila",
+        "Sosthenes",
+        "Titius Justus"
+      ],
+      "correct": "Sosthenes",
+      "claims": [
+        "Sosthenes, the synagogue ruler, was beaten before the judgment seat.",
+        "Gallio took no notice."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "micaiah-imprisonment",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "1 Kings 22:13-28",
+      "prompt": "In 1 Kings, which prophet was struck before being imprisoned on bread and water?",
+      "choices": [
+        "Zedekiah",
+        "Elijah",
+        "Micaiah",
+        "Elisha"
+      ],
+      "correct": "Micaiah",
+      "claims": [
+        "Zedekiah struck Micaiah after hearing his prophecy.",
+        "Bread and water were ordered for Micaiah’s imprisonment."
+      ],
+      "authorship": "Assistant original draft"
+    }
+  ]
+}

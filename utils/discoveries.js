@@ -1,6 +1,6 @@
 const {hasBiblicalFrame}=require('./discoveryQuestionCraft');
 const { createHash } = require('node:crypto');
-const { VERSION: DIFFICULTY_VERSION, levelFor } = require('./discoveryDifficulty');
+const { VERSION: DIFFICULTY_VERSION, DAILY_VERSION, levelFor } = require('./discoveryDifficulty');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ID = /^[a-z][a-z0-9-]{0,79}$/;
@@ -68,7 +68,7 @@ function validateContent(input) {
   let difficulty;
   if (input.difficulty != null) {
     const d=input.difficulty;
-    if(d.rubricVersion!==DIFFICULTY_VERSION || !Number.isInteger(d.score) || d.score<0 || d.score>8 || d.level!==levelFor(d.score)) invalid('Difficulty must match the versioned rubric and score.');
+    if(![DIFFICULTY_VERSION,DAILY_VERSION].includes(d.rubricVersion) || !Number.isInteger(d.score) || d.score<0 || d.score>(d.rubricVersion===DAILY_VERSION ? 10:8) || d.level!==levelFor(d.score,d.rubricVersion)) invalid('Difficulty must match the versioned rubric and score.');
     difficulty={rubricVersion:d.rubricVersion,level:d.level,score:d.score};
   }
   return { kind, category: category.trim(), prompt: prompt.trim(), heading: heading.trim(), scopeNote: scopeNote.trim(), choices, correctOptionId: input.correctOptionId, sources, claims, answerClaimId: input.answerClaimId, explanationClaimIds: input.explanationClaimIds, ...(scriptureReference ? { scriptureReference: string(scriptureReference, 'Scripture reference', 3, 100), translation } : {}), ...(traditionLabel ? { traditionLabel: string(traditionLabel, 'tradition label', 3, 120) } : {}), ...(difficulty ? {difficulty}: {}) };

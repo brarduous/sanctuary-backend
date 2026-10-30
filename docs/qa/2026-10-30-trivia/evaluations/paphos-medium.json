@@ -1,0 +1,700 @@
+{
+  "noProductionWrites": true,
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Acts, which city saw a sorcerer struck blind while trying to stop an official from believing?",
+    "heading": "A detail in Acts 13:1-13",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Antioch"
+      },
+      {
+        "id": "option-2",
+        "text": "Salamis"
+      },
+      {
+        "id": "option-3",
+        "text": "Paphos"
+      },
+      {
+        "id": "option-4",
+        "text": "Perga"
+      }
+    ],
+    "correctOptionId": "option-3",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT13.htm",
+        "locator": "Acts 13:1-13",
+        "excerpt": "Now in the assembly that was at Antioch there were some prophets and teachers: Barnabas, Simeon who was called Niger, Lucius of Cyrene, Manaen the foster brother of Herod the tetrarch, and Saul. As they served the Lord and fasted, the Holy Spirit said, “Separate Barnabas and Saul for me, for the work to which I have called them.” Then, when they had fasted and prayed and laid their hands on them, they sent them away. So, being sent out by the Holy Spirit, they went down to Seleucia. From there they sailed to Cyprus. When they were at Salamis, they proclaimed God’s word in the Jewish synagogues. They also had John as their attendant. When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus, who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God. But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith. But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him, and said, “You son of the devil, full of all deceit and all cunning, you enemy of all righteousness, will you not cease to pervert the right ways of the Lord? Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand. Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord. Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "At Paphos, Elymas opposed Saul and Barnabas and lost his sight.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "Sergius Paulus believed after seeing what happened.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Acts 13:1-13",
+    "translation": "WEB"
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 8,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "Accept: 8/8. The setup clearly describes a confrontation without requiring unexplained church terminology. The memorable connection is a sorcerer trying to prevent another person's belief and himself losing sight. Identifying the city requires genuine recall rather than everyday guessing. All four choices are credible cities from the same journey, with distinct roles in the passage."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The setup gives a clear conflict in accessible language without requiring knowledge of the title proconsul. The memorable discovery is a sorcerer losing his sight while trying to obstruct another person's faith. Identifying the city requires genuine recall, not everyday expectations or a giveaway. All three distractors are credible locations in the same journey, with distinct narrative roles. Total: 8/8."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 100,
+    "candidateSha256": "902deb8b2ed69800683920e0bebba64596d3cfc98c61af8c5a0bacdc4b83b627",
+    "sourceSha256": "954af3c70bd9d102b1b698a31bfb3e381c19d202f81215615bb0d8805e89df96",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "f7dc676fb5f93f65a63f54b903667d7cf28ae0196f01cca28cf3ec608ab7d015",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "moderate",
+      "score": 6
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "daily_set_difficulty_mismatch"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The episode is narrated in Acts within the stated Acts 13:1–13 scope.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The encounter takes place at an identifiable city, Paphos.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ]
+          },
+          {
+            "text": "The person opposing the message is described as a sorcerer.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "The person whose belief he sought to prevent was an official, the proconsul Sergius Paulus.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "The sorcerer sought to turn the official away from the faith.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "The sorcerer was struck blind in the confrontation arising from that opposition.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "Accept: 8/8. The setup clearly describes a confrontation without requiring unexplained church terminology. The memorable connection is a sorcerer trying to prevent another person's belief and himself losing sight. Identifying the city requires genuine recall rather than everyday guessing. All four choices are credible cities from the same journey, with distinct roles in the passage."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Antioch is the sending assembly's location, not the setting of the sorcerer's blindness. It is a credible distractor because it is a prominent location at the start of this journey.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 1,
+                "quote": "Now in the assembly that was at Antioch there were some prophets and teachers: Barnabas, Simeon who was called Niger, Lucius of Cyrene, Manaen the foster brother of Herod the tetrarch, and Saul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 3,
+                "quote": "Then, when they had fasted and prayed and laid their hands on them, they sent them away."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Salamis is the earlier preaching stop, before the travelers reach Paphos. As another stop on the same island journey, it is a plausible location mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 5,
+                "quote": "When they were at Salamis, they proclaimed God’s word in the Jewish synagogues. They also had John as their attendant."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "The travelers encounter the sorcerer at Paphos, where the opposition and blindness occur before their departure. This uniquely answers the question.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Perga is reached after the company leaves Paphos, following the confrontation. It is a credible distractor as the immediately subsequent destination.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Paphos, a little-known location detail in the Elymas episode. Players need only recall the city associated with the event, not reconstruct the journey or infer an answer. The distractors are closely related locations from the same missionary itinerary, making the city distinction challenging despite the direct-recall task."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_09ca10082b18154c016ae4da1ecd1c87d29417b70814b25989",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_02bcdd04702740df016ae4da31ccd487d293577ab39aefd772",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "5a75962fda627810b99462df52d2c528a520791ec550e835649be477a3aabb63",
+          "usage": {
+            "inputTokens": 1819,
+            "outputTokens": 172,
+            "totalTokens": 1991
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 5/10. The tested city association is relatively little-known for the intended audience. Answering requires direct recall of one location, not reconstruction of the journey. The alternatives are plausible cities but do not require a complex role distinction."
+        }
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The question describes an episode narrated in Acts within the cited passage.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The episode takes place at an identifiable city.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ]
+          },
+          {
+            "text": "The person struck blind is described as a sorcerer.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The sorcerer tries to prevent an official from believing.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "The blindness occurs during the confrontation over the sorcerer's opposition.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 10,
+                "quote": "and said, “You son of the devil, full of all deceit and all cunning, you enemy of all righteousness, will you not cease to pervert the right ways of the Lord?"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The setup gives a clear conflict in accessible language without requiring knowledge of the title proconsul. The memorable discovery is a sorcerer losing his sight while trying to obstruct another person's faith. Identifying the city requires genuine recall, not everyday expectations or a giveaway. All three distractors are credible locations in the same journey, with distinct narrative roles. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Antioch is the sending community, not the location of this confrontation. Its role at the beginning of the journey makes it a credible location mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 1,
+                "quote": "Now in the assembly that was at Antioch there were some prophets and teachers: Barnabas, Simeon who was called Niger, Lucius of Cyrene, Manaen the foster brother of Herod the tetrarch, and Saul."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 3,
+                "quote": "Then, when they had fasted and prayed and laid their hands on them, they sent them away."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 4,
+                "quote": "So, being sent out by the Holy Spirit, they went down to Seleucia. From there they sailed to Cyprus."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Salamis is the earlier preaching stop before the travelers reach Paphos. As another stop on the same island, it is a particularly plausible distractor.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 5,
+                "quote": "When they were at Salamis, they proclaimed God’s word in the Jewish synagogues. They also had John as their attendant."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "The encounter begins at Paphos, where Elymas opposes the official's faith and is struck blind. The subsequent departure from Paphos confirms the location.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Perga is reached after the party leaves Paphos following the confrontation. Its adjacent place in the itinerary makes it a credible chronological mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 13,
+                "quote": "Now Paul and his company set sail from Paphos, and came to Perga in Pamphylia. John departed from them and returned to Jerusalem."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Paphos, a little-known location detail of the Elymas episode. Players need only recall the event–city association, not reconstruct the journey or infer the answer. The distractors are closely related cities from the same missionary journey, serving different narrative roles."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_05235ccf2bb5543c016ae4da1ed13487d288cb90b6c7c1d83f",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_0bbcd94b4d0ba10e016ae4da31dc1087d29bde86065ec9827c",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "5a75962fda627810b99462df52d2c528a520791ec550e835649be477a3aabb63",
+          "usage": {
+            "inputTokens": 1819,
+            "outputTokens": 160,
+            "totalTokens": 1979
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "Medium (6/10): the city associated with this episode is a relatively little-known detail. The task is direct event-to-location recall, but the alternatives are closely related stops in the same journey."
+        }
+      }
+    ]
+  },
+  "reviews": null,
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_09ca10082b18154c016ae4da1ecd1c87d29417b70814b25989",
+      "usage": {
+        "inputTokens": 7583,
+        "outputTokens": 1719,
+        "totalTokens": 9302
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_05235ccf2bb5543c016ae4da1ed13487d288cb90b6c7c1d83f",
+      "usage": {
+        "inputTokens": 7583,
+        "outputTokens": 1621,
+        "totalTokens": 9204
+      }
+    }
+  ]
+}

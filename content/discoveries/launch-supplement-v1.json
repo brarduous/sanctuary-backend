@@ -1,0 +1,286 @@
+{
+  "version": "trivia-launch-supplement-v1",
+  "purpose": "Source-backed original launch candidates, not a calibrated benchmark or human editorial approval.",
+  "cases": [
+    {
+      "id": "rainbow-covenant",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Genesis 9:12-17",
+      "prompt": "In Genesis, what appears in the clouds as the sign of God’s covenant after the flood?",
+      "choices": [
+        "Lightning",
+        "A rainbow",
+        "A comet",
+        "An eclipse"
+      ],
+      "correct": "A rainbow",
+      "claims": [
+        "God called the rainbow a sign of his covenant.",
+        "The promise included every living creature."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "moses-basket",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Exodus 2:1-10",
+      "prompt": "In Exodus, which baby was hidden in a basket among the reeds beside the river?",
+      "choices": [
+        "Aaron",
+        "Samuel",
+        "Moses",
+        "Joseph"
+      ],
+      "correct": "Moses",
+      "claims": [
+        "Pharaoh’s daughter named the rescued baby Moses.",
+        "His sister arranged for his own mother to nurse him."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "storm-cushion",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Mark 4:35-41",
+      "prompt": "In Mark, what was Jesus resting on while a storm battered the boat?",
+      "choices": [
+        "A mat",
+        "A cushion",
+        "A bedroll",
+        "A blanket"
+      ],
+      "correct": "A cushion",
+      "claims": [
+        "Jesus was asleep on a cushion in the stern.",
+        "The disciples woke him as waves filled the boat."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "palace-wall",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Daniel 5:1-9",
+      "prompt": "At the feast in Daniel, a mysterious hand wrote on which surface?",
+      "choices": [
+        "The ceiling",
+        "The table",
+        "The floor",
+        "The wall"
+      ],
+      "correct": "The wall",
+      "claims": [
+        "Fingers of a hand wrote on the palace wall.",
+        "The king’s knees knocked together."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "bartimaeus-cloak",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "Mark 10:46-52",
+      "prompt": "In Mark, what did Bartimaeus throw aside before getting up to meet Jesus?",
+      "choices": [
+        "His staff",
+        "His cloak",
+        "His bag",
+        "His sandals"
+      ],
+      "correct": "His cloak",
+      "claims": [
+        "Bartimaeus threw aside his cloak and came to Jesus.",
+        "He had been begging beside the road."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "rahab-flax",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "Joshua 2:1-15",
+      "prompt": "In Joshua, what covered the spies while Rahab sent the king’s men toward the Jordan?",
+      "choices": [
+        "Stalks of flax",
+        "Bundles of straw",
+        "Sheaves of wheat",
+        "Branches of olive trees"
+      ],
+      "correct": "Stalks of flax",
+      "claims": [
+        "Rahab hid the spies under stalks of flax on her roof.",
+        "The pursuers headed toward the Jordan."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "mary-gardener",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "John 20:11-18",
+      "prompt": "In John, whom did Mary mistake Jesus for outside the tomb?",
+      "choices": [
+        "A watchman",
+        "A servant",
+        "A traveler",
+        "The gardener"
+      ],
+      "correct": "The gardener",
+      "claims": [
+        "Mary mistook Jesus for the gardener.",
+        "She recognized him after he called her by name."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "naaman-earth",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "2 Kings 5:9-19",
+      "prompt": "In 2 Kings, what did Naaman ask to take home after Elisha refused his gift?",
+      "choices": [
+        "Water",
+        "Oil",
+        "Earth",
+        "Salt"
+      ],
+      "correct": "Earth",
+      "claims": [
+        "Naaman asked for earth after Elisha refused a gift.",
+        "He said he would offer sacrifices only to Yahweh."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "benaiah-snow",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "2 Samuel 23:8-23",
+      "prompt": "In 2 Samuel, who killed a lion in a pit during snow and seized an Egyptian’s spear?",
+      "choices": [
+        "Eleazar",
+        "Abishai",
+        "Benaiah",
+        "Shammah"
+      ],
+      "correct": "Benaiah",
+      "claims": [
+        "Benaiah killed a lion in a pit during snow.",
+        "He also seized an Egyptian’s spear and used it against him."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "manasseh-crossed-hands",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Genesis 48:1-20",
+      "prompt": "In Genesis, whom did Joseph position for Israel’s right hand before Israel crossed his hands?",
+      "choices": [
+        "Ephraim",
+        "Reuben",
+        "Simeon",
+        "Manasseh"
+      ],
+      "correct": "Manasseh",
+      "claims": [
+        "Joseph positioned Manasseh for Israel’s right hand.",
+        "Israel crossed his hands and placed that hand on younger Ephraim."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "caesarea-host",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 21:1-14",
+      "prompt": "In Acts, where did Paul stay with Philip after the stops at Tyre and Ptolemais?",
+      "choices": [
+        "Patara",
+        "Caesarea",
+        "Tyre",
+        "Ptolemais"
+      ],
+      "correct": "Caesarea",
+      "claims": [
+        "Paul reached Caesarea after Tyre and Ptolemais.",
+        "He stayed with Philip the evangelist, whose daughters prophesied."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "lydda-departure",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 9:26-39",
+      "prompt": "In Acts, which city did Peter leave to visit Tabitha, whose handmade clothes the widows showed him?",
+      "choices": [
+        "Joppa",
+        "Caesarea",
+        "Lydda",
+        "Tarsus"
+      ],
+      "correct": "Lydda",
+      "claims": [
+        "Messengers from Joppa found Peter at Lydda after Tabitha died.",
+        "He went with them, and widows showed him Tabitha’s clothes."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "hushai-cover",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "2 Samuel 15:22-37",
+      "prompt": "In 2 Samuel, who was to pose as Absalom’s servant while secretly reporting to David?",
+      "choices": [
+        "Zadok",
+        "Hushai",
+        "Abiathar",
+        "Ahithophel"
+      ],
+      "correct": "Hushai",
+      "claims": [
+        "David asked Hushai to undermine Ahithophel’s advice.",
+        "Reports were to reach David through the priests’ sons."
+      ],
+      "authorship": "Assistant original draft"
+    },
+    {
+      "id": "lydia-hospitality-city",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 16:6-15",
+      "prompt": "In Acts, Lydia came from Thyatira; in which city did she invite Paul’s group home after baptism?",
+      "choices": [
+        "Troas",
+        "Neapolis",
+        "Thyatira",
+        "Philippi"
+      ],
+      "correct": "Philippi",
+      "claims": [
+        "Lydia sold purple goods and came from Thyatira.",
+        "At Philippi, she persuaded Paul’s group to stay at her house after baptism."
+      ],
+      "authorship": "Assistant original draft"
+    }
+  ]
+}

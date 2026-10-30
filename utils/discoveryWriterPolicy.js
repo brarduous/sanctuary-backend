@@ -1,1 +1,1 @@
-module.exports={VERSION:'sanctuary-trivia-writer-v7'};
+module.exports={VERSION:'sanctuary-trivia-writer-v9'};

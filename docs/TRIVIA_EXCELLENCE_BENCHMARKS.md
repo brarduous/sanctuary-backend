@@ -1,6 +1,6 @@
 # Trivia: examples and standards of excellence
 
-Status: proposed editorial benchmarks, October 30, 2026. These are writing references, not questions approved for production. The public feature name is **Trivia**.
+Status: professional writing references plus a reviewed original Biblical benchmark, October 30, 2026. Publisher examples remain study material; actual launch publication is recorded separately. The public feature name is **Trivia**.
 
 ## What we are trying to make
 
@@ -28,7 +28,7 @@ Source: [Water Cooler Trivia, Easy #1, Easy #75, Hard #14](https://www.watercool
 - **Wording precision anchor, original adaptation:** “Which planet takes longer to rotate once than to orbit the Sun?” **Venus.** This wording avoids the ambiguous everyday meaning of “day.” [NASA's rotation/orbit facts](https://science.nasa.gov/venus/venus-facts/). This is our source-backed example, not a claim that NASA published this exact question or its difficulty.
 - **Word-history verification anchor:** the Bluetooth SIG documents its name's connection to Harald Bluetooth. That primary source is better support for the factual reveal than another trivia page repeating the story. [Bluetooth SIG](https://www.bluetooth.com/about-us/bluetooth-origin/).
 
-We need at least three reviewed positive examples per intended difficulty and six negative cases before freezing the evaluator. The anchors above start that collection; they do not complete it. Add original Biblical examples covering geography, word meanings, customs, objects, and human choices after factual review.
+The versioned original benchmark `content/discoveries/editorial-benchmark-v6.json` contains nine positive anchors, three per band, and six negative cases. Its positives cover familiar scenes, objects, occupations, geography and relational distinctions. Lexical/archaeological claims remain negative or research-only until multi-source approval exists.
 
 ## Translate the lessons to Biblical trivia
 
@@ -53,8 +53,8 @@ Proposed initial first-attempt targets, to be tested rather than advertised: Eas
 
 Aim for an initial 12–20 consenting intended-audience testers across different levels of church familiarity. Seek anonymous per-question clarity/enjoyment feedback and qualitative reasons, without collecting sensitive profile details. Do not recruit or message anyone without the owner's instruction. A targeted owner/editor review can start the process; real-reader recruitment remains a separate dependency.
 
-## What the current trials actually establish
+## What actual reviews establish
 
-The original question was rejected at 3/8 by both recalibrated reviewers while its evidence remained 100. Other trial questions received high craft scores but inconsistent difficulty bands; some alternatives were rejected merely for not appearing in the scene. Those results show that evaluator calibration is unfinished. They are not evidence that we already have an excellent launch set.
+The original question failed craft at 3/8 despite evidence confidence 100. The final benchmark preserves that regression and other factual/editorial failures. Positive Easy anchors include David rejecting armor, Noah’s dove and Daniel’s den; Medium anchors include Siloam, Lydia’s purple goods and Malta; Hard anchors include Hushai’s covert role, Judah’s substitution and Lydia’s origin versus meeting place. Full saved inputs, separate closed-book assessments and historical rejected proposals remain in the QA evaluations directory.
 
-No three-question production set has been generated or published by this work. Live model calls stopped when the configured API project reported no credits remaining. Complete the benchmark and stabilize the rubric before resuming batch generation.
+A later rolling-week check rejected the Lydia hospitality reveal because it exposed the purple-goods answer from another day. That is a useful distinction: individual quality does not imply a safe weekly bank. The revised reveal and precise riverside location must pass again before publication. Neither automated approval nor a held-out model check constitutes an independent reader study.

@@ -1,0 +1,2765 @@
+{
+  "noProductionWrites": true,
+  "benchmarkVersion": "trivia-launch-supplement-v2",
+  "benchmarkSha256": "0fe4495a057ce66faf40d38c43ecebc8362b57070974ed6a1acf31cd93f998bc",
+  "editorialVersion": "sanctuary-trivia-editorial-v2",
+  "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+  "startedAt": "2026-10-30T17:20:24.251Z",
+  "tokenBudget": 100000,
+  "totalTokens": 73626,
+  "results": [
+    {
+      "id": "daniel-toes",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "decisionMatches": false,
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Daniel’s interpretation, which statue part pictured a kingdom that was partly strong and partly broken?",
+        "heading": "A detail in Daniel 2:31-45",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Arms"
+          },
+          {
+            "id": "option-2",
+            "text": "Head"
+          },
+          {
+            "id": "option-3",
+            "text": "Toes"
+          },
+          {
+            "id": "option-4",
+            "text": "Thighs"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/DAN02.htm",
+            "locator": "Daniel 2:31-45",
+            "excerpt": "“You, O king, saw, and behold, a great image. This image, which was mighty, and whose brightness was excellent, stood before you; and its appearance was terrifying. As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze, its legs of iron, its feet part of iron, and part of clay. You saw until a stone was cut out without hands, which struck the image on its feet that were of iron and clay, and broke them in pieces. Then the iron, the clay, the bronze, the silver, and the gold were broken in pieces together, and became like the chaff of the summer threshing floors. The wind carried them away, so that no place was found for them. The stone that struck the image became a great mountain, and filled the whole earth. “This is the dream; and we will tell its interpretation before the king. You, O king, are king of kings, to whom the God of heaven has given the kingdom, the power, the strength, and the glory. Wherever the children of men dwell, he has given the animals of the field and the birds of the sky into your hand, and has made you rule over them all. You are the head of gold. “After you, another kingdom will arise that is inferior to you; and another third kingdom of bronze, which will rule over all the earth. The fourth kingdom will be strong as iron, because iron breaks in pieces and subdues all things; and as iron that crushes all these, it will break in pieces and crush. Whereas you saw the feet and toes, part of potters’ clay, and part of iron, it will be a divided kingdom; but there will be in it of the strength of the iron, because you saw the iron mixed with miry clay. As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken. Whereas you saw the iron mixed with miry clay, they will mingle themselves with the seed of men; but they won’t cling to one another, even as iron does not mix with clay. “In the days of those kings the God of heaven will set up a kingdom which will never be destroyed, nor will its sovereignty be left to another people; but it will break in pieces and consume all these kingdoms, and it will stand forever. Because you saw that a stone was cut out of the mountain without hands, and that it broke in pieces the iron, the bronze, the clay, the silver, and the gold; the great God has made known to the king what will happen hereafter. The dream is certain, and its interpretation sure.”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "The toes were partly iron and partly clay.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Daniel connected them to a kingdom partly strong and partly broken.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Daniel 2:31-45",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 8,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The statue and kingdom interpretation give a clear, compact situation without specialist jargon. The memorable connection is a kingdom's mixed strength pictured through the statue's toes and their mixed materials. Everyday expectations do not uniquely reveal the answer. All four choices are actual parts of the same statue, making each a credible alternative. Craft total: 8/8; the separate speaker-attribution evidence gap still prevents full evidentiary approval."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The interpretation of a statue supplies a clear, jargon-free situation. The retellable connection is that toes made from incompatible materials picture a kingdom's mixed strength and weakness. Everyday expectations do not uniquely reveal the answer. All four choices are actual parts of this statue, making each a credible guess while leaving only one explicitly correct. Craft passes at 8/8; the separate attribution-evidence failure remains."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 90,
+        "candidateSha256": "5037082e19bec0f262206876919be7d1998b0af79e3a10c4882ebc302ce605d5",
+        "sourceSha256": "a5da1b50d9c6532d28211dfdc8968333c52d757e5190a3180f2301a9e2008c2f",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "50e7b9d236ba0c39dcc222c3614ba2adfe7d052215cfd139bf3b0b6e47ecc2e7",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 4
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "questionAccuracy_below_threshold",
+          "explanationCoverage_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_context_unsupported",
+          "unsupported_claim",
+          "question_context_quote_missing_or_invalid",
+          "daily_set_difficulty_mismatch"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 92,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 92,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The saved excerpt does not name Daniel as the speaker. Surrounding chapter context confirms the attribution, but the required direct evidence for that contextual premise is missing from the saved excerpt."
+            ],
+            "questionPremises": [
+              {
+                "text": "The scene concerns a statue or human-shaped image.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 31,
+                    "quote": "“You, O king, saw, and behold, a great image. This image, which was mighty, and whose brightness was excellent, stood before you; and its appearance was terrifying."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  }
+                ]
+              },
+              {
+                "text": "The statue is being interpreted as part of a dream.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  }
+                ]
+              },
+              {
+                "text": "Daniel is the person giving the interpretation.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  }
+                ]
+              },
+              {
+                "text": "A statue part represents a kingdom described as partly strong and partly broken.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              },
+              {
+                "text": "The heading's Daniel 2:31–45 scope contains the statue description and its interpretation.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 31,
+                    "quote": "“You, O king, saw, and behold, a great image. This image, which was mighty, and whose brightness was excellent, stood before you; and its appearance was terrifying."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 45,
+                    "quote": "Because you saw that a stone was cut out of the mountain without hands, and that it broke in pieces the iron, the bronze, the clay, the silver, and the gold; the great God has made known to the king what will happen hereafter. The dream is certain, and its interpretation sure.”"
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The statue and kingdom interpretation give a clear, compact situation without specialist jargon. The memorable connection is a kingdom's mixed strength pictured through the statue's toes and their mixed materials. Everyday expectations do not uniquely reveal the answer. All four choices are actual parts of the same statue, making each a credible alternative. Craft total: 8/8; the separate speaker-attribution evidence gap still prevents full evidentiary approval."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The arms are silver, not the mixed-material part associated with this kingdom description. They are a plausible distractor because they belong to the same symbolic statue.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The head is gold and is identified with the king being addressed, rather than the partly strong and partly broken kingdom. Its explicit symbolic role makes it a credible competing choice.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 38,
+                    "quote": "Wherever the children of men dwell, he has given the animals of the field and the birds of the sky into your hand, and has made you rule over them all. You are the head of gold."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage directly connects the toes' iron-and-clay composition with the kingdom's mixed strength and brokenness.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The thighs are bronze, whereas the requested description belongs to the iron-and-clay toes. They are plausible because they are another material-defined section of the same statue.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 39,
+                    "quote": "“After you, another kingdom will arise that is inferior to you; and another third kingdom of bronze, which will rule over all the earth."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (3/8): the precise body-part symbolism is a relatively specialized detail, but the answer is stated directly in one verse. The alternatives are plausible statue parts, though not near-identical concepts."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0b772b2e1e80bacf016ae4d1d8d02887d2848100dfe5a3734d",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 90,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 90,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The saved excerpt does not name Daniel as the speaker. The surrounding chapter confirms the attribution, but cannot supply direct evidence under the excerpt-only rule. This leaves a contextual premise and part of claim-2 incompletely supported."
+            ],
+            "questionPremises": [
+              {
+                "text": "The passage presents an interpretation of a dream.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  }
+                ]
+              },
+              {
+                "text": "Daniel is the person giving the interpretation.",
+                "status": "unsupported",
+                "confidence": 100,
+                "evidence": []
+              },
+              {
+                "text": "The dream contains a statue with distinct body parts.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 31,
+                    "quote": "“You, O king, saw, and behold, a great image. This image, which was mighty, and whose brightness was excellent, stood before you; and its appearance was terrifying."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 33,
+                    "quote": "its legs of iron, its feet part of iron, and part of clay."
+                  }
+                ]
+              },
+              {
+                "text": "A part of the statue represents a kingdom that is partly strong and partly broken.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The interpretation of a statue supplies a clear, jargon-free situation. The retellable connection is that toes made from incompatible materials picture a kingdom's mixed strength and weakness. Everyday expectations do not uniquely reveal the answer. All four choices are actual parts of this statue, making each a credible guess while leaving only one explicitly correct. Craft passes at 8/8; the separate attribution-evidence failure remains."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "partially_supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 36,
+                    "quote": "“This is the dream; and we will tell its interpretation before the king."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The arms are silver, not the mixed-material part assigned this description. They are a credible distractor because they belong to the same symbolic statue.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The gold head represents the king being addressed, not the partly strong and partly broken kingdom. It is plausible because it also has an explicit political meaning in the interpretation.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 38,
+                    "quote": "Wherever the children of men dwell, he has given the animals of the field and the birds of the sky into your hand, and has made you rule over them all. You are the head of gold."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly connects the toes' iron-and-clay composition with the kingdom's partly strong and partly broken condition.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 42,
+                    "quote": "As the toes of the feet were part of iron, and part of clay, so the kingdom will be partly strong, and partly broken."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The thighs are bronze, whereas the requested condition is assigned to the mixed iron-and-clay toes. They are a credible distractor as another material-defined section of the same statue.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 32,
+                    "quote": "As for this image, its head was of fine gold, its breast and its arms of silver, its belly and its thighs of bronze,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 39,
+                    "quote": "“After you, another kingdom will arise that is inferior to you; and another third kingdom of bronze, which will rule over all the earth."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 2,
+              "rationale": "Moderate (4/8). The precise body-part symbolism is a relatively little-known detail, and the alternatives belong to the same statue. Nevertheless, the answer requires only direct identification from one verse."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_08e288af33937279016ae4d1d914cc87d2a91601f8a41bad32",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0b772b2e1e80bacf016ae4d1d8d02887d2848100dfe5a3734d",
+          "usage": {
+            "inputTokens": 6384,
+            "outputTokens": 1597,
+            "totalTokens": 7981
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_08e288af33937279016ae4d1d914cc87d2a91601f8a41bad32",
+          "usage": {
+            "inputTokens": 6384,
+            "outputTokens": 1331,
+            "totalTokens": 7715
+          }
+        }
+      ]
+    },
+    {
+      "id": "naaman-request",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "decisionMatches": true,
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In 2 Kings, what did Naaman request after the prophet refused his gift?",
+        "heading": "A detail in 2 Kings 5:9-19",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Water"
+          },
+          {
+            "id": "option-2",
+            "text": "Oil"
+          },
+          {
+            "id": "option-3",
+            "text": "Earth"
+          },
+          {
+            "id": "option-4",
+            "text": "Salt"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/2KI05.htm",
+            "locator": "2 Kings 5:9-19",
+            "excerpt": "So Naaman came with his horses and with his chariots, and stood at the door of the house of Elisha. Elisha sent a messenger to him, saying, “Go and wash in the Jordan seven times, and your flesh shall come again to you, and you shall be clean.” But Naaman was angry, and went away, and said, “Behold, I thought, ‘He will surely come out to me, and stand, and call on the name of Yahweh his God, and wave his hand over the place, and heal the leper.’ Aren’t Abanah and Pharpar, the rivers of Damascus, better than all the waters of Israel? Couldn’t I wash in them, and be clean?” So he turned and went away in a rage. His servants came near, and spoke to him, and said, “My father, if the prophet had asked you do some great thing, wouldn’t you have done it? How much rather then, when he says to you, ‘Wash, and be clean?’ ” Then went he down, and dipped himself seven times in the Jordan, according to the saying of the man of God; and his flesh was restored like the flesh of a little child, and he was clean. He returned to the man of God, he and all his company, and came, and stood before him; and he said, “See now, I know that there is no God in all the earth, but in Israel. Now therefore, please take a gift from your servant.” But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused. Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh. In this thing may Yahweh pardon your servant: when my master goes into the house of Rimmon to worship there, and he leans on my hand, and I bow myself in the house of Rimmon. When I bow myself in the house of Rimmon, may Yahweh pardon your servant in this thing.” He said to him, “Go in peace.” So he departed from him a little way.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Naaman requested earth after the gift was refused.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He said he would offer sacrifices only to Yahweh.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "2 Kings 5:9-19",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 7,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The refused gift provides a clear, economical situation without requiring unexplained religious terminology. The memorable discovery is the reversal: Naaman follows an unsuccessful offer of a gift by asking for a load of earth, linking his request to future worship. Nothing in everyday expectations or the option wording gives away earth. The choices are parallel materials; water and oil are credible distractors, but salt is a weaker, relatively generic alternative. Total: 7/8."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The refused gift supplies a clear, economical situation rather than a bare reference lookup. The retellable discovery is Naaman's unexpected request for earth, which the passage connects to his commitment to worship Yahweh. Everyday expectations do not reveal the answer. All choices are distinct, portable materials: water offers a strong connection to the washing scene, oil is a credible healing-related guess, and salt is a credible ritual-material alternative. Total: 8/8."
+            }
+          ]
+        },
+        "accepted": true,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "370342887a80c109bfa573900830b23ddb407be62c558bca70ffddfb9cc15cab",
+        "sourceSha256": "77d53d17151b3157ade39b6ef7ea864d7ffb2afe550c94b418260970edfb7701",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "c6a170ce39c16a1c9b1ab4e792fe42d17f66b7ff91701d422688899eab71b1da",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 4
+        },
+        "difficultyTargetMet": true,
+        "reasons": [],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns Naaman's encounter with the prophet in the cited 2 Kings passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "So Naaman came with his horses and with his chariots, and stood at the door of the house of Elisha."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "His servants came near, and spoke to him, and said, “My father, if the prophet had asked you do some great thing, wouldn’t you have done it? How much rather then, when he says to you, ‘Wash, and be clean?’ ”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "He returned to the man of God, he and all his company, and came, and stood before him; and he said, “See now, I know that there is no God in all the earth, but in Israel. Now therefore, please take a gift from your servant.”"
+                  }
+                ]
+              },
+              {
+                "text": "Naaman offered the prophet a gift.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "He returned to the man of God, he and all his company, and came, and stood before him; and he said, “See now, I know that there is no God in all the earth, but in Israel. Now therefore, please take a gift from your servant.”"
+                  }
+                ]
+              },
+              {
+                "text": "The prophet refused Naaman's gift.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  }
+                ]
+              },
+              {
+                "text": "Naaman subsequently requested something.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The refused gift provides a clear, economical situation without requiring unexplained religious terminology. The memorable discovery is the reversal: Naaman follows an unsuccessful offer of a gift by asking for a load of earth, linking his request to future worship. Nothing in everyday expectations or the option wording gives away earth. The choices are parallel materials; water and oil are credible distractors, but salt is a weaker, relatively generic alternative. Total: 7/8."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Water features prominently in Naaman's washing and his comparison of rivers, making it a credible scene-based distractor. It is not what he requests after the gift is refused.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "Aren’t Abanah and Pharpar, the rivers of Damascus, better than all the waters of Israel? Couldn’t I wash in them, and be clean?” So he turned and went away in a rage."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "Then went he down, and dipped himself seven times in the Jordan, according to the saying of the man of God; and his flesh was restored like the flesh of a little child, and he was clean."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage does not identify oil as his request. As a material associated with religious use, it is a plausible alternative for a player uncertain about the scene, although it has no specific textual cue here.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "Naaman explicitly requests two mules' burden of earth immediately after the refusal.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "Salt is not named as Naaman's request. It is a comparable portable material, but lacks a strong connection to this scene and is the weakest distractor.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (4/8). The requested material is a relatively little-known detail. Verification connects the refusal and request in adjacent verses, but answering requires direct identification rather than inference. The choices are comparable materials, not closely related narrative alternatives."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_071b81db3ce68723016ae4d1d8d33087d2b9daa45fd9c3a3f9",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The cited episode in 2 Kings concerns Naaman.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "So Naaman came with his horses and with his chariots, and stood at the door of the house of Elisha."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              },
+              {
+                "text": "Naaman was dealing with a prophet.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "Elisha sent a messenger to him, saying, “Go and wash in the Jordan seven times, and your flesh shall come again to you, and you shall be clean.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "His servants came near, and spoke to him, and said, “My father, if the prophet had asked you do some great thing, wouldn’t you have done it? How much rather then, when he says to you, ‘Wash, and be clean?’ ”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "He returned to the man of God, he and all his company, and came, and stood before him; and he said, “See now, I know that there is no God in all the earth, but in Israel. Now therefore, please take a gift from your servant.”"
+                  }
+                ]
+              },
+              {
+                "text": "Naaman offered the prophet a gift.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "He returned to the man of God, he and all his company, and came, and stood before him; and he said, “See now, I know that there is no God in all the earth, but in Israel. Now therefore, please take a gift from your servant.”"
+                  }
+                ]
+              },
+              {
+                "text": "The prophet refused Naaman's gift.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  }
+                ]
+              },
+              {
+                "text": "Naaman made the requested-material request after that refusal.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The refused gift supplies a clear, economical situation rather than a bare reference lookup. The retellable discovery is Naaman's unexpected request for earth, which the passage connects to his commitment to worship Yahweh. Everyday expectations do not reveal the answer. All choices are distinct, portable materials: water offers a strong connection to the washing scene, oil is a credible healing-related guess, and salt is a credible ritual-material alternative. Total: 8/8."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Water belongs to the earlier washing discussion, not the request after the gift refusal. It is an attractive distractor because rivers and washing feature prominently in Naaman's encounter.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "Aren’t Abanah and Pharpar, the rivers of Damascus, better than all the waters of Israel? Couldn’t I wash in them, and be clean?” So he turned and went away in a rage."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "Then went he down, and dipped himself seven times in the Jordan, according to the saying of the man of God; and his flesh was restored like the flesh of a little child, and he was clean."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not name oil as his request. Oil is nevertheless a plausible material to associate with a healing encounter, so it is not an absurd alternative.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "Immediately following the refusal, Naaman asks for two mules' burden of earth. This directly identifies the requested material.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "But he said, “As Yahweh lives, before whom I stand, I will receive none.” He urged him to take it; but he refused."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Naaman said, “If not, then, please let two mules’ burden of earth be given to your servant; for your servant will from now on offer neither burnt offering nor sacrifice to other gods, but to Yahweh."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "Salt is not named as Naaman's request. As another tangible material with ritual associations, it is a believable alternative, though less strongly cued than water.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (3/8): the requested earth is a relatively little-known detail, but the answer is stated directly in one verse and requires no inference. The alternatives are comparable materials rather than closely overlapping narrative roles."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_00363910a92cd2f9016ae4d1d8d30487d28d4b4e7b1e0ee8f9",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_071b81db3ce68723016ae4d1d8d33087d2b9daa45fd9c3a3f9",
+          "usage": {
+            "inputTokens": 5417,
+            "outputTokens": 1443,
+            "totalTokens": 6860
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_00363910a92cd2f9016ae4d1d8d30487d28d4b4e7b1e0ee8f9",
+          "usage": {
+            "inputTokens": 5417,
+            "outputTokens": 1334,
+            "totalTokens": 6751
+          }
+        }
+      ]
+    },
+    {
+      "id": "demetrius-livelihood",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "decisionMatches": false,
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, who tied his coworkers’ livelihood to the honor of a goddess, helping spark a riot?",
+        "heading": "A detail in Acts 19:23-41",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Alexander"
+          },
+          {
+            "id": "option-2",
+            "text": "Demetrius"
+          },
+          {
+            "id": "option-3",
+            "text": "Gaius"
+          },
+          {
+            "id": "option-4",
+            "text": "Aristarchus"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT19.htm",
+            "locator": "Acts 19:23-41",
+            "excerpt": "About that time there arose no small disturbance concerning the Way. For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen, whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth. You see and hear that not at Ephesus alone, but almost throughout all Asia, this Paul has persuaded and turned away many people, saying that they are no gods that are made with hands. Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.” When they heard this they were filled with anger, and cried out, saying, “Great is Artemis of the Ephesians!” The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel. When Paul wanted to enter in to the people, the disciples didn’t allow him. Certain also of the Asiarchs, being his friends, sent to him and begged him not to venture into the theater. Some therefore cried one thing, and some another, for the assembly was in confusion. Most of them didn’t know why they had come together. They brought Alexander out of the multitude, the Jews putting him forward. Alexander beckoned with his hand, and would have made a defense to the people. But when they perceived that he was a Jew, all with one voice for a time of about two hours cried out, “Great is Artemis of the Ephesians!” When the town clerk had quieted the multitude, he said, “You men of Ephesus, what man is there who doesn’t know that the city of the Ephesians is temple keeper of the great goddess Artemis, and of the image which fell down from Zeus? Seeing then that these things can’t be denied, you ought to be quiet and to do nothing rash. For you have brought these men here, who are neither robbers of temples nor blasphemers of your goddess. If therefore Demetrius and the craftsmen who are with him have a matter against anyone, the courts are open, and there are proconsuls. Let them press charges against one another. But if you seek anything about other matters, it will be settled in the regular assembly. For indeed we are in danger of being accused concerning today’s riot, there being no cause. Concerning it, we wouldn’t be able to give an account of this commotion.” When he had thus spoken, he dismissed the assembly.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Demetrius made silver shrines of Diana.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He warned that their trade and her temple’s standing were in danger.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 19:23-41",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 8,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The question supplies a clear, accessible situation without requiring church jargon. The memorable connection is that a speaker combines threatened earnings with threatened religious honor, provoking public disorder. Identifying that speaker requires actual knowledge rather than everyday guessing. All three distractors are named participants in the disturbance and offer credible role-confusion alternatives. Craft passes at 8/8, although the explanation's unsupported name substitution still requires correction."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The prompt supplies an accessible situation without church jargon. Its memorable connection is the combination of threatened income and religious honor in a speech that provokes public disorder. Everyday expectations cannot identify the speaker from these four names. All alternatives are actual participants in the same disturbance, making them credible role-confusion distractors. Craft passes at 8/8, independently of the explanation’s naming error."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 70,
+        "candidateSha256": "0e90750f0b62f0277e6b02d557b0e15eec06edf131b450e5f06b7449afa2a017",
+        "sourceSha256": "35b78eeff5ef923fb32af0035b794a64c065478b2a5d159a3fc442fac26ac8d7",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "63a558f033ecc480a9097d39e82f56a6ded8187be496dd12ddcdbaf14a9cfe45",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 5
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "scopeAccuracy_below_threshold",
+          "explanationCoverage_below_threshold",
+          "unresolved_or_complex_claim",
+          "unsupported_claim",
+          "daily_set_difficulty_mismatch"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-2",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 90,
+            "explanationCoverage": 75,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Claim-1 names Diana, but the saved WEB excerpt names Artemis. The excerpt does not establish that these names are interchangeable. The explanation therefore needs correction before acceptance."
+            ],
+            "questionPremises": [
+              {
+                "text": "The question concerns the disturbance narrated in Acts 19:23–41.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "About that time there arose no small disturbance concerning the Way."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 40,
+                    "quote": "For indeed we are in danger of being accused concerning today’s riot, there being no cause. Concerning it, we wouldn’t be able to give an account of this commotion.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 41,
+                    "quote": "When he had thus spoken, he dismissed the assembly."
+                  }
+                ]
+              },
+              {
+                "text": "A man addressed fellow workers whose livelihood came from their shared trade.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  }
+                ]
+              },
+              {
+                "text": "His appeal connected threats to their livelihood with threats to a goddess's honor and temple.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  }
+                ]
+              },
+              {
+                "text": "That appeal helped spark the riot.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 28,
+                    "quote": "When they heard this they were filled with anger, and cried out, saying, “Great is Artemis of the Ephesians!”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 40,
+                    "quote": "For indeed we are in danger of being accused concerning today’s riot, there being no cause. Concerning it, we wouldn’t be able to give an account of this commotion.”"
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The question supplies a clear, accessible situation without requiring church jargon. The memorable connection is that a speaker combines threatened earnings with threatened religious honor, provoking public disorder. Identifying that speaker requires actual knowledge rather than everyday guessing. All three distractors are named participants in the disturbance and offer credible role-confusion alternatives. Craft passes at 8/8, although the explanation's unsupported name substitution still requires correction."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "partially_supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Alexander is put forward to make a defense, not identified as the craftsman who links trade and religious honor. His attempted public address makes him a credible speaker-role distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 33,
+                    "quote": "They brought Alexander out of the multitude, the Jews putting him forward. Alexander beckoned with his hand, and would have made a defense to the people."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "supported",
+                "rationale": "Demetrius gathers the workers, invokes their shared wealth, and warns about both their trade and Artemis's standing. Their anger and the wider disturbance follow.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 28,
+                    "quote": "When they heard this they were filled with anger, and cried out, saying, “Great is Artemis of the Ephesians!”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "Gaius is a traveling companion of Paul seized by the crowd, not the speaker who rallies the workers. His involvement in the same riot makes him a plausible name-and-role mix-up.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "Aristarchus is also a traveling companion seized by the crowd, not the trade spokesman. As another named participant in the same scene, he is a credible distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 1,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (5/8). The tested speaker is a relatively unfamiliar figure for newcomers. Solving from the excerpt requires connecting his introduction with the nearby speech. The alternatives are credible participants, but their narrative roles are distinct."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_045f59888837fe3a016ae4d1f3334c87d28693591f208d4f36",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          },
+          {
+            "solvedOptionId": "option-2",
+            "questionAccuracy": 99,
+            "scopeAccuracy": 80,
+            "explanationCoverage": 70,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Claim-1 names Diana, but the saved WEB excerpt names Artemis. The excerpt does not establish equivalence between these names; the explanation therefore fails its stated translation-specific scope.",
+              "The explanation covers the economic and religious warning but omits the crowd’s immediate reaction, which supports the question’s claim that the speech helped spark a riot. The candidate needs explanation revision before acceptance."
+            ],
+            "questionPremises": [
+              {
+                "text": "The question concerns a disturbance narrated in Acts within the cited passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "About that time there arose no small disturbance concerning the Way."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 40,
+                    "quote": "For indeed we are in danger of being accused concerning today’s riot, there being no cause. Concerning it, we wouldn’t be able to give an account of this commotion.”"
+                  }
+                ]
+              },
+              {
+                "text": "The speaker addressed fellow workers whose livelihood depended on their shared trade.",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  }
+                ]
+              },
+              {
+                "text": "The speaker expressed concern for a goddess’s honor and her temple’s standing.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  }
+                ]
+              },
+              {
+                "text": "The speaker connected the workers’ economic interests with the goddess’s standing.",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  }
+                ]
+              },
+              {
+                "text": "The speech preceded and helped provoke the angry reaction that developed into a riot.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 28,
+                    "quote": "When they heard this they were filled with anger, and cried out, saying, “Great is Artemis of the Ephesians!”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 40,
+                    "quote": "For indeed we are in danger of being accused concerning today’s riot, there being no cause. Concerning it, we wouldn’t be able to give an account of this commotion.”"
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The prompt supplies an accessible situation without church jargon. Its memorable connection is the combination of threatened income and religious honor in a speech that provokes public disorder. Everyday expectations cannot identify the speaker from these four names. All alternatives are actual participants in the same disturbance, making them credible role-confusion distractors. Craft passes at 8/8, independently of the explanation’s naming error."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "partially_supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Alexander is put forward later and attempts a defense; he does not deliver the trade-and-temple warning. His attempted public address makes him a credible confusion with the instigating speaker.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 33,
+                    "quote": "They brought Alexander out of the multitude, the Jews putting him forward. Alexander beckoned with his hand, and would have made a defense to the people."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "supported",
+                "rationale": "Demetrius gathers the craftsmen, invokes their income, and warns about both their trade and Artemis’s standing. The listeners then become angry.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "For a certain man named Demetrius, a silversmith who made silver shrines of Artemis, brought no little business to the craftsmen,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "whom he gathered together, with the workmen of like occupation, and said, “Sirs, you know that by this business we have our wealth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Not only is there danger that this our trade come into disrepute, but also that the temple of the great goddess Artemis will be counted as nothing and her majesty destroyed, whom all Asia and the world worships.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 28,
+                    "quote": "When they heard this they were filled with anger, and cried out, saying, “Great is Artemis of the Ephesians!”"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "Gaius is a traveling companion of Paul seized by the crowd, not the speaker addressing craftsmen. His prominent involvement in the same riot makes him a plausible name-recall distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "Aristarchus is also identified as Paul’s traveling companion seized by the crowd, not the economic and religious agitator. A reader recalling participants but confusing their roles could reasonably select him.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 29,
+                    "quote": "The whole city was filled with confusion, and they rushed with one accord into the theater, having seized Gaius and Aristarchus, men of Macedonia, Paul’s companions in travel."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 2,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (5/8). The tested speaker is relatively unfamiliar to newcomers. Verification follows the speaker’s introduction, economic appeal, religious warning, and crowd reaction across several verses, but requires direct identification rather than an additional inference. The alternatives are credible participants with distinct roles."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0efeca28f239e241016ae4d1f321a087d2b2fe949d7989e51a",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_045f59888837fe3a016ae4d1f3334c87d28693591f208d4f36",
+          "usage": {
+            "inputTokens": 5778,
+            "outputTokens": 1457,
+            "totalTokens": 7235
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0efeca28f239e241016ae4d1f321a087d2b2fe949d7989e51a",
+          "usage": {
+            "inputTokens": 5778,
+            "outputTokens": 1619,
+            "totalTokens": 7397
+          }
+        }
+      ]
+    },
+    {
+      "id": "sosthenes-court",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "decisionMatches": false,
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, who was beaten before the judgment seat after Gallio dismissed the case against Paul?",
+        "heading": "A detail in Acts 18:1-17",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Crispus"
+          },
+          {
+            "id": "option-2",
+            "text": "Aquila"
+          },
+          {
+            "id": "option-3",
+            "text": "Sosthenes"
+          },
+          {
+            "id": "option-4",
+            "text": "Titius Justus"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-17",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks. But when Silas and Timothy came down from Macedonia, Paul was compelled by the Spirit, testifying to the Jews that Jesus was the Christ. When they opposed him and blasphemed, he shook out his clothing and said to them, “Your blood be on your own heads! I am clean. From now on, I will go to the Gentiles!” He departed there, and went into the house of a certain man named Justus, one who worshiped God, whose house was next door to the synagogue. Crispus, the ruler of the synagogue, believed in the Lord with all his house. Many of the Corinthians, when they heard, believed and were baptized. The Lord said to Paul in the night by a vision, “Don’t be afraid, but speak and don’t be silent; for I am with you, and no one will attack you to harm you, for I have many people in this city.” He lived there a year and six months, teaching the word of God among them. But when Gallio was proconsul of Achaia, the Jews with one accord rose up against Paul and brought him before the judgment seat, saying, “This man persuades men to worship God contrary to the law.” But when Paul was about to open his mouth, Gallio said to the Jews, “If indeed it were a matter of wrong or of wicked crime, you Jews, it would be reasonable that I should bear with you; but if they are questions about words and names and your own law, look to it yourselves. For I don’t want to be a judge of these matters.” So he drove them from the judgment seat. Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Sosthenes, the synagogue ruler, was beaten before the judgment seat.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Gallio took no notice.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-17",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 8,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "Context: the accusation against Paul and Gallio's dismissal establish a clear courtroom situation without unnecessary detail. Interest: the memorable reversal is that someone other than Paul is beaten after Paul's case is dismissed. Fair challenge: identifying that person requires textual knowledge; everyday expectations and option wording do not reveal the answer. Choices: all four are credible personal-name alternatives connected to the local narrative, with Crispus especially plausible because he also bears the synagogue-ruler title. Total: 8/8."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The courtroom setting and dismissed case give a clear situation without requiring church vocabulary. The memorable discovery is that the case against Paul ends with someone else being beaten at the same judgment seat. Nothing in everyday expectations or the option wording reveals which man it was. All four choices are comparable personal names associated, or apparently associated, with the local narrative; Crispus is an especially credible confusion because he too is identified as a synagogue ruler. Total: 8/8. Craft passes, subject to verifying the expanded distractor name."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 95,
+        "candidateSha256": "2f21939a861f3bcf49b098bf3f3b06e9b161eab896f887f3621b9daa7b06270b",
+        "sourceSha256": "547f9bce98ec156c57ffd61f3747e5c8d964444657cfed4c2a985d65ade72dc1",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "3a84a56467d681cce2b9da038ed50df300538d6a53891907e60b0658e97dd8b2",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 3
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "unresolved_or_complex_claim",
+          "daily_set_difficulty_mismatch"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Option-4 uses the fuller name Titius Justus, whereas the saved excerpt supplies only Justus. The additional name cannot be verified here, but it does not create ambiguity about the answer."
+            ],
+            "questionPremises": [
+              {
+                "text": "The episode belongs to the Acts 18:1–17 passage identified in the heading.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "But when Gallio was proconsul of Achaia, the Jews with one accord rose up against Paul and brought him before the judgment seat,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "text": "Paul was brought before the judgment seat to face an accusation.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "But when Gallio was proconsul of Achaia, the Jews with one accord rose up against Paul and brought him before the judgment seat,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "saying, “This man persuades men to worship God contrary to the law.”"
+                  }
+                ]
+              },
+              {
+                "text": "Gallio dismissed the case against Paul.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "But when Paul was about to open his mouth, Gallio said to the Jews, “If indeed it were a matter of wrong or of wicked crime, you Jews, it would be reasonable that I should bear with you;"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "but if they are questions about words and names and your own law, look to it yourselves. For I don’t want to be a judge of these matters.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  }
+                ]
+              },
+              {
+                "text": "Someone was beaten before the judgment seat.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "text": "The beating occurred after Gallio dismissed the case.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "Context: the accusation against Paul and Gallio's dismissal establish a clear courtroom situation without unnecessary detail. Interest: the memorable reversal is that someone other than Paul is beaten after Paul's case is dismissed. Fair challenge: identifying that person requires textual knowledge; everyday expectations and option wording do not reveal the answer. Choices: all four are credible personal-name alternatives connected to the local narrative, with Crispus especially plausible because he also bears the synagogue-ruler title. Total: 8/8."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Crispus is described as a synagogue ruler who believed, not as the person beaten. His shared title with Sosthenes makes him a strong, credible distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Crispus, the ruler of the synagogue, believed in the Lord with all his house. Many of the Corinthians, when they heard, believed and were baptized."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Aquila is Paul's associate and fellow tent maker, not the named victim. His involvement in Paul's stay makes him a plausible local-person distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies Sosthenes as the person seized and beaten before the judgment seat immediately after the dismissal.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt names Justus as the worshiper whose house Paul entered, not as the beating victim. That nearby narrative role makes Justus a credible distractor, although the fuller name Titius Justus is not established by this excerpt.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "He departed there, and went into the house of a certain man named Justus, one who worshiped God, whose house was next door to the synagogue."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (3/8). The victim's identity is a relatively little-known detail, but it is stated directly in one verse and requires no inference. The alternatives are plausible people from the same narrative rather than uniformly close role matches."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0dba6a8fc65ad3f5016ae4d1f3cad087d296076bbc59d82176",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 95,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The distractor name 'Titius Justus' is not fully verified by the saved WEB excerpt, which names only Justus. This does not create an alternative correct answer, but the expanded name exceeds the supplied textual evidence."
+            ],
+            "questionPremises": [
+              {
+                "text": "The episode occurs in Acts within the stated Acts 18:1–17 scope.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "But when Gallio was proconsul of Achaia, the Jews with one accord rose up against Paul and brought him before the judgment seat,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "text": "A case against Paul was brought before Gallio.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "But when Gallio was proconsul of Achaia, the Jews with one accord rose up against Paul and brought him before the judgment seat,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "saying, “This man persuades men to worship God contrary to the law.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "But when Paul was about to open his mouth, Gallio said to the Jews, “If indeed it were a matter of wrong or of wicked crime, you Jews, it would be reasonable that I should bear with you;"
+                  }
+                ]
+              },
+              {
+                "text": "Gallio dismissed the case against Paul.",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 15,
+                    "quote": "but if they are questions about words and names and your own law, look to it yourselves. For I don’t want to be a judge of these matters.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  }
+                ]
+              },
+              {
+                "text": "Someone was beaten before the judgment seat.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "text": "The beating followed Gallio's dismissal.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The courtroom setting and dismissed case give a clear situation without requiring church vocabulary. The memorable discovery is that the case against Paul ends with someone else being beaten at the same judgment seat. Nothing in everyday expectations or the option wording reveals which man it was. All four choices are comparable personal names associated, or apparently associated, with the local narrative; Crispus is an especially credible confusion because he too is identified as a synagogue ruler. Total: 8/8. Craft passes, subject to verifying the expanded distractor name."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 98,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Crispus is described as believing with his household, not as the beating victim. His shared title of synagogue ruler makes him a strong, credible distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Crispus, the ruler of the synagogue, believed in the Lord with all his house. Many of the Corinthians, when they heard, believed and were baptized."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Aquila is Paul's fellow tradesman and host, not the named victim. His close association with Paul in the same setting makes him a plausible guess.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage directly identifies Sosthenes as the man beaten before the judgment seat immediately after the dismissal.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 16,
+                    "quote": "So he drove them from the judgment seat."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt's Justus is associated with the house beside the synagogue, not the beating. That local connection makes the intended distractor plausible, although the additional name 'Titius' is not established by this excerpt.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "He departed there, and went into the house of a certain man named Justus, one who worshiped God, whose house was next door to the synagogue."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 17,
+                    "quote": "Then all the Greeks seized Sosthenes, the ruler of the synagogue, and beat him before the judgment seat. Gallio didn’t care about any of these things."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (3/8): the victim's identity is a relatively little-known detail, but it is directly stated in one verse and requires no inference. The alternatives are plausible people from the local narrative rather than uniformly close competing roles."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0b223811405ba908016ae4d1f3d54087d2aef4af50d2693bd7",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0dba6a8fc65ad3f5016ae4d1f3cad087d296076bbc59d82176",
+          "usage": {
+            "inputTokens": 5143,
+            "outputTokens": 1591,
+            "totalTokens": 6734
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0b223811405ba908016ae4d1f3d54087d2aef4af50d2693bd7",
+          "usage": {
+            "inputTokens": 5143,
+            "outputTokens": 1475,
+            "totalTokens": 6618
+          }
+        }
+      ]
+    },
+    {
+      "id": "micaiah-imprisonment",
+      "split": "launch-pilot",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "decisionMatches": false,
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In 1 Kings, which prophet was struck before being imprisoned on bread and water?",
+        "heading": "A detail in 1 Kings 22:13-28",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Zedekiah"
+          },
+          {
+            "id": "option-2",
+            "text": "Elijah"
+          },
+          {
+            "id": "option-3",
+            "text": "Micaiah"
+          },
+          {
+            "id": "option-4",
+            "text": "Elisha"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/1KI22.htm",
+            "locator": "1 Kings 22:13-28",
+            "excerpt": "The messenger who went to call Micaiah spoke to him, saying, “See now, the prophets declare good to the king with one mouth. Please let your word be like the word of one of them, and speak good.” Micaiah said, “As Yahweh lives, what Yahweh says to me, that I will speak.” When he had come to the king, the king said to him, “Micaiah, shall we go to Ramoth Gilead to battle, or shall we forbear?” He answered him, “Go up and prosper; and Yahweh will deliver it into the hand of the king.” The king said to him, “How many times do I have to adjure you that you speak to me nothing but the truth in Yahweh’s name?” He said, “I saw all Israel scattered on the mountains, as sheep that have no shepherd. Yahweh said, ‘These have no master. Let them each return to his house in peace.’ ” The king of Israel said to Jehoshaphat, “Didn’t I tell you that he would not prophesy good concerning me, but evil?” Micaiah said, “Therefore hear Yahweh’s word. I saw Yahweh sitting on his throne, and all the army of heaven standing by him on his right hand and on his left. Yahweh said, ‘Who will entice Ahab, that he may go up and fall at Ramoth Gilead?’ One said one thing; and another said another. A spirit came out and stood before Yahweh, and said, ‘I will entice him.’ Yahweh said to him, ‘How?’ He said, ‘I will go out and will be a lying spirit in the mouth of all his prophets.’ He said, ‘You will entice him, and will also prevail. Go out and do so.’ Now therefore, behold, Yahweh has put a lying spirit in the mouth of all these your prophets; and Yahweh has spoken evil concerning you.” Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?” Micaiah said, “Behold, you will see on that day, when you go into an inner room to hide yourself.” The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son. Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ” Micaiah said, “If you return at all in peace, Yahweh has not spoken by me.” He said, “Listen, all you people!”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Zedekiah struck Micaiah after hearing his prophecy.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Bread and water were ordered for Micaiah’s imprisonment.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "1 Kings 22:13-28",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 8,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "The setup supplies a clear, accessible situation without unnecessary jargon. The memorable target is the prophet subjected to both a physical blow and a punitive prison ration, not merely an expected outcome. Everyday reasoning cannot identify his name. All alternatives are credible prophetic-name choices: Zedekiah offers a particularly plausible reversal of attacker and victim, while Elijah and Elisha are believable name confusions. Craft total: 8/8; the separate evidentiary overstatement still needs correction."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 8,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "Craft passes at 8/8, independently of the evidentiary defect. The setup provides a clear, accessible situation. The memorable connection is a prophet facing both a physical blow and an ordered bread-and-water imprisonment. Identifying him requires actual narrative knowledge rather than everyday expectations. All choices are credible prophetic-name alternatives, with Zedekiah providing a particularly plausible reversal of aggressor and victim."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 90,
+        "candidateSha256": "9a0cf0842cea30e7f3eeff7b37a5003106b80f72b1cbc6661df6937665cf6548",
+        "sourceSha256": "d670aad16fff3da98e8e600bd325bb3cc1f2ff2b35a383f9850de649a2df3642",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "4fcce492f2d4bc410c3b4ea402654f1cc1757df7d67d16ca5c1332b760f6f403",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 5
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "questionAccuracy_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_context_unsupported",
+          "scopeAccuracy_below_threshold",
+          "daily_set_difficulty_mismatch"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 92,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "The question states that imprisonment occurred, but the saved excerpt explicitly records only the king's order to imprison Micaiah. The intended answer is nevertheless unique."
+            ],
+            "questionPremises": [
+              {
+                "text": "The scene belongs to the stated 1 Kings passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "The person being identified speaks as a prophet.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 18,
+                    "quote": "The king of Israel said to Jehoshaphat, “Didn’t I tell you that he would not prophesy good concerning me, but evil?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 19,
+                    "quote": "Micaiah said, “Therefore hear Yahweh’s word. I saw Yahweh sitting on his throne, and all the army of heaven standing by him on his right hand and on his left."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 28,
+                    "quote": "Micaiah said, “If you return at all in peace, Yahweh has not spoken by me.” He said, “Listen, all you people!”"
+                  }
+                ]
+              },
+              {
+                "text": "The prophet was struck.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ]
+              },
+              {
+                "text": "The prophet was imprisoned.",
+                "status": "partially_supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "Bread and water were specified as the prophet's prison provisions.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "The striking preceded the imprisonment described in the question.",
+                "status": "partially_supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "The setup supplies a clear, accessible situation without unnecessary jargon. The memorable target is the prophet subjected to both a physical blow and a punitive prison ration, not merely an expected outcome. Everyday reasoning cannot identify his name. All alternatives are credible prophetic-name choices: Zedekiah offers a particularly plausible reversal of attacker and victim, while Elijah and Elisha are believable name confusions. Craft total: 8/8; the separate evidentiary overstatement still needs correction."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "Now therefore, behold, Yahweh has put a lying spirit in the mouth of all these your prophets; and Yahweh has spoken evil concerning you.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Zedekiah strikes Micaiah; he is not the recipient of the blow or imprisonment order. His involvement makes him a strong role-reversal distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify Elijah as the person struck or ordered imprisoned. He is a credible alternative prophetic name, but no detail here assigns him this role.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "Micaiah is explicitly named as the person struck and then as the subject of the prison order specifying bread and water.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify Elisha as the person struck or ordered imprisoned. His name is a plausible prophetic-name distractor, but the passage assigns the actions to Micaiah.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 1,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (5/8). The tested identity is relatively little-known. Verification connects the named victim of the blow with the nearby imprisonment order. The alternatives are plausible names in the same category, but they are not all competing participants in this scene."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_04631897e30a3582016ae4d20c511487d2b073f0a3d0c62397",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 90,
+            "scopeAccuracy": 94,
+            "explanationCoverage": 100,
+            "simpleTextualFact": false,
+            "unresolvedIssues": [
+              "The question presents imprisonment and the bread-and-water diet as completed events. The excerpt records the king ordering these punishments, not their execution. The explanation accurately describes an order, but does not resolve the question's overstatement. Strict evidence approval is therefore withheld."
+            ],
+            "questionPremises": [
+              {
+                "text": "The described confrontation occurs in the cited 1 Kings passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "The person being identified acts as a prophet.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 18,
+                    "quote": "The king of Israel said to Jehoshaphat, “Didn’t I tell you that he would not prophesy good concerning me, but evil?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 19,
+                    "quote": "Micaiah said, “Therefore hear Yahweh’s word. I saw Yahweh sitting on his throne, and all the army of heaven standing by him on his right hand and on his left."
+                  }
+                ]
+              },
+              {
+                "text": "The prophet was struck.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ]
+              },
+              {
+                "text": "The prophet was imprisoned.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "Bread and water were his actual prison diet.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              },
+              {
+                "text": "The striking preceded his imprisonment.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "Craft passes at 8/8, independently of the evidentiary defect. The setup provides a clear, accessible situation. The memorable connection is a prophet facing both a physical blow and an ordered bread-and-water imprisonment. Identifying him requires actual narrative knowledge rather than everyday expectations. All choices are credible prophetic-name alternatives, with Zedekiah providing a particularly plausible reversal of aggressor and victim."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "Now therefore, behold, Yahweh has put a lying spirit in the mouth of all these your prophets; and Yahweh has spoken evil concerning you.”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Zedekiah delivers the blow rather than receiving it. His direct involvement makes him a credible role-confusion distractor.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify Elijah as the victim or intended prisoner. A recognizable prophetic name is a credible alternative for someone uncertain which prophet faced this punishment.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "Micaiah is explicitly struck and subsequently named in the king's imprisonment order. He uniquely matches the scene, although the question overstates the order as a completed punishment.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "Then Zedekiah the son of Chenaanah came near, and struck Micaiah on the cheek, and said, “Which way did Yahweh’s Spirit go from me to speak to you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "The king of Israel said, “Take Micaiah, and carry him back to Amon the governor of the city, and to Joash the king’s son."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 27,
+                    "quote": "Say, ‘The king says, “Put this fellow in the prison, and feed him with bread of affliction and with water of affliction, until I come in peace.” ’ ”"
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify Elisha as the victim or intended prisoner. He is a credible prophetic-name alternative, especially for players who confuse accounts involving different prophets.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 1,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate, 5/8. The tested identity is relatively little-known. Verification connects the named victim with the nearby prison order. The alternatives are plausible names in the same category, but only Zedekiah has a competing role in this scene. The wording defect does not increase difficulty."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0e38fa6af5732f11016ae4d20c541c87d2b07c8c5db51d1a3f",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_04631897e30a3582016ae4d20c511487d2b073f0a3d0c62397",
+          "usage": {
+            "inputTokens": 6605,
+            "outputTokens": 1608,
+            "totalTokens": 8213
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0e38fa6af5732f11016ae4d20c541c87d2b07c8c5db51d1a3f",
+          "usage": {
+            "inputTokens": 6605,
+            "outputTokens": 1517,
+            "totalTokens": 8122
+          }
+        }
+      ]
+    }
+  ],
+  "completedAt": "2026-10-30T17:21:39.255Z",
+  "errors": [],
+  "matched": 1,
+  "complete": true
+}

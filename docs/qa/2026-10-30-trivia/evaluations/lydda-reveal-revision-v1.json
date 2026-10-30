@@ -1,0 +1,628 @@
+{
+  "reason": "Remove Joppa answer leakage identified by both rolling-week editors; retain the distinct departure-city target.",
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Acts, which city did Peter leave to visit Tabitha, whose handmade clothes the widows showed him?",
+    "heading": "A detail in Acts 9:26-39",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Joppa"
+      },
+      {
+        "id": "option-2",
+        "text": "Caesarea"
+      },
+      {
+        "id": "option-3",
+        "text": "Lydda"
+      },
+      {
+        "id": "option-4",
+        "text": "Tarsus"
+      }
+    ],
+    "correctOptionId": "option-3",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/ACT09.htm",
+        "locator": "Acts 9:26-39",
+        "excerpt": "When Saul had come to Jerusalem, he tried to join himself to the disciples; but they were all afraid of him, not believing that he was a disciple. But Barnabas took him and brought him to the apostles, and declared to them how he had seen the Lord on the way, and that he had spoken to him, and how at Damascus he had preached boldly in the name of Jesus. He was with them entering into Jerusalem, preaching boldly in the name of the Lord Jesus. He spoke and disputed against the Hellenists, but they were seeking to kill him. When the brothers knew it, they brought him down to Caesarea, and sent him off to Tarsus. So the assemblies throughout all Judea, Galilee, and Samaria had peace, and were built up. They were multiplied, walking in the fear of the Lord and in the comfort of the Holy Spirit. As Peter went throughout all those parts, he came down also to the saints who lived at Lydda. There he found a certain man named Aeneas, who had been bedridden for eight years, because he was paralyzed. Peter said to him, “Aeneas, Jesus Christ heals you. Get up and make your bed!” Immediately he arose. All who lived at Lydda and in Sharon saw him, and they turned to the Lord. Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did. In those days, she became sick, and died. When they had washed her, they laid her in an upper room. As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them. Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them.",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "Peter was staying in Lydda when two men summoned him after Tabitha died.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "The disciples urged him to come without delay.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Acts 9:26-39",
+    "translation": "WEB",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 8
+    }
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 8,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question supplies a clear, accessible scene without church jargon. The memorable detail is the grieving widows showing clothing Tabitha had made, a concrete expression of her connection to them. Identifying Peter's departure city rather than Tabitha's location creates a fair distinction without an everyday-logic giveaway. All choices are real cities from the excerpt: Joppa is the destination, while Caesarea and Tarsus belong to Saul's journey and offer credible narrative mix-ups. Total: 8/8."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The setup identifies Peter, Tabitha, and a concrete scene without requiring church jargon. The memorable connection is the widows displaying clothes Tabitha had made—a tangible reminder of her work, rather than a generic journey detail alone. Identifying the departure city requires actual narrative knowledge; everyday expectations do not reveal it. All four choices are credible biblical cities: Joppa creates a departure-versus-destination distinction, while Caesarea and Tarsus belong to Saul's nearby travel account. Total: 8/8."
+        }
+      ]
+    },
+    "accepted": true,
+    "minimumScore": 95,
+    "evidenceScore": 95,
+    "candidateSha256": "d83da05e107c699be5d423e0e1b4cb4b4691b2b6a74f256006777a4ce599f0c4",
+    "sourceSha256": "9ab4cfc7b931767f88240be09788f6bbe199f5fc92fb7f489c0fc833fb78e2de",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "ddefbb98f097919d9e4e37c4222831d3c30dca389f2076e1ba52a44c3a8ad331",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "challenging",
+      "score": 8
+    },
+    "difficultyTargetMet": true,
+    "reasons": [],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The scene involving Peter, Tabitha, and the widows occurs within the cited Acts passage.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Peter left a city to go to the place where Tabitha was.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Tabitha is the woman also called Dorcas in the clothing scene.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Tabitha had made the clothes mentioned in the question.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "The widows showed those clothes to Peter after he arrived.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question supplies a clear, accessible scene without church jargon. The memorable detail is the grieving widows showing clothing Tabitha had made, a concrete expression of her connection to them. Identifying Peter's departure city rather than Tabitha's location creates a fair distinction without an everyday-logic giveaway. All choices are real cities from the excerpt: Joppa is the destination, while Caesarea and Tarsus belong to Saul's journey and offer credible narrative mix-ups. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "As Peter went throughout all those parts, he came down also to the saints who lived at Lydda."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 37,
+                "quote": "In those days, she became sick, and died. When they had washed her, they laid her in an upper room."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Joppa is where Tabitha was, making it Peter's destination rather than his departure city. It is a strong distractor for someone remembering the scene but reversing the journey.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Caesarea belongs to Saul's movements in this excerpt, not Peter's departure to visit Tabitha. Its appearance in the adjacent travel narrative makes it a credible mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 30,
+                "quote": "When the brothers knew it, they brought him down to Caesarea, and sent him off to Tarsus."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Peter was in Lydda when the messengers requested his presence, and he went with them to Tabitha's location.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "As Peter went throughout all those parts, he came down also to the saints who lived at Lydda."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Tarsus is Saul's destination in the preceding travel account, not Peter's departure city. It is a plausible alternative for a player mixing the two travelers' movements.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 30,
+                "quote": "When the brothers knew it, they brought him down to Caesarea, and sent him off to Tarsus."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 1,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Lydda, a little-known departure point in Peter’s visit to Tabitha. Players must connect Peter’s location with the summons and distinguish it from Joppa, Tabitha’s city and his destination. Joppa is a closely related distractor, while Caesarea and Tarsus belong to Saul’s nearby itinerary."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_079c0fb874566049016ae4e7278f9487d289e52dffa3238224",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_04049bf9d95f9276016ae4e73f36a887d2b2ebbc9b82010ee1",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "374cfc188d96894d60dc91bac600b702567eecd41d7b24004c00399c0a92b27f",
+          "usage": {
+            "inputTokens": 1831,
+            "outputTokens": 147,
+            "totalTokens": 1978
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 6/10: the departure city is a relatively little-known detail. Players must recall the origin-versus-destination relationship, but the task remains direct identification rather than a multi-step inference. The alternatives are plausible cities, though they do not all share closely competing roles in Peter's journey."
+        }
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 95,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The question concerns Peter's journey in the cited Acts narrative.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "As Peter went throughout all those parts, he came down also to the saints who lived at Lydda."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Peter left a city to go to the place where Tabitha was.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Tabitha made the clothes mentioned in the question.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          },
+          {
+            "text": "Widows showed Peter those clothes after he arrived.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The setup identifies Peter, Tabitha, and a concrete scene without requiring church jargon. The memorable connection is the widows displaying clothes Tabitha had made—a tangible reminder of her work, rather than a generic journey detail alone. Identifying the departure city requires actual narrative knowledge; everyday expectations do not reveal it. All four choices are credible biblical cities: Joppa creates a departure-versus-destination distinction, while Caesarea and Tarsus belong to Saul's nearby travel account. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "As Peter went throughout all those parts, he came down also to the saints who lived at Lydda."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 37,
+                "quote": "In those days, she became sick, and died. When they had washed her, they laid her in an upper room."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "Joppa was Tabitha's location and Peter's destination, not his departure city. It is a strong distractor for someone remembering the place associated with Tabitha but reversing the journey.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Caesarea appears in Saul's travel account, not as Peter's departure point for this visit. Its role as another travel location in the same excerpt makes it a credible narrative mix-up.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 26,
+                "quote": "When Saul had come to Jerusalem, he tried to join himself to the disciples; but they were all afraid of him, not believing that he was a disciple."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 30,
+                "quote": "When the brothers knew it, they brought him down to Caesarea, and sent him off to Tarsus."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Peter was in Lydda when the disciples sent two men to fetch him; he then went with them to Tabitha's location in Joppa.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 32,
+                "quote": "As Peter went throughout all those parts, he came down also to the saints who lived at Lydda."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 36,
+                "quote": "Now there was at Joppa a certain disciple named Tabitha, which when translated, means Dorcas. This woman was full of good works and acts of mercy which she did."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "As Lydda was near Joppa, the disciples, hearing that Peter was there, sent two men to him, imploring him not to delay in coming to them."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Peter got up and went with them. When he had come, they brought him into the upper room. All the widows stood by him weeping, and showing the coats and garments which Dorcas had made while she was with them."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Tarsus was Saul's destination in the preceding account, not Peter's starting point here. It is a credible city alternative for a player confusing the two travel accounts.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 26,
+                "quote": "When Saul had come to Jerusalem, he tried to join himself to the disciples; but they were all afraid of him, not believing that he was a disciple."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 30,
+                "quote": "When the brothers knew it, they brought him down to Caesarea, and sent him off to Tarsus."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 1,
+          "distractorSimilarity": 2,
+          "rationale": "The answer is Lydda, a little-known geographical detail of Peter’s visit to Tabitha. Players must connect Peter’s location with his departure to visit her, distinguishing Lydda as the starting point from Joppa as the destination. Joppa is a closely related distractor; Caesarea and Tarsus belong to Saul’s nearby journey account."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_091e925348f5502c016ae4e7278d4487d2991b0bb849d56b50",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_0dc4d20189c1cdf1016ae4e73f398c87d285723fde9da00112",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "374cfc188d96894d60dc91bac600b702567eecd41d7b24004c00399c0a92b27f",
+          "usage": {
+            "inputTokens": 1831,
+            "outputTokens": 196,
+            "totalTokens": 2027
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 6/10: identifying Lydda is a relatively little-known geographical detail. Players must remember which city was Peter's starting point rather than Tabitha's location, but no further inference is required. The alternatives are plausible cities, though they are not all closely competing locations within Peter's journey."
+        }
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_079c0fb874566049016ae4e7278f9487d289e52dffa3238224",
+      "usage": {
+        "inputTokens": 7318,
+        "outputTokens": 1713,
+        "totalTokens": 9031
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_091e925348f5502c016ae4e7278d4487d2991b0bb849d56b50",
+      "usage": {
+        "inputTokens": 7318,
+        "outputTokens": 1737,
+        "totalTokens": 9055
+      }
+    }
+  ]
+}

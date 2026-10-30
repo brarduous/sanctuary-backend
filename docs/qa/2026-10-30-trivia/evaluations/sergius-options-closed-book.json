@@ -1,0 +1,604 @@
+{
+  "noProductionWrites": true,
+  "revisionReason": "Replace missionary and opponent role-elimination cues with comparable actual officials, as requested by the final set reviewer.",
+  "content": {
+    "kind": "biblical_text",
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "Sergius Paulus believed after Elymas was blinded.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "He was astonished at the Lord’s teaching.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "prompt": "In Acts, who believed after the sorcerer trying to turn him from faith was struck temporarily blind?",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Gallio"
+      },
+      {
+        "id": "option-2",
+        "text": "Felix"
+      },
+      {
+        "id": "option-3",
+        "text": "Sergius Paulus"
+      },
+      {
+        "id": "option-4",
+        "text": "Festus"
+      }
+    ],
+    "heading": "A detail in Acts 13:1-12",
+    "sources": [
+      {
+        "id": "passage",
+        "url": "https://ebible.org/eng-web/ACT13.htm",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm",
+        "excerpt": "Now in the assembly that was at Antioch there were some prophets and teachers: Barnabas, Simeon who was called Niger, Lucius of Cyrene, Manaen the foster brother of Herod the tetrarch, and Saul. As they served the Lord and fasted, the Holy Spirit said, “Separate Barnabas and Saul for me, for the work to which I have called them.” Then, when they had fasted and prayed and laid their hands on them, they sent them away. So, being sent out by the Holy Spirit, they went down to Seleucia. From there they sailed to Cyprus. When they were at Salamis, they proclaimed God’s word in the Jewish synagogues. They also had John as their attendant. When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus, who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God. But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith. But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him, and said, “You son of the devil, full of all deceit and all cunning, you enemy of all righteousness, will you not cease to pervert the right ways of the Lord? Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand. Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord.",
+        "locator": "Acts 13:1-12",
+        "publisher": "eBible.org / World English Bible"
+      }
+    ],
+    "category": "Bible and context",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "translation": "WEB",
+    "answerClaimId": "claim-1",
+    "correctOptionId": "option-3",
+    "scriptureReference": "Acts 13:1-12",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ]
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 8,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question supplies a clear, accessible encounter without requiring unexplained church terminology. The memorable connection is that a sorcerer trying to obstruct another man's faith is himself blinded, while that man believes. Identifying the witness is a fair recall challenge, not an outcome guess: everyday expectations cannot select his name. All four choices are credible Roman-official names associated with Acts, making plausible, parallel alternatives. Total: 8/8."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question supplies a clear conflict without requiring church jargon. Its memorable connection is the identity of the man who believed after the sorcerer opposing his faith was himself blinded, rather than merely a generic successful conversion. Everyday expectations cannot identify the correct name. All four choices are credible Acts-era officials associated with Paul's encounters, making the distractors plausible but distinct. Total: 8/8."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 100,
+    "candidateSha256": "71811ca3c15f01de169f832d48753f4daed0c0fbbc456d370120157d42e42689",
+    "sourceSha256": "4994fce65dbaccd219369306d1baaab608bcb0513a3075d4820b57a67ef3612b",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "efd240a3a7bfc1eff5a966ca1c55517cfff51ae96d47d415770454ae83de4fd0",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v2",
+      "level": "moderate",
+      "score": 5
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "daily_set_difficulty_mismatch"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The question describes the sorcerer encounter in Acts within the heading's stated scope, Acts 13:1–12.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 6,
+                "quote": "When they had gone through the island to Paphos, they found a certain sorcerer, a false prophet, a Jew, whose name was Bar Jesus,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          },
+          {
+            "text": "A sorcerer was trying to turn the man in question away from faith.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "The sorcerer was struck blind.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The sorcerer's blindness was described as temporary.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The targeted man believed after the sorcerer was blinded.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question supplies a clear, accessible encounter without requiring unexplained church terminology. The memorable connection is that a sorcerer trying to obstruct another man's faith is himself blinded, while that man believes. Identifying the witness is a fair recall challenge, not an outcome guess: everyday expectations cannot select his name. All four choices are credible Roman-official names associated with Acts, making plausible, parallel alternatives. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The passage identifies the believing proconsul as Sergius Paulus, not Gallio. Gallio is a credible distractor as another official associated with Acts.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Felix is not identified as the man in this encounter. His association with Paul's encounters with officials makes him a plausible mistaken choice.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "Sergius Paulus is named as the proconsul whom Elymas tried to turn away from faith. After the blindness, that proconsul believed.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Festus is not named as the believing proconsul here. As another official associated with Paul in Acts, he is a credible distractor rather than arbitrary filler.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "The answer is Sergius Paulus, a little-known figure whose conversion is unlikely to be familiar to newcomers. The question requires direct recall of his association with Elymas’s blinding, not a chain of deductions. The other choices are plausible Roman officials from Acts, but they do not compete for roles within this episode."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_04e2730443780733016ae4d6d8234487d2945be6db530ccbe4",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0036c5b9e2312951016ae4d7bee48c87d28e6bf21a8f5bf3ad",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "e34547d7257864e7bfebf055447114ba6df8c8ed9e6975b917328a92d08ac336",
+          "usage": {
+            "inputTokens": 1748,
+            "outputTokens": 166,
+            "totalTokens": 1914
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 5/10: identifying Sergius Paulus is a relatively little-known name association. The task is direct identification, without a required multi-step connection. The alternatives are plausible officials but are not competing participants in this encounter. Audience familiarity is an estimate."
+        }
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The scene is narrated in Acts within the stated Acts 13:1–12 scope.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          },
+          {
+            "text": "A sorcerer was trying to turn the person sought by the question away from faith.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              }
+            ]
+          },
+          {
+            "text": "That sorcerer was struck blind.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 9,
+                "quote": "But Saul, who is also called Paul, filled with the Holy Spirit, fastened his eyes on him,"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The blindness was described as temporary.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              }
+            ]
+          },
+          {
+            "text": "The person whom the sorcerer opposed believed after the blinding.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question supplies a clear conflict without requiring church jargon. Its memorable connection is the identity of the man who believed after the sorcerer opposing his faith was himself blinded, rather than merely a generic successful conversion. Everyday expectations cannot identify the correct name. All four choices are credible Acts-era officials associated with Paul's encounters, making the distractors plausible but distinct. Total: 8/8."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The passage identifies Sergius Paulus, not Gallio, as the believing proconsul. Gallio is a credible distractor as another official associated with Paul in Acts.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Felix is not identified as the believer in this scene. His association with Paul's encounters with Roman authorities makes him a plausible mistaken choice.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "The passage names the proconsul Sergius Paulus, identifies him as the target of Elymas's opposition, and says the proconsul believed after witnessing the blinding.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 7,
+                "quote": "who was with the proconsul, Sergius Paulus, a man of understanding. This man summoned Barnabas and Saul, and sought to hear the word of God."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 8,
+                "quote": "But Elymas the sorcerer (for so is his name by interpretation) withstood them, seeking to turn the proconsul away from the faith."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 11,
+                "quote": "Now, behold, the hand of the Lord is on you, and you will be blind, not seeing the sun for a season!” Immediately a mist and darkness fell on him. He went around seeking someone to lead him by the hand."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 12,
+                "quote": "Then the proconsul, when he saw what was done, believed, being astonished at the teaching of the Lord."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Festus is not the proconsul named in this episode. As another Roman official associated with Paul in Acts, he is a credible alternative for a player recalling the wrong encounter.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "The answer is Sergius Paulus, a little-known figure whose conversion is unlikely to be familiar to readers new to church. The question requires directly recalling his association with Elymas’s blinding, not reconstructing a journey or making additional inferences. Gallio, Felix, and Festus are plausible alternatives as officials in Acts, but they belong to different episodes rather than competing roles in this scene."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0248b77639a852a5016ae4d6d8069c87d28691fa6e735de861",
+        "reviewerPromptSha256": "ca06c28f923fd64d76c361071bba4844724afafadcde62cc7545270a07142c03",
+        "difficultyAssessment": {
+          "rubricVersion": "discovery-difficulty-v2",
+          "model": "gpt-6-astra",
+          "responseId": "resp_084727ce25c0a79b016ae4d7bec47087d29f4ebe2c9dafb5ba",
+          "reviewerPromptSha256": "50a2f27a039134f57a2474efb452d510d32d57e475cb38d1738ff6519901c31e",
+          "questionPromptSha256": "e34547d7257864e7bfebf055447114ba6df8c8ed9e6975b917328a92d08ac336",
+          "usage": {
+            "inputTokens": 1748,
+            "outputTokens": 209,
+            "totalTokens": 1957
+          }
+        },
+        "verificationDifficulty": {
+          "familiarity": 2,
+          "evidenceNavigation": 1,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Medium, 6/10: the tested name is a relatively little-known detail. Players must recall which person was the convert rather than the blinded opponent, but no inference beyond direct identification is required. The alternatives are comparable officials, not participants competing for roles within this scene."
+        }
+      }
+    ]
+  },
+  "reviews": null,
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_04e2730443780733016ae4d6d8234487d2945be6db530ccbe4",
+      "usage": {
+        "inputTokens": 5647,
+        "outputTokens": 1461,
+        "totalTokens": 7108
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0248b77639a852a5016ae4d6d8069c87d28691fa6e735de861",
+      "usage": {
+        "inputTokens": 5647,
+        "outputTokens": 1368,
+        "totalTokens": 7015
+      }
+    }
+  ],
+  "difficultyTask": "Separate closed-book task, consistently used for every daily-three question. Original combined-task grade remains preserved as verificationDifficulty."
+}

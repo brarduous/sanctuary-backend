@@ -1,0 +1,426 @@
+{
+  "version": "trivia-editorial-benchmark-v1",
+  "frozenBeforeEvaluation": true,
+  "authorship": "Original Sanctuary research drafts written by the assistant; not human-approved production content.",
+  "rights": {
+    "questions": "Original project editorial material",
+    "scripture": "World English Bible, public domain; exact edition/hash resolved from bundled corpus"
+  },
+  "difficultyMeaning": "Proposed bands; no audience success rates observed. Independently evaluate without seeing intended labels.",
+  "cases": [
+    {
+      "id": "david-armor",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "1 Samuel 17:23-40",
+      "prompt": "In 1 Samuel, who faced Goliath after taking off the armor Saul offered?",
+      "choices": [
+        "Jonathan",
+        "David",
+        "Abner",
+        "Joab"
+      ],
+      "correct": "David",
+      "claims": [
+        "David removed Saul’s armor because he hadn’t tried it.",
+        "He went toward the Philistine carrying a sling."
+      ],
+      "rationale": "Familiar identity anchored by a memorable choice; three actual military figures are comparable names.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "1 Samuel 17:23-40",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "noah-olive",
+      "split": "holdout",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Genesis 8:6-12",
+      "prompt": "In Genesis, which bird returned to Noah carrying an olive leaf?",
+      "choices": [
+        "Raven",
+        "Dove",
+        "Eagle",
+        "Sparrow"
+      ],
+      "correct": "Dove",
+      "claims": [
+        "The dove returned to Noah carrying a freshly plucked olive leaf.",
+        "Noah knew the waters had receded."
+      ],
+      "rationale": "A familiar image and concrete sign, with comparable birds.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 8:6-12",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "daniel-den",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "easy",
+      "reference": "Daniel 6:14-23",
+      "prompt": "In Daniel, which animals shared the den where the king ordered Daniel thrown?",
+      "choices": [
+        "Bears",
+        "Wolves",
+        "Lions",
+        "Leopards"
+      ],
+      "correct": "Lions",
+      "claims": [
+        "Daniel was thrown into a den of lions.",
+        "The king sealed its entrance with his own signet."
+      ],
+      "rationale": "Recognizable scene; concrete animals make a welcoming opener, not an inevitable rescue result.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Daniel 6:14-23",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "siloam",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "John 9:1-11",
+      "prompt": "In John, Jesus sent a man born blind to wash in which pool?",
+      "choices": [
+        "Bethesda",
+        "Heshbon",
+        "Siloam",
+        "Gibeon"
+      ],
+      "correct": "Siloam",
+      "claims": [
+        "Jesus told the man to wash in the pool of Siloam.",
+        "The pool’s name means “Sent.”"
+      ],
+      "rationale": "A place-name distinction with a rewarding word connection; all alternatives name Biblical pools.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "John 9:1-11",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "lydia-purple",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "Acts 16:11-18",
+      "prompt": "In Acts, Lydia welcomed Paul into her home; what color goods did she sell?",
+      "choices": [
+        "Scarlet",
+        "Purple",
+        "Blue",
+        "White"
+      ],
+      "correct": "Purple",
+      "claims": [
+        "Lydia was a seller of purple from Thyatira.",
+        "She persuaded Paul and his companions to stay at her house."
+      ],
+      "rationale": "An everyday trade connects to a named woman’s hospitality; parallel colors.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Acts 16:11-18",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "malta-viper",
+      "split": "holdout",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "moderate",
+      "reference": "Acts 28:1-10",
+      "prompt": "In Acts, on which island did a viper fasten onto Paul’s hand beside a fire?",
+      "choices": [
+        "Crete",
+        "Cyprus",
+        "Patmos",
+        "Malta"
+      ],
+      "correct": "Malta",
+      "claims": [
+        "On Malta, a viper fastened onto Paul’s hand beside a fire.",
+        "He shook it into the fire without being harmed."
+      ],
+      "rationale": "Connect the surprising incident to a named island; all choices are actual Mediterranean Biblical islands.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Acts 28:1-10",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "judah-substitution",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Genesis 44:15-34",
+      "prompt": "In Genesis, which brother offered himself as Joseph’s slave so their youngest brother could go home?",
+      "choices": [
+        "Reuben",
+        "Simeon",
+        "Judah",
+        "Levi"
+      ],
+      "correct": "Judah",
+      "claims": [
+        "Judah offered to remain as a slave in his brother’s place.",
+        "He feared returning to their father without the boy."
+      ],
+      "rationale": "Track the named speaker through an appeal to a costly substitution; brothers make related alternatives.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 44:15-34",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "joppa-garments",
+      "split": "calibration",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 9:26-39",
+      "prompt": "In Acts, which city was home to the woman whose handmade clothes the widows showed Peter?",
+      "choices": [
+        "Lydda",
+        "Caesarea",
+        "Tarsus",
+        "Joppa"
+      ],
+      "correct": "Joppa",
+      "claims": [
+        "Tabitha, also called Dorcas, lived in Joppa.",
+        "Widows showed Peter the clothes she had made."
+      ],
+      "rationale": "Connect two names for one person, her craft, and her city amid other named destinations.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Acts 9:26-39",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "apollos-ephesus",
+      "split": "holdout",
+      "expectedDecision": "accept",
+      "proposedDifficulty": "challenging",
+      "reference": "Acts 18:24-28",
+      "prompt": "In Acts, where did the teacher from Alexandria receive private instruction from Priscilla and Aquila?",
+      "choices": [
+        "Alexandria",
+        "Ephesus",
+        "Corinth",
+        "Troas"
+      ],
+      "correct": "Ephesus",
+      "claims": [
+        "Apollos came to Ephesus from Alexandria.",
+        "Priscilla and Aquila took him aside to explain the way of God more accurately."
+      ],
+      "rationale": "Distinguish origin from teaching location and connect the named teachers to the traveler.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Acts 18:24-28",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "predictable-healing",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Mark 8:22-26",
+      "prompt": "In Mark’s account, what happened after Jesus laid hands on the man’s eyes again?",
+      "choices": [
+        "He saw everyone clearly",
+        "He stayed completely blind",
+        "His sight became worse",
+        "He refused to look"
+      ],
+      "correct": "He saw everyone clearly",
+      "claims": [
+        "The man saw everyone clearly after Jesus laid hands on his eyes again."
+      ],
+      "rationale": "Expected healing outcome with three failure alternatives gives away the answer without knowledge.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Mark 8:22-26",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "ambiguous-weapon",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "1 Samuel 17:38-51",
+      "prompt": "In 1 Samuel, what weapon did David use to kill Goliath?",
+      "choices": [
+        "Sling",
+        "Sword",
+        "Spear",
+        "Bow"
+      ],
+      "correct": "Sling",
+      "claims": [
+        "David struck the Philistine with a sling and a stone."
+      ],
+      "rationale": "Broad kill wording is ambiguous across the sling and subsequent sword action; chronology must reject.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "1 Samuel 17:38-51",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "invented-lexicon",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "John 9:1-11",
+      "prompt": "In John, which pool’s Hebrew name literally means “new beginning”?",
+      "choices": [
+        "Bethesda",
+        "Siloam",
+        "Gibeon",
+        "Heshbon"
+      ],
+      "correct": "Siloam",
+      "claims": [
+        "Siloam literally means “new beginning.”"
+      ],
+      "rationale": "Invented meaning contradicts the supplied text; reject regardless of style.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "John 9:1-11",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "uncertain-geography",
+      "split": "calibration",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Genesis 11:1-9",
+      "prompt": "In Genesis, which tower has been conclusively identified by archaeology at Etemenanki?",
+      "choices": [
+        "Babel",
+        "David",
+        "Siloam",
+        "Hananel"
+      ],
+      "correct": "Babel",
+      "claims": [
+        "Archaeology has conclusively proved the tower of Babel was Etemenanki."
+      ],
+      "rationale": "External archaeological certainty cannot be established from a Bible passage; historical identification is disputed.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 11:1-9",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "overlapping-options",
+      "split": "holdout",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "Genesis 8:6-12",
+      "prompt": "In Genesis, what returned to Noah carrying an olive leaf?",
+      "choices": [
+        "Dove",
+        "Bird",
+        "Raven",
+        "Eagle"
+      ],
+      "correct": "Dove",
+      "claims": [
+        "A dove returned to Noah carrying an olive leaf."
+      ],
+      "rationale": "Bird includes dove, producing overlapping correct options.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "Genesis 8:6-12",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    },
+    {
+      "id": "answer-in-stem",
+      "split": "holdout",
+      "expectedDecision": "reject",
+      "proposedDifficulty": null,
+      "reference": "John 9:1-11",
+      "prompt": "In John, Jesus sent the blind man to Siloam; which pool did he name?",
+      "choices": [
+        "Bethesda",
+        "Siloam",
+        "Gibeon",
+        "Heshbon"
+      ],
+      "correct": "Siloam",
+      "claims": [
+        "Jesus sent the man to the pool of Siloam."
+      ],
+      "rationale": "The stem directly gives away the answer; no legitimate knowledge challenge.",
+      "source": {
+        "edition": "Bundled World English Bible",
+        "locator": "John 9:1-11",
+        "url": "https://ebible.org/web/",
+        "rights": "Public domain"
+      },
+      "authorship": "Assistant original draft",
+      "observedSuccessRate": null
+    }
+  ]
+}

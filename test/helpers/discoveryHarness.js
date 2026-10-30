@@ -69,7 +69,7 @@ async function createHarness({listen=false,port=0,curriculum=false,dailySets=fal
  const admin=(req,res,next)=>req.user.id===ADMIN ? next():res.sendStatus(403);
  const module={exports:{}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../../routes/discoveries.js'),'utf8'),{module,console,URL,Date,require:name=>{
-  const overrides={'../config/supabase':client,'../middleware/auth':auth,'../middleware/optionalAuth':optional,'../middleware/adminAuth':admin,'../utils/discoveries':require('../../utils/discoveries')};
+  const overrides={'../config/supabase':client,'../middleware/auth':auth,'../middleware/optionalAuth':optional,'../middleware/adminAuth':admin,'../utils/discoveries':require('../../utils/discoveries'),'../utils/discoveryDailyPlan':require('../../utils/discoveryDailyPlan')};
   return name in overrides ? overrides[name]:require(name);
  }});
  const app=express();app.use(require('cors')({origin:['http://localhost:3010','http://127.0.0.1:3010','http://localhost:8083']}));app.use(express.json());app.use('/api/v1/discoveries',module.exports.router);app.use('/admin/discoveries',module.exports.adminRouter);

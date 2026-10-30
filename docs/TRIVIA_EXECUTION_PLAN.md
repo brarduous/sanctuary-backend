@@ -11,23 +11,26 @@ Owner direction through October 30, 2026: call the feature **Trivia**; publish t
 - The twenty-second timer and existing answer elimination are currently retained. Validate their interaction with three questions and with the proposed difficulty bands before freezing the release.
 - Broader reference research supports original Biblical trivia. Non-Biblical examples are writing benchmarks; they are not an instruction to turn the production feature into a general-knowledge feed.
 
-## Actual state at this checkpoint
+## Actual state, October 30 release continuation
 
-| Area | State | Evidence/remaining work |
-| --- | --- | --- |
-| Earlier release integration | Complete | Backend/mobile release work merged into `main`; web into its existing default `master`. The earlier one-question production experience is still live. |
-| Three-question backend | Local prototype | Additive migration, service-only generation/publishing functions, complete-set projection, dated lookup, canonical results, fixed ordering, legacy-client compatibility, and atomic publication have implementation/tests. Backend suite: 195 passed; final lease/atomic-publication tests: 4 passed. **Migration not applied to hosted databases.** |
-| Mobile | Local prototype | Three-question entry, home card, next-question flow, check/cross results, shared squares, offline result fields and perfect-set streak are implemented. Typecheck, 19 Trivia tests and behavior checks passed before the final checkpoint. **No new signed build or store submission yet.** |
-| Web | Local prototype | Trivia naming, three-question flow, dated spoiler-free shares, results screen and generic social preview updated. Lint, typecheck and production build passed with public application config. |
-| Browser journey | Synthetic isolated QA passed | Used a separate local API, not production approvals. Played correct, incorrect and revealed cases; verified 1/3, green/red/red order, progression, source rendering and copyable spoiler-free share fallback. Screenshot: [prototype](qa/2026-10-30-trivia/web-three-result-preview.jpg). |
-| Question quality | Unfinished | One trial earned 8/8 craft; others exposed inconsistent difficulty and over-restrictive distractor judgments. **No excellent complete daily set has been established or published.** |
-| Reference library | Design/research only | Verified potential open sources and reuse constraints. No external PDF/reference corpus has been ingested into production. |
-| Live generation | Blocked | The configured OpenAI project returned HTTP 429 with “no credits remaining.” Further live model calls stopped. Funding/billing changes were not attempted. |
-| Existing store review | Earlier builds only | Last recorded iOS 1.2.11 (66) and Android 138 were submitted previously. Verify current store status before preparing replacements. Manual release/managed publishing holds remain the intended settings. |
+- Real API generation and independent reviews are working. Credits are no longer a blocker; no billing changes were made.
+- Seven daily sets (21 questions) passed individual factual/craft checks and separate closed-book difficulty checks. The new rolling-week editor caught leakage in the Lydia and Peter-departure reveals. Both were revised and independently rechecked. All seven final sets now pass both rolling-week editors and the real saved-review local SQL publication gate. Original approvals, rejections and changed manuscripts are retained. The final bank is `content/discoveries/reviewed-launch-bank-v3.json`.
+- Writer v9, daily difficulty v2, set editor v4 and rolling-week v1 are versioned. Daily questions require evidence >=95, craft >=7/8, full fairness, no zero dimension, two independently solved keys, agreed difficulty, then two bound set/week approvals. Legacy v1 ratings remain valid for existing saved games.
+- Backend full suite passed 205 tests; targeted worker checks passed 11. Final hosted staging rollback/roll-forward retained data and grants, and eight real JWT daily-set/privacy checks passed with both disposable accounts cleaned up. Production migration/publication remain pending until the recorded release checkpoint says otherwise.
+- Mobile changes are merged into main at `3ade2a1672c8ffdea8ac7e17fcd62cb454f98b8a`. Production builds iOS 67 and Android 139 are processing from that commit. This is not yet a new store review submission. Native simulator QA exercised the actual hosted staging set, mixed results, share cancellation and cached restart with the API unavailable. Physical-device VoiceOver/TalkBack checks have not been performed.
+- Web final lint, typecheck and production build passed. `/trivia?date=YYYY-MM-DD` is the browser sharing route; public promotion is pending.
+- The private reference pilot stores 15 original/extracted objects and an index of 95 entries from seven source editions. Retrieval is wired into future writing as research, not as permission to publish external claims.
+- Both clients use the exact CTA **Share your Results**. CMO copy and a native screenshot are in mobile `docs/releases/TRIVIA_SOCIAL_BRIEF.md`.
 
-Checkpoint evidence: [tests, synthetic browser journey and content trial summary](qa/2026-10-30-trivia/prototype-checkpoint.json).
+Historical prototype evidence stays in [the original checkpoint](qa/2026-10-30-trivia/prototype-checkpoint.json). It records the earlier state, not the current release verdict. Actual model reviews and rejected revisions live in `docs/qa/2026-10-30-trivia/evaluations/`.
 
-The implementation currently lives on `feature/daily-trivia-three` in backend, mobile and layperson web. Treat it as work in progress. Prompt scoring rules and the new database migration are not ready for production solely because tests pass.
+## Scheduled runs use the same standards
+
+`cron/generateDiscoveries.js` now invokes the daily-three worker exclusively. It never creates weaker single-question replacements through the old curriculum generator. Atomic publication also points legacy clients at the approved Easy question, retaining already-released legacy history.
+
+The existing daily 08:15 UTC cron maintains a seven-day runway; a weekly/catch-up invocation uses the same worker, models, budgets and gates, with up to seven missing dates per run. Three source choices per slot are frozen before generation; all nine options have distinct chapters. Exhausted attempts remain held. Only a concrete operator reason and a revised plan can start a bounded retry epoch; old attempts and set reviews are retained.
+
+Every complete day is reviewed against published sets within six days on either side. Both independent editors check repeated knowledge targets, people/place/object/action variety, Testament balance and cross-day answer leakage. This is a rolling-week review of available content, not a claim to have reviewed unseen future questions. Publication takes a database lock and requires the exact same question contents and neighboring context; changed context requires a new review. A rejection withholds the entire day. Missing or exhausted dates make cron/status checks unhealthy and visible in the existing admin inspection endpoint; no notification delivery is enabled.
 
 ## Execution order and acceptance gates
 
@@ -61,7 +64,7 @@ Exit: each retrieved fact is traceable to an allowed source and exact location; 
 
 ### 3. Finish generation and approve an initial content bank
 
-Resume live model work only once the API credit issue is resolved. Use the benchmark and a bounded evaluation budget first; do not regenerate a month of content while the rubric is still moving.
+Live model work has resumed. Preserve bounded evaluation budgets and all rejected attempts; do not rerun an unchanged rejected candidate to obtain a pass.
 
 Deliver:
 
@@ -114,12 +117,12 @@ Exit: final source is on default branches; backend/web are verified live; today 
 
 ## Dependencies and scope controls
 
-- **Required external change:** usable API credits. No payment or billing change was authorized/performed.
+- **API access:** working again; no payment or billing change was performed.
 - **Editorial input:** approval of benchmark direction; real-reader recruitment if a measured audience trial is required before launch.
 - **Reference rights:** an accessible PDF is not automatically licensed for app ingestion or redistribution. Use approved open data first; request specific permissions only when a needed source requires them.
 - **Store access:** existing authenticated tooling/sessions can be used. New binding agreements or account/security changes require their applicable user action.
 - No bulk regeneration of historical private advice/news, no unrelated app redesign, no new notification rollout and no public store publication are included.
 
-## Suggested next goal instruction
+## Authorized completion path
 
 “Execute `docs/TRIVIA_EXECUTION_PLAN.md` end to end, starting by finalizing the benchmark and writing guide. Build on the existing `feature/daily-trivia-three` work. Produce excellent source-backed Easy/Medium/Hard daily sets, verify backend/web/mobile, merge the finished changes into the default branches, deploy the compatible services, and submit the final mobile builds to both stores for review. Preserve source/attempt history and public publishing holds. Report real blockers and do not represent uploads or model scores as completed review or audience validation.”

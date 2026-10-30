@@ -1,0 +1,1394 @@
+{
+  "noProductionWrites": true,
+  "results": [
+    {
+      "id": "bartimaeus-reveal",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Mark, what did Bartimaeus throw aside before getting up to meet Jesus?",
+        "heading": "A detail in Mark 10:46-52",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "His staff"
+          },
+          {
+            "id": "option-2",
+            "text": "His cloak"
+          },
+          {
+            "id": "option-3",
+            "text": "His bag"
+          },
+          {
+            "id": "option-4",
+            "text": "His sandals"
+          }
+        ],
+        "correctOptionId": "option-2",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/MRK10.htm",
+            "locator": "Mark 10:46-52",
+            "excerpt": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road. When he heard that it was Jesus the Nazarene, he began to cry out, and say, “Jesus, you son of David, have mercy on me!” Many rebuked him, that he should be quiet, but he cried out much more, “You son of David, have mercy on me!” Jesus stood still, and said, “Call him.” They called the blind man, saying to him, “Cheer up! Get up. He is calling you!” He, casting away his cloak, sprang up, and came to Jesus. Jesus asked him, “What do you want me to do for you?” The blind man said to him, “Rabboni, that I may see again.” Jesus said to him, “Go your way. Your faith has made you well.” Immediately he received his sight, and followed Jesus on the way.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Bartimaeus threw aside his cloak and came to Jesus.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "The blind beggar had been sitting beside the road.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Mark 10:46-52",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 7,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The prompt establishes a clear person and action without jargon or unnecessary clues. The memorable detail is Bartimaeus casting aside his cloak as he springs up to approach Jesus, rather than a routine healing outcome. Direct recall is fair, and everyday expectations do not reveal the answer. Staff and bag are credible alternative belongings; sandals are a weaker distractor because discarding footwear before walking is less natural. Total: 7/8; passes."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The prompt supplies a clear person and action without jargon or unnecessary clues. The memorable discovery is Bartimaeus tossing aside his cloak as he springs up to approach Jesus, rather than merely the expected outcome of a healing. Identifying the discarded possession is fair direct recall; everyday expectations do not uniquely reveal it. Staff and bag are credible portable-possession distractors. Sandals are a weaker alternative because removing footwear before getting up to approach someone has less intuitive plausibility. Total: 7/8; passes the craft threshold."
+            }
+          ]
+        },
+        "accepted": true,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "c0d877790e69371148429c5d5543797c85c4ac6b3cb6864a30769b03a338d8dd",
+        "sourceSha256": "4df235796a5fb98c743d6f3d980e2ea45a36427e7126af8df69d0a17fd2f78da",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "b1383eb72ed416f8b8b49aba33a88bf3a1ef0627e9a76af2ce9f72204bf7b3fb",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        },
+        "difficultyTargetMet": false,
+        "reasons": [],
+        "reviews": [
+          {
+            "solvedOptionId": "option-2",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns the Bartimaeus episode in Mark within the cited passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "Bartimaeus is the person who throws something aside.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 49,
+                    "quote": "Jesus stood still, and said, “Call him.” They called the blind man, saying to him, “Cheer up! Get up. He is calling you!”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "Throwing the object aside precedes his getting up.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "He gets up and approaches Jesus.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The prompt establishes a clear person and action without jargon or unnecessary clues. The memorable detail is Bartimaeus casting aside his cloak as he springs up to approach Jesus, rather than a routine healing outcome. Direct recall is fair, and everyday expectations do not reveal the answer. Staff and bag are credible alternative belongings; sandals are a weaker distractor because discarding footwear before walking is less natural. Total: 7/8; passes."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify a staff as the discarded object. A staff is a plausible portable belonging, making it a credible alternative without being supported.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies his cloak as what he casts away immediately before rising and approaching Jesus.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "No bag is identified as the discarded object. A bag is a plausible personal belonging someone might put aside before moving quickly.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The text does not identify sandals as the discarded object. They are comparable personal belongings, but are less persuasive because removing footwear before walking is less natural.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). The tested detail is less familiar than the broader healing scene, but the answer is stated directly in one verse and requires no inference. The choices are distinct personal belongings rather than closely related narrative roles."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0656cd3335d553f4016ae4d3d175b487d2bce4c0fb0b969b49",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6.1-sol",
+              "responseId": "resp_0656cd3335d553f4016ae4d3d175b487d2bce4c0fb0b969b49",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "c606d86c5b06c0e7bb2bfccf2313998899f6277c25a3d41ff0304ef57de40cd7"
+            }
+          },
+          {
+            "solvedOptionId": "option-2",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The scene occurs in the supplied passage from Mark.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "Bartimaeus is the person who performs the action being asked about.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 49,
+                    "quote": "Jesus stood still, and said, “Call him.” They called the blind man, saying to him, “Cheer up! Get up. He is calling you!”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "Bartimaeus throws aside a possession before getting up.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "text": "Bartimaeus gets up and approaches Jesus.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The prompt supplies a clear person and action without jargon or unnecessary clues. The memorable discovery is Bartimaeus tossing aside his cloak as he springs up to approach Jesus, rather than merely the expected outcome of a healing. Identifying the discarded possession is fair direct recall; everyday expectations do not uniquely reveal it. Staff and bag are credible portable-possession distractors. Sandals are a weaker alternative because removing footwear before getting up to approach someone has less intuitive plausibility. Total: 7/8; passes the craft threshold."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 46,
+                    "quote": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify a staff as the discarded object. A staff is nevertheless a credible guess as a portable walking aid in a scene involving a blind man.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies his cloak as the possession he casts aside when rising to approach Jesus.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 50,
+                    "quote": "He, casting away his cloak, sprang up, and came to Jesus."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "No bag is identified as the discarded object. A portable bag is a plausible alternative possession that someone might put aside before rising quickly.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The passage does not mention discarding sandals. They are a comparable personal item, but a weaker distractor because taking off footwear before approaching someone is less naturally suggested by this scene.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). The discarded garment is a less familiar concrete detail of a healing scene, but the answer is stated directly in one verse and requires no inference. The alternatives are distinct personal possessions rather than closely competing narrative details."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_04c4b10bc3117b4b016ae4d3d17e5487d29d41193e31d2e48d",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6-astra",
+              "responseId": "resp_04c4b10bc3117b4b016ae4d3d17e5487d29d41193e31d2e48d",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "c606d86c5b06c0e7bb2bfccf2313998899f6277c25a3d41ff0304ef57de40cd7"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0656cd3335d553f4016ae4d3d175b487d2bce4c0fb0b969b49",
+          "usage": {
+            "inputTokens": 4892,
+            "outputTokens": 1350,
+            "totalTokens": 6242
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_04c4b10bc3117b4b016ae4d3d17e5487d29d41193e31d2e48d",
+          "usage": {
+            "inputTokens": 4892,
+            "outputTokens": 1289,
+            "totalTokens": 6181
+          }
+        }
+      ]
+    },
+    {
+      "id": "prison-hymns",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, what were Paul and Silas doing at midnight while the other prisoners listened?",
+        "heading": "A detail in Acts 16:23-34",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Telling parables"
+          },
+          {
+            "id": "option-2",
+            "text": "Arguing their case"
+          },
+          {
+            "id": "option-3",
+            "text": "Singing hymns"
+          },
+          {
+            "id": "option-4",
+            "text": "Reading a scroll"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT16.htm",
+            "locator": "Acts 16:23-34",
+            "excerpt": "When they had laid many stripes on them, they threw them into prison, charging the jailer to keep them safely, who, having received such a command, threw them into the inner prison, and secured their feet in the stocks. But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them. Suddenly there was a great earthquake, so that the foundations of the prison were shaken; and immediately all the doors were opened, and everyone’s bonds were loosened. The jailer, being roused out of sleep and seeing the prison doors open, drew his sword and was about to kill himself, supposing that the prisoners had escaped. But Paul cried with a loud voice, saying, “Don’t harm yourself, for we are all here!” He called for lights, sprang in, fell down trembling before Paul and Silas, brought them out, and said, “Sirs, what must I do to be saved?” They said, “Believe in the Lord Jesus Christ, and you will be saved, you and your household.” They spoke the word of the Lord to him, and to all who were in his house. He took them the same hour of the night and washed their stripes, and was immediately baptized, he and all his household. He brought them up into his house, and set food before them, and rejoiced greatly, with all his household, having believed in God.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul and Silas were praying and singing hymns at midnight.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "The prison doors opened after an earthquake.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 16:23-34",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 7,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The question supplies a clear, accessible midnight prison scene without unnecessary background. The memorable discovery is that Paul and Silas were singing while fellow prisoners listened, rather than merely enduring confinement. The setup does not reveal which audible activity they performed, making direct recall fair and satisfying. The alternatives are parallel activities, with storytelling and arguing a case credible guesses; reading a scroll is weaker in this confinement setting. Total: 7/8; passes."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The question establishes two named prisoners, a nighttime setting, and an audience without requiring background knowledge. The retellable discovery is their singing hymns in prison at midnight while fellow prisoners listened—not merely a routine outcome. Everyday expectations do not identify the answer, so this is fair direct recall. The alternatives are parallel audible activities, with storytelling and arguing their case credible competing guesses; reading a scroll is a weaker fit for the nighttime prison setting. Total: 7/8; passes craft requirements."
+            }
+          ]
+        },
+        "accepted": true,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "a8a036faa83e26e25b2f0be6d8b0dcef4f68a405cf6bbd4c084bb9c633c9b117",
+        "sourceSha256": "7348d9155749bebc3af53c4b1275d9408088fd3721ee4076f6e05680e0163a20",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "d4c21c28a29d6c5ede7e923052a3a0d60d23e8bcaf703e23389e986a0e8e9797",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        },
+        "difficultyTargetMet": false,
+        "reasons": [],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns the Paul-and-Silas episode in the cited Acts passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "Paul and Silas were in prison.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "When they had laid many stripes on them, they threw them into prison, charging the jailer to keep them safely,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "who, having received such a command, threw them into the inner prison, and secured their feet in the stocks."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "The activity occurred around midnight.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "Other prisoners were listening to Paul and Silas.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The question supplies a clear, accessible midnight prison scene without unnecessary background. The memorable discovery is that Paul and Silas were singing while fellow prisoners listened, rather than merely enduring confinement. The setup does not reveal which audible activity they performed, making direct recall fair and satisfying. The alternatives are parallel activities, with storytelling and arguing a case credible guesses; reading a scroll is weaker in this confinement setting. Total: 7/8; passes."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "Suddenly there was a great earthquake, so that the foundations of the prison were shaken; and immediately all the doors were opened, and everyone’s bonds were loosened."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage identifies prayer and hymn singing, not telling parables. Religious storytelling is nevertheless a credible alternative activity for listeners to hear.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The midnight activity is not a legal defense or dispute. Arguing their case is a plausible guess in a prison scene, but it does not answer the question.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies singing hymns as one of their activities while the prisoners listened. Prayer also occurred, but no other option names it.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "No scroll or reading activity is identified. Reading aloud is a conceivable religious activity, but it is a weaker distractor given the confinement and lack of any mentioned reading material.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). The tested activity is a concrete detail that may be less familiar to newcomers. It is stated directly in one verse and requires no inference. The alternatives are plausible activities but not closely confusable textual details."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0a33bb76c90ae865016ae4d3d16e2c87d2af49c4df2dfdfc20",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6.1-sol",
+              "responseId": "resp_0a33bb76c90ae865016ae4d3d16e2c87d2af49c4df2dfdfc20",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "d8c78edd860b29733c3c8cd4158af4c39833cf72bfd66356adcd36b8d5f97342"
+            }
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The scene concerns Paul and Silas in Acts.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "Paul and Silas were themselves prisoners.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 23,
+                    "quote": "When they had laid many stripes on them, they threw them into prison, charging the jailer to keep them safely,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 24,
+                    "quote": "who, having received such a command, threw them into the inner prison, and secured their feet in the stocks."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "The activity occurred at midnight, understood as approximately midnight.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "text": "Other prisoners were listening to Paul and Silas during the activity.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The question establishes two named prisoners, a nighttime setting, and an audience without requiring background knowledge. The retellable discovery is their singing hymns in prison at midnight while fellow prisoners listened—not merely a routine outcome. Everyday expectations do not identify the answer, so this is fair direct recall. The alternatives are parallel audible activities, with storytelling and arguing their case credible competing guesses; reading a scroll is a weaker fit for the nighttime prison setting. Total: 7/8; passes craft requirements."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 26,
+                    "quote": "Suddenly there was a great earthquake, so that the foundations of the prison were shaken; and immediately all the doors were opened, and everyone’s bonds were loosened."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage identifies prayer and hymn singing, not telling parables. Religious storytelling is nevertheless a credible guess for an activity others might listen to.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Arguing their case is not the activity identified at midnight. It is a plausible distractor because imprisoned people might discuss or defend their case within others' hearing.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies singing hymns as one of their activities while the prisoners listened. Its accompanying mention of prayer does not make this choice incomplete as an answer among these options.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "No scroll reading is identified in the scene. Reading aloud could attract a guess as a religious activity with listeners, but the nighttime prison setting makes it less compelling than the other distractors.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 25,
+                    "quote": "But about midnight Paul and Silas were praying and singing hymns to God, and the prisoners were listening to them."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). The tested activity is a less universally familiar detail of a recognizable prison story. One verse directly supplies the answer, with no inferential steps. The choices are plausible alternative activities rather than closely confusable textual details."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_042faf34f1a444a7016ae4d3d17d7887d2ba6cef28e5c88026",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6-astra",
+              "responseId": "resp_042faf34f1a444a7016ae4d3d17d7887d2ba6cef28e5c88026",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "d8c78edd860b29733c3c8cd4158af4c39833cf72bfd66356adcd36b8d5f97342"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0a33bb76c90ae865016ae4d3d16e2c87d2af49c4df2dfdfc20",
+          "usage": {
+            "inputTokens": 4851,
+            "outputTokens": 1181,
+            "totalTokens": 6032
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_042faf34f1a444a7016ae4d3d17d7887d2ba6cef28e5c88026",
+          "usage": {
+            "inputTokens": 4851,
+            "outputTokens": 1280,
+            "totalTokens": 6131
+          }
+        }
+      ]
+    },
+    {
+      "id": "ark-wood",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Exodus, the ark was covered in gold; which wood was underneath?",
+        "heading": "A detail in Exodus 25:10-22",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Cedar wood"
+          },
+          {
+            "id": "option-2",
+            "text": "Cypress wood"
+          },
+          {
+            "id": "option-3",
+            "text": "Olive wood"
+          },
+          {
+            "id": "option-4",
+            "text": "Acacia wood"
+          }
+        ],
+        "correctOptionId": "option-4",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/EXO25.htm",
+            "locator": "Exodus 25:10-22",
+            "excerpt": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height. You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it. You shall cast four rings of gold for it, and put them in its four feet. Two rings shall be on the one side of it, and two rings on the other side of it. You shall make poles of acacia wood, and overlay them with gold. You shall put the poles into the rings on the sides of the ark to carry the ark. The poles shall be in the rings of the ark. They shall not be taken from it. You shall put the covenant which I shall give you into the ark. You shall make a mercy seat of pure gold. Two and a half cubits shall be its length, and a cubit and a half its width. You shall make two cherubim of hammered gold. You shall make them at the two ends of the mercy seat. Make one cherub at the one end, and one cherub at the other end. You shall make the cherubim on its two ends of one piece with the mercy seat. The cherubim shall spread out their wings upward, covering the mercy seat with their wings, with their faces toward one another. The faces of the cherubim shall be toward the mercy seat. You shall put the mercy seat on top of the ark, and in the ark you shall put the covenant that I will give you. There I will meet with you, and I will tell you from above the mercy seat, from between the two cherubim which are on the ark of the covenant, all that I command you for the children of Israel.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "The ark was made of acacia wood and overlaid with gold.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Its carrying poles were also acacia wood covered in gold.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Exodus 25:10-22",
+        "translation": "WEB"
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v2",
+          "minimumScore": 6,
+          "score": 6,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 6,
+              "accepted": true,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "Context is useful but incomplete: the gold-covered object establishes the situation, yet 'ark' is not explained for newcomers. The wooden structure beneath the gold is a worthwhile concrete detail, though not an especially striking discovery. Identifying its wood is fair direct recall, with no everyday-expectation shortcut. All four choices are credible, parallel wood alternatives. Total: 6/8; craft passes, but the construction-versus-completion accuracy issue remains."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v2",
+              "score": 6,
+              "accepted": true,
+              "dimensions": {
+                "context": 1,
+                "interest": 1,
+                "fairChallenge": 2,
+                "choiceQuality": 2
+              },
+              "rationale": "Context: the gold-covered object supplies a useful situation, but 'the ark' is unexplained for newcomers and the wording obscures the instructional setting. Interest: identifying the particular wood beneath the gold is a worthwhile concrete construction detail, though not a strong narrative discovery. Fair challenge: the wood species cannot be inferred from everyday expectations; this is fair direct recall without a giveaway. Choice quality: all four choices are real, comparable woods that could credibly attract guesses. Total: 6/8; craft meets the threshold, but the separate scope defect remains."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 85,
+        "candidateSha256": "eab22e53618984f59913d71f3ef8a45b2a4a37cb70880ee68ef8c77940577b45",
+        "sourceSha256": "64218d12152905cba501980b6442e5a436e1a535515e5779831f13a372f3feb5",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "a11565007bfb3832809f090ff971d214964660b5f8a2bb18602ae8cead707f0c",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 3
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "questionAccuracy_below_threshold",
+          "scopeAccuracy_below_threshold",
+          "unresolved_or_complex_claim",
+          "question_context_unsupported",
+          "unsupported_claim",
+          "explanationCoverage_below_threshold"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-4",
+            "questionAccuracy": 90,
+            "scopeAccuracy": 90,
+            "explanationCoverage": 100,
+            "simpleTextualFact": false,
+            "unresolvedIssues": [
+              "The passage gives construction instructions, not a report of completed construction. The prompt and both claims use completed-action wording that exceeds this excerpt.",
+              "For readers new to church, 'the ark' is incompletely identified; the passage identifies it as the ark of the covenant."
+            ],
+            "questionPremises": [
+              {
+                "text": "The Exodus passage concerns the ark of the covenant.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 22,
+                    "quote": "There I will meet with you, and I will tell you from above the mercy seat, from between the two cherubim which are on the ark of the covenant, all that I command you for the children of Israel."
+                  }
+                ]
+              },
+              {
+                "text": "The ark was already covered in gold in the scene described.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              },
+              {
+                "text": "Wood forms the ark's underlying structure beneath its gold overlay.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "Context is useful but incomplete: the gold-covered object establishes the situation, yet 'ark' is not explained for newcomers. The wooden structure beneath the gold is a worthwhile concrete detail, though not an especially striking discovery. Identifying its wood is fair direct recall, with no everyday-expectation shortcut. All four choices are credible, parallel wood alternatives. Total: 6/8; craft passes, but the construction-versus-completion accuracy issue remains."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "You shall make poles of acacia wood, and overlay them with gold."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "You shall put the poles into the rings on the sides of the ark to carry the ark."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage specifies acacia, not cedar. Cedar is a credible construction wood and therefore a plausible material-based distractor.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage specifies acacia, not cypress. Cypress is a credible timber alternative that a player could reasonably consider.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "The passage specifies acacia, not olive. Olive wood is a credible material for a crafted wooden object and fits the same category as the key.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "supported",
+                "rationale": "The instructions explicitly specify acacia wood for the ark, followed by a gold overlay. This uniquely answers the material question.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). The wood is a less familiar detail of a recognizable biblical object. Its identity is stated directly in one verse, requiring no inference. The alternatives are plausible woods, but not closely competing narrative roles."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0a91737ab0707ae1016ae4d3d175f887d2965438783bc1e083",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6.1-sol",
+              "responseId": "resp_0a91737ab0707ae1016ae4d3d175f887d2965438783bc1e083",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "6e26e6ecb92ccdf45ce149623500664e3227b23b4ee3215c7f6523b1b6e348f1"
+            }
+          },
+          {
+            "solvedOptionId": "option-4",
+            "questionAccuracy": 90,
+            "scopeAccuracy": 88,
+            "explanationCoverage": 85,
+            "simpleTextualFact": false,
+            "unresolvedIssues": [
+              "The excerpt gives construction instructions, not a report of completed construction. The question's 'was covered' and both claims' past-tense descriptions exceed that literary frame. The specified materials are clear, but the completed construction is not established by this excerpt."
+            ],
+            "questionPremises": [
+              {
+                "text": "The passage in Exodus concerns an ark, specifically the ark of the covenant.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 22,
+                    "quote": "There I will meet with you, and I will tell you from above the mercy seat, from between the two cherubim which are on the ark of the covenant, all that I command you for the children of Israel."
+                  }
+                ]
+              },
+              {
+                "text": "The ark was covered in gold as an already completed action.",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              },
+              {
+                "text": "The ark's specified construction places wood beneath the gold overlay.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 1,
+              "interest": 1,
+              "fairChallenge": 2,
+              "choiceQuality": 2,
+              "rationale": "Context: the gold-covered object supplies a useful situation, but 'the ark' is unexplained for newcomers and the wording obscures the instructional setting. Interest: identifying the particular wood beneath the gold is a worthwhile concrete construction detail, though not a strong narrative discovery. Fair challenge: the wood species cannot be inferred from everyday expectations; this is fair direct recall without a giveaway. Choice quality: all four choices are real, comparable woods that could credibly attract guesses. Total: 6/8; craft meets the threshold, but the separate scope defect remains."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "partially_supported",
+                "confidence": 99,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "You shall make poles of acacia wood, and overlay them with gold."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 14,
+                    "quote": "You shall put the poles into the rings on the sides of the ark to carry the ark."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Cedar is not specified as the ark's wood. It is nevertheless a credible guess because it is a recognizable construction wood in the same category as the answer.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Cypress is not specified as the ark's wood. As another real timber, it is a plausible material alternative rather than an implausible filler.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "not_supported",
+                "rationale": "Olive wood is not specified as the ark's wood. It is a credible alternative material for a crafted wooden object, although the passage gives it no support.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "supported",
+                "rationale": "The instructions explicitly specify acacia for the ark and then prescribe a gold overlay. This uniquely identifies the intended wood, without establishing that construction has already occurred.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "“They shall make an ark of acacia wood. Its length shall be two and a half cubits, its width a cubit and a half, and a cubit and a half its height."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "You shall overlay it with pure gold. You shall overlay it inside and outside, and you shall make a gold molding around it."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 2,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (3/8). The particular wood species is a relatively little-known material distinction for newcomers. It is named directly in one verse, requires no inference, and competes with plausible alternatives in the same material category. The tense defect does not increase difficulty. The heading correctly locates the material instructions, but the stated textual scope does not support treating them as a completed-construction report."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0595310184b12909016ae4d3d16a5887d2bab1a36970e7224a",
+            "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+            "difficultyAssessment": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "model": "gpt-6-astra",
+              "responseId": "resp_0595310184b12909016ae4d3d16a5887d2bab1a36970e7224a",
+              "reviewerPromptSha256": "12715e4a373b717a06400f0b3f061657fad10bf2a9ff759c2b9d507bfa1beeb4",
+              "questionPromptSha256": "6e26e6ecb92ccdf45ce149623500664e3227b23b4ee3215c7f6523b1b6e348f1"
+            }
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0a91737ab0707ae1016ae4d3d175f887d2965438783bc1e083",
+          "usage": {
+            "inputTokens": 5016,
+            "outputTokens": 1299,
+            "totalTokens": 6315
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0595310184b12909016ae4d3d16a5887d2bab1a36970e7224a",
+          "usage": {
+            "inputTokens": 5016,
+            "outputTokens": 1429,
+            "totalTokens": 6445
+          }
+        }
+      ]
+    }
+  ]
+}

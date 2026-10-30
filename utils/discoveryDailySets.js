@@ -1,9 +1,10 @@
 const {randomUUID}=require('node:crypto');
 const {localDate,shiftDate,validateContent}=require('./discoveries');
-const {loadCorpus,scriptureEvidence}=require('./discoveryScripture');
+const {loadCorpus,scriptureEvidence,sha}=require('./discoveryScripture');
 const {POLICY,deterministicChecks,assessCandidate,retryFeedback}=require('./discoveryAccuracy');
 const {configFromEnv,safeFailure}=require('./discoveryCurriculum');
 const {buildDailySetPlan}=require('./discoveryDailyPlan');
+const {buildResearchPacket}=require('./triviaReferences');
 const unwrap=result=>{if(result.error)throw result.error;return result.data;};
 async function dailySetStatus(db,{now=new Date(),runwayDays=7}={}) {
  const today=localDate(now),through=shiftDate(today,runwayDays-1);
@@ -11,7 +12,7 @@ async function dailySetStatus(db,{now=new Date(),runwayDays=7}={}) {
  const dates=new Set(unwrap(sets).map(row=>row.publication_date));
  return {today,through,missingDates:Array.from({length:runwayDays},(_,i)=>shiftDate(today,i)).filter(date=>!dates.has(date)),exhaustedDates:unwrap(jobs).filter(row=>row.status==='exhausted').map(row=>row.publication_date),published:dates.size};
 }
-async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),runwayDays=7,maxDaysPerRun=2,corpus=loadCorpus(),planForDate=buildDailySetPlan}={}) {
+async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),runwayDays=7,maxDaysPerRun=config.maxDaysPerRun || 7,corpus=loadCorpus(),planForDate=buildDailySetPlan}={}) {
  const before=await dailySetStatus(db,{now,runwayDays});
  if(!config.enabled || config.autoApprove===false || !before.missingDates.length)return {generated:false,status:before};
  const runId=randomUUID();
@@ -25,10 +26,10 @@ async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),
    const job=unwrap(await db.rpc('discovery_daily_claim',{p_date:date,p_plan:proposed,p_run:runId}));
    if(!job)continue;
    const plan=job.plan;
-   if(plan.version!==proposed.version || plan.corpusSha256!==corpus.sha256)throw new Error('Frozen daily plan requires explicit version review.');
+   if(plan.version!==proposed.version || plan.corpusSha256!==corpus.sha256 || plan.writerVersion!==proposed.writerVersion || plan.editorialVersion!==proposed.editorialVersion)throw new Error('Frozen daily plan requires explicit version review.');
    let exhausted=false;
    for(const slot of plan.slots) {
-    const attempts=unwrap(await db.from('discovery_daily_attempts').select('attempt,status,content,verification,reason_codes').eq('publication_date',date).eq('position',slot.position).order('attempt'));
+    const attempts=unwrap(await db.from('discovery_daily_attempts').select('attempt,status,content,verification,reason_codes').eq('publication_date',date).eq('epoch',job.epoch).eq('position',slot.position).order('attempt'));
     if(attempts.some(a=>a.status==='accepted'))continue;
     let feedback=attempts.flatMap(a=>retryFeedback(a.verification,a.reason_codes));
     for(let n=attempts.length;n<3;n++) {
@@ -36,16 +37,17 @@ async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),
      const selected=slot.sourceOptions[n],evidence=scriptureEvidence(selected.sourceReference,corpus);
      if(evidence.sourceSha256!==selected.sourceSha256)throw new Error('Frozen daily source changed.');
      const attempt=unwrap(await db.rpc('discovery_daily_begin',{p_date:date,p_position:slot.position,p_run:runId,p_source_sha256:evidence.sourceSha256}));
-     const siblings=unwrap(await db.from('discovery_daily_attempts').select('content').eq('publication_date',date).eq('status','accepted')).map(a=>a.content);
+     const siblings=unwrap(await db.from('discovery_daily_attempts').select('content').eq('publication_date',date).eq('epoch',job.epoch).eq('status','accepted')).map(a=>a.content);
      let content=null,verification=null,reasons=[],generation=null;
      try {
-      const generated=await models.generate({plan,day:{...selected,targetDifficulty:slot.targetDifficulty,setPosition:slot.position,siblingQuestions:siblings},evidence,recent,failures:feedback});
+      const research=buildResearchPacket(evidence);
+      const generated=await models.generate({plan,day:{...selected,targetDifficulty:slot.targetDifficulty,setPosition:slot.position,siblingQuestions:siblings},evidence,recent,failures:feedback,research});
       summary.totalTokens+=generated.usage?.totalTokens || 0;
-      generation={model:generated.model,responseId:generated.responseId,usage:generated.usage,writerVersion:generated.writerVersion,writerPromptSha256:generated.writerPromptSha256};
+      generation={model:generated.model,responseId:generated.responseId,usage:generated.usage,writerVersion:generated.writerVersion,writerPromptSha256:generated.writerPromptSha256,researchPacketSha256:sha(research),researchCitationIds:research.results.map(result=>result.citationId)};
       content=validateContent(generated.content);
       reasons=deterministicChecks(content,evidence,{recent});
       if(!reasons.length) {
-       const responses=await models.review({content,evidence});summary.totalTokens+=responses.reduce((s,r)=>s+(r.usage?.totalTokens || 0),0);
+       const responses=await models.review({content,evidence,dailySet:true});summary.totalTokens+=responses.reduce((s,r)=>s+(r.usage?.totalTokens || 0),0);
        verification=assessCandidate(content,evidence,responses.map(r=>r.data),{minimumScore:config.minimumScore,dailySet:true,targetDifficulty:slot.targetDifficulty,recent});
        reasons=verification.reasons;
       }
@@ -67,9 +69,10 @@ async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),
     }
     if(exhausted || summary.totalTokens>=config.maxTokensPerRun)break;
    }
-   const accepted=unwrap(await db.from('discovery_daily_attempts').select('position,content').eq('publication_date',date).eq('status','accepted').order('position'));
+   const accepted=unwrap(await db.from('discovery_daily_attempts').select('position,content').eq('publication_date',date).eq('epoch',job.epoch).eq('status','accepted').order('position'));
    if(!exhausted && accepted.length===3) {
-    const reviews=await models.reviewSet(accepted.map(a=>a.content));summary.totalTokens+=reviews.reduce((s,r)=>s+(r.usage?.totalTokens || 0),0);
+    const weekContext=unwrap(await db.rpc('discovery_daily_week_context',{p_date:date}));
+    const reviews=await models.reviewSet(accepted.map(a=>a.content),{weekContext});summary.totalTokens+=reviews.reduce((s,r)=>s+(r.usage?.totalTokens || 0),0);
     const result=unwrap(await db.rpc('discovery_daily_publish',{p_date:date,p_run:runId,p_reviews:reviews}));
     summary.published+=result.status==='published' ? 1:0;summary.exhausted+=result.status==='exhausted' ? 1:0;summary.results.push({date,...result});
    }

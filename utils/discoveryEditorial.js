@@ -1,6 +1,6 @@
 // Editorial calibration; the v2 craft JSON/scoring contract is unchanged.
 // Sources and examples: docs/TRIVIA_WRITING_GUIDE.md.
-const VERSION='sanctuary-trivia-editorial-v1';
+const VERSION='sanctuary-trivia-editorial-v2';
 const WRITING_GUIDE=`EDITORIAL METHOD (${VERSION})
 Start with the discovery, not the sentence: privately identify the one source-supported fact a player might enjoy repeating. Prefer a vivid image, unexpected object, distinctive action or meaningful contrast. Then write one natural question whose answer is that fact. If the only fact is the expected outcome of the setup, choose another fact or another supplied passage; do not dress it up with extra clauses.
 The question must work when spoken once. Name the person or situation clearly; avoid "the man", "what happened after", nested chronology and generic outcomes when a direct who/what/which question would be clearer. Give only context needed to identify the scene and one answer. A second clue is optional, not a scoring requirement.
