@@ -494,18 +494,34 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
   throw lastError;
 };
 
-const generateEntries = async (theme, recentContent = []) => {
+const generatePlannedEntries = async (theme, plan, recentContent = [], { concurrency = 1, generateDay = generateSingleDayEntry } = {}) => {
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 3) throw new Error('Devotional concurrency must be 1-3.');
+  const entries = [];
+  let tokens = 0;
+  let cursor = 0;
+  let failure;
+  await Promise.all(Array.from({ length: concurrency }, async () => {
+    while (cursor < 7 && !failure) {
+      const dayOffset = cursor++;
+      // Pass the shared completed entries so late responses still run the
+      // existing duplicate-title rejection and retry before joining the batch.
+      let generated;
+      try { generated = await generateDay(theme, plan, dayOffset, entries, recentContent); }
+      catch (error) { failure ||= error; return; }
+      tokens += generated.tokens;
+      entries.push(generated.entry);
+      console.log(`[General Devotionals] Prepared day ${dayOffset + 1}/7: ${generated.entry.scripture_reference}.`);
+    }
+  }));
+  if (failure) throw failure;
+  return { entries: entries.sort((a,b) => a.day_offset - b.day_offset), tokens };
+};
+
+const generateEntries = async (theme, recentContent = [], options = {}) => {
   const planned = await generateWeeklyPlan(theme, recentContent);
   console.log(`[General Devotionals] Validated seven-day plan for ${theme.theme_title}.`);
-  const entries = [];
-  let tokens = planned.tokens;
-  for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
-    const generated = await generateSingleDayEntry(theme, planned.plan, dayOffset, entries, recentContent);
-    tokens += generated.tokens;
-    entries.push(generated.entry);
-    console.log(`[General Devotionals] Prepared day ${dayOffset + 1}/7: ${generated.entry.scripture_reference}.`);
-  }
-  return { entries, plan: planned.plan, tokens, fallback: false };
+  const generated = await generatePlannedEntries(theme, planned.plan, recentContent, options);
+  return { entries: generated.entries, plan: planned.plan, tokens: planned.tokens + generated.tokens, fallback: false };
 };
 
 const loadRecentContent = async startDate => {
@@ -716,6 +732,7 @@ module.exports = {
   buildWeeklyPlanPrompt,
   ensureDevotionalRunway,
   generateEntries,
+  generatePlannedEntries,
   generateWeeklyBatch,
   getCurriculumStatus,
   getCurriculumRemediationTarget,

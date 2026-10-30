@@ -30,6 +30,8 @@ const buildScheduledRows = (week, entries, scheduledDates, cutoff, includeToday 
 async function refreshScheduledDevotionals() {
   const cutoff = dateInNewYork();
   const includeToday = process.env.DEVOTIONAL_REFRESH_INCLUDE_TODAY === 'true';
+  const concurrency = Number(process.env.DEVOTIONAL_REFRESH_CONCURRENCY || 1);
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 3) throw new Error('Refresh concurrency must be 1-3.');
   if (process.env.DEVOTIONAL_REFRESH_CONFIRM !== cutoff) throw new Error(`Set DEVOTIONAL_REFRESH_CONFIRM=${cutoff} to refresh future scheduled content.`);
   const db = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
   const query = async q => { const { data, error } = await q; if (error) throw error; return data || []; };
@@ -54,7 +56,7 @@ async function refreshScheduledDevotionals() {
     const theme = themes.find(item => item.week_number === week.theme_week_number);
     if (!theme) throw new Error(`Missing theme ${week.theme_week_number}.`);
     console.log(JSON.stringify({ phase: 'generating', startDate: week.start_date, theme: theme.theme_title }));
-    const generated = await generateEntries({ ...theme, formation_goal: week.formation_goal || theme.formation_goal }, recent);
+    const generated = await generateEntries({ ...theme, formation_goal: week.formation_goal || theme.formation_goal }, recent, { concurrency });
     const entries = validateWeeklyEntries(generated.entries);
     const rows = buildScheduledRows(week, entries, dates, cutoff, includeToday);
     // Preserve published day briefs for the partially elapsed current week.

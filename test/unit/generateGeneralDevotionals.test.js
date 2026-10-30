@@ -8,6 +8,7 @@ process.env.OPENAI_API_KEY ||= 'test-openai-key';
 const {
   buildSingleDayPrompt,
   buildWeeklyPlanPrompt,
+  generatePlannedEntries,
   validateWeeklyEntries,
   validateWeeklyPlan,
 } = require('../../cron/generateGeneralDevotionals');
@@ -51,6 +52,24 @@ const plan = () => ({
     title_direction: planTitles[index],
     share_mode: index > 4 ? 'discuss' : 'none',
   })),
+});
+
+test('bounded refresh generation retains every day, shared duplicate context, ordering and token totals', async () => {
+  let active=0, maximum=0;
+  const seen=[],contexts=[];
+  const result = await generatePlannedEntries({theme_title:'Trust'},plan(),[],{concurrency:3,generateDay:async (_theme,_plan,offset,completed)=>{
+    active++;maximum=Math.max(maximum,active);seen.push(offset);contexts.push(completed);
+    await new Promise(resolve=>setTimeout(resolve,offset===0 ? 8 : 1));
+    active--;
+    return {entry:{day_offset:offset,scripture_reference:`Psalms ${offset+1}:1`},tokens:offset+1};
+  }});
+  assert.equal(maximum,3);
+  assert.deepEqual(seen,[0,1,2,3,4,5,6]);
+  assert.deepEqual(result.entries.map(row=>row.day_offset),seen);
+  assert.equal(result.tokens,28);
+  assert.ok(contexts.every(context=>context===contexts[0]));
+  assert.equal(contexts[0].length,7);
+  await assert.rejects(generatePlannedEntries({},plan(),[],{concurrency:4}),/1-3/);
 });
 
 test('weekly devotional validation accepts one complete entry for every day', () => {
