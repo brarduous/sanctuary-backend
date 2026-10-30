@@ -1,0 +1,12 @@
+{
+  "version": "1.2.11",
+  "build": "66",
+  "bundleId": "us.sanctuaryapp.app",
+  "quickTakeaway": true,
+  "newsQuickRead": true,
+  "labeledReflection": true,
+  "productionApi": true,
+  "productionDatabase": true,
+  "stagingDatabase": false,
+  "loopbackApi": false
+}

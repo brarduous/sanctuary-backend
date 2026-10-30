@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Backend for AI content generation and database interaction.",
   "main": "index.js",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
@@ -47,7 +50,15 @@
     "test:event-volunteer-journey:staging": "node scripts/verifyEventVolunteerJourney.js",
     "test:content-production:staging": "node scripts/verifyContentProductionJourney.js",
     "test:staging": "node scripts/verifyStaging.js",
-    "test:production-shape": "node scripts/verifyProductionShape.js"
+    "test:production-shape": "node scripts/verifyProductionShape.js",
+    "validate:discoveries": "node scripts/discoveries/validateCandidates.js",
+    "review:discoveries": "node scripts/discoveries/reviewPacket.js",
+    "test:discoveries": "node --test test/integration/discoveries.test.js test/discoveryAccuracy.test.js test/discoveryCronRoutes.test.js test/integration/discoveryCurriculum.test.js test/discoveryDraftBatch.test.js test/integration/discoveryReminders.test.js test/integration/discoverySourceRepair.test.js",
+    "cron-discoveries": "node cron/generateDiscoveries.js",
+    "cron-discoveries:status": "node cron/generateDiscoveries.js --status",
+    "eval:discovery-accuracy": "node scripts/discoveries/evaluateAccuracy.js",
+    "draft:discoveries": "node scripts/discoveries/draftBatch.js",
+    "qa:discoveries:hosted": "node scripts/discoveries/verifyHostedJourney.js"
   },
   "keywords": [],
   "author": "",
@@ -67,7 +78,7 @@
     "mammoth": "^1.11.0",
     "multer": "^2.4.0",
     "nodemailer": "^10.0.10",
-    "openai": "^5.10.1",
+    "openai": "^7.45.1",
     "pdf-parse": "^2.4.5",
     "puppeteer": "^25.11.0",
     "resend": "^6.9.1",
@@ -78,6 +89,7 @@
     "youtube-transcript": "^1.2.1"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "^0.5.13",
     "nodemon": "^3.1.11",
     "xlsx": "^0.18.5"
   }

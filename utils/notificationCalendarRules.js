@@ -72,4 +72,14 @@ function devotionalCopy({ title, scripture, variant, weekday }) {
   return { ...selected, body: cleanPushField(`${selected.body}${weeklyPrompt}`, selected.body, 220) };
 }
 
-module.exports = { DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, isInRollout, isValidTimeZone, isWithinQuietHours, isWithinWindow, localParts, parseTimeMinutes, stagePercentage };
+function discoveryCopy(variant=1) {
+  const variants={
+    1:{heading:'Your daily trivia is ready',body:'One question, 20 seconds, and a fresh discovery in Scripture. Ready to play?'},
+    2:{heading:'A little curiosity for today',body:'Today’s Sanctuary trivia is ready. Play a quick round and explore the Scripture behind it.'},
+    3:{heading:'A moment for discovery',body:'Try today’s Bible trivia, then see the detail behind the answer.'},
+    4:{heading:'What will you discover today?',body:'A new Sanctuary trivia question is waiting. Take 20 seconds when you have a moment.'},
+  };
+  return variants[variant] || variants[1];
+}
+
+module.exports = { DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, discoveryCopy, isInRollout, isValidTimeZone, isWithinQuietHours, isWithinWindow, localParts, parseTimeMinutes, stagePercentage };

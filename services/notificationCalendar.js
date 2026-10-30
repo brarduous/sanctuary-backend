@@ -2,14 +2,15 @@ const webPush = require('web-push');
 const { Expo } = require('expo-server-sdk');
 const supabase = require('../config/supabase');
 const {
-  DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy,
+  DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, discoveryCopy,
   isInRollout: ruleIsInRollout, isValidTimeZone, isWithinQuietHours,
   isWithinWindow, localParts, stagePercentage,
 } = require('../utils/notificationCalendarRules');
 
+const {loadDiscoveryReminderContext,selectDiscoveryReminder,discoveryReminderChannel,nativeCapabilities}=require('./discoveryReminders');
 const expo = new Expo();
 const STAGES = new Set(['dry_run', 'internal', '10', '50', '100']);
-const CATEGORY_PREFERENCE = { devotional: 'devotionals', advice: 'advice', news: 'news', church: 'announcements' };
+const CATEGORY_PREFERENCE = { devotional: 'devotionals', advice: 'advice', news: 'news', church: 'announcements', discovery:'trivia' };
 
 function internalUserIds() {
   return new Set(String(process.env.NOTIFICATION_INTERNAL_USER_IDS || '')
@@ -31,18 +32,29 @@ function configureWebPush() {
   return true;
 }
 
-async function loadAudience() {
-  const [{ data: profiles, error: profileError }, { data: subscriptions, error: subscriptionError }] = await Promise.all([
-    supabase.from('user_profiles').select('user_id, subscription_tier, user_preferences, expo_push_token, notification_time_zone'),
-    supabase.from('push_subscriptions').select('id, user_id, subscription, created_at').order('created_at', { ascending: false }),
+async function loadAudience(category) {
+  const [profiles, subscriptions] = await Promise.all([
+    readPages(() => supabase.from('user_profiles').select(`user_id, subscription_tier, user_preferences, expo_push_token, notification_time_zone${category==='discovery' ? ', notification_capabilities':''}`).order('user_id')),
+    readPages(() => supabase.from('push_subscriptions').select('id, user_id, subscription, created_at').order('created_at', { ascending: false }).order('id')),
   ]);
-  if (profileError) throw profileError;
-  if (subscriptionError) throw subscriptionError;
   const webByUser = new Map();
   for (const subscription of subscriptions || []) {
     if (!webByUser.has(subscription.user_id)) webByUser.set(subscription.user_id, subscription);
   }
   return (profiles || []).map(profile => ({ ...profile, webSubscription: webByUser.get(profile.user_id) }));
+}
+
+// PostgREST caps responses. Stable pagination keeps recipients past the first
+// page eligible without increasing the database-wide API limit.
+async function readPages(query) {
+  const rows = [];
+  const pageSize = 500;
+  for (let offset = 0; ; offset += pageSize) {
+    const {data, error} = await query().range(offset, offset + pageSize - 1);
+    if (error) throw error;
+    rows.push(...(data || []));
+    if (!data || data.length < pageSize) return rows;
+  }
 }
 
 async function loadContent(now) {
@@ -134,12 +146,13 @@ async function resolveNewsCampaign({ setting, now, dryRun }) {
 async function recentAcceptedByUser(userIds, now) {
   if (!userIds.length) return new Map();
   const since = new Date(now.getTime() - 6 * 60 * 60 * 1000).toISOString();
-  const { data, error } = await supabase.from('notification_deliveries')
-    .select('user_id, accepted_at').in('user_id', userIds).gte('accepted_at', since)
-    .in('status', ['accepted', 'opened']).order('accepted_at', { ascending: false });
-  if (error) throw error;
   const result = new Map();
-  for (const row of data || []) if (!result.has(row.user_id)) result.set(row.user_id, row.accepted_at);
+  for (let offset = 0; offset < userIds.length; offset += 250) {
+    const data = await readPages(() => supabase.from('notification_deliveries')
+      .select('user_id, accepted_at').in('user_id', userIds.slice(offset, offset + 250)).gte('accepted_at', since)
+      .in('status', ['accepted', 'opened']).order('accepted_at', { ascending: false }).order('id'));
+    for (const row of data) if (!result.has(row.user_id)) result.set(row.user_id, row.accepted_at);
+  }
   return result;
 }
 
@@ -182,7 +195,7 @@ async function sendWeb(subscription, payload) {
 }
 
 async function dispatchToRecipient({ profile, campaign, category, local, content, variant, now, dryRun }) {
-  const channel = Expo.isExpoPushToken(profile.expo_push_token)
+  const channel = category==='discovery' ? discoveryReminderChannel(profile) : Expo.isExpoPushToken(profile.expo_push_token)
     ? 'native'
     : profile.webSubscription ? 'web' : null;
   if (!channel) return { status: 'invalidEndpoint' };
@@ -197,7 +210,7 @@ async function dispatchToRecipient({ profile, campaign, category, local, content
   const trackingUrl = content?.url || '/(tabs)/advice';
   const copy = category === 'devotional'
     ? devotionalCopy({ title: content.title, scripture: content.scripture, variant, weekday: local.weekday })
-    : category === 'news'
+    : category === 'discovery' ? discoveryCopy(variant) : category === 'news'
       ? { heading: 'News worth a thoughtful pause', body: `${content.title} — look beyond the headline with a scriptural perspective.` }
       : { heading: 'Need a little wisdom?', body: 'What decision or relationship could use a prayerful, scriptural perspective?' };
   const payload = { title: copy.heading, body: copy.body, data: { url: trackingUrl, notificationDeliveryId: delivery.id }, url: trackingUrl, tag: `${category}-${local.date}` };
@@ -219,7 +232,7 @@ async function dispatchToRecipient({ profile, campaign, category, local, content
 }
 
 function emptySummary() {
-  return { eligible: 0, attempted: 0, accepted: 0, optedOut: 0, quietHours: 0, frequencyCapped: 0, missingContent: 0, invalidEndpoint: 0, outsideWindow: 0, outsideRollout: 0, deduplicated: 0, failed: 0 };
+  return { eligible: 0, attempted: 0, accepted: 0, optedOut: 0, quietHours: 0, frequencyCapped: 0, missingContent: 0, invalidEndpoint: 0, outsideWindow: 0, outsideRollout: 0, deduplicated: 0, alreadyPlayed:0, unsupportedClient:0, failed: 0 };
 }
 
 async function dispatchCategory({ category, now, dryRun, rolloutStage }) {
@@ -230,7 +243,8 @@ async function dispatchCategory({ category, now, dryRun, rolloutStage }) {
   if (!STAGES.has(activeSetting.rollout_stage)) throw new Error('Invalid rollout stage');
   if (!activeSetting.enabled && !dryRun) return { category, skipped: 'disabled', ...emptySummary() };
   if (category === 'church') return { category, skipped: 'organization_driven', ...emptySummary() };
-  const audience = await loadAudience();
+  const audience = await loadAudience(category);
+  const discovery=category==='discovery' ? await loadDiscoveryReminderContext(supabase,now,audience.map(profile=>profile.user_id)):null;
   const recent = await recentAcceptedByUser(audience.map(profile => profile.user_id), now);
   const content = category === 'devotional' ? await loadContent(now) : null;
   const news = category === 'news' ? await resolveNewsCampaign({ setting: activeSetting, now, dryRun }) : null;
@@ -248,9 +262,11 @@ async function dispatchCategory({ category, now, dryRun, rolloutStage }) {
     if (isWithinQuietHours(local.minutes, activeSetting.quiet_hours_start, activeSetting.quiet_hours_end)) { summary.quietHours++; continue; }
     if (!isInRollout(profile, activeSetting.rollout_stage) && !dryRun) { summary.outsideRollout++; continue; }
     if (recent.has(profile.user_id)) { summary.frequencyCapped++; continue; }
-    const selectedContent = category === 'devotional' ? selectDevotional(profile, local.date, content) : category === 'news' ? news.content : null;
+    const dailyDiscovery=discovery ? selectDiscoveryReminder(discovery,profile,local.date):null;
+    if(dailyDiscovery?.reason){summary[dailyDiscovery.reason]++;continue;}
+    const selectedContent = category==='discovery' ? dailyDiscovery.content : category === 'devotional' ? selectDevotional(profile, local.date, content) : category === 'news' ? news.content : null;
     if (category === 'devotional' && !selectedContent) { summary.missingContent++; continue; }
-    const campaignContentId = category === 'devotional' ? `daily-${local.date}` : category === 'news' ? news.content.contentId : null;
+    const campaignContentId = category==='discovery' ? selectedContent.contentId : category === 'devotional' ? `daily-${local.date}` : category === 'news' ? news.content.contentId : null;
     const cacheKey = `${local.date}:${campaignContentId || category}`;
     let campaign = campaignCache.get(cacheKey);
     if (!campaign) {
@@ -314,8 +330,8 @@ async function evaluateRolloutGates(now = new Date()) {
 }
 
 async function dispatchCalendar({ now = new Date(), dryRun = false, category = null, rolloutStage = null } = {}) {
-  const categories = category ? [category] : ['devotional', 'advice', 'news'];
-  if (categories.some(value => !['devotional', 'advice', 'news', 'church'].includes(value))) throw new Error('Invalid notification category');
+  const categories = category ? [category] : ['devotional', 'advice', 'news','discovery'];
+  if (categories.some(value => !['devotional', 'advice', 'news', 'church','discovery'].includes(value))) throw new Error('Invalid notification category');
   if (rolloutStage && !STAGES.has(rolloutStage)) throw new Error('Invalid rollout stage');
   const results = [];
   for (const value of categories) results.push(await dispatchCategory({ category: value, now, dryRun, rolloutStage }));
@@ -342,6 +358,13 @@ async function notificationReport({ since }) {
   const { data: runs, error: runError } = await runQuery;
   if (runError) throw runError;
   return { deliveries: totals, dispatchRuns: runs || [] };
+}
+
+async function registerCapabilities(userId,input) {
+  const capabilities=nativeCapabilities(input);
+  const {data,error}=await supabase.from('user_profiles').update({expo_push_token:input.expoPushToken,notification_capabilities:capabilities}).eq('user_id',userId).select('user_id').single();
+  if(error)throw error;
+  return {registered:Boolean(data)};
 }
 
 async function markOpened(userId, deliveryId) {
@@ -389,8 +412,8 @@ async function processExpoReceipts() {
   return { checked, failed };
 }
 
-module.exports = {
-  DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, dispatchCalendar,
+module.exports = { registerCapabilities,
+  DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, discoveryCopy, dispatchCalendar,
   evaluateRolloutGates, isInRollout, isValidTimeZone, isWithinQuietHours,
   isWithinWindow, localParts, markOpened, notificationReport,
   processExpoReceipts, stagePercentage, updateTimeZone,

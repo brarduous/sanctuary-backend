@@ -8,6 +8,7 @@ process.env.OPENAI_API_KEY ||= 'test-openai-key';
 const {
   buildSingleDayPrompt,
   buildWeeklyPlanPrompt,
+  generatePlannedEntries,
   validateWeeklyEntries,
   validateWeeklyPlan,
 } = require('../../cron/generateGeneralDevotionals');
@@ -53,6 +54,24 @@ const plan = () => ({
   })),
 });
 
+test('bounded refresh generation retains every day, shared duplicate context, ordering and token totals', async () => {
+  let active=0, maximum=0;
+  const seen=[],contexts=[];
+  const result = await generatePlannedEntries({theme_title:'Trust'},plan(),[],{concurrency:3,generateDay:async (_theme,_plan,offset,completed)=>{
+    active++;maximum=Math.max(maximum,active);seen.push(offset);contexts.push(completed);
+    await new Promise(resolve=>setTimeout(resolve,offset===0 ? 8 : 1));
+    active--;
+    return {entry:{day_offset:offset,scripture_reference:`Psalms ${offset+1}:1`},tokens:offset+1};
+  }});
+  assert.equal(maximum,3);
+  assert.deepEqual(seen,[0,1,2,3,4,5,6]);
+  assert.deepEqual(result.entries.map(row=>row.day_offset),seen);
+  assert.equal(result.tokens,28);
+  assert.ok(contexts.every(context=>context===contexts[0]));
+  assert.equal(contexts[0].length,7);
+  await assert.rejects(generatePlannedEntries({},plan(),[],{concurrency:4}),/1-3/);
+});
+
 test('weekly devotional validation accepts one complete entry for every day', () => {
   const result = validateWeeklyEntries(Array.from({ length: 7 }, (_, index) => entry(index)));
   assert.deepEqual(result.map(item => item.day_offset), [0, 1, 2, 3, 4, 5, 6]);
@@ -93,6 +112,8 @@ test('weekly planner excludes recent content and generic title openings', () => 
   assert.match(prompt, /seven-day Christian formation journey/i);
   assert.match(prompt, /A Familiar Title — Psalm 46:10/);
   assert.match(prompt, /Do not begin titles with/i);
+  assert.match(prompt, /late teens and young adults/);
+  assert.match(prompt, /feasible without money or special resources/);
 });
 
 test('single-day prompt applies the research-grounded formation playbook', () => {
@@ -113,6 +134,9 @@ test('single-day prompt applies the research-grounded formation playbook', () =>
   assert.match(prompt, /Required Scripture: Psalm 3:1/);
   assert.match(prompt, /A Familiar Title/);
   assert.match(prompt, /Other days in this week/);
+  assert.match(prompt, /young-adult-content-v1/);
+  assert.match(prompt, /Practice \(10-25 words\)/);
+  assert.ok(prompt.indexOf('# FINAL AUDIENCE COPY POLICY') > prompt.indexOf('## Short-form story playbook'));
 });
 
 

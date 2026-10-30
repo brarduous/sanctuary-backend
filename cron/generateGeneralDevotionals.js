@@ -4,6 +4,7 @@ require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
+const { VOICE, VERSION: AUDIENCE_VERSION, applyAudiencePolicy } = require('../utils/audienceContentPolicy');
 const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, normalizeFeaturedReference, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -158,12 +159,15 @@ Do not repeat or closely paraphrase these recent titles and primary passages:
 ${recentContent.length ? recentContent.map(item => `- ${item.title} — ${item.scripture_reference}`).join('\n') : '- None supplied'}
 
 ## Planning requirements
+${VOICE}
+- Choose a recognizable everyday human situation for each day. Keep practices small, observable, and feasible without money or special resources. Do not assume a student or employed reader.
 - State one precise formation_goal, one theological_claim, one pastoral_need, and 2-4 guardrails.
 - Create exactly seven days with distinct movements, daily angles, human situations, central claims, practice types, and title directions.
 - Use an intentional arc such as encounter, expose, lament/confess, receive, practice, with others, and integrate/rest. Adapt labels when the theme requires it, but use at least six distinct movements.
 - Select seven different Scripture references. Each passage must genuinely support its day's central claim in context.
 - Include a short interpretation_note for each passage naming its speaker/author, audience or setting, and relevant claim. Do not import language from another biblical passage as though it came from the selected text.
 - Each practice_brief must specify a visible same-day behavior, plus a time/setting or recipient. Reflection alone is not a practice unless it produces a written, spoken, scheduled, given, asked, heard, or served response.
+- Begin each practice_brief with a concrete verb accepted by the practice check: Write, Speak, Say, Tell, Text, Call, Send, Schedule, Give, Ask, Listen, Serve, Name, List, Set, Offer, Apologize, Thank, Invite, Read, Pray, Share, Place, Remove, or Visit. Do not use an abstract or unobservable instruction as the entire practice.
 - Assign share_mode as one of: none, send, discuss, do_together, serve, church. Use a relational mode on at least two days, but never force sharing.
 - Titles must be 4-9 words, make sense without the theme label, and reveal the day's distinctive tension, discovery, or action.
 - Do not begin titles with: ${BANNED_TITLE_OPENINGS.join(', ')}.
@@ -339,6 +343,8 @@ Write the content as a seamless 120-160 word reflection that does all five moves
 - prayer must be 1-2 sentences.
 - Return compact valid JSON only. Do not add commentary or Markdown fences.
 
+${applyAudiencePolicy('general_devotional_generator', '')}
+
 Use this exact shape:
 {
   "day_offset": ${dayOffset},
@@ -489,18 +495,34 @@ const generateSingleDayEntry = async (theme, plan, dayOffset, generatedEntries =
   throw lastError;
 };
 
-const generateEntries = async (theme, recentContent = []) => {
+const generatePlannedEntries = async (theme, plan, recentContent = [], { concurrency = 1, generateDay = generateSingleDayEntry } = {}) => {
+  if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 3) throw new Error('Devotional concurrency must be 1-3.');
+  const entries = [];
+  let tokens = 0;
+  let cursor = 0;
+  let failure;
+  await Promise.all(Array.from({ length: concurrency }, async () => {
+    while (cursor < 7 && !failure) {
+      const dayOffset = cursor++;
+      // Pass the shared completed entries so late responses still run the
+      // existing duplicate-title rejection and retry before joining the batch.
+      let generated;
+      try { generated = await generateDay(theme, plan, dayOffset, entries, recentContent); }
+      catch (error) { failure ||= error; return; }
+      tokens += generated.tokens;
+      entries.push(generated.entry);
+      console.log(`[General Devotionals] Prepared day ${dayOffset + 1}/7: ${generated.entry.scripture_reference}.`);
+    }
+  }));
+  if (failure) throw failure;
+  return { entries: entries.sort((a,b) => a.day_offset - b.day_offset), tokens };
+};
+
+const generateEntries = async (theme, recentContent = [], options = {}) => {
   const planned = await generateWeeklyPlan(theme, recentContent);
   console.log(`[General Devotionals] Validated seven-day plan for ${theme.theme_title}.`);
-  const entries = [];
-  let tokens = planned.tokens;
-  for (let dayOffset = 0; dayOffset < 7; dayOffset += 1) {
-    const generated = await generateSingleDayEntry(theme, planned.plan, dayOffset, entries, recentContent);
-    tokens += generated.tokens;
-    entries.push(generated.entry);
-    console.log(`[General Devotionals] Prepared day ${dayOffset + 1}/7: ${generated.entry.scripture_reference}.`);
-  }
-  return { entries, plan: planned.plan, tokens, fallback: false };
+  const generated = await generatePlannedEntries(theme, planned.plan, recentContent, options);
+  return { entries: generated.entries, plan: planned.plan, tokens: planned.tokens + generated.tokens, fallback: false };
 };
 
 const loadRecentContent = async startDate => {
@@ -604,7 +626,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null, themeWeekN
             scripture_text: entry.scripture_text,
             content: entry.content,
             prayer: entry.prayer,
-            topics: [...new Set([...(entry.topics || []), theme.theme_title, CURRICULUM_V2_MARKER])],
+            topics: [...new Set([...(entry.topics || []), theme.theme_title, CURRICULUM_V2_MARKER, AUDIENCE_VERSION])],
             short_form: entry.short_form || null,
           },
           { onConflict: 'date' }
@@ -711,6 +733,7 @@ module.exports = {
   buildWeeklyPlanPrompt,
   ensureDevotionalRunway,
   generateEntries,
+  generatePlannedEntries,
   generateWeeklyBatch,
   getCurriculumStatus,
   getCurriculumRemediationTarget,

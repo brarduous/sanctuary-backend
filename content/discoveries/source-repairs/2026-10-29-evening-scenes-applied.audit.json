@@ -1,0 +1,570 @@
+{
+  "project": "cmakuvkjxknwhonfqbit",
+  "applied": true,
+  "audit": {
+    "id": "13c0412f-e50b-47f3-bc93-db64dbf95fa1",
+    "manifestId": "narrative-source-repair-2026-10-29-evening",
+    "manifestSha256": "fcf02e9e10d89440e8c498719c361916006631b568b6a064b9c61a3b662b2a84",
+    "createdAt": "2026-10-29T21:59:56.957Z",
+    "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+    "reason": "Read all six rejected drafts for the two exhausted dates. November 18 failed for overlapping entrance or cloth distractors and an uninteresting port lookup; November 20 failed for an arbitrary floor count, a source contract error and an occupational lookup. Replace these exhausted source sets with distinct named-person narratives or an explicit contrast that supports concise context and mutually exclusive choices. Preserve every rejection and keep both independent verifiers, the evidence floor and craft rubric unchanged.",
+    "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+    "changes": [
+      {
+        "date": "2026-11-18",
+        "weekStart": "2026-11-16",
+        "previousEpoch": 1,
+        "previousAttempts": 3,
+        "previousSources": [
+          {
+            "angle": "Connect recognizing Peter’s voice and leaving the gate shut in joy with the named servant girl.",
+            "sourceReference": "Acts 12:12-17",
+            "sourceSha256": "fddb2573f778aae620099694fbf1e6cf55933766a0275fc6f645a32007589d89"
+          },
+          {
+            "angle": "Distinguish the port where Jonah finds a ship from his intended destination.",
+            "sourceReference": "Jonah 1:1-6",
+            "sourceSha256": "f53906a02d7b96eb9236c754171a4350fea427438cb648db497c4365717a1a27"
+          },
+          {
+            "angle": "Connect the fragrant supper and anointing of Jesus's feet with what Mary uses to wipe them. Avoid adding cultural customs or monetary conversions.",
+            "sourceReference": "John 12:1-8",
+            "sourceSha256": "4be6550f7d7b0da2db929b9ceba0dd99a0ccb484b8effe44e089dba80a7e5133"
+          }
+        ],
+        "sources": [
+          {
+            "sourceReference": "John 19:38-42",
+            "sourceSha256": "d966be1a8c7177ea862b60b42907d485a090c9572219c18ef8186ff74eb88085",
+            "angle": "Connect the earlier nighttime visit with bringing myrrh and aloes for Jesus’s burial to identify Nicodemus. Ask about the named person rather than a weight, and distinguish him from Joseph of Arimathaea, who asks Pilate for the body."
+          },
+          {
+            "sourceReference": "John 20:24-29",
+            "sourceSha256": "70752de61da211d78579ce6ebf5346905ef6a7809a27b804a0a393181c91d75c",
+            "angle": "Connect absence from the earlier visit with the request to see nail marks and the later invitation to inspect Jesus’s hands and side, identifying Thomas. Do not claim that he actually touched Jesus; the excerpt records an invitation, not its acceptance."
+          },
+          {
+            "sourceReference": "Acts 18:24-28",
+            "sourceSha256": "e89257240c5e2592aec385e65f4526e21810676fd485041bc1d312edb91ba0bf",
+            "angle": "Connect the eloquent Alexandrian teacher with Priscilla and Aquila explaining the way more accurately to identify Apollos. Do not identify a modern ethnicity or portray his earlier teaching as wholly false."
+          }
+        ]
+      },
+      {
+        "date": "2026-11-20",
+        "weekStart": "2026-11-16",
+        "previousEpoch": 1,
+        "previousAttempts": 3,
+        "previousSources": [
+          {
+            "angle": "Connect Eutychus’s sleep at the window with the explicitly numbered story from which he falls.",
+            "sourceReference": "Acts 20:7-12",
+            "sourceSha256": "208df81159f81a0067da7850187a9f312081597aee07ab6833f1c15b054cfdac"
+          },
+          {
+            "angle": "Connect Ruth’s return to her mother-in-law with the explicit quantity of barley.",
+            "sourceReference": "Ruth 3:14-18",
+            "sourceSha256": "13d4389e83ea3f53b17b9b3d1b905fae260594118caaeef6c8bbd4f62235cd8c"
+          },
+          {
+            "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+            "sourceReference": "Acts 18:1-4",
+            "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+          }
+        ],
+        "sources": [
+          {
+            "sourceReference": "1 Kings 19:1-8",
+            "sourceSha256": "26b576aa8b4a90085bde13fd5bae763a7130eaf613af2de47a02e16cd67d14fc",
+            "angle": "Connect fleeing Jezebel’s threat with being awakened by an angel to eat before the journey toward Horeb, identifying Elijah. Do not add a medical diagnosis, plant taxonomy or an isolated day count."
+          },
+          {
+            "sourceReference": "Luke 10:38-42",
+            "sourceSha256": "448c1dee07df3e8ee9e353fc6424bc9c6276807f7a764b1d64f336b957151574",
+            "angle": "Use Martha’s complaint about serving alone and listening at Jesus’s feet as paired clues to identify her sister Mary. Do not conflate this Mary with other named women or add a village name absent from the excerpt."
+          },
+          {
+            "sourceReference": "Mark 12:41-44",
+            "sourceSha256": "6832b9aa35678b17fab7e40753a3549cffd9efbf354d428683863ff0dbed2f4c",
+            "angle": "Connect the small contribution with Jesus’s explicit explanation that the poor widow gave all she had to live on while others gave from abundance. Ask about this stated contrast rather than isolated coin counts or inferred motives."
+          }
+        ]
+      }
+    ]
+  },
+  "plans": [
+    {
+      "startDate": "2026-11-16",
+      "before": {
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "days": [
+          {
+            "angle": "identify a person through a concrete action and scene",
+            "date": "2026-11-16",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "identify a person through a concrete action and scene",
+                "sourceReference": "Matthew 4:1-12",
+                "sourceSha256": "5fbd1ba1078fbac6401970af95a575208be912866618bdb8dc2b4c9be4330d18"
+              },
+              {
+                "angle": "Connect the brook and morning/evening provisions with the birds named as bringing food.",
+                "sourceReference": "1 Kings 17:1-6",
+                "sourceSha256": "9b8ebc0f2c342ca00e7a0cd1dcaaee1edfb40832d44fe67703957be342aacdef"
+              },
+              {
+                "angle": "Connect the lost tool and the man's distress with the explicit reason the loss matters: it was borrowed. Avoid an isolated material or number lookup.",
+                "sourceReference": "2 Kings 6:1-7",
+                "sourceSha256": "54672b9aded3252734a64b7050ac4ec7833c92d11620c8b579b9cdf2ab4be4be"
+              }
+            ],
+            "sourceReference": "Matthew 4:1-12",
+            "sourceSha256": "5fbd1ba1078fbac6401970af95a575208be912866618bdb8dc2b4c9be4330d18",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect Peter’s chains and sleeping position with the explicit number of soldiers beside him.",
+            "date": "2026-11-17",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect Peter’s chains and sleeping position with the explicit number of soldiers beside him.",
+                "sourceReference": "Acts 12:6-11",
+                "sourceSha256": "b0ec5afa8ffc5a997d5a4d71e469a95ef9850eed49b8cce20e2ab7a630761c5b"
+              },
+              {
+                "angle": "Connect Naaman’s instructions and initial anger with the exact number of times he washes in the Jordan.",
+                "sourceReference": "2 Kings 5:9-14",
+                "sourceSha256": "1c19c979bd42f7473e90c3c148f89edcf9f8ce7a22cec91a9dfb27e91a2cd884"
+              },
+              {
+                "angle": "Connect Philip hearing reading from the chariot and the passenger asking for an explanation with the named prophet being read. Keep all choices prophet names.",
+                "sourceReference": "Acts 8:26-35",
+                "sourceSha256": "1ee18c207b602432fbf3a9d5e5d4f9c9c5d0b9ed678cf48d77399732cdf12217"
+              }
+            ],
+            "sourceReference": "Acts 12:6-11",
+            "sourceSha256": "b0ec5afa8ffc5a997d5a4d71e469a95ef9850eed49b8cce20e2ab7a630761c5b",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect recognizing Peter’s voice and leaving the gate shut in joy with the named servant girl.",
+            "date": "2026-11-18",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect recognizing Peter’s voice and leaving the gate shut in joy with the named servant girl.",
+                "sourceReference": "Acts 12:12-17",
+                "sourceSha256": "fddb2573f778aae620099694fbf1e6cf55933766a0275fc6f645a32007589d89"
+              },
+              {
+                "angle": "Distinguish the port where Jonah finds a ship from his intended destination.",
+                "sourceReference": "Jonah 1:1-6",
+                "sourceSha256": "f53906a02d7b96eb9236c754171a4350fea427438cb648db497c4365717a1a27"
+              },
+              {
+                "angle": "Connect the fragrant supper and anointing of Jesus's feet with what Mary uses to wipe them. Avoid adding cultural customs or monetary conversions.",
+                "sourceReference": "John 12:1-8",
+                "sourceSha256": "4be6550f7d7b0da2db929b9ceba0dd99a0ccb484b8effe44e089dba80a7e5133"
+              }
+            ],
+            "sourceReference": "Acts 12:12-17",
+            "sourceSha256": "fddb2573f778aae620099694fbf1e6cf55933766a0275fc6f645a32007589d89",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the prisoners listening at midnight with what Paul and Silas do in addition to praying.",
+            "date": "2026-11-19",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the prisoners listening at midnight with what Paul and Silas do in addition to praying.",
+                "sourceReference": "Acts 16:23-29",
+                "sourceSha256": "2e4efe678f64da70158f7713a175bbe0ce521a6e23f134c8c7675097be7a3a14"
+              },
+              {
+                "angle": "Connect Jonah’s shade plant with the creature appointed to damage it.",
+                "sourceReference": "Jonah 4:5-8",
+                "sourceSha256": "5a9038e9cee74684a4534e558b181897ca20d4770567ed49a06d4f03bce31500"
+              },
+              {
+                "angle": "Connect the child's repeated nighttime response to a voice with the man he first runs to. Do not ask an isolated count of calls.",
+                "sourceReference": "1 Samuel 3:1-10",
+                "sourceSha256": "b721ca091652fb5a78d33892f7501ace1caab475d2d42bd2554bb411f9fcce44"
+              }
+            ],
+            "sourceReference": "Acts 16:23-29",
+            "sourceSha256": "2e4efe678f64da70158f7713a175bbe0ce521a6e23f134c8c7675097be7a3a14",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect Eutychus’s sleep at the window with the explicitly numbered story from which he falls.",
+            "date": "2026-11-20",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect Eutychus’s sleep at the window with the explicitly numbered story from which he falls.",
+                "sourceReference": "Acts 20:7-12",
+                "sourceSha256": "208df81159f81a0067da7850187a9f312081597aee07ab6833f1c15b054cfdac"
+              },
+              {
+                "angle": "Connect Ruth’s return to her mother-in-law with the explicit quantity of barley.",
+                "sourceReference": "Ruth 3:14-18",
+                "sourceSha256": "13d4389e83ea3f53b17b9b3d1b905fae260594118caaeef6c8bbd4f62235cd8c"
+              },
+              {
+                "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                "sourceReference": "Acts 18:1-4",
+                "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+              }
+            ],
+            "sourceReference": "Acts 20:7-12",
+            "sourceSha256": "208df81159f81a0067da7850187a9f312081597aee07ab6833f1c15b054cfdac",
+            "targetDifficulty": "challenging"
+          },
+          {
+            "angle": "Connect the fire and viper with the explicitly named island.",
+            "date": "2026-11-21",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the fire and viper with the explicitly named island.",
+                "sourceReference": "Acts 28:1-6",
+                "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103"
+              },
+              {
+                "angle": "Connect the cry about the pot with the ingredient Elisha asks to have added. Describe only the narrative’s claim.",
+                "sourceReference": "2 Kings 4:38-41",
+                "sourceSha256": "cba45dd5cd3e14b21b2ece3c20546b8a44b83ba772ba787393fe5da9bf448072"
+              },
+              {
+                "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                "sourceReference": "John 4:25-30",
+                "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+              }
+            ],
+            "sourceReference": "Acts 28:1-6",
+            "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "explore a distinctive phrase through its immediate context",
+            "date": "2026-11-22",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "explore a distinctive phrase through its immediate context",
+                "sourceReference": "Matthew 11:23-30",
+                "sourceSha256": "c05d55d40cfe885ecd304787dd0f32d5c46a0e267a25c25d838397c8efe6e596"
+              },
+              {
+                "angle": "Connect the king’s feast and visible fingers with the surface on which the writing appears.",
+                "sourceReference": "Daniel 5:1-6",
+                "sourceSha256": "05f1a885c8362ac2ef3b1b3ede36afb0acb031a93c1d09595b6ad1afc9859ee9"
+              },
+              {
+                "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                "sourceReference": "Matthew 2:9-12",
+                "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+              }
+            ],
+            "sourceReference": "Matthew 11:23-30",
+            "sourceSha256": "c05d55d40cfe885ecd304787dd0f32d5c46a0e267a25c25d838397c8efe6e596",
+            "targetDifficulty": "easy"
+          }
+        ],
+        "endDate": "2026-11-22",
+        "learningGoal": "Read what the texts say about named places and encounters.",
+        "sourceCatalogVersion": "narrative-scenes-2026-10-29-v2",
+        "sourcePolicy": "Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.",
+        "startDate": "2026-11-16",
+        "theme": "Exile and return",
+        "version": "discovery-biblical-curriculum-v3",
+        "weekNumber": 4
+      },
+      "after": {
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "days": [
+          {
+            "angle": "identify a person through a concrete action and scene",
+            "date": "2026-11-16",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "identify a person through a concrete action and scene",
+                "sourceReference": "Matthew 4:1-12",
+                "sourceSha256": "5fbd1ba1078fbac6401970af95a575208be912866618bdb8dc2b4c9be4330d18"
+              },
+              {
+                "angle": "Connect the brook and morning/evening provisions with the birds named as bringing food.",
+                "sourceReference": "1 Kings 17:1-6",
+                "sourceSha256": "9b8ebc0f2c342ca00e7a0cd1dcaaee1edfb40832d44fe67703957be342aacdef"
+              },
+              {
+                "angle": "Connect the lost tool and the man's distress with the explicit reason the loss matters: it was borrowed. Avoid an isolated material or number lookup.",
+                "sourceReference": "2 Kings 6:1-7",
+                "sourceSha256": "54672b9aded3252734a64b7050ac4ec7833c92d11620c8b579b9cdf2ab4be4be"
+              }
+            ],
+            "sourceReference": "Matthew 4:1-12",
+            "sourceSha256": "5fbd1ba1078fbac6401970af95a575208be912866618bdb8dc2b4c9be4330d18",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect Peter’s chains and sleeping position with the explicit number of soldiers beside him.",
+            "date": "2026-11-17",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect Peter’s chains and sleeping position with the explicit number of soldiers beside him.",
+                "sourceReference": "Acts 12:6-11",
+                "sourceSha256": "b0ec5afa8ffc5a997d5a4d71e469a95ef9850eed49b8cce20e2ab7a630761c5b"
+              },
+              {
+                "angle": "Connect Naaman’s instructions and initial anger with the exact number of times he washes in the Jordan.",
+                "sourceReference": "2 Kings 5:9-14",
+                "sourceSha256": "1c19c979bd42f7473e90c3c148f89edcf9f8ce7a22cec91a9dfb27e91a2cd884"
+              },
+              {
+                "angle": "Connect Philip hearing reading from the chariot and the passenger asking for an explanation with the named prophet being read. Keep all choices prophet names.",
+                "sourceReference": "Acts 8:26-35",
+                "sourceSha256": "1ee18c207b602432fbf3a9d5e5d4f9c9c5d0b9ed678cf48d77399732cdf12217"
+              }
+            ],
+            "sourceReference": "Acts 12:6-11",
+            "sourceSha256": "b0ec5afa8ffc5a997d5a4d71e469a95ef9850eed49b8cce20e2ab7a630761c5b",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect the earlier nighttime visit with bringing myrrh and aloes for Jesus’s burial to identify Nicodemus. Ask about the named person rather than a weight, and distinguish him from Joseph of Arimathaea, who asks Pilate for the body.",
+            "date": "2026-11-18",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "sourceReference": "John 19:38-42",
+                "sourceSha256": "d966be1a8c7177ea862b60b42907d485a090c9572219c18ef8186ff74eb88085",
+                "angle": "Connect the earlier nighttime visit with bringing myrrh and aloes for Jesus’s burial to identify Nicodemus. Ask about the named person rather than a weight, and distinguish him from Joseph of Arimathaea, who asks Pilate for the body."
+              },
+              {
+                "sourceReference": "John 20:24-29",
+                "sourceSha256": "70752de61da211d78579ce6ebf5346905ef6a7809a27b804a0a393181c91d75c",
+                "angle": "Connect absence from the earlier visit with the request to see nail marks and the later invitation to inspect Jesus’s hands and side, identifying Thomas. Do not claim that he actually touched Jesus; the excerpt records an invitation, not its acceptance."
+              },
+              {
+                "sourceReference": "Acts 18:24-28",
+                "sourceSha256": "e89257240c5e2592aec385e65f4526e21810676fd485041bc1d312edb91ba0bf",
+                "angle": "Connect the eloquent Alexandrian teacher with Priscilla and Aquila explaining the way more accurately to identify Apollos. Do not identify a modern ethnicity or portray his earlier teaching as wholly false."
+              }
+            ],
+            "sourceReference": "John 19:38-42",
+            "sourceSha256": "d966be1a8c7177ea862b60b42907d485a090c9572219c18ef8186ff74eb88085",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the prisoners listening at midnight with what Paul and Silas do in addition to praying.",
+            "date": "2026-11-19",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the prisoners listening at midnight with what Paul and Silas do in addition to praying.",
+                "sourceReference": "Acts 16:23-29",
+                "sourceSha256": "2e4efe678f64da70158f7713a175bbe0ce521a6e23f134c8c7675097be7a3a14"
+              },
+              {
+                "angle": "Connect Jonah’s shade plant with the creature appointed to damage it.",
+                "sourceReference": "Jonah 4:5-8",
+                "sourceSha256": "5a9038e9cee74684a4534e558b181897ca20d4770567ed49a06d4f03bce31500"
+              },
+              {
+                "angle": "Connect the child's repeated nighttime response to a voice with the man he first runs to. Do not ask an isolated count of calls.",
+                "sourceReference": "1 Samuel 3:1-10",
+                "sourceSha256": "b721ca091652fb5a78d33892f7501ace1caab475d2d42bd2554bb411f9fcce44"
+              }
+            ],
+            "sourceReference": "Acts 16:23-29",
+            "sourceSha256": "2e4efe678f64da70158f7713a175bbe0ce521a6e23f134c8c7675097be7a3a14",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect fleeing Jezebel’s threat with being awakened by an angel to eat before the journey toward Horeb, identifying Elijah. Do not add a medical diagnosis, plant taxonomy or an isolated day count.",
+            "date": "2026-11-20",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "sourceReference": "1 Kings 19:1-8",
+                "sourceSha256": "26b576aa8b4a90085bde13fd5bae763a7130eaf613af2de47a02e16cd67d14fc",
+                "angle": "Connect fleeing Jezebel’s threat with being awakened by an angel to eat before the journey toward Horeb, identifying Elijah. Do not add a medical diagnosis, plant taxonomy or an isolated day count."
+              },
+              {
+                "sourceReference": "Luke 10:38-42",
+                "sourceSha256": "448c1dee07df3e8ee9e353fc6424bc9c6276807f7a764b1d64f336b957151574",
+                "angle": "Use Martha’s complaint about serving alone and listening at Jesus’s feet as paired clues to identify her sister Mary. Do not conflate this Mary with other named women or add a village name absent from the excerpt."
+              },
+              {
+                "sourceReference": "Mark 12:41-44",
+                "sourceSha256": "6832b9aa35678b17fab7e40753a3549cffd9efbf354d428683863ff0dbed2f4c",
+                "angle": "Connect the small contribution with Jesus’s explicit explanation that the poor widow gave all she had to live on while others gave from abundance. Ask about this stated contrast rather than isolated coin counts or inferred motives."
+              }
+            ],
+            "sourceReference": "1 Kings 19:1-8",
+            "sourceSha256": "26b576aa8b4a90085bde13fd5bae763a7130eaf613af2de47a02e16cd67d14fc",
+            "targetDifficulty": "challenging"
+          },
+          {
+            "angle": "Connect the fire and viper with the explicitly named island.",
+            "date": "2026-11-21",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the fire and viper with the explicitly named island.",
+                "sourceReference": "Acts 28:1-6",
+                "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103"
+              },
+              {
+                "angle": "Connect the cry about the pot with the ingredient Elisha asks to have added. Describe only the narrative’s claim.",
+                "sourceReference": "2 Kings 4:38-41",
+                "sourceSha256": "cba45dd5cd3e14b21b2ece3c20546b8a44b83ba772ba787393fe5da9bf448072"
+              },
+              {
+                "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                "sourceReference": "John 4:25-30",
+                "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+              }
+            ],
+            "sourceReference": "Acts 28:1-6",
+            "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "explore a distinctive phrase through its immediate context",
+            "date": "2026-11-22",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "explore a distinctive phrase through its immediate context",
+                "sourceReference": "Matthew 11:23-30",
+                "sourceSha256": "c05d55d40cfe885ecd304787dd0f32d5c46a0e267a25c25d838397c8efe6e596"
+              },
+              {
+                "angle": "Connect the king’s feast and visible fingers with the surface on which the writing appears.",
+                "sourceReference": "Daniel 5:1-6",
+                "sourceSha256": "05f1a885c8362ac2ef3b1b3ede36afb0acb031a93c1d09595b6ad1afc9859ee9"
+              },
+              {
+                "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                "sourceReference": "Matthew 2:9-12",
+                "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+              }
+            ],
+            "sourceReference": "Matthew 11:23-30",
+            "sourceSha256": "c05d55d40cfe885ecd304787dd0f32d5c46a0e267a25c25d838397c8efe6e596",
+            "targetDifficulty": "easy"
+          }
+        ],
+        "endDate": "2026-11-22",
+        "learningGoal": "Read what the texts say about named places and encounters.",
+        "sourceCatalogVersion": "narrative-scenes-2026-10-29-v2",
+        "sourcePolicy": "Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.",
+        "startDate": "2026-11-16",
+        "theme": "Exile and return",
+        "version": "discovery-biblical-curriculum-v3",
+        "weekNumber": 4,
+        "sourceRepairs": [
+          {
+            "id": "13c0412f-e50b-47f3-bc93-db64dbf95fa1",
+            "manifestId": "narrative-source-repair-2026-10-29-evening",
+            "manifestSha256": "fcf02e9e10d89440e8c498719c361916006631b568b6a064b9c61a3b662b2a84",
+            "createdAt": "2026-10-29T21:59:56.957Z",
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "reason": "Read all six rejected drafts for the two exhausted dates. November 18 failed for overlapping entrance or cloth distractors and an uninteresting port lookup; November 20 failed for an arbitrary floor count, a source contract error and an occupational lookup. Replace these exhausted source sets with distinct named-person narratives or an explicit contrast that supports concise context and mutually exclusive choices. Preserve every rejection and keep both independent verifiers, the evidence floor and craft rubric unchanged.",
+            "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+            "changes": [
+              {
+                "date": "2026-11-18",
+                "weekStart": "2026-11-16",
+                "previousEpoch": 1,
+                "previousAttempts": 3,
+                "previousSources": [
+                  {
+                    "angle": "Connect recognizing Peter’s voice and leaving the gate shut in joy with the named servant girl.",
+                    "sourceReference": "Acts 12:12-17",
+                    "sourceSha256": "fddb2573f778aae620099694fbf1e6cf55933766a0275fc6f645a32007589d89"
+                  },
+                  {
+                    "angle": "Distinguish the port where Jonah finds a ship from his intended destination.",
+                    "sourceReference": "Jonah 1:1-6",
+                    "sourceSha256": "f53906a02d7b96eb9236c754171a4350fea427438cb648db497c4365717a1a27"
+                  },
+                  {
+                    "angle": "Connect the fragrant supper and anointing of Jesus's feet with what Mary uses to wipe them. Avoid adding cultural customs or monetary conversions.",
+                    "sourceReference": "John 12:1-8",
+                    "sourceSha256": "4be6550f7d7b0da2db929b9ceba0dd99a0ccb484b8effe44e089dba80a7e5133"
+                  }
+                ],
+                "sources": [
+                  {
+                    "sourceReference": "John 19:38-42",
+                    "sourceSha256": "d966be1a8c7177ea862b60b42907d485a090c9572219c18ef8186ff74eb88085",
+                    "angle": "Connect the earlier nighttime visit with bringing myrrh and aloes for Jesus’s burial to identify Nicodemus. Ask about the named person rather than a weight, and distinguish him from Joseph of Arimathaea, who asks Pilate for the body."
+                  },
+                  {
+                    "sourceReference": "John 20:24-29",
+                    "sourceSha256": "70752de61da211d78579ce6ebf5346905ef6a7809a27b804a0a393181c91d75c",
+                    "angle": "Connect absence from the earlier visit with the request to see nail marks and the later invitation to inspect Jesus’s hands and side, identifying Thomas. Do not claim that he actually touched Jesus; the excerpt records an invitation, not its acceptance."
+                  },
+                  {
+                    "sourceReference": "Acts 18:24-28",
+                    "sourceSha256": "e89257240c5e2592aec385e65f4526e21810676fd485041bc1d312edb91ba0bf",
+                    "angle": "Connect the eloquent Alexandrian teacher with Priscilla and Aquila explaining the way more accurately to identify Apollos. Do not identify a modern ethnicity or portray his earlier teaching as wholly false."
+                  }
+                ]
+              },
+              {
+                "date": "2026-11-20",
+                "weekStart": "2026-11-16",
+                "previousEpoch": 1,
+                "previousAttempts": 3,
+                "previousSources": [
+                  {
+                    "angle": "Connect Eutychus’s sleep at the window with the explicitly numbered story from which he falls.",
+                    "sourceReference": "Acts 20:7-12",
+                    "sourceSha256": "208df81159f81a0067da7850187a9f312081597aee07ab6833f1c15b054cfdac"
+                  },
+                  {
+                    "angle": "Connect Ruth’s return to her mother-in-law with the explicit quantity of barley.",
+                    "sourceReference": "Ruth 3:14-18",
+                    "sourceSha256": "13d4389e83ea3f53b17b9b3d1b905fae260594118caaeef6c8bbd4f62235cd8c"
+                  },
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  }
+                ],
+                "sources": [
+                  {
+                    "sourceReference": "1 Kings 19:1-8",
+                    "sourceSha256": "26b576aa8b4a90085bde13fd5bae763a7130eaf613af2de47a02e16cd67d14fc",
+                    "angle": "Connect fleeing Jezebel’s threat with being awakened by an angel to eat before the journey toward Horeb, identifying Elijah. Do not add a medical diagnosis, plant taxonomy or an isolated day count."
+                  },
+                  {
+                    "sourceReference": "Luke 10:38-42",
+                    "sourceSha256": "448c1dee07df3e8ee9e353fc6424bc9c6276807f7a764b1d64f336b957151574",
+                    "angle": "Use Martha’s complaint about serving alone and listening at Jesus’s feet as paired clues to identify her sister Mary. Do not conflate this Mary with other named women or add a village name absent from the excerpt."
+                  },
+                  {
+                    "sourceReference": "Mark 12:41-44",
+                    "sourceSha256": "6832b9aa35678b17fab7e40753a3549cffd9efbf354d428683863ff0dbed2f4c",
+                    "angle": "Connect the small contribution with Jesus’s explicit explanation that the poor widow gave all she had to live on while others gave from abundance. Ask about this stated contrast rather than isolated coin counts or inferred motives."
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "appliedAt": "2026-10-29T21:59:59.610Z"
+}

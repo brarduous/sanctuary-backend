@@ -1,0 +1,420 @@
+{
+  "id": "5c3db78f-c90c-46a0-8930-a64b6c803a12",
+  "recheckedAt": "2026-10-28T22:00:13.947Z",
+  "input": "contextual-john-editorial-draft.json",
+  "originalDraft": {
+    "id": "a0d6e697-6f98-4b15-83a1-a67dd3d872bc",
+    "slug": "tears-and-burial-wrappings",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In John, Jesus weeps before calling Lazarus out. What does the account say covers Lazarus’s face?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Spices"
+        },
+        {
+          "id": "option-2",
+          "text": "Oil"
+        },
+        {
+          "id": "option-3",
+          "text": "Cloth"
+        },
+        {
+          "id": "option-4",
+          "text": "Dust"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "burial-wrappings",
+          "text": "Lazarus comes out with his hands and feet bound and his face wrapped in a cloth.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "burial-wrappings",
+      "explanationClaimIds": [
+        "burial-wrappings"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Assistant-authored contextual revision, requiring the same independent evidence and craft checks as model-written candidates.",
+      "origin": "assistant_contextual_revision",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "pending",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "Cloth"
+    }
+  },
+  "noDatabaseWrites": true,
+  "decision": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v1",
+      "minimumScore": 6,
+      "score": 5,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 8,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question points to a clear scene (John 11:32–44) and a specific detail (what covered Lazarus's face). It asks for a concrete textual detail rather than an interpretation; distractors are plausible burial-related items so the question is a fair, answerable recall from the passage."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 5,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 1,
+            "fairChallenge": 1,
+            "choiceQuality": 1
+          },
+          "rationale": "Total: 5/8; reject on craft, not accuracy. Jesus's weeping and subsequent call provide two concise, grounded scene clues. The remaining burial wrapping is a worthwhile detail, but the task is a straightforward material lookup rather than a satisfying connection. All choices are materials, with spices and oil plausible burial-associated distractors; dust is substantially weaker. The heading, literary frame, and WEB-limited scope accurately represent the excerpt."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 90,
+    "candidateSha256": "d639cba802f446e539ceb6bb3e58fd9dd9f907afdeec8c57d40395f8ef657628",
+    "sourceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "8da3730fb16bfd1d8d060043b15ec4431a0efa503473128bd227491f6e069488",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "easy",
+      "score": 2
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "question_context_below_threshold",
+      "unresolved_or_complex_claim",
+      "question_craft_below_threshold"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "In John 11 Jesus weeps before calling Lazarus to come out of the tomb.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              }
+            ]
+          },
+          {
+            "text": "After Jesus calls, the dead man (Lazarus) comes out of the tomb bound hand and foot with wrappings and with his face wrapped around with a cloth.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "The question is asking what the account says covers Lazarus’s face (i.e., a detail described in John 11:32–44).",
+            "status": "supported",
+            "confidence": 90,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question points to a clear scene (John 11:32–44) and a specific detail (what covered Lazarus's face). It asks for a concrete textual detail rather than an interpretation; distractors are plausible burial-related items so the question is a fair, answerable recall from the passage."
+        },
+        "claims": [
+          {
+            "claimId": "burial-wrappings",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The passage does not say Lazarus's face was covered with spices. Verse 44 specifies a cloth, not spices.",
+            "evidence": [],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "The passage does not say Lazarus's face was covered with oil. Verse 44 specifies a cloth, not oil.",
+            "evidence": [],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "John 11:44 (WEB) explicitly says his face was wrapped around with a cloth.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "The passage does not say Lazarus's face was covered with dust. Verse 44 specifies a cloth, not dust.",
+            "evidence": [],
+            "confidence": 95
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Many readers know the Lazarus story, but the specific detail about the face covering is a less-remembered detail (familiarity=1). The answer appears directly in a single verse (evidenceNavigation=0) and requires direct identification (reasoningSteps=0). Distractors are plausible burial-related choices (distractorSimilarity=1). Overall this is an easy direct lookup from the passage."
+        },
+        "model": "gpt-5-mini-2025-08-07",
+        "requestedModel": "gpt-5-mini",
+        "responseId": "resp_090354b7cd8286b7016ae27056ec1c87d282b1d120827bf40b"
+      },
+      {
+        "solvedOptionId": "option-3",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Question craft scores 5/8, below the required 6/8. The scene is grounded, but answering requires only identifying a material explicitly named in one verse; the question does not develop a meaningful connection between Jesus's weeping and Lazarus's face covering.",
+          "Dust is a weak distractor for the specified face covering. The alternatives meet basic parallelism but do not all provide plausible competition."
+        ],
+        "questionPremises": [
+          {
+            "text": "The question concerns the Lazarus account in the cited passage of John.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "Jesus weeps in this scene.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              }
+            ]
+          },
+          {
+            "text": "Jesus calls Lazarus out.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              }
+            ]
+          },
+          {
+            "text": "Jesus's weeping precedes his call for Lazarus to come out.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 35,
+                "quote": "Jesus wept."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              }
+            ]
+          },
+          {
+            "text": "The account identifies a covering on Lazarus's face.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 1,
+          "fairChallenge": 1,
+          "choiceQuality": 1,
+          "rationale": "Total: 5/8; reject on craft, not accuracy. Jesus's weeping and subsequent call provide two concise, grounded scene clues. The remaining burial wrapping is a worthwhile detail, but the task is a straightforward material lookup rather than a satisfying connection. All choices are materials, with spices and oil plausible burial-associated distractors; dust is substantially weaker. The heading, literary frame, and WEB-limited scope accurately represent the excerpt."
+        },
+        "claims": [
+          {
+            "claimId": "burial-wrappings",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The excerpt does not identify spices as Lazarus's face covering.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "The excerpt does not identify oil as Lazarus's face covering.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "supported",
+            "rationale": "The account explicitly identifies cloth as the wrapping around his face when he emerges.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "The excerpt does not identify dust as Lazarus's face covering.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy (2/8). The story is recognizable, though the face covering is a less prominent detail. The answer is stated directly in one verse and requires no inference. The choices are alternative materials, but they are not closely competing descriptions."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0ee0f0a974495b5f016ae27056f1c887d2a1dfa5a45646310f"
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-5-mini-2025-08-07",
+      "responseId": "resp_090354b7cd8286b7016ae27056ec1c87d282b1d120827bf40b",
+      "usage": {
+        "inputTokens": 4491,
+        "outputTokens": 2366,
+        "totalTokens": 6857
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0ee0f0a974495b5f016ae27056f1c887d2a1dfa5a45646310f",
+      "usage": {
+        "inputTokens": 4491,
+        "outputTokens": 1191,
+        "totalTokens": 5682
+      }
+    }
+  ]
+}

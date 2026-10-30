@@ -1,0 +1,178 @@
+[
+  {
+    "id": "6af7e5a4-caeb-4817-a190-4b39534cf9ae",
+    "slug": "tears-before-the-tomb-opens",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "After Jesus wept in John's account, which man did he raise from the tomb?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Eutychus"
+        },
+        {
+          "id": "option-2",
+          "text": "Jairus"
+        },
+        {
+          "id": "option-3",
+          "text": "Lazarus"
+        },
+        {
+          "id": "option-4",
+          "text": "Bartimaeus"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Jesus called Lazarus from the tomb, and he emerged bound in wrappings with a cloth around his face.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "Lazarus",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v2.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v2",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0b7d500d9a8ae74a016ae26c37053087d2b72183c9291da87b",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_07b32e2b70ecf405016ae26c42d1c887d2bd53d74b2498e06e",
+        "resp_0cc3210c0b40a7c9016ae26c42dab087d2908efa22f7d4a50d"
+      ],
+      "policyVersion": "discovery-evidence-v2",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "2d1bce8c-1778-45cd-a3d0-0e52bce03fb3",
+    "slug": "after-wind-earthquake-and-fire",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In 1 Kings, after wind, earthquake, and fire, what sound did Elijah hear?",
+      "heading": "A detail in 1 Kings 19:9-13",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "a thunderous roar"
+        },
+        {
+          "id": "option-2",
+          "text": "a rushing wind"
+        },
+        {
+          "id": "option-3",
+          "text": "a still small voice"
+        },
+        {
+          "id": "option-4",
+          "text": "a crackling fire"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1KI19.htm",
+          "locator": "1 Kings 19:9-13",
+          "excerpt": "He came to a cave there, and camped there; and behold, Yahweh’s word came to him, and he said to him, “What are you doing here, Elijah?” He said, “I have been very jealous for Yahweh, the God of Armies; for the children of Israel have forsaken your covenant, thrown down your altars, and killed your prophets with the sword. I, even I only, am left; and they seek my life, to take it away.” He said, “Go out, and stand on the mountain before Yahweh.” Behold, Yahweh passed by, and a great and strong wind tore the mountains, and broke in pieces the rocks before Yahweh; but Yahweh was not in the wind. After the wind there was an earthquake; but Yahweh was not in the earthquake. After the earthquake a fire passed; but Yahweh was not in the fire. After the fire, there was a still small voice. When Elijah heard it, he wrapped his face in his mantle, went out, and stood in the entrance of the cave. Behold, a voice came to him, and said, “What are you doing here, Elijah?”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "After the fire came a still small voice.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "Elijah wrapped his face in his mantle and stood at the cave entrance.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "1 Kings 19:9-13",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "f3d43a58a490731a5e8486c8658d685c2bcb8ebeda0562ff197398e584227d43",
+      "answerText": "a still small voice",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "contextual-pilot-v2.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v2",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_097f14cc417ab088016ae26dc3a13887d282683b3ffa3e14bb",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0d6b27441c60066c016ae26dcda7d887d291a2296899d079af",
+        "resp_009660bb82fd87be016ae26dcda99c87d29a50ca8984a1f0f5"
+      ],
+      "policyVersion": "discovery-evidence-v2",
+      "evidenceScore": 100,
+      "questionCraftScore": 6
+    }
+  }
+]

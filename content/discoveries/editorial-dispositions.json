@@ -1,0 +1,20 @@
+{
+  "reviewer": "assistant editorial check, not a human approval",
+  "purpose": "Additional conservative holds after the automated pilot; these candidates are excluded from the default bank.",
+  "held": [
+    {
+      "id": "751ca20e-b842-4ac5-957a-b601f27dd419",
+      "slug": "care-beyond-the-roadside",
+      "reason": "Hold for narrower alternatives: broad additional expenses may include some of the other choices.",
+      "automatedReviewPassed": true,
+      "published": false
+    },
+    {
+      "id": "01d38cdb-252e-4e30-851f-a28256db16fe",
+      "slug": "an-unexpected-gardener",
+      "reason": "Hold for disjoint occupation choices: a hired servant can include a gardener.",
+      "automatedReviewPassed": true,
+      "published": false
+    }
+  ]
+}

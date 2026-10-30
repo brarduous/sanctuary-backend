@@ -1,0 +1,1531 @@
+{
+  "createdAt": "2026-10-29T21:24:48.895Z",
+  "method": "Live recheck of three previously passing source-bound drafts; diagnostic comparison, not human-labeled calibration.",
+  "models": [
+    "gpt-6.1-sol",
+    "gpt-6-astra"
+  ],
+  "noDatabaseWrites": true,
+  "results": [
+    {
+      "slug": "writer-v4-2026-11-02",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+        "heading": "A detail in Acts 18:1-4",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "Carpenters"
+          },
+          {
+            "id": "option-2",
+            "text": "Fishermen"
+          },
+          {
+            "id": "option-3",
+            "text": "Tent makers"
+          },
+          {
+            "id": "option-4",
+            "text": "Merchants"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/ACT18.htm",
+            "locator": "Acts 18:1-4",
+            "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Paul, Aquila, and Priscilla were tent makers.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "Paul reasoned in the synagogue every Sabbath.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Acts 18:1-4",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 6,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 6,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "Passes at 6/8. The named companions and shared living-and-working arrangement provide a concise scene with a causal clue. The connection between Paul's livelihood and his companionship is worth discovering. The question is clear but requires only direct identification. The alternatives are parallel occupations, with carpenters and merchants plausible occupational distractors, though not all alternatives are equally compelling for this scene."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 6,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "The shared household and work provide a concise scene, and the causal connection to a common trade supplies a second grounded clue. The connection between Paul's occupation and his association with the couple is worthwhile. Answering requires direct identification rather than a deeper connection. The occupational alternatives are distinct, with carpenters and merchants plausible distractors; fishermen is weaker for this particular scene. Total: 6/8, meeting the craft threshold."
+            }
+          ]
+        },
+        "accepted": true,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "fdda7d59cb8200b922650c55135b169a9776b5d350bafd1923d127341ab271bc",
+        "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "726739373b50df62ce7ca16c64e0d0be78c3513bba814c68c3accd3f09cdc00f",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 1
+        },
+        "difficultyTargetMet": false,
+        "reasons": [],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns the account identified as Acts 18:1–4.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              },
+              {
+                "text": "Aquila and Priscilla are the people Paul joined in this scene.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "They shared the same trade.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "Passes at 6/8. The named companions and shared living-and-working arrangement provide a concise scene with a causal clue. The connection between Paul's livelihood and his companionship is worth discovering. The question is clear but requires only direct identification. The alternatives are parallel occupations, with carpenters and merchants plausible occupational distractors, though not all alternatives are equally compelling for this scene."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify carpentry as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies tent making as the trade that explains Paul's living and working with them.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The passage identifies a manufacturing craft, not merchant activity, as their shared trade. Possible commercial activity is not stated and does not supply an alternative answer.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8). Paul's tent making is a familiar biblical detail, and the answer appears explicitly in one verse. The distractors are other occupations, but no inference or cross-passage navigation is needed."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_02563bc8a7c5b238016ae3b9892a2c87d28d80e4353602379c"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns Paul's encounter with Aquila and Priscilla in the Acts episode identified by the heading.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 1,
+                    "quote": "After these things Paul departed from Athens, and came to Corinth."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  }
+                ]
+              },
+              {
+                "text": "Paul lived with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Paul worked with Aquila and Priscilla.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "text": "Their shared trade explains Paul's living and working with them.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "The shared household and work provide a concise scene, and the causal connection to a common trade supplies a second grounded clue. The connection between Paul's occupation and his association with the couple is worthwhile. Answering requires direct identification rather than a deeper connection. The occupational alternatives are distinct, with carpenters and merchants plausible distractors; fishermen is weaker for this particular scene. Total: 6/8, meeting the craft threshold."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks."
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify carpentry as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The excerpt does not identify fishing as their shared trade.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies tent making as the trade that Paul shared with the couple.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 2,
+                    "quote": "He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 3,
+                    "quote": "and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The excerpt names a manufacturing craft, not merchant work. Possible commercial activity cannot establish merchants as the stated answer.",
+                "evidence": [],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 0,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (1/8). Paul's association with tent making is a familiar biblical detail, and the answer is directly stated in one verse. The distractors are other occupations, but distinguishing them requires no inference."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0d5865318574a42b016ae3b98924d487d2bee4145afeccd5d6"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_02563bc8a7c5b238016ae3b9892a2c87d28d80e4353602379c",
+          "usage": {
+            "inputTokens": 3059,
+            "outputTokens": 1498,
+            "totalTokens": 4557
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0d5865318574a42b016ae3b98924d487d2bee4145afeccd5d6",
+          "usage": {
+            "inputTokens": 3059,
+            "outputTokens": 1357,
+            "totalTokens": 4416
+          }
+        }
+      ]
+    },
+    {
+      "slug": "writer-v4-2026-11-03",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In Exodus, after the sister offered to find a nurse, whom did Pharaoh’s daughter promise wages?",
+        "heading": "A detail in Exodus 2:1-10",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "a Hebrew midwife"
+          },
+          {
+            "id": "option-2",
+            "text": "an Egyptian nurse"
+          },
+          {
+            "id": "option-3",
+            "text": "the child’s mother"
+          },
+          {
+            "id": "option-4",
+            "text": "the child’s sister"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/EXO02.htm",
+            "locator": "Exodus 2:1-10",
+            "excerpt": "A man of the house of Levi went and took a daughter of Levi as his wife. The woman conceived and bore a son. When she saw that he was a fine child, she hid him three months. When she could no longer hide him, she took a papyrus basket for him, and coated it with tar and with pitch. She put the child in it, and laid it in the reeds by the river’s bank. His sister stood far off, to see what would be done to him. Pharaoh’s daughter came down to bathe at the river. Her maidens walked along by the riverside. She saw the basket among the reeds, and sent her servant to get it. She opened it, and saw the child, and behold, the baby cried. She had compassion on him, and said, “This is one of the Hebrews’ children.” Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?” Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother. Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it. The child grew, and she brought him to Pharaoh’s daughter, and he became her son. She named him Moses, and said, “Because I drew him out of the water.”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "Pharaoh’s daughter promised the child’s mother wages for nursing him.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "When the child grew, she brought him to Pharaoh’s daughter.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "Exodus 2:1-10",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 3
+        }
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 7,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "Passes at 7/8. The sister's offer and the subsequent wage promise provide two grounded scene clues. The discovery that the child's own mother receives wages is an interesting reversal. Identifying the recipient requires a fair connection between adjacent statements without giving away the answer. The alternatives are distinct caregiving roles, with the sister and Hebrew midwife plausible distractors, though the Egyptian nurse is weaker given the request for a Hebrew woman."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 7,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 2,
+                "choiceQuality": 1
+              },
+              "rationale": "The nursing arrangement supplies a concise scene, and the sister's preceding offer supplies a grounded chronological clue. The mother receiving wages to nurse her own child is a worthwhile narrative connection. Identifying the recipient requires a fair connection between the mother's arrival and the ensuing promise, without giving away her identity. The sister and Hebrew midwife are plausible distractors; the Egyptian nurse is weaker because the sister explicitly proposes a Hebrew woman. Total: 7/8."
+            }
+          ]
+        },
+        "accepted": true,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "039498e69b76c0c9d65ee0aac63d337f76a0af1660347ed2af5bafdfba17ad89",
+        "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "76d065cd16225786103b81986bd2afc0c7968fdc68c96cd0f98758f4d45b275b",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "moderate",
+          "score": 4
+        },
+        "difficultyTargetMet": false,
+        "reasons": [],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns the childhood episode recorded in the supplied Exodus 2:1–10 passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "His sister stood far off, to see what would be done to him."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 5,
+                    "quote": "Pharaoh’s daughter came down to bathe at the river. Her maidens walked along by the riverside. She saw the basket among the reeds, and sent her servant to get it."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "The child grew, and she brought him to Pharaoh’s daughter, and he became her son. She named him Moses, and said, “Because I drew him out of the water.”"
+                  }
+                ]
+              },
+              {
+                "text": "The sister mentioned in the question is the child's sister.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  }
+                ]
+              },
+              {
+                "text": "The sister offered Pharaoh's daughter to find a nurse for the child.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  }
+                ]
+              },
+              {
+                "text": "Pharaoh's daughter promised someone wages for nursing the child.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              },
+              {
+                "text": "The promise of wages occurred after the sister's offer to find a nurse.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "Passes at 7/8. The sister's offer and the subsequent wage promise provide two grounded scene clues. The discovery that the child's own mother receives wages is an interesting reversal. Identifying the recipient requires a fair connection between adjacent statements without giving away the answer. The alternatives are distinct caregiving roles, with the sister and Hebrew midwife plausible distractors, though the Egyptian nurse is weaker given the request for a Hebrew woman."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "The child grew, and she brought him to Pharaoh’s daughter, and he became her son. She named him Moses, and said, “Because I drew him out of the water.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The recipient is identified as the child's mother, not as a Hebrew midwife. The passage does not assign her the occupation of midwife.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The sister offers to obtain a nurse from the Hebrew women and brings the child's mother; no Egyptian nurse receives the promise.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The sister calls the child's mother, and Pharaoh's daughter then addresses that woman with the promise of wages for nursing him.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The sister arranges the introduction; the mother she brings is the recipient of the wage promise.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 1,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (4/8). This is a less prominent detail in a familiar account. Solving it requires connecting the mother summoned in one verse with the woman addressed in the next. The distractors are plausible caregiving alternatives, but the text clearly distinguishes the recipient."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_0a6d968ff7dd089d016ae3b989220487d2be4110b79ce5475c"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The question concerns the infant-care episode in the cited Exodus passage.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              },
+              {
+                "text": "The sister mentioned is the child's sister.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 4,
+                    "quote": "His sister stood far off, to see what would be done to him."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  }
+                ]
+              },
+              {
+                "text": "The sister offered to find a nurse for Pharaoh's daughter.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  }
+                ]
+              },
+              {
+                "text": "Pharaoh's daughter promised someone wages for nursing the child.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              },
+              {
+                "text": "The promise of wages followed the sister's offer to find a nurse.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 2,
+              "choiceQuality": 1,
+              "rationale": "The nursing arrangement supplies a concise scene, and the sister's preceding offer supplies a grounded chronological clue. The mother receiving wages to nurse her own child is a worthwhile narrative connection. Identifying the recipient requires a fair connection between the mother's arrival and the ensuing promise, without giving away her identity. The sister and Hebrew midwife are plausible distractors; the Egyptian nurse is weaker because the sister explicitly proposes a Hebrew woman. Total: 7/8."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "The child grew, and she brought him to Pharaoh’s daughter, and he became her son. She named him Moses, and said, “Because I drew him out of the water.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify the recipient as a midwife. It specifically identifies the woman summoned as the child's mother.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "No Egyptian nurse is summoned or promised wages. The sister proposes a Hebrew woman and brings the child's mother.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 7,
+                    "quote": "Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?”"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The sister brings the child's mother, who is the recipient of Pharaoh's daughter's immediately following instructions and promise of wages.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The sister arranges the mother's arrival; the wages are promised to the mother for nursing, not to the sister for fetching her.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 9,
+                    "quote": "Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it."
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 1,
+              "reasoningSteps": 1,
+              "distractorSimilarity": 1,
+              "rationale": "Moderate (4/8). This is a less prominent detail within a recognizable account. Readers connect the mother's arrival with the next verse's promise by resolving its pronoun. The alternatives are plausible female participants or caregivers, but their roles are distinguishable from the text."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_0ad3d174b7b336d8016ae3b989212487d28f8d5af2898f013f"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_0a6d968ff7dd089d016ae3b989220487d2be4110b79ce5475c",
+          "usage": {
+            "inputTokens": 3686,
+            "outputTokens": 1364,
+            "totalTokens": 5050
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_0ad3d174b7b336d8016ae3b989212487d28f8d5af2898f013f",
+          "usage": {
+            "inputTokens": 3686,
+            "outputTokens": 1329,
+            "totalTokens": 5015
+          }
+        }
+      ]
+    },
+    {
+      "slug": "writer-v4-2026-11-04",
+      "content": {
+        "kind": "biblical_text",
+        "category": "Bible and context",
+        "prompt": "In 2 Kings, after Shaphan read the discovered book before the king, what did the king immediately do?",
+        "heading": "A detail in 2 Kings 22:8-13",
+        "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+        "choices": [
+          {
+            "id": "option-1",
+            "text": "covered his face"
+          },
+          {
+            "id": "option-2",
+            "text": "fell to his knees"
+          },
+          {
+            "id": "option-3",
+            "text": "tore his clothes"
+          },
+          {
+            "id": "option-4",
+            "text": "dismissed the scribe"
+          }
+        ],
+        "correctOptionId": "option-3",
+        "sources": [
+          {
+            "id": "passage",
+            "type": "scripture",
+            "title": "World English Bible (classic)",
+            "publisher": "eBible.org / World English Bible",
+            "url": "https://ebible.org/eng-web/2KI22.htm",
+            "locator": "2 Kings 22:8-13",
+            "excerpt": "Hilkiah the high priest said to Shaphan the scribe, “I have found the book of the law in Yahweh’s house.” Hilkiah delivered the book to Shaphan, and he read it. Shaphan the scribe came to the king, and brought the king word again, and said, “Your servants have emptied out the money that was found in the house, and have delivered it into the hands of the workmen who have the oversight of Yahweh’s house.” Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king. When the king had heard the words of the book of the law, he tore his clothes. The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying, “Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”",
+            "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+          }
+        ],
+        "claims": [
+          {
+            "id": "claim-1",
+            "text": "The king tore his clothes after hearing the book of the law.",
+            "sourceIds": [
+              "passage"
+            ]
+          },
+          {
+            "id": "claim-2",
+            "text": "He then commanded five men to inquire of Yahweh.",
+            "sourceIds": [
+              "passage"
+            ]
+          }
+        ],
+        "answerClaimId": "claim-1",
+        "explanationClaimIds": [
+          "claim-1",
+          "claim-2"
+        ],
+        "scriptureReference": "2 Kings 22:8-13",
+        "translation": "WEB",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        }
+      },
+      "verification": {
+        "policyVersion": "discovery-evidence-v3",
+        "copyPolicyVersion": "discovery-concise-v2",
+        "questionCraft": {
+          "policyVersion": "discovery-question-craft-v1",
+          "minimumScore": 6,
+          "score": 5,
+          "assessments": [
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 5,
+              "accepted": false,
+              "dimensions": {
+                "context": 2,
+                "interest": 1,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "The discovered book and Shaphan's reading provide a concise scene with a second grounded clue. The king's response is worthwhile, but the task remains direct identification rather than a satisfying connection. Covering his face and kneeling are plausible alternative reactions; dismissing the scribe is weaker. Total: 5/8, so the candidate fails the craft threshold despite its factual accuracy."
+            },
+            {
+              "policyVersion": "discovery-question-craft-v1",
+              "score": 6,
+              "accepted": true,
+              "dimensions": {
+                "context": 2,
+                "interest": 2,
+                "fairChallenge": 1,
+                "choiceQuality": 1
+              },
+              "rationale": "Passes at 6/8. The discovered book and Shaphan's reading provide two grounded contextual clues. The king's dramatic response to hearing the law is a meaningful action worth discovering. The question is clear but requires direct identification rather than a further connection. The alternatives are distinct reactions; covering his face and kneeling are plausible distractors, while dismissing the scribe is weaker."
+            }
+          ]
+        },
+        "accepted": false,
+        "minimumScore": 95,
+        "evidenceScore": 100,
+        "candidateSha256": "d0a81fc8232acc7f3092e14161baaca531e301f37fd1fb4462dbadd4fedda8b6",
+        "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858",
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+        "questionFingerprint": "6cc49bf50c2c8c9dd7213969a0fb12b8551c34ef3a7b9056213337308d4bb0a8",
+        "difficulty": {
+          "rubricVersion": "discovery-difficulty-v1",
+          "level": "easy",
+          "score": 2
+        },
+        "difficultyTargetMet": false,
+        "reasons": [
+          "unresolved_or_complex_claim",
+          "question_craft_below_threshold"
+        ],
+        "reviews": [
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [
+              "Question craft scores 5/8, below the required 6/8 threshold. The question is accurate but primarily tests direct recall, and the distractors are not uniformly plausible."
+            ],
+            "questionPremises": [
+              {
+                "text": "The episode concerns a discovered book of the law.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Hilkiah the high priest said to Shaphan the scribe, “I have found the book of the law in Yahweh’s house.” Hilkiah delivered the book to Shaphan, and he read it."
+                  }
+                ]
+              },
+              {
+                "text": "Shaphan read that book before the king.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king."
+                  }
+                ]
+              },
+              {
+                "text": "The king heard the book being read.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              },
+              {
+                "text": "The narrative identifies an immediate reaction to hearing the book.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 1,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "The discovered book and Shaphan's reading provide a concise scene with a second grounded clue. The king's response is worthwhile, but the task remains direct identification rather than a satisfying connection. Covering his face and kneeling are plausible alternative reactions; dismissing the scribe is weaker. Total: 5/8, so the candidate fails the craft threshold despite its factual accuracy."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "“Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "The passage does not identify covering his face as the king's reaction.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "The passage does not say that the king fell to his knees.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The narrative explicitly identifies tearing his clothes as the king's reaction upon hearing the book.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "Dismissal is not the stated reaction. Shaphan is subsequently included among those commanded to inquire of Yahweh.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "“Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”"
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). This is a less familiar detail within a recognizable account, but the answer appears directly in one verse and requires no inference. The alternatives are distinct possible reactions rather than closely related textual details."
+            },
+            "model": "gpt-6.1-sol",
+            "requestedModel": "gpt-6.1-sol",
+            "responseId": "resp_00f02f8268dfa60f016ae3b98928e487d290217e706d1babb2"
+          },
+          {
+            "solvedOptionId": "option-3",
+            "questionAccuracy": 100,
+            "scopeAccuracy": 100,
+            "explanationCoverage": 100,
+            "simpleTextualFact": true,
+            "unresolvedIssues": [],
+            "questionPremises": [
+              {
+                "text": "The episode is narrated in the cited passage of 2 Kings.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              },
+              {
+                "text": "The book had been discovered before it was read before the king.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 8,
+                    "quote": "Hilkiah the high priest said to Shaphan the scribe, “I have found the book of the law in Yahweh’s house.” Hilkiah delivered the book to Shaphan, and he read it."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king."
+                  }
+                ]
+              },
+              {
+                "text": "Shaphan read the discovered book before the king.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 10,
+                    "quote": "Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king."
+                  }
+                ]
+              },
+              {
+                "text": "The narrative reports the king's immediate reaction upon hearing the book.",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              }
+            ],
+            "questionCraft": {
+              "context": 2,
+              "interest": 2,
+              "fairChallenge": 1,
+              "choiceQuality": 1,
+              "rationale": "Passes at 6/8. The discovered book and Shaphan's reading provide two grounded contextual clues. The king's dramatic response to hearing the law is a meaningful action worth discovering. The question is clear but requires direct identification rather than a further connection. The alternatives are distinct reactions; covering his face and kneeling are plausible distractors, while dismissing the scribe is weaker."
+            },
+            "claims": [
+              {
+                "claimId": "claim-1",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ]
+              },
+              {
+                "claimId": "claim-2",
+                "status": "supported",
+                "confidence": 100,
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "“Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”"
+                  }
+                ]
+              }
+            ],
+            "options": [
+              {
+                "optionId": "option-1",
+                "status": "not_supported",
+                "rationale": "Covering his face is not reported as the king's reaction.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-2",
+                "status": "not_supported",
+                "rationale": "Falling to his knees is not reported as the king's reaction.",
+                "evidence": [],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-3",
+                "status": "supported",
+                "rationale": "The passage explicitly identifies tearing his clothes as the king's response upon hearing the book of the law.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 11,
+                    "quote": "When the king had heard the words of the book of the law, he tore his clothes."
+                  }
+                ],
+                "confidence": 100
+              },
+              {
+                "optionId": "option-4",
+                "status": "not_supported",
+                "rationale": "The passage does not report dismissing the scribe as the immediate reaction. Shaphan is subsequently included among those commissioned to inquire of Yahweh.",
+                "evidence": [
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 12,
+                    "quote": "The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying,"
+                  },
+                  {
+                    "sourceId": "passage",
+                    "verseNumber": 13,
+                    "quote": "“Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”"
+                  }
+                ],
+                "confidence": 100
+              }
+            ],
+            "difficulty": {
+              "familiarity": 1,
+              "evidenceNavigation": 0,
+              "reasoningSteps": 0,
+              "distractorSimilarity": 1,
+              "rationale": "Easy (2/8). This is a recognizable account with a somewhat less familiar detail. One verse directly supplies the answer, with no inference required. The distractors are alternative personal reactions rather than unrelated categories."
+            },
+            "model": "gpt-6-astra",
+            "requestedModel": "gpt-6-astra",
+            "responseId": "resp_058e2ab6640ca681016ae3b98929e487d2b45465e1028c2037"
+          }
+        ]
+      },
+      "responses": [
+        {
+          "model": "gpt-6.1-sol",
+          "responseId": "resp_00f02f8268dfa60f016ae3b98928e487d290217e706d1babb2",
+          "usage": {
+            "inputTokens": 3627,
+            "outputTokens": 1237,
+            "totalTokens": 4864
+          }
+        },
+        {
+          "model": "gpt-6-astra",
+          "responseId": "resp_058e2ab6640ca681016ae3b98929e487d2b45465e1028c2037",
+          "usage": {
+            "inputTokens": 3627,
+            "outputTokens": 1178,
+            "totalTokens": 4805
+          }
+        }
+      ]
+    }
+  ]
+}

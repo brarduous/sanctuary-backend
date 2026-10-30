@@ -1,0 +1,40 @@
+{
+  "verifiedAt": "2026-10-30T13:44:10.645Z",
+  "approvedBy": "Brandon Jones: explicit deploy and regenerate request in this session",
+  "ticket": "https://github.com/brarduous/sanctuary-backend/pull/17",
+  "backup": {
+    "backups": null,
+    "physical_backup_data": {
+      "earliest_physical_backup_date_unix": 1792762979,
+      "latest_physical_backup_date_unix": 1793367779
+    },
+    "pitr_enabled": true,
+    "region": "us-east-1",
+    "walg_enabled": true
+  },
+  "rehearsal": {
+    "target": "gjwvtqdfqprzcpgqrfhr",
+    "verifiedAt": "2026-10-30T13:43:47.564Z",
+    "before": {
+      "accepts_v2": true,
+      "authenticated_execute": false,
+      "devotionals": 39,
+      "reviews": 0,
+      "schedules": 0
+    },
+    "rollback": {
+      "accepts_v2": false,
+      "authenticated_execute": false,
+      "devotionals": 39,
+      "reviews": 0,
+      "schedules": 0
+    },
+    "reapply": {
+      "accepts_v2": true,
+      "authenticated_execute": false,
+      "devotionals": 39,
+      "reviews": 0,
+      "schedules": 0
+    }
+  }
+}

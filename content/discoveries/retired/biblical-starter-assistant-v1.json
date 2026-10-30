@@ -1,0 +1,2270 @@
+[
+  {
+    "id": "1f28f594-18f0-55af-860b-45169f41436e",
+    "slug": "the-sign-in-the-cloud",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Genesis 9, what sign marks God’s covenant?",
+      "heading": "The sign in the cloud",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Rainbow"
+        },
+        {
+          "id": "option-2",
+          "text": "Star"
+        },
+        {
+          "id": "option-3",
+          "text": "Pillar"
+        },
+        {
+          "id": "option-4",
+          "text": "Lamp"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/GEN09.htm",
+          "locator": "Genesis 9:13-16",
+          "excerpt": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth. When I bring a cloud over the earth, that the rainbow will be seen in the cloud, I will remember my covenant, which is between me and you and every living creature of all flesh, and the waters will no more become a flood to destroy all flesh. The rainbow will be in the cloud. I will look at it, that I may remember the everlasting covenant between God and every living creature of all flesh that is on the earth.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Genesis links the rainbow to God’s promise that floodwaters will no longer destroy all flesh.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Genesis 9:13-16",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "d3ec94851b96b69642794e4c4e04dde6e9b5901fa2da5adf32a156d71a90d870",
+      "answerText": "rainbow",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "61582f31-0eb9-530b-8439-fc2b00706965",
+    "slug": "languages-at-babel",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Genesis 11, what happens to Babel’s language?",
+      "heading": "Languages at Babel",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Unified"
+        },
+        {
+          "id": "option-2",
+          "text": "Confused"
+        },
+        {
+          "id": "option-3",
+          "text": "Translated"
+        },
+        {
+          "id": "option-4",
+          "text": "Recorded"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/GEN11.htm",
+          "locator": "Genesis 11:7-9",
+          "excerpt": "Come, let’s go down, and there confuse their language, that they may not understand one another’s speech.” So Yahweh scattered them abroad from there on the surface of all the earth. They stopped building the city. Therefore its name was called Babel, because there Yahweh confused the language of all the earth. From there, Yahweh scattered them abroad on the surface of all the earth.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Confused speech breaks the builders’ shared language, and the people scatter from Babel.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Genesis 11:7-9",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "7fb7c97b5a825e1953f671744179a672c32cac127041ce608fca4bef5087bb6d",
+      "answerText": "confused",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "4c14c008-2e43-524b-b654-bb916793cf4d",
+    "slug": "the-burning-bush",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Exodus 3, what burns without being consumed?",
+      "heading": "The burning bush",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Tree stump"
+        },
+        {
+          "id": "option-2",
+          "text": "Basket"
+        },
+        {
+          "id": "option-3",
+          "text": "Bush"
+        },
+        {
+          "id": "option-4",
+          "text": "Tent"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/EXO03.htm",
+          "locator": "Exodus 3:1-5",
+          "excerpt": "Now Moses was keeping the flock of Jethro, his father-in-law, the priest of Midian, and he led the flock to the back of the wilderness, and came to God’s mountain, to Horeb. Yahweh’s angel appeared to him in a flame of fire out of the middle of a bush. He looked, and behold, the bush burned with fire, and the bush was not consumed. Moses said, “I will go now, and see this great sight, why the bush is not burned.” When Yahweh saw that he came over to see, God called to him out of the middle of the bush, and said, “Moses! Moses!” He said, “Here I am.” He said, “Don’t come close. Take off your sandals, for the place you are standing on is holy ground.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "A burning bush draws Moses closer. Then God calls his name from within it.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Exodus 3:1-5",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "a2d5c4b04ab59428cf8bbacc16c1e7709631057c923e3d504969830297e470e3",
+      "answerText": "bush",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "b0509774-1ed5-5356-ba0e-b2113467bba2",
+    "slug": "a-question-in-the-wilderness",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Exodus 16, what do the Israelites ask about their unfamiliar food?",
+      "heading": "A question in the wilderness",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Where are we?"
+        },
+        {
+          "id": "option-2",
+          "text": "Who sent this?"
+        },
+        {
+          "id": "option-3",
+          "text": "When do we leave?"
+        },
+        {
+          "id": "option-4",
+          "text": "What is it?"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/EXO16.htm",
+          "locator": "Exodus 16:14-15",
+          "excerpt": "When the dew that lay had gone, behold, on the surface of the wilderness was a small round thing, small as the frost on the ground. When the children of Israel saw it, they said to one another, “What is it?” For they didn’t know what it was. Moses said to them, “It is the bread which Yahweh has given you to eat.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "“What is it?” is their first reaction. Moses identifies the unfamiliar food as bread from God.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Exodus 16:14-15",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "5a6411cc9b1ea901cb0efc0674e0967a0d821d7ffb56927035fe3a4f12a0277d",
+      "answerText": "What is it?",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "d151aa19-d914-5556-9041-f4fb58eac593",
+    "slug": "ruth-s-commitment",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Ruth 1, who hears Ruth say, “Your people will be my people”?",
+      "heading": "Ruth’s commitment",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Naomi"
+        },
+        {
+          "id": "option-2",
+          "text": "Esther"
+        },
+        {
+          "id": "option-3",
+          "text": "Deborah"
+        },
+        {
+          "id": "option-4",
+          "text": "Miriam"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/RUT01.htm",
+          "locator": "Ruth 1:14-19",
+          "excerpt": "They lifted up their voices and wept again; then Orpah kissed her mother-in-law, but Ruth stayed with her. She said, “Behold, your sister-in-law has gone back to her people and to her god. Follow your sister-in-law.” Ruth said, “Don’t urge me to leave you, and to return from following you, for where you go, I will go; and where you stay, I will stay. Your people will be my people, and your God my God. Where you die, I will die, and there I will be buried. May Yahweh do so to me, and more also, if anything but death parts you and me.” When Naomi saw that she was determined to go with her, she stopped urging her. So they both went until they came to Bethlehem. When they had come to Bethlehem, all the city was excited about them, and they asked, “Is this Naomi?”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Ruth makes her pledge to Naomi, promising to share her journey, people, and God.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Ruth 1:14-19",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "093e571b520262643be6ec60ee6dc9561ace92cfaba06779545b4f50c2b67345",
+      "answerText": "Naomi",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "d0607f18-22e4-52d1-88ba-535c821b84c7",
+    "slug": "david-s-sling",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to 1 Samuel 17, what does David launch from his sling?",
+      "heading": "David’s sling",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Spear"
+        },
+        {
+          "id": "option-2",
+          "text": "Stone"
+        },
+        {
+          "id": "option-3",
+          "text": "Arrow"
+        },
+        {
+          "id": "option-4",
+          "text": "Staff"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1SA17.htm",
+          "locator": "1 Samuel 17:49-50",
+          "excerpt": "David put his hand in his bag, took a stone, and slung it, and struck the Philistine in his forehead. The stone sank into his forehead, and he fell on his face to the earth. So David prevailed over the Philistine with a sling and with a stone, and struck the Philistine, and killed him; but there was no sword in the hand of David.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "David strikes the Philistine with a stone from his bag; the account emphasizes his sling and stone.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "1 Samuel 17:49-50",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "e53c6c529c913827b0dada3ac1f6f0a92e360b11acc2fb74ba077d019c4df665",
+      "answerText": "stone",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "48853874-1c3e-5b9e-8f23-4a6cde655045",
+    "slug": "solomon-s-request",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to 1 Kings 3, what kind of heart does Solomon request?",
+      "heading": "Solomon’s request",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Fearless"
+        },
+        {
+          "id": "option-2",
+          "text": "Unchanging"
+        },
+        {
+          "id": "option-3",
+          "text": "Understanding"
+        },
+        {
+          "id": "option-4",
+          "text": "Joyful"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1KI03.htm",
+          "locator": "1 Kings 3:9-12",
+          "excerpt": "Give your servant therefore an understanding heart to judge your people, that I may discern between good and evil; for who is able to judge this great people of yours?” This request pleased the Lord, that Solomon had asked this thing. God said to him, “Because you have asked this thing, and have not asked for yourself long life, nor have you asked for riches for yourself, nor have you asked for the life of your enemies, but have asked for yourself understanding to discern justice; behold, I have done according to your word. Behold, I have given you a wise and understanding heart; so that there has been no one like you before you, and after you none will arise like you.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Solomon asks for an understanding heart to judge fairly and distinguish good from evil.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "1 Kings 3:9-12",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "2a5b5b585c6c134ac30a2168d0137faa8785146257eef133c2884698298c5dfa",
+      "answerText": "understanding",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "08fd6e4b-211f-54d1-ae6a-e27e4bd71a56",
+    "slug": "elijah-listens",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to 1 Kings 19, what follows the fire?",
+      "heading": "Elijah listens",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Trumpet blast"
+        },
+        {
+          "id": "option-2",
+          "text": "Rushing river"
+        },
+        {
+          "id": "option-3",
+          "text": "Song of soldiers"
+        },
+        {
+          "id": "option-4",
+          "text": "Still small voice"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/1KI19.htm",
+          "locator": "1 Kings 19:11-13",
+          "excerpt": "He said, “Go out, and stand on the mountain before Yahweh.” Behold, Yahweh passed by, and a great and strong wind tore the mountains, and broke in pieces the rocks before Yahweh; but Yahweh was not in the wind. After the wind there was an earthquake; but Yahweh was not in the earthquake. After the earthquake a fire passed; but Yahweh was not in the fire. After the fire, there was a still small voice. When Elijah heard it, he wrapped his face in his mantle, went out, and stood in the entrance of the cave. Behold, a voice came to him, and said, “What are you doing here, Elijah?”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "After wind, earthquake, and fire comes a still small voice. Elijah covers his face and leaves the cave.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "1 Kings 19:11-13",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "45b12b200c77192660f885ab43e66b5eca246deadbd965923821abf4fbcb5e18",
+      "answerText": "still small voice",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "5f319039-a377-56da-98a4-10ad5b3d7f00",
+    "slug": "naaman-and-the-jordan",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to 2 Kings 5, in which river must Naaman wash?",
+      "heading": "Naaman and the Jordan",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Jordan"
+        },
+        {
+          "id": "option-2",
+          "text": "Nile"
+        },
+        {
+          "id": "option-3",
+          "text": "Euphrates"
+        },
+        {
+          "id": "option-4",
+          "text": "Tigris"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/2KI05.htm",
+          "locator": "2 Kings 5:10-14",
+          "excerpt": "Elisha sent a messenger to him, saying, “Go and wash in the Jordan seven times, and your flesh shall come again to you, and you shall be clean.” But Naaman was angry, and went away, and said, “Behold, I thought, ‘He will surely come out to me, and stand, and call on the name of Yahweh his God, and wave his hand over the place, and heal the leper.’ Aren’t Abanah and Pharpar, the rivers of Damascus, better than all the waters of Israel? Couldn’t I wash in them, and be clean?” So he turned and went away in a rage. His servants came near, and spoke to him, and said, “My father, if the prophet had asked you do some great thing, wouldn’t you have done it? How much rather then, when he says to you, ‘Wash, and be clean?’ ” Then went he down, and dipped himself seven times in the Jordan, according to the saying of the man of God; and his flesh was restored like the flesh of a little child, and he was clean.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Elisha sends Naaman to the Jordan seven times. After initially objecting, Naaman follows the instruction and is cleansed.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "2 Kings 5:10-14",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "b3062b2c2fb03506480f54de99c99c930ab1e76ddf50c1e50392305aad4ee7f0",
+      "answerText": "Jordan",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "fa7b1777-3f58-5539-8f69-0e0b48f6ed2f",
+    "slug": "the-opening-of-psalm-23",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Psalms 23, what image opens the poem?",
+      "heading": "The opening of Psalm 23",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Builder"
+        },
+        {
+          "id": "option-2",
+          "text": "Shepherd"
+        },
+        {
+          "id": "option-3",
+          "text": "Potter"
+        },
+        {
+          "id": "option-4",
+          "text": "Sailor"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/PSA023.htm",
+          "locator": "Psalms 23:1-3",
+          "excerpt": "Yahweh is my shepherd: I shall lack nothing. He makes me lie down in green pastures. He leads me beside still waters. He restores my soul. He guides me in the paths of righteousness for his name’s sake.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The shepherd image leads into green pastures, still waters, and guidance along the right paths.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Psalms 23:1-3",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "3aac8558a3528e254073ef2f3cbc7cdedd571e2ba0b312029f812da12bfdfec2",
+      "answerText": "shepherd",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "6ff9c495-c4fe-5de5-a3fa-5f7d5aa6ff63",
+    "slug": "a-lamp-for-the-path",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Psalms 119, what is God’s word compared to?",
+      "heading": "A lamp for the path",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Shield of bronze"
+        },
+        {
+          "id": "option-2",
+          "text": "Crown"
+        },
+        {
+          "id": "option-3",
+          "text": "Lamp"
+        },
+        {
+          "id": "option-4",
+          "text": "Seed"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/PSA119.htm",
+          "locator": "Psalms 119:105",
+          "excerpt": "Your word is a lamp to my feet, and a light for my path.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "God’s word becomes a lamp for the speaker’s feet and a light for the path.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Psalms 119:105",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "6bef518237c67747c2807509e2b6e95a39e1d188fc4cadc5eac9eecb5f161a20",
+      "answerText": "lamp",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "c54e22d3-21ab-58a9-8828-515f915ab8ae",
+    "slug": "a-gentle-answer",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Proverbs 15, what kind of answer turns away wrath?",
+      "heading": "A gentle answer",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Delayed"
+        },
+        {
+          "id": "option-2",
+          "text": "Loud"
+        },
+        {
+          "id": "option-3",
+          "text": "Lengthy"
+        },
+        {
+          "id": "option-4",
+          "text": "Gentle"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/PRO15.htm",
+          "locator": "Proverbs 15:1",
+          "excerpt": "A gentle answer turns away wrath, but a harsh word stirs up anger.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The proverb pairs a gentle answer with calming wrath and harsh words with stirring up anger.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Proverbs 15:1",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "fb8e13f204c89d95aa846d0313e55bee7927f85950bebe070b515ea1d850ff0c",
+      "answerText": "gentle",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "e4f5535e-3d49-5eea-993e-20f7cb7619ac",
+    "slug": "the-wording-of-jonah",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Jonah 1, which description names the creature that swallows Jonah?",
+      "heading": "The wording of Jonah",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Great fish"
+        },
+        {
+          "id": "option-2",
+          "text": "Whale shark"
+        },
+        {
+          "id": "option-3",
+          "text": "Sea turtle"
+        },
+        {
+          "id": "option-4",
+          "text": "Dolphin"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JON01.htm",
+          "locator": "Jonah 1:17",
+          "excerpt": "Yahweh prepared a great fish to swallow up Jonah, and Jonah was in the belly of the fish three days and three nights.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The verse calls the creature a “great fish,” without naming a biological species.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Jonah 1:17",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "ea7c3fb32f261764ba7b9f4b04af9500131e43740a269fd4817329c6a051c489",
+      "answerText": "great fish",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "68aec63b-b9ef-551f-be96-321b57bdc429",
+    "slug": "three-actions-in-micah",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Micah 6, what joins doing justice and loving kindness?",
+      "heading": "Three actions in Micah",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Build a palace"
+        },
+        {
+          "id": "option-2",
+          "text": "Walk humbly"
+        },
+        {
+          "id": "option-3",
+          "text": "Win a battle"
+        },
+        {
+          "id": "option-4",
+          "text": "Count the stars"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MIC06.htm",
+          "locator": "Micah 6:8",
+          "excerpt": "He has shown you, O man, what is good. What does Yahweh require of you, but to act justly, to love mercy, and to walk humbly with your God?",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Walking humbly with God completes the verse’s trio alongside justice and kindness.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Micah 6:8",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "e2a9de5d32f1a69cb2c97c12eb10a1fe34421b90fb2865bfe852d0527ae2b3ca",
+      "answerText": "walk humbly",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "205ea144-0bff-5827-9cb6-d603d541c381",
+    "slug": "matthew-s-stated-location",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Matthew 2, where is Jesus born?",
+      "heading": "Matthew’s stated location",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Nazareth"
+        },
+        {
+          "id": "option-2",
+          "text": "Jericho"
+        },
+        {
+          "id": "option-3",
+          "text": "Bethlehem"
+        },
+        {
+          "id": "option-4",
+          "text": "Capernaum"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MAT02.htm",
+          "locator": "Matthew 2:1-2",
+          "excerpt": "Now when Jesus was born in Bethlehem of Judea in the days of King Herod, behold, wise men from the east came to Jerusalem, saying, “Where is he who is born King of the Jews? For we saw his star in the east, and have come to worship him.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Matthew places the birth in Bethlehem of Judea; the wise men first arrive in Jerusalem.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Matthew 2:1-2",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "063feb83b743ed3bd5c2b56ddc307c4f491229c4ea9682e746b2f2be7f808ea0",
+      "answerText": "Bethlehem",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "8e89626e-215b-5d34-94b4-1f51486e253c",
+    "slug": "the-gifts-matthew-names",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Matthew 2, which gift joins gold and myrrh?",
+      "heading": "The gifts Matthew names",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Silver"
+        },
+        {
+          "id": "option-2",
+          "text": "Cinnamon"
+        },
+        {
+          "id": "option-3",
+          "text": "Olive oil"
+        },
+        {
+          "id": "option-4",
+          "text": "Frankincense"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MAT02.htm",
+          "locator": "Matthew 2:11",
+          "excerpt": "They came into the house and saw the young child with Mary, his mother, and they fell down and worshiped him. Opening their treasures, they offered to him gifts: gold, frankincense, and myrrh.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Matthew lists gold, frankincense, and myrrh. The verse leaves the number of visitors unstated.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Matthew 2:11",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "b3ed8d71e4f17b40dd5284773baee34b1ee2776a0fe01053f5990224a0cea328",
+      "answerText": "frankincense",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "948a0a1e-29cb-507e-a162-7c3cdbebdf80",
+    "slug": "a-beatitude-about-peace",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Matthew 5, which group will be called children of God?",
+      "heading": "A beatitude about peace",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Peacemakers"
+        },
+        {
+          "id": "option-2",
+          "text": "Tax collectors"
+        },
+        {
+          "id": "option-3",
+          "text": "Stonecutters"
+        },
+        {
+          "id": "option-4",
+          "text": "Merchants"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MAT05.htm",
+          "locator": "Matthew 5:9",
+          "excerpt": "Blessed are the peacemakers, for they shall be called children of God.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "This beatitude blesses peacemakers and says they will be called children of God.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Matthew 5:9",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "68925315724ccf07841b423f7a2da18843b61097ad88c7d8d6863e9695ebc14b",
+      "answerText": "peacemakers",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "338c96ea-e591-57c6-8bca-6b134741c873",
+    "slug": "the-flowers-in-matthew",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Matthew 6, which flowers does Jesus ask people to consider?",
+      "heading": "The flowers in Matthew",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Roses"
+        },
+        {
+          "id": "option-2",
+          "text": "Lilies"
+        },
+        {
+          "id": "option-3",
+          "text": "Poppies"
+        },
+        {
+          "id": "option-4",
+          "text": "Tulips"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MAT06.htm",
+          "locator": "Matthew 6:28-29",
+          "excerpt": "Why are you anxious about clothing? Consider the lilies of the field, how they grow. They don’t toil, neither do they spin, yet I tell you that even Solomon in all his glory was not dressed like one of these.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Jesus points to the lilies, then compares their clothing with Solomon’s glory.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Matthew 6:28-29",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "957644caba1a8bec81a343880ea774bb913dd7cefb7179af5c015f5795d543da",
+      "answerText": "lilies",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "fbe22b43-6e3f-5829-87f6-8cb8e7572259",
+    "slug": "the-brothers-by-the-sea",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Mark 1, which brothers are casting a net?",
+      "heading": "The brothers by the sea",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "James and John"
+        },
+        {
+          "id": "option-2",
+          "text": "Moses and Aaron"
+        },
+        {
+          "id": "option-3",
+          "text": "Simon and Andrew"
+        },
+        {
+          "id": "option-4",
+          "text": "Cain and Abel"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MRK01.htm",
+          "locator": "Mark 1:16-18",
+          "excerpt": "Passing along by the sea of Galilee, he saw Simon and Andrew, the brother of Simon, casting a net into the sea, for they were fishermen. Jesus said to them, “Come after me, and I will make you into fishers for men.” Immediately they left their nets, and followed him.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Simon and Andrew are fishing when Jesus calls them. They leave their nets and follow him.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Mark 1:16-18",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "09689295c7775f9a621d4b782e2087aae53f90bbea2bc75e3d5e207a4f117bca",
+      "answerText": "Simon and Andrew",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "4fbd7fea-c775-56ed-9f99-81d68a7b0c95",
+    "slug": "the-name-mark-supplies",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Mark 10, who is the blind beggar near Jericho?",
+      "heading": "The name Mark supplies",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Zacchaeus"
+        },
+        {
+          "id": "option-2",
+          "text": "Nicodemus"
+        },
+        {
+          "id": "option-3",
+          "text": "Barnabas"
+        },
+        {
+          "id": "option-4",
+          "text": "Bartimaeus"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/MRK10.htm",
+          "locator": "Mark 10:46-47",
+          "excerpt": "They came to Jericho. As he went out from Jericho, with his disciples and a great multitude, the son of Timaeus, Bartimaeus, a blind beggar, was sitting by the road. When he heard that it was Jesus the Nazarene, he began to cry out, and say, “Jesus, you son of David, have mercy on me!”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Mark gives Bartimaeus’s name and identifies him as the son of Timaeus.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Mark 10:46-47",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "ef265d1e0862cd7218e2ce85283bcb47ec79ca8430d7f26b63a79b160edef125",
+      "answerText": "Bartimaeus",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "23d19bcc-ede8-5012-916f-4ceb13c0dfe1",
+    "slug": "the-messenger-in-luke",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Luke 1, which angel is sent to Mary?",
+      "heading": "The messenger in Luke",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Gabriel"
+        },
+        {
+          "id": "option-2",
+          "text": "Michael"
+        },
+        {
+          "id": "option-3",
+          "text": "Raphael"
+        },
+        {
+          "id": "option-4",
+          "text": "Uriel"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK01.htm",
+          "locator": "Luke 1:26-27",
+          "excerpt": "Now in the sixth month, the angel Gabriel was sent from God to a city of Galilee named Nazareth, to a virgin pledged to be married to a man whose name was Joseph, of David’s house. The virgin’s name was Mary.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Gabriel is sent to Nazareth, where Luke introduces Mary as pledged to Joseph.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Luke 1:26-27",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "6d485aeb3cdb17634e14fc4d90b75332cb069e0f08d3ccac55342546b76d38a0",
+      "answerText": "Gabriel",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "e8f6a29d-8ace-5bf1-8788-02269138ed72",
+    "slug": "the-field-in-luke-s-account",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Luke 2, who watches a flock when an angel appears?",
+      "heading": "The field in Luke’s account",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Priests"
+        },
+        {
+          "id": "option-2",
+          "text": "Shepherds"
+        },
+        {
+          "id": "option-3",
+          "text": "Wise men"
+        },
+        {
+          "id": "option-4",
+          "text": "Roman soldiers"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK02.htm",
+          "locator": "Luke 2:8-12",
+          "excerpt": "There were shepherds in the same country staying in the field, and keeping watch by night over their flock. Behold, an angel of the Lord stood by them, and the glory of the Lord shone around them, and they were terrified. The angel said to them, “Don’t be afraid, for behold, I bring you good news of great joy which will be to all the people. For there is born to you today, in David’s city, a Savior, who is Christ the Lord. This is the sign to you: you will find a baby wrapped in strips of cloth, lying in a feeding trough.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The good news reaches shepherds keeping watch over their flock at night.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Luke 2:8-12",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "9ceb091d508bc4502df62fcd6bac8e22cf3cdae45f1588a4a472ae049b391a09",
+      "answerText": "shepherds",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "ebb6a4dc-f999-504d-b575-0443bb4329ae",
+    "slug": "the-traveler-who-stops",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Luke 10, who helps the injured traveler in Jesus’ parable?",
+      "heading": "The traveler who stops",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Priest"
+        },
+        {
+          "id": "option-2",
+          "text": "Levite"
+        },
+        {
+          "id": "option-3",
+          "text": "Samaritan"
+        },
+        {
+          "id": "option-4",
+          "text": "Innkeeper"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK10.htm",
+          "locator": "Luke 10:33-35",
+          "excerpt": "But a certain Samaritan, as he traveled, came where he was. When he saw him, he was moved with compassion, came to him, and bound up his wounds, pouring on oil and wine. He set him on his own animal, brought him to an inn, and took care of him. On the next day, when he departed, he took out two denarii, gave them to the host, and said to him, ‘Take care of him. Whatever you spend beyond that, I will repay you when I return.’",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The Samaritan bandages the traveler’s wounds, takes him to an inn, and pays for his care.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Luke 10:33-35",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "4def00602a19199e5c3130c85b29bf8aa34a3914b17efae271cf11efdbd4dd82",
+      "answerText": "Samaritan",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "de363574-c3aa-5b16-9cdd-6e47be126c53",
+    "slug": "zacchaeus-above-the-crowd",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Luke 19, which tree does Zacchaeus climb?",
+      "heading": "Zacchaeus above the crowd",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Olive"
+        },
+        {
+          "id": "option-2",
+          "text": "Cedar"
+        },
+        {
+          "id": "option-3",
+          "text": "Palm"
+        },
+        {
+          "id": "option-4",
+          "text": "Sycamore"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK19.htm",
+          "locator": "Luke 19:2-4",
+          "excerpt": "There was a man named Zacchaeus. He was a chief tax collector, and he was rich. He was trying to see who Jesus was, and couldn’t because of the crowd, because he was short. He ran on ahead, and climbed up into a sycamore tree to see him, for he was going to pass that way.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Zacchaeus runs ahead and climbs a sycamore to see Jesus.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Luke 19:2-4",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "c6534a75c0c72da7a43f3f119ce8307c3986a29b223f90eedf8f49c70fdb144e",
+      "answerText": "sycamore",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "f7209ed4-0444-5a62-8505-41a6cf464e05",
+    "slug": "the-road-in-luke-24",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Luke 24, which village are two disciples traveling toward?",
+      "heading": "The road in Luke 24",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Emmaus"
+        },
+        {
+          "id": "option-2",
+          "text": "Bethany"
+        },
+        {
+          "id": "option-3",
+          "text": "Cana"
+        },
+        {
+          "id": "option-4",
+          "text": "Nain"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/LUK24.htm",
+          "locator": "Luke 24:13-16",
+          "excerpt": "Behold, two of them were going that very day to a village named Emmaus, which was sixty stadia from Jerusalem. They talked with each other about all of these things which had happened. While they talked and questioned together, Jesus himself came near, and went with them. But their eyes were kept from recognizing him.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The travelers are heading to Emmaus when Jesus joins them, initially unrecognized.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Luke 24:13-16",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "2b6b8d13fabea3fb91592ef08e9c6119c5ee0c33504b97aa9a033544d192dd6b",
+      "answerText": "Emmaus",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "d8655ae5-8007-5069-8ee1-a58504c792f1",
+    "slug": "the-wedding-john-describes",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to John 2, where is the wedding?",
+      "heading": "The wedding John describes",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Bethlehem"
+        },
+        {
+          "id": "option-2",
+          "text": "Cana"
+        },
+        {
+          "id": "option-3",
+          "text": "Jerusalem"
+        },
+        {
+          "id": "option-4",
+          "text": "Bethany"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN02.htm",
+          "locator": "John 2:1-3",
+          "excerpt": "The third day, there was a wedding in Cana of Galilee. Jesus’ mother was there. Jesus also was invited, with his disciples, to the wedding. When the wine ran out, Jesus’ mother said to him, “They have no wine.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "John locates the wedding in Cana of Galilee, with Jesus, his mother, and his disciples attending.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "John 2:1-3",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "e74f0bf05ef40478c6e3057146dc60d813b82dd2b6f2446e10b7d1a14e60693d",
+      "answerText": "Cana",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "16499b3d-35ec-5e3c-9617-f93afbd2360a",
+    "slug": "a-visitor-by-night",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to John 3, which Pharisee visits Jesus at night?",
+      "heading": "A visitor by night",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Joseph"
+        },
+        {
+          "id": "option-2",
+          "text": "Gamaliel"
+        },
+        {
+          "id": "option-3",
+          "text": "Nicodemus"
+        },
+        {
+          "id": "option-4",
+          "text": "Saul"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN03.htm",
+          "locator": "John 3:1-2",
+          "excerpt": "Now there was a man of the Pharisees named Nicodemus, a ruler of the Jews. The same came to him by night, and said to him, “Rabbi, we know that you are a teacher come from God, for no one can do these signs that you do, unless God is with him.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Nicodemus comes after dark. John identifies him as both a Pharisee and a Jewish ruler.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "John 3:1-2",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "3d88daf2f3d33a5bc2f6aea22e229611ed6378527361947826dd69bddd7661f3",
+      "answerText": "Nicodemus",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "f4dd32e2-77c0-50fd-b3d9-0675f20150d4",
+    "slug": "the-well-in-john-4",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to John 4, which town is near Jacob’s well?",
+      "heading": "The well in John 4",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Jericho"
+        },
+        {
+          "id": "option-2",
+          "text": "Tiberias"
+        },
+        {
+          "id": "option-3",
+          "text": "Bethlehem"
+        },
+        {
+          "id": "option-4",
+          "text": "Sychar"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN04.htm",
+          "locator": "John 4:5-7",
+          "excerpt": "So he came to a city of Samaria, called Sychar, near the parcel of ground that Jacob gave to his son, Joseph. Jacob’s well was there. Jesus therefore, being tired from his journey, sat down by the well. It was about the sixth hour. A woman of Samaria came to draw water. Jesus said to her, “Give me a drink.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "John places Jacob’s well by Sychar, where Jesus asks a Samaritan woman for a drink.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "John 4:5-7",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "d434424ef70e0ae5ed9a5031a94d063d91bde9ed9a3ab9e01807528452e9e366",
+      "answerText": "Sychar",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "abee2858-8ed2-5faf-a15b-a24b1e0e43ee",
+    "slug": "a-brief-verse-in-john",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to John 11, what does Jesus do in verse 35?",
+      "heading": "A brief verse in John",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Wept"
+        },
+        {
+          "id": "option-2",
+          "text": "Slept"
+        },
+        {
+          "id": "option-3",
+          "text": "Wrote"
+        },
+        {
+          "id": "option-4",
+          "text": "Sang"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:35",
+          "excerpt": "Jesus wept.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "The verse records one simple, moving action: Jesus weeps.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "John 11:35",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "37c0a7cae6955a79b8c7dc2663fea265e804a7e88d69ca011fa0bcc83beb521d",
+      "answerText": "wept",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "1decc0fb-7792-5221-a044-278fb717aedc",
+    "slug": "mary-s-first-impression",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to John 20, who does Mary initially think Jesus is?",
+      "heading": "Mary’s first impression",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Soldier"
+        },
+        {
+          "id": "option-2",
+          "text": "Gardener"
+        },
+        {
+          "id": "option-3",
+          "text": "Priest"
+        },
+        {
+          "id": "option-4",
+          "text": "Merchant"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN20.htm",
+          "locator": "John 20:15-16",
+          "excerpt": "Jesus said to her, “Woman, why are you weeping? Who are you looking for?” She, supposing him to be the gardener, said to him, “Sir, if you have carried him away, tell me where you have laid him, and I will take him away.” Jesus said to her, “Mary.” She turned and said to him, “Rabboni!” which is to say, “Teacher!”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Mary mistakes Jesus for the gardener, then responds when he calls her by name.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "John 20:15-16",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "2dbac779b0ed0063ed1a50621b69b31b0e98e910872f9e030ed8514bc442b1e8",
+      "answerText": "gardener",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "3848f51f-f000-530a-acff-02b5821051dc",
+    "slug": "the-day-named-in-acts",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Acts 2, on which day are the disciples gathered?",
+      "heading": "The day named in Acts",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Passover"
+        },
+        {
+          "id": "option-2",
+          "text": "Sabbath"
+        },
+        {
+          "id": "option-3",
+          "text": "Pentecost"
+        },
+        {
+          "id": "option-4",
+          "text": "Day of Atonement"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT02.htm",
+          "locator": "Acts 2:1-4",
+          "excerpt": "Now when the day of Pentecost had come, they were all with one accord in one place. Suddenly there came from the sky a sound like the rushing of a mighty wind, and it filled all the house where they were sitting. Tongues like fire appeared and were distributed to them, and one sat on each of them. They were all filled with the Holy Spirit, and began to speak with other languages, as the Spirit gave them the ability to speak.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Acts opens this scene on Pentecost, followed by a sound from heaven and tongues like fire.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Acts 2:1-4",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "3da34aefee1e86c8513d579581ad22f5e51852b00289947ff206ef755ab798ee",
+      "answerText": "Pentecost",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "0021af81-a442-5b6b-944d-38b7a26eb0f9",
+    "slug": "the-disciple-in-damascus",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Acts 9, which Damascus disciple receives a vision?",
+      "heading": "The disciple in Damascus",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Philip"
+        },
+        {
+          "id": "option-2",
+          "text": "Stephen"
+        },
+        {
+          "id": "option-3",
+          "text": "Silas"
+        },
+        {
+          "id": "option-4",
+          "text": "Ananias"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT09.htm",
+          "locator": "Acts 9:10-12",
+          "excerpt": "Now there was a certain disciple at Damascus named Ananias. The Lord said to him in a vision, “Ananias!” He said, “Behold, it’s me, Lord.” The Lord said to him, “Arise, and go to the street which is called Straight, and inquire in the house of Judah for one named Saul, a man of Tarsus. For behold, he is praying, and in a vision he has seen a man named Ananias coming in and laying his hands on him, that he might receive his sight.”",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Ananias is sent to find Saul at Judas’s house on Straight Street.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Acts 9:10-12",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "9213007f84fe4539dcaf371c2501cc0460f9b1e0b13ab091f70af85532dd2183",
+      "answerText": "Ananias",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "e9e05f61-5026-5ed2-ba09-6407908a5520",
+    "slug": "the-name-in-acts-11",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Acts 11, where are disciples first called Christians?",
+      "heading": "The name in Acts 11",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Antioch"
+        },
+        {
+          "id": "option-2",
+          "text": "Jerusalem"
+        },
+        {
+          "id": "option-3",
+          "text": "Rome"
+        },
+        {
+          "id": "option-4",
+          "text": "Athens"
+        }
+      ],
+      "correctOptionId": "option-1",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT11.htm",
+          "locator": "Acts 11:25-26",
+          "excerpt": "Barnabas went out to Tarsus to look for Saul. When he had found him, he brought him to Antioch. For a whole year they were gathered together with the assembly, and taught many people. The disciples were first called Christians in Antioch.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Acts places the first use of “Christians” for the disciples in Antioch, where Barnabas brings Saul.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Acts 11:25-26",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "12db2a945e875dc042ae9066842e43559061db7de4548897e26354ca639a5f83",
+      "answerText": "Antioch",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "7e368721-e100-572d-9a4a-542812e25bcf",
+    "slug": "lydia-s-trade",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Acts 16, who sells purple goods?",
+      "heading": "Lydia’s trade",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Priscilla"
+        },
+        {
+          "id": "option-2",
+          "text": "Lydia"
+        },
+        {
+          "id": "option-3",
+          "text": "Phoebe"
+        },
+        {
+          "id": "option-4",
+          "text": "Martha"
+        }
+      ],
+      "correctOptionId": "option-2",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT16.htm",
+          "locator": "Acts 16:14-15",
+          "excerpt": "A certain woman named Lydia, a seller of purple, of the city of Thyatira, one who worshiped God, heard us. The Lord opened her heart to listen to the things which were spoken by Paul. When she and her household were baptized, she begged us, saying, “If you have judged me to be faithful to the Lord, come into my house and stay.” So she persuaded us.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Lydia is a seller of purple from Thyatira. After her baptism, she welcomes Paul’s group to her home.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Acts 16:14-15",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "f88d2a2aa11fe6ffd08f14484e735c42ba7581a0475ac199b662c32b365cf793",
+      "answerText": "Lydia",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "990f5914-2364-5eea-9b3f-8897e56289b3",
+    "slug": "a-shared-trade-in-acts",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Acts 18, what trade do Paul, Aquila, and Priscilla share?",
+      "heading": "A shared trade in Acts",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Carpenters"
+        },
+        {
+          "id": "option-2",
+          "text": "Potters"
+        },
+        {
+          "id": "option-3",
+          "text": "Tent makers"
+        },
+        {
+          "id": "option-4",
+          "text": "Fishermen"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT18.htm",
+          "locator": "Acts 18:1-3",
+          "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Their shared trade brings Paul, Aquila, and Priscilla together to work in Corinth.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Acts 18:1-3",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "cad9f97c7ef42a7974e71844ce38fedb4f57edd75db5eca626faf95bedc79c75",
+      "answerText": "tent makers",
+      "humanReviewStatus": "pending"
+    }
+  },
+  {
+    "id": "7c3e5a0f-e7e3-5565-aa0b-d129e6a4ba83",
+    "slug": "phoebe-s-community",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "According to Romans 16, which church is Phoebe associated with?",
+      "heading": "Phoebe’s community",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Corinth"
+        },
+        {
+          "id": "option-2",
+          "text": "Ephesus"
+        },
+        {
+          "id": "option-3",
+          "text": "Philippi"
+        },
+        {
+          "id": "option-4",
+          "text": "Cenchreae"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ROM16.htm",
+          "locator": "Romans 16:1-2",
+          "excerpt": "I commend to you Phoebe, our sister, who is a servant of the assembly that is at Cenchreae, that you receive her in the Lord, in a way worthy of the saints, and that you assist her in whatever matter she may need from you, for she herself also has been a helper of many, and of my own self.",
+          "rights": "World English Bible text is public domain. Explanation is an original paraphrase; preserve the reviewed translation when checking evidence."
+        }
+      ],
+      "claims": [
+        {
+          "id": "account",
+          "text": "Paul commends Phoebe of Cenchreae and asks his readers to welcome and assist her.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "account",
+      "explanationClaimIds": [
+        "account"
+      ],
+      "scriptureReference": "Romans 16:1-2",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Exact passage extracted from the app’s bundled WEB; correct answer text is present. This checks textual integrity, not interpretation.",
+      "evidenceSha256": "962dbd25d8b2c3790b73aecbc952ebad21e742bbebe403f0aa214ab5964a1776",
+      "answerText": "Cenchreae",
+      "humanReviewStatus": "pending"
+    }
+  }
+]

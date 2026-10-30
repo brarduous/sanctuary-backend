@@ -7,6 +7,7 @@ const {
   notificationReport,
   processExpoReceipts,
   updateTimeZone,
+  registerCapabilities,
 } = require('../services/notificationCalendar');
 
 const router = express.Router();
@@ -16,6 +17,10 @@ const hasCronSecret = (req) => {
   const authorization = req.headers.authorization || '';
   return Boolean(configured) && authorization === `Bearer ${configured}`;
 };
+
+router.post('/capabilities',authenticateUser,async(req,res,next)=>{
+  try {res.json(await registerCapabilities(req.user.id,req.body));}catch(error){next(error);}
+});
 
 router.post('/timezone', authenticateUser, async (req, res, next) => {
   try {
@@ -71,7 +76,7 @@ router.get('/report', async (req, res, next) => {
 
 router.patch('/settings/:category', async (req, res, next) => {
   if (!hasCronSecret(req)) return res.status(401).json({ error: 'Unauthorized' });
-  const allowedCategories = new Set(['devotional', 'advice', 'news', 'church']);
+  const allowedCategories = new Set(['devotional', 'advice', 'news', 'church','discovery']);
   const allowedStages = new Set(['dry_run', 'internal', '10', '50', '100']);
   if (!allowedCategories.has(req.params.category)) return res.status(400).json({ error: 'Invalid category' });
   const values = {};

@@ -1,0 +1,60 @@
+{
+  "id": "writer-contract-repair-2026-10-29",
+  "mode": "writer_revision",
+  "previousWriterVersion": "sanctuary-trivia-writer-v3",
+  "writerVersion": "sanctuary-trivia-writer-v4",
+  "reason": "The v3 writer prompt included instructions to rate craft/difficulty, causing review commentary to leak into claims and repeated factoid-budget failures. Writer v4 removes grading tasks, constrains the strict schema to two factual sentences of fourteen words each, and preserves all v3 evidence/craft thresholds. Three source-bound live pilot drafts passed; six adversarial controls were rejected. This is one explicit policy repair for three exhausted v3 dates, not an automatic retry reset or factual approval.",
+  "days": [
+    {
+      "date": "2026-11-02",
+      "sources": [
+        [
+          "Acts 18:1-4",
+          "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials."
+        ],
+        [
+          "John 4:25-30",
+          "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location."
+        ],
+        [
+          "Matthew 2:9-12",
+          "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors."
+        ]
+      ]
+    },
+    {
+      "date": "2026-11-03",
+      "sources": [
+        [
+          "Exodus 2:1-10",
+          "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names."
+        ],
+        [
+          "Luke 24:28-35",
+          "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt."
+        ],
+        [
+          "Daniel 6:16-23",
+          "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation."
+        ]
+      ]
+    },
+    {
+      "date": "2026-11-04",
+      "sources": [
+        [
+          "2 Kings 22:8-13",
+          "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt."
+        ],
+        [
+          "Acts 27:27-32",
+          "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count."
+        ],
+        [
+          "Acts 16:11-15",
+          "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material."
+        ]
+      ]
+    }
+  ]
+}

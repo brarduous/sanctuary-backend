@@ -1,0 +1,2274 @@
+{
+  "id": "386077a2-f69b-451b-856d-2f5821bd459a",
+  "createdAt": "2026-10-28T21:33:40.132Z",
+  "policy": "discovery-evidence-v2",
+  "writerVersion": "sanctuary-trivia-writer-v2",
+  "batchSha": "a5c09c0dd788003c41d1826d6679bfe372d9bc110fec5d7456037af50cacaa38",
+  "models": {
+    "generator": "gpt-5-mini",
+    "reviewers": [
+      "gpt-5-mini",
+      "gpt-6-astra"
+    ]
+  },
+  "totalTokens": 76273,
+  "noDatabaseWrites": true,
+  "items": [
+    {
+      "slug": "the-sign-in-the-cloud",
+      "sourceReference": "Genesis 9:10-21",
+      "targetDifficulty": "moderate",
+      "id": "084fb1f0-ae5a-4fa1-a44d-82bcbdb30596",
+      "status": "exhausted",
+      "attempts": [
+        {
+          "number": 1,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:33:40.134Z",
+          "reasons": [
+            "generation_or_verification_failed"
+          ],
+          "errorStatus": null,
+          "completedAt": "2026-10-28T21:34:11.940Z"
+        },
+        {
+          "number": 2,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:34:11.943Z",
+          "generated": {
+            "model": "gpt-5-mini-2025-08-07",
+            "responseId": "resp_016e387cb86c7cfe016ae26a54067087d2a91caa44bad1ca75",
+            "usage": {
+              "inputTokens": 2454,
+              "outputTokens": 4574,
+              "totalTokens": 7028
+            }
+          },
+          "content": {
+            "kind": "biblical_text",
+            "category": "Bible and context",
+            "prompt": "In Genesis' covenant after the flood, what did God set in the cloud as a sign?",
+            "heading": "A detail in Genesis 9:10-21",
+            "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+            "choices": [
+              {
+                "id": "option-1",
+                "text": "I set my rainbow in the cloud"
+              },
+              {
+                "id": "option-2",
+                "text": "I will establish my covenant with you"
+              },
+              {
+                "id": "option-3",
+                "text": "I will remember my covenant"
+              },
+              {
+                "id": "option-4",
+                "text": "When I bring a cloud over the earth"
+              }
+            ],
+            "correctOptionId": "option-1",
+            "sources": [
+              {
+                "id": "passage",
+                "type": "scripture",
+                "title": "World English Bible (classic)",
+                "publisher": "eBible.org / World English Bible",
+                "url": "https://ebible.org/eng-web/GEN09.htm",
+                "locator": "Genesis 9:10-21",
+                "excerpt": "and with every living creature that is with you: the birds, the livestock, and every animal of the earth with you, of all that go out of the ship, even every animal of the earth. I will establish my covenant with you: All flesh will not be cut off any more by the waters of the flood. There will never again be a flood to destroy the earth.\u201d God said, \u201cThis is the token of the covenant which I make between me and you and every living creature that is with you, for perpetual generations: I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth. When I bring a cloud over the earth, that the rainbow will be seen in the cloud, I will remember my covenant, which is between me and you and every living creature of all flesh, and the waters will no more become a flood to destroy all flesh. The rainbow will be in the cloud. I will look at it, that I may remember the everlasting covenant between God and every living creature of all flesh that is on the earth.\u201d God said to Noah, \u201cThis is the token of the covenant which I have established between me and all flesh that is on the earth.\u201d The sons of Noah who went out from the ship were Shem, Ham, and Japheth. Ham is the father of Canaan. These three were the sons of Noah, and from these the whole earth was populated. Noah began to be a farmer, and planted a vineyard. He drank of the wine and got drunk. He was uncovered within his tent.",
+                "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+              }
+            ],
+            "claims": [
+              {
+                "id": "c1",
+                "text": "I set my rainbow in the cloud",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "c2",
+                "text": "I will establish my covenant with you",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "c3",
+                "text": "it will be a sign of a covenant between me and the earth",
+                "sourceIds": [
+                  "passage"
+                ]
+              }
+            ],
+            "answerClaimId": "c1",
+            "explanationClaimIds": [
+              "c1",
+              "c3"
+            ],
+            "scriptureReference": "Genesis 9:10-21",
+            "translation": "WEB"
+          },
+          "reviewResponses": [
+            {
+              "model": "gpt-5-mini-2025-08-07",
+              "responseId": "resp_0eebd00ec58d06ea016ae26a7b4f1c87d2af6c0edff9d9363b",
+              "usage": {
+                "inputTokens": 3160,
+                "outputTokens": 2678,
+                "totalTokens": 5838
+              }
+            },
+            {
+              "model": "gpt-6-astra",
+              "responseId": "resp_01b919db14c88cdf016ae26a7b6d3887d2ad1e9dcee71656b5",
+              "usage": {
+                "inputTokens": 3160,
+                "outputTokens": 1385,
+                "totalTokens": 4545
+              }
+            }
+          ],
+          "verification": {
+            "policyVersion": "discovery-evidence-v2",
+            "copyPolicyVersion": "discovery-concise-v2",
+            "questionCraft": {
+              "policyVersion": "discovery-question-craft-v1",
+              "minimumScore": 6,
+              "score": 4,
+              "assessments": [
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 6,
+                  "accepted": true,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 1,
+                    "choiceQuality": 2
+                  },
+                  "rationale": "The question pinpoints Genesis 9:10-21 (clear scene and covenant-after-flood context). It's a straightforward factual detail (moderate interest). The correct answer is directly stated in the passage, so it's not a hard challenge; distractors are plausible statements from the same passage, giving good distractor quality."
+                },
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 4,
+                  "accepted": false,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 1,
+                    "choiceQuality": 0
+                  },
+                  "rationale": "The post-flood covenant scene and cloud clue provide concise, grounded context. The covenant sign is a worthwhile detail, but the task remains familiar direct identification rather than a richer connection. It is clearly answerable. However, the alternatives are mismatched speech fragments rather than competing signs, so the correct choice stands out by answer type. Total: 4/8; reject."
+                }
+              ]
+            },
+            "accepted": false,
+            "minimumScore": 95,
+            "evidenceScore": 90,
+            "candidateSha256": "8ac05e42c297d46a6386022f10baa6bc21425e7f3016f4873a655f182fda99ea",
+            "sourceSha256": "d0ac33dd39868293ed6db787ac70f4e0cd31a37ec293b816fae1d8ceaad3ed4b",
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+            "questionFingerprint": "5f089a5b67f3922aa35d8601875b092bef24c710debce905620a2267a2f38efc",
+            "difficulty": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "level": "easy",
+              "score": 1
+            },
+            "difficultyTargetMet": false,
+            "reasons": [
+              "explanationCoverage_below_threshold",
+              "option_below_threshold",
+              "unresolved_or_complex_claim",
+              "question_craft_below_threshold"
+            ],
+            "reviews": [
+              {
+                "solvedOptionId": "option-1",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 90,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [],
+                "questionPremises": [
+                  {
+                    "text": "There is a covenant made after the flood between God and Noah (and every living creature).",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I will establish my covenant with you: All flesh will not be cut off any more by the waters of the flood."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God declares a token (sign) of the covenant.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "This is the token of the covenant which I make between me and you and every living creature that is with you, for perpetual generations:"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God sets something in the cloud as that sign.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The passage includes the clause 'When I bring a cloud over the earth,' linking the cloud with God's remembering the covenant.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "When I bring a cloud over the earth, that the rainbow will be seen in the cloud, I will remember my covenant,"
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 1,
+                  "choiceQuality": 2,
+                  "rationale": "The question pinpoints Genesis 9:10-21 (clear scene and covenant-after-flood context). It's a straightforward factual detail (moderate interest). The correct answer is directly stated in the passage, so it's not a hard challenge; distractors are plausible statements from the same passage, giving good distractor quality."
+                },
+                "claims": [
+                  {
+                    "claimId": "c1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "c2",
+                    "status": "supported",
+                    "confidence": 95,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I will establish my covenant with you:"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "c3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "This exactly matches the stated sign in the passage.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 90,
+                    "rationale": "The phrase 'I will establish my covenant with you' appears in the passage, but that is the declaration of the covenant itself, not the thing God 'set in the cloud as a sign.' Thus it is not the answer to the question asked.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "not_supported",
+                    "confidence": 90,
+                    "rationale": "The promise 'I will remember my covenant' appears in the passage in the context of seeing the rainbow in the cloud, but it is an action God will take when the sign appears, not the sign God 'set in the cloud.' Therefore it does not answer the question.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 95,
+                    "rationale": "This is a clause of the passage ('When I bring a cloud over the earth') describing the circumstance when the sign will be visible, not the sign itself. It does not answer 'what did God set in the cloud as a sign?'.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 1,
+                  "rationale": "This is an easy, direct lookup: the phrase 'I set my rainbow in the cloud' is stated explicitly in Genesis 9:13. Distractors are nearby phrases in the same passage but the sign itself is named plainly, so only minimal navigation and reasoning are required."
+                },
+                "model": "gpt-5-mini-2025-08-07",
+                "requestedModel": "gpt-5-mini",
+                "responseId": "resp_0eebd00ec58d06ea016ae26a7b4f1c87d2af6c0edff9d9363b"
+              },
+              {
+                "solvedOptionId": "option-1",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [
+                  "Reject on question craft: the choices are not parallel answers to what God set in the cloud. Only option-1 identifies an object; the others describe establishing or remembering a covenant, or bringing a cloud.",
+                  "Question craft totals 4/8, below the required 6/8, and choiceQuality is 0. Textual accuracy does not remedy these weaknesses."
+                ],
+                "questionPremises": [
+                  {
+                    "text": "The cited Genesis passage describes a covenant made by God.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "God said, \u201cThis is the token of the covenant which I make between me and you and every living creature that is with you, for perpetual generations:"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The covenant scene takes place after the flood.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "of all that go out of the ship, even every animal of the earth."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "All flesh will not be cut off any more by the waters of the flood. There will never again be a flood to destroy the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God says that he sets something in the cloud.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "What God sets in the cloud serves as a covenant sign.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 1,
+                  "choiceQuality": 0,
+                  "rationale": "The post-flood covenant scene and cloud clue provide concise, grounded context. The covenant sign is a worthwhile detail, but the task remains familiar direct identification rather than a richer connection. It is clearly answerable. However, the alternatives are mismatched speech fragments rather than competing signs, so the correct choice stands out by answer type. Total: 4/8; reject."
+                },
+                "claims": [
+                  {
+                    "claimId": "c1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "c2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I will establish my covenant with you"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "c3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "it will be a sign of a covenant between me and the earth"
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "This uniquely identifies the rainbow as what God sets in the cloud as a covenant sign.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "I set my rainbow in the cloud, and it will be a sign of a covenant between me and the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "This statement occurs in the excerpt but describes establishing the covenant, not what God sets in the cloud.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "This statement describes remembering the covenant, not the object placed in the cloud.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "This clause describes bringing a cloud over the earth, not setting a sign in that cloud.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 0,
+                  "rationale": "Easy (0/8). The rainbow covenant is likely widely familiar to a general adult Christian audience. One sentence directly supplies the answer, no additional connection is needed, and the distractors do not offer competing objects or signs. The heading and scope accurately frame this as a textual detail in the supplied Genesis passage, without historical or doctrinal inference."
+                },
+                "model": "gpt-6-astra",
+                "requestedModel": "gpt-6-astra",
+                "responseId": "resp_01b919db14c88cdf016ae26a7b6d3887d2ad1e9dcee71656b5"
+              }
+            ]
+          },
+          "reasons": [
+            "explanationCoverage_below_threshold",
+            "option_below_threshold",
+            "unresolved_or_complex_claim",
+            "question_craft_below_threshold"
+          ],
+          "completedAt": "2026-10-28T21:35:20.244Z"
+        },
+        {
+          "number": 3,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:35:20.247Z",
+          "reasons": [
+            "provider_invalid_request"
+          ],
+          "errorStatus": 400,
+          "completedAt": "2026-10-28T21:35:46.741Z"
+        }
+      ]
+    },
+    {
+      "slug": "languages-at-babel",
+      "sourceReference": "Genesis 11:4-15",
+      "targetDifficulty": "moderate",
+      "id": "b988b7d9-b190-4c5d-9c89-370376c17f8f",
+      "status": "exhausted",
+      "attempts": [
+        {
+          "number": 1,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:33:40.134Z",
+          "reasons": [
+            "generation_or_verification_failed"
+          ],
+          "errorStatus": null,
+          "completedAt": "2026-10-28T21:34:28.167Z"
+        },
+        {
+          "number": 2,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:34:28.170Z",
+          "generated": {
+            "model": "gpt-5-mini-2025-08-07",
+            "responseId": "resp_02e565d712052e21016ae26a643a1c87d2b696472b95e39118",
+            "usage": {
+              "inputTokens": 2564,
+              "outputTokens": 3904,
+              "totalTokens": 6468
+            }
+          },
+          "content": {
+            "kind": "biblical_text",
+            "category": "Bible and context",
+            "prompt": "In Genesis' account, what name was given to the city after Yahweh confused their language, scattering the people?",
+            "heading": "A detail in Genesis 11:4-15",
+            "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+            "choices": [
+              {
+                "id": "option-1",
+                "text": "Shinar"
+              },
+              {
+                "id": "option-2",
+                "text": "Babel"
+              },
+              {
+                "id": "option-3",
+                "text": "Ur of the Chaldees"
+              },
+              {
+                "id": "option-4",
+                "text": "Haran"
+              }
+            ],
+            "correctOptionId": "option-2",
+            "sources": [
+              {
+                "id": "passage",
+                "type": "scripture",
+                "title": "World English Bible (classic)",
+                "publisher": "eBible.org / World English Bible",
+                "url": "https://ebible.org/eng-web/GEN11.htm",
+                "locator": "Genesis 11:4-15",
+                "excerpt": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d Yahweh came down to see the city and the tower, which the children of men built. Yahweh said, \u201cBehold, they are one people, and they all have one language, and this is what they begin to do. Now nothing will be withheld from them, which they intend to do. Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech.\u201d So Yahweh scattered them abroad from there on the surface of all the earth. They stopped building the city. Therefore its name was called Babel, because there Yahweh confused the language of all the earth. From there, Yahweh scattered them abroad on the surface of all the earth. This is the history of the generations of Shem: Shem was one hundred years old when he became the father of Arpachshad two years after the flood. Shem lived five hundred years after he became the father of Arpachshad, and became the father of more sons and daughters. Arpachshad lived thirty-five years and became the father of Shelah. Arpachshad lived four hundred three years after he became the father of Shelah, and became the father of more sons and daughters. Shelah lived thirty years, and became the father of Eber. Shelah lived four hundred three years after he became the father of Eber, and became the father of more sons and daughters.",
+                "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+              }
+            ],
+            "claims": [
+              {
+                "id": "claim-1",
+                "text": "Therefore its name was called Babel.",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-2",
+                "text": "there Yahweh confused the language of all the earth.",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-3",
+                "text": "So Yahweh scattered them abroad from there on the surface of all the earth.",
+                "sourceIds": [
+                  "passage"
+                ]
+              }
+            ],
+            "answerClaimId": "claim-1",
+            "explanationClaimIds": [
+              "claim-1",
+              "claim-2",
+              "claim-3"
+            ],
+            "scriptureReference": "Genesis 11:4-15",
+            "translation": "WEB"
+          },
+          "reviewResponses": [
+            {
+              "model": "gpt-5-mini-2025-08-07",
+              "responseId": "resp_0fe5d96a6ebcc974016ae26a878e8887d2add81ac71cc313fc",
+              "usage": {
+                "inputTokens": 3287,
+                "outputTokens": 2698,
+                "totalTokens": 5985
+              }
+            },
+            {
+              "model": "gpt-6-astra",
+              "responseId": "resp_04105018715409d9016ae26a87a37c87d28742cd7b8520f9f6",
+              "usage": {
+                "inputTokens": 3287,
+                "outputTokens": 1340,
+                "totalTokens": 4627
+              }
+            }
+          ],
+          "verification": {
+            "policyVersion": "discovery-evidence-v2",
+            "copyPolicyVersion": "discovery-concise-v2",
+            "questionCraft": {
+              "policyVersion": "discovery-question-craft-v1",
+              "minimumScore": 6,
+              "score": 6,
+              "assessments": [
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 6,
+                  "accepted": true,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 1,
+                    "choiceQuality": 2
+                  },
+                  "rationale": "The question points to a specific, named scene in Genesis (the tower-building in the land of Shinar) and asks for the city-name given after the language confusion; that scene and the outcome are both present in the supplied excerpt. It's an easy lookup but the distractors are plausible because they are other place names in the same chapter, so choice quality is high."
+                },
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 6,
+                  "accepted": true,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 2,
+                    "fairChallenge": 1,
+                    "choiceQuality": 1
+                  },
+                  "rationale": "Context supplies the city scene and two grounded identifying actions: language confusion and scattering. Interest comes from connecting the city's name with the narrative's consequential events. The challenge is clear but amounts to familiar direct identification. The choices are recognizable Genesis place-names, with Ur and Haran plausible alternatives, although they are less closely connected to this scene and Shinar is not an equally precise city alternative. Total: 6/8; passes the craft threshold."
+                }
+              ]
+            },
+            "accepted": false,
+            "minimumScore": 95,
+            "evidenceScore": 100,
+            "candidateSha256": "9d7b5d458d91a4dd6ee0a920e32aa0ccb003e21c7d9fd5979616e5658d0a9c0a",
+            "sourceSha256": "8363c9a97dbe684ad4ce081309e98cae01ab6f64355c8f80485b57604d6173da",
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+            "questionFingerprint": "17e4e11e81ff9a237426bc1499806bfb3ef6d3203762646d67ad8d23585ec1e2",
+            "difficulty": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "level": "easy",
+              "score": 2
+            },
+            "difficultyTargetMet": false,
+            "reasons": [
+              "question_context_quote_missing_or_invalid"
+            ],
+            "reviews": [
+              {
+                "solvedOptionId": "option-2",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [],
+                "questionPremises": [
+                  {
+                    "text": "Yahweh confused their language.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Yahweh scattered the people from that place across the earth.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "So Yahweh scattered them abroad from there on the surface of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The city was given a name after the language confusion and scattering.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "This account is in Genesis (chapter context shows they were in the land of Shinar building a city and tower).",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "As they traveled from the east, they found a plain in the land of Shinar, and they lived there."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky"
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 1,
+                  "choiceQuality": 2,
+                  "rationale": "The question points to a specific, named scene in Genesis (the tower-building in the land of Shinar) and asks for the city-name given after the language confusion; that scene and the outcome are both present in the supplied excerpt. It's an easy lookup but the distractors are plausible because they are other place names in the same chapter, so choice quality is high."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "So Yahweh scattered them abroad from there on the surface of all the earth."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Although the land of Shinar is named earlier in the chapter, the passage explicitly states the city's name after the confusion was 'Babel.' The excerpt does not say the city was called Shinar.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "The passage explicitly gives the city's name as Babel after Yahweh confused their language and scattered them.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Ur of the Chaldees is mentioned later in the chapter as the birthplace of Haran; the excerpt does not identify Ur as the name given to the city after the language confusion.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Haran appears later as a place/person in the genealogy and travels, but the passage does not say the confused city was named Haran.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 2,
+                  "rationale": "The correct name (Babel) is stated directly in the passage (one-verse lookup), so this is an easy factual recall for readers familiar with Genesis. Distractors are plausible because they are other geographic names appearing in the same chapter, which slightly raises the challenge."
+                },
+                "model": "gpt-5-mini-2025-08-07",
+                "requestedModel": "gpt-5-mini",
+                "responseId": "resp_0fe5d96a6ebcc974016ae26a878e8887d2add81ac71cc313fc"
+              },
+              {
+                "solvedOptionId": "option-2",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [],
+                "questionPremises": [
+                  {
+                    "text": "The cited Genesis account concerns people building a city.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Yahweh confused the people's language at that city.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Yahweh scattered the people from that place.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "So Yahweh scattered them abroad from there on the surface of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The narrative presents the city's naming after the scattering and connects its name to the confusion of language.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "So Yahweh scattered them abroad from there on the surface of all the earth. They stopped building the city. Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 2,
+                  "fairChallenge": 1,
+                  "choiceQuality": 1,
+                  "rationale": "Context supplies the city scene and two grounded identifying actions: language confusion and scattering. Interest comes from connecting the city's name with the narrative's consequential events. The challenge is clear but amounts to familiar direct identification. The choices are recognizable Genesis place-names, with Ur and Haran plausible alternatives, although they are less closely connected to this scene and Shinar is not an equally precise city alternative. Total: 6/8; passes the craft threshold."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "So Yahweh scattered them abroad from there on the surface of all the earth."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "The saved excerpt does not identify Shinar as the city's resulting name; it explicitly identifies Babel.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "The excerpt explicitly names the city Babel and links that name to Yahweh's confusion of language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "The saved excerpt does not name Ur of the Chaldees as this city. Its explicit naming statement supports only Babel.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "The saved excerpt does not name Haran as this city. Its explicit naming statement supports only Babel.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 1,
+                  "rationale": "Easy (1/8). Babel and the confusion of language are widely familiar to the intended audience. One explicit naming statement answers the question without inference. The alternatives are related biblical place-names but are not close competitors for this particular event."
+                },
+                "model": "gpt-6-astra",
+                "requestedModel": "gpt-6-astra",
+                "responseId": "resp_04105018715409d9016ae26a87a37c87d28742cd7b8520f9f6"
+              }
+            ]
+          },
+          "reasons": [
+            "question_context_quote_missing_or_invalid"
+          ],
+          "completedAt": "2026-10-28T21:35:30.032Z"
+        },
+        {
+          "number": 3,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:35:30.035Z",
+          "generated": {
+            "model": "gpt-5-mini-2025-08-07",
+            "responseId": "resp_0313d80cecddbcea016ae26aa21bb087d29199ca8dfad0d0b0",
+            "usage": {
+              "inputTokens": 2571,
+              "outputTokens": 3886,
+              "totalTokens": 6457
+            }
+          },
+          "content": {
+            "kind": "biblical_text",
+            "category": "Bible and context",
+            "prompt": "Building a tower to reach the sky, In Genesis who confused their language?",
+            "heading": "A detail in Genesis 11:4-15",
+            "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+            "choices": [
+              {
+                "id": "option-1",
+                "text": "the children of men"
+              },
+              {
+                "id": "option-2",
+                "text": "Shem"
+              },
+              {
+                "id": "option-3",
+                "text": "Yahweh"
+              },
+              {
+                "id": "option-4",
+                "text": "Terah"
+              }
+            ],
+            "correctOptionId": "option-3",
+            "sources": [
+              {
+                "id": "passage",
+                "type": "scripture",
+                "title": "World English Bible (classic)",
+                "publisher": "eBible.org / World English Bible",
+                "url": "https://ebible.org/eng-web/GEN11.htm",
+                "locator": "Genesis 11:4-15",
+                "excerpt": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d Yahweh came down to see the city and the tower, which the children of men built. Yahweh said, \u201cBehold, they are one people, and they all have one language, and this is what they begin to do. Now nothing will be withheld from them, which they intend to do. Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech.\u201d So Yahweh scattered them abroad from there on the surface of all the earth. They stopped building the city. Therefore its name was called Babel, because there Yahweh confused the language of all the earth. From there, Yahweh scattered them abroad on the surface of all the earth. This is the history of the generations of Shem: Shem was one hundred years old when he became the father of Arpachshad two years after the flood. Shem lived five hundred years after he became the father of Arpachshad, and became the father of more sons and daughters. Arpachshad lived thirty-five years and became the father of Shelah. Arpachshad lived four hundred three years after he became the father of Shelah, and became the father of more sons and daughters. Shelah lived thirty years, and became the father of Eber. Shelah lived four hundred three years after he became the father of Eber, and became the father of more sons and daughters.",
+                "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+              }
+            ],
+            "claims": [
+              {
+                "id": "claim-1",
+                "text": "a tower whose top reaches to the sky",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-2",
+                "text": "there Yahweh confused the language of all the earth.",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-3",
+                "text": "They stopped building the city.",
+                "sourceIds": [
+                  "passage"
+                ]
+              }
+            ],
+            "answerClaimId": "claim-2",
+            "explanationClaimIds": [
+              "claim-1",
+              "claim-2",
+              "claim-3"
+            ],
+            "scriptureReference": "Genesis 11:4-15",
+            "translation": "WEB"
+          },
+          "reviewResponses": [
+            {
+              "model": "gpt-5-mini-2025-08-07",
+              "responseId": "resp_007f78315d205af8016ae26ac62c1887d2994eb7e2516d7e8b",
+              "usage": {
+                "inputTokens": 3270,
+                "outputTokens": 3392,
+                "totalTokens": 6662
+              }
+            },
+            {
+              "model": "gpt-6-astra",
+              "responseId": "resp_053dfd0c24ed787f016ae26ac614c087d2a9be8566c6b44476",
+              "usage": {
+                "inputTokens": 3270,
+                "outputTokens": 1591,
+                "totalTokens": 4861
+              }
+            }
+          ],
+          "verification": {
+            "policyVersion": "discovery-evidence-v2",
+            "copyPolicyVersion": "discovery-concise-v2",
+            "questionCraft": {
+              "policyVersion": "discovery-question-craft-v1",
+              "minimumScore": 6,
+              "score": 3,
+              "assessments": [
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 6,
+                  "accepted": true,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 1,
+                    "choiceQuality": 2
+                  },
+                  "rationale": "The question is a focused detail drawn from Genesis 11:4-9 (WEB). The scene and verse reference are given (context=2). The fact is moderately interesting but widely known (interest=1). The answer is directly supported by the passage but requires reading the speech attribution (fairChallenge=1). Options include plausible distractors (children of men) and two genealogical names, making choice quality good (2)."
+                },
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 3,
+                  "accepted": false,
+                  "dimensions": {
+                    "context": 1,
+                    "interest": 1,
+                    "fairChallenge": 1,
+                    "choiceQuality": 0
+                  },
+                  "rationale": "The tower reaching toward the sky supplies a useful scene, but no distinct second identifying clue. The confusion of language is a worthwhile narrative detail, though the question remains direct actor recall. It is clearly answerable without outside inference. The choices are weak: the builders are the affected party, Shem appears only in the subsequent genealogy, and Terah is absent from the excerpt. These do not provide two plausible competing agents. Total: 3/8; reject."
+                }
+              ]
+            },
+            "accepted": false,
+            "minimumScore": 95,
+            "evidenceScore": 99,
+            "candidateSha256": "7c675bffb2a8c80f0749e636749adf874c777450989fef501b2e702a08a237fa",
+            "sourceSha256": "8363c9a97dbe684ad4ce081309e98cae01ab6f64355c8f80485b57604d6173da",
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+            "questionFingerprint": "eda2170e6f091db37ca9bf2a45acb7be31d50bb27de4b2cd7e55c03c4d0c7617",
+            "difficulty": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "level": "easy",
+              "score": 1
+            },
+            "difficultyTargetMet": false,
+            "reasons": [
+              "fabricated_or_missing_quote",
+              "unresolved_or_complex_claim",
+              "question_craft_below_threshold"
+            ],
+            "reviews": [
+              {
+                "solvedOptionId": "option-3",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [],
+                "questionPremises": [
+                  {
+                    "text": "The people said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky.\u201d",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Yahweh came down to see the city and the tower which the children of men built.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Yahweh said, \u201cCome, let\u2019s go down, and there confuse their language...\u201d",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh said, \u201cBehold, they are one people, and they all have one language, and this is what they begin to do. Now nothing will be withheld from them, which they intend to do. Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "They stopped building the city.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They stopped building the city."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 1,
+                  "choiceQuality": 2,
+                  "rationale": "The question is a focused detail drawn from Genesis 11:4-9 (WEB). The scene and verse reference are given (context=2). The fact is moderately interesting but widely known (interest=1). The answer is directly supported by the passage but requires reading the speech attribution (fairChallenge=1). Options include plausible distractors (children of men) and two genealogical names, making choice quality good (2)."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They stopped building the city."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "The passage identifies the builders as 'the children of men' but it explicitly says Yahweh confused the language. The children of men are the builders, not the ones who confused the language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Shem appears later in the genealogy but is not described in the passage as confusing anyone's language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "This is the history of the generations of Shem: Shem was one hundred years old when he became the father of Arpachshad two years after the flood."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "The passage directly attributes the action of confusing the language to Yahweh.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Terah is mentioned later as the father of Abram, Nahor, and Haran; the passage does not attribute the confusing of language to Terah.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Terah lived seventy years, and became the father of Abram, Nahor, and Haran."
+                      }
+                    ]
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 1,
+                  "rationale": "This is a widely familiar, directly stated detail (familiarity=0). The answer is located explicitly in the passage (evidenceNavigation=0) and requires only direct identification (reasoningSteps=0). Distractors include one plausible alternative (the builders) and two genealogical names, so they are somewhat similar (distractorSimilarity=1). Overall difficulty: Easy."
+                },
+                "model": "gpt-5-mini-2025-08-07",
+                "requestedModel": "gpt-5-mini",
+                "responseId": "resp_007f78315d205af8016ae26ac62c1887d2994eb7e2516d7e8b"
+              },
+              {
+                "solvedOptionId": "option-3",
+                "questionAccuracy": 99,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [
+                  "Reject on question craft: 3/8, below the required 6/8, with choiceQuality also below 1. The human alternatives provide little plausible competition for the explicitly identified divine actor.",
+                  "The opening phrase 'Building a tower to reach the sky' dangles grammatically and could appear to describe the person being asked about. The intended distinction between the builders and the one confusing their language should be clearer."
+                ],
+                "questionPremises": [
+                  {
+                    "text": "The question concerns the tower-building scene in the cited Genesis passage.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The builders intended their tower's top to reach the sky.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The tower builders initially shared one language.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh said, \u201cBehold, they are one people, and they all have one language, and this is what they begin to do."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Their language was confused in connection with the building episode, after construction had begun.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "Come, let\u2019s go down, and there confuse their language, that they may not understand one another\u2019s speech."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 1,
+                  "interest": 1,
+                  "fairChallenge": 1,
+                  "choiceQuality": 0,
+                  "rationale": "The tower reaching toward the sky supplies a useful scene, but no distinct second identifying clue. The confusion of language is a worthwhile narrative detail, though the question remains direct actor recall. It is clearly answerable without outside inference. The choices are weak: the builders are the affected party, Shem appears only in the subsequent genealogy, and Terah is absent from the excerpt. These do not provide two plausible competing agents. Total: 3/8; reject."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They said, \u201cCome, let\u2019s build ourselves a city, and a tower whose top reaches to the sky, and let\u2019s make a name for ourselves, lest we be scattered abroad on the surface of the whole earth.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "They stopped building the city."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "The children of men built the tower; the passage identifies Yahweh, not the builders, as the one who confused their language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh came down to see the city and the tower, which the children of men built."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Shem appears in the genealogy following the Babel account and is not credited with confusing anyone's language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "This is the history of the generations of Shem:"
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "The passage explicitly names Yahweh as the agent who confused the language.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Therefore its name was called Babel, because there Yahweh confused the language of all the earth."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Terah is not named in the saved excerpt, and its explicit attribution to Yahweh excludes this alternative.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 0,
+                  "rationale": "Easy (0/8). Babel is a widely familiar account for the intended audience. One explicit statement supplies the answer, with no inference or navigation required. The divine actor stands apart from the human distractors."
+                },
+                "model": "gpt-6-astra",
+                "requestedModel": "gpt-6-astra",
+                "responseId": "resp_053dfd0c24ed787f016ae26ac614c087d2a9be8566c6b44476"
+              }
+            ]
+          },
+          "reasons": [
+            "fabricated_or_missing_quote",
+            "unresolved_or_complex_claim",
+            "question_craft_below_threshold"
+          ],
+          "completedAt": "2026-10-28T21:36:37.833Z"
+        }
+      ]
+    },
+    {
+      "slug": "the-burning-bush",
+      "sourceReference": "Exodus 3:1-12",
+      "targetDifficulty": "moderate",
+      "id": "d6bcd10c-a84d-4d70-a71e-4aabcb37a0b1",
+      "status": "exhausted",
+      "attempts": [
+        {
+          "number": 1,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:33:40.134Z",
+          "reasons": [
+            "generation_or_verification_failed"
+          ],
+          "errorStatus": null,
+          "completedAt": "2026-10-28T21:34:14.043Z"
+        },
+        {
+          "number": 2,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:34:14.044Z",
+          "generated": {
+            "model": "gpt-5-mini-2025-08-07",
+            "responseId": "resp_066a6225125d277f016ae26a564e2487d28be766c09cfe93b2",
+            "usage": {
+              "inputTokens": 2777,
+              "outputTokens": 3393,
+              "totalTokens": 6170
+            }
+          },
+          "content": {
+            "kind": "biblical_text",
+            "category": "Bible and context",
+            "prompt": "At the burning bush on Horeb \u2014 In Exodus, what did God tell Moses to take off? Holy ground.",
+            "heading": "A detail in Exodus 3:1-12",
+            "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+            "choices": [
+              {
+                "id": "option-1",
+                "text": "Don't come close"
+              },
+              {
+                "id": "option-2",
+                "text": "I AM WHO I AM"
+              },
+              {
+                "id": "option-3",
+                "text": "Take off your sandals"
+              },
+              {
+                "id": "option-4",
+                "text": "Go and gather the elders of Israel together"
+              }
+            ],
+            "correctOptionId": "option-3",
+            "sources": [
+              {
+                "id": "passage",
+                "type": "scripture",
+                "title": "World English Bible (classic)",
+                "publisher": "eBible.org / World English Bible",
+                "url": "https://ebible.org/eng-web/EXO03.htm",
+                "locator": "Exodus 3:1-12",
+                "excerpt": "Now Moses was keeping the flock of Jethro, his father-in-law, the priest of Midian, and he led the flock to the back of the wilderness, and came to God\u2019s mountain, to Horeb. Yahweh\u2019s angel appeared to him in a flame of fire out of the middle of a bush. He looked, and behold, the bush burned with fire, and the bush was not consumed. Moses said, \u201cI will go now, and see this great sight, why the bush is not burned.\u201d When Yahweh saw that he came over to see, God called to him out of the middle of the bush, and said, \u201cMoses! Moses!\u201d He said, \u201cHere I am.\u201d He said, \u201cDon\u2019t come close. Take off your sandals, for the place you are standing on is holy ground.\u201d Moreover he said, \u201cI am the God of your father, the God of Abraham, the God of Isaac, and the God of Jacob.\u201d Moses hid his face because he was afraid to look at God. Yahweh said, \u201cI have surely seen the affliction of my people who are in Egypt, and have heard their cry because of their taskmasters, for I know their sorrows. I have come down to deliver them out of the hand of the Egyptians, and to bring them up out of that land to a good and large land, to a land flowing with milk and honey; to the place of the Canaanite, the Hittite, the Amorite, the Perizzite, the Hivite, and the Jebusite. Now, behold, the cry of the children of Israel has come to me. Moreover I have seen the oppression with which the Egyptians oppress them. Come now therefore, and I will send you to Pharaoh, that you may bring my people, the children of Israel, out of Egypt.\u201d Moses said to God, \u201cWho am I, that I should go to Pharaoh, and that I should bring the children of Israel out of Egypt?\u201d He said, \u201cCertainly I will be with you. This will be the token to you, that I have sent you: when you have brought the people out of Egypt, you shall serve God on this mountain.\u201d",
+                "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+              }
+            ],
+            "claims": [
+              {
+                "id": "claim-1",
+                "text": "Take off your sandals",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-2",
+                "text": "the place you are standing on is holy ground",
+                "sourceIds": [
+                  "passage"
+                ]
+              }
+            ],
+            "answerClaimId": "claim-1",
+            "explanationClaimIds": [
+              "claim-1",
+              "claim-2"
+            ],
+            "scriptureReference": "Exodus 3:1-12",
+            "translation": "WEB"
+          },
+          "reviewResponses": [
+            {
+              "model": "gpt-5-mini-2025-08-07",
+              "responseId": "resp_0bb5318415456f1a016ae26a73aa3487d299aeca2fa88ae27b",
+              "usage": {
+                "inputTokens": 3592,
+                "outputTokens": 3392,
+                "totalTokens": 6984
+              }
+            },
+            {
+              "model": "gpt-6-astra",
+              "responseId": "resp_03fcae0315a9b4ef016ae26a73a96887d29fa4c52d142ce9c4",
+              "usage": {
+                "inputTokens": 3592,
+                "outputTokens": 1399,
+                "totalTokens": 4991
+              }
+            }
+          ],
+          "verification": {
+            "policyVersion": "discovery-evidence-v2",
+            "copyPolicyVersion": "discovery-concise-v2",
+            "questionCraft": {
+              "policyVersion": "discovery-question-craft-v1",
+              "minimumScore": 6,
+              "score": 3,
+              "assessments": [
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 6,
+                  "accepted": true,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 2,
+                    "choiceQuality": 1
+                  },
+                  "rationale": "The question gives a clear scene (burning bush at Horeb) and asks for a single concrete verbal command from that scene (context=2). It's a small, straightforward factual recall (interest=1). The answer is directly supported in the verse but distractors are other nearby commands/phrases in the passage, making it a modestly satisfying test of reading (fairChallenge=2). Choice quality is adequate: distractors are plausible phrases from the same passage but one is the exact phrasing sought (choiceQuality=1). Total meets the minimum combined score requirement."
+                },
+                {
+                  "policyVersion": "discovery-question-craft-v1",
+                  "score": 3,
+                  "accepted": false,
+                  "dimensions": {
+                    "context": 2,
+                    "interest": 1,
+                    "fairChallenge": 0,
+                    "choiceQuality": 0
+                  },
+                  "rationale": "Context supplies the burning-bush scene, Horeb, and the grounded holy-ground clue. The command and its stated reason are a worthwhile detail, but the question remains direct recall. The answer is mechanically identifiable because only one choice says 'Take off' or names a removable item. The alternatives are not plausible answers to the exact question. Total: 3/8; reject despite full textual accuracy."
+                }
+              ]
+            },
+            "accepted": false,
+            "minimumScore": 95,
+            "evidenceScore": 95,
+            "candidateSha256": "3dda868c1ecac0949a2cf8692a5cde9d7380e2ed05d13b0a6a6208fdacac8a94",
+            "sourceSha256": "9f9202297b7151b1b41710339ae681dad51277276766a6ec78e3ac118f81d7a3",
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+            "questionFingerprint": "99e70f3a9d0e22d2e13ccc299f3fe2c94c40343aee07423065998e8cf79a2c82",
+            "difficulty": {
+              "rubricVersion": "discovery-difficulty-v1",
+              "level": "easy",
+              "score": 1
+            },
+            "difficultyTargetMet": false,
+            "reasons": [
+              "unresolved_or_complex_claim",
+              "question_craft_below_threshold"
+            ],
+            "reviews": [
+              {
+                "solvedOptionId": "option-3",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [],
+                "questionPremises": [
+                  {
+                    "text": "The scene is the burning bush on Horeb where God speaks to Moses.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "and came to God\u2019s mountain, to Horeb."
+                      },
+                      {
+                        "sourceId": "passage",
+                        "quote": "Yahweh\u2019s angel appeared to him in a flame of fire out of the middle of a bush."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God told Moses to take something off.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God calls the ground there 'holy ground.'",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "for the place you are standing on is holy ground."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 2,
+                  "choiceQuality": 1,
+                  "rationale": "The question gives a clear scene (burning bush at Horeb) and asks for a single concrete verbal command from that scene (context=2). It's a small, straightforward factual recall (interest=1). The answer is directly supported in the verse but distractors are other nearby commands/phrases in the passage, making it a modestly satisfying test of reading (fairChallenge=2). Choice quality is adequate: distractors are plausible phrases from the same passage but one is the exact phrasing sought (choiceQuality=1). Total meets the minimum combined score requirement."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "for the place you are standing on is holy ground."
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 95,
+                    "rationale": "The phrase 'Don't come close' does appear in the same verse, but it is a separate command and not the thing God told Moses to 'take off.' The question specifically asks what God told Moses to take off.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 95,
+                    "rationale": "'I AM WHO I AM' is what God declares as his name later in the passage (Exodus 3:14), but it is not an instruction to Moses to take something off; therefore it does not answer the question asked.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "This is the exact verbal instruction in the verse immediately addressing Moses about the holiness of the ground.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals, for the place you are standing on is holy ground."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 95,
+                    "rationale": "'Go and gather the elders of Israel together' is a later instruction in the chapter (verse 16), but it is not what God told Moses to take off; therefore it does not answer the question.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 2,
+                  "rationale": "This is a widely known scene (familiarity=0). The requested phrase is located directly in one verse (evidenceNavigation=0) and requires direct identification (reasoningSteps=0). Distractors are all actual nearby phrases/commands from the same passage, so they are closely related and increase potential confusion (distractorSimilarity=2). Sum = 2, which rates as Easy."
+                },
+                "model": "gpt-5-mini-2025-08-07",
+                "requestedModel": "gpt-5-mini",
+                "responseId": "resp_0bb5318415456f1a016ae26a73aa3487d299aeca2fa88ae27b"
+              },
+              {
+                "solvedOptionId": "option-3",
+                "questionAccuracy": 100,
+                "scopeAccuracy": 100,
+                "explanationCoverage": 100,
+                "simpleTextualFact": true,
+                "unresolvedIssues": [
+                  "Reject on question craft: 3/8, with fairChallenge and choiceQuality below the required minimum.",
+                  "The question asks what Moses was told to take off, but the choices are assorted utterances rather than competing removable items. Only option-3 repeats 'Take off' and names something removable, giving away the answer without requiring passage knowledge.",
+                  "The trailing fragment 'Holy ground.' is grounded in the passage but awkwardly detached from the question."
+                ],
+                "questionPremises": [
+                  {
+                    "text": "The scene takes place at Horeb.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "and came to God\u2019s mountain, to Horeb."
+                      }
+                    ]
+                  },
+                  {
+                    "text": "Moses encounters a burning bush in this scene.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "He looked, and behold, the bush burned with fire, and the bush was not consumed. Moses said, \u201cI will go now, and see this great sight, why the bush is not burned.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "God speaks to Moses from the bush.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "When Yahweh saw that he came over to see, God called to him out of the middle of the bush, and said, \u201cMoses! Moses!\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "During this encounter, God tells Moses to take something off.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "He said, \u201cHere I am.\u201d He said, \u201cDon\u2019t come close. Take off your sandals, for the place you are standing on is holy ground.\u201d"
+                      }
+                    ]
+                  },
+                  {
+                    "text": "The place where Moses stands is described as holy ground, explaining the removal command.",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals, for the place you are standing on is holy ground."
+                      }
+                    ]
+                  }
+                ],
+                "questionCraft": {
+                  "context": 2,
+                  "interest": 1,
+                  "fairChallenge": 0,
+                  "choiceQuality": 0,
+                  "rationale": "Context supplies the burning-bush scene, Horeb, and the grounded holy-ground clue. The command and its stated reason are a worthwhile detail, but the question remains direct recall. The answer is mechanically identifiable because only one choice says 'Take off' or names a removable item. The alternatives are not plausible answers to the exact question. Total: 3/8; reject despite full textual accuracy."
+                },
+                "claims": [
+                  {
+                    "claimId": "claim-1",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals"
+                      }
+                    ]
+                  },
+                  {
+                    "claimId": "claim-2",
+                    "status": "supported",
+                    "confidence": 100,
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "the place you are standing on is holy ground"
+                      }
+                    ]
+                  }
+                ],
+                "options": [
+                  {
+                    "optionId": "option-1",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "This is another instruction in the scene, but it concerns approaching, not taking anything off.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Don\u2019t come close."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-2",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "This does not identify anything Moses was told to remove and is not in the saved excerpt. The surrounding context does not make it an alternative answer to this question.",
+                    "evidence": []
+                  },
+                  {
+                    "optionId": "option-3",
+                    "status": "supported",
+                    "confidence": 100,
+                    "rationale": "The command explicitly identifies Moses' sandals as what he must take off.",
+                    "evidence": [
+                      {
+                        "sourceId": "passage",
+                        "quote": "Take off your sandals, for the place you are standing on is holy ground."
+                      }
+                    ]
+                  },
+                  {
+                    "optionId": "option-4",
+                    "status": "not_supported",
+                    "confidence": 100,
+                    "rationale": "Gathering elders is not a removal instruction and is not stated in the saved excerpt. Its appearance later in the chapter does not answer the exact question.",
+                    "evidence": []
+                  }
+                ],
+                "difficulty": {
+                  "familiarity": 0,
+                  "evidenceNavigation": 0,
+                  "reasoningSteps": 0,
+                  "distractorSimilarity": 0,
+                  "rationale": "Easy (0/8): a familiar burning-bush detail is stated directly in one sentence and requires no inference. The alternatives concern different kinds of speech or action rather than competing items to remove. Familiarity is an audience estimate."
+                },
+                "model": "gpt-6-astra",
+                "requestedModel": "gpt-6-astra",
+                "responseId": "resp_03fcae0315a9b4ef016ae26a73a96887d29fa4c52d142ce9c4"
+              }
+            ]
+          },
+          "reasons": [
+            "unresolved_or_complex_claim",
+            "question_craft_below_threshold"
+          ],
+          "completedAt": "2026-10-28T21:35:20.753Z"
+        },
+        {
+          "number": 3,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:35:20.758Z",
+          "generated": {
+            "model": "gpt-5-mini-2025-08-07",
+            "responseId": "resp_025c02c7cacfcd21016ae26a98d2b087d28958fdc96969cc71",
+            "usage": {
+              "inputTokens": 2790,
+              "outputTokens": 2867,
+              "totalTokens": 5657
+            }
+          },
+          "content": {
+            "kind": "biblical_text",
+            "category": "Bible and context",
+            "prompt": "At the burning bush in Exodus, what phrase described where Moses stood? (Take off your sandals.)",
+            "heading": "A detail in Exodus 3:1-12",
+            "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+            "choices": [
+              {
+                "id": "option-1",
+                "text": "God's mountain"
+              },
+              {
+                "id": "option-2",
+                "text": "holy ground"
+              },
+              {
+                "id": "option-3",
+                "text": "a flame of fire"
+              },
+              {
+                "id": "option-4",
+                "text": "not consumed"
+              }
+            ],
+            "correctOptionId": "option-2",
+            "sources": [
+              {
+                "id": "passage",
+                "type": "scripture",
+                "title": "World English Bible (classic)",
+                "publisher": "eBible.org / World English Bible",
+                "url": "https://ebible.org/eng-web/EXO03.htm",
+                "locator": "Exodus 3:1-12",
+                "excerpt": "Now Moses was keeping the flock of Jethro, his father-in-law, the priest of Midian, and he led the flock to the back of the wilderness, and came to God\u2019s mountain, to Horeb. Yahweh\u2019s angel appeared to him in a flame of fire out of the middle of a bush. He looked, and behold, the bush burned with fire, and the bush was not consumed. Moses said, \u201cI will go now, and see this great sight, why the bush is not burned.\u201d When Yahweh saw that he came over to see, God called to him out of the middle of the bush, and said, \u201cMoses! Moses!\u201d He said, \u201cHere I am.\u201d He said, \u201cDon\u2019t come close. Take off your sandals, for the place you are standing on is holy ground.\u201d Moreover he said, \u201cI am the God of your father, the God of Abraham, the God of Isaac, and the God of Jacob.\u201d Moses hid his face because he was afraid to look at God. Yahweh said, \u201cI have surely seen the affliction of my people who are in Egypt, and have heard their cry because of their taskmasters, for I know their sorrows. I have come down to deliver them out of the hand of the Egyptians, and to bring them up out of that land to a good and large land, to a land flowing with milk and honey; to the place of the Canaanite, the Hittite, the Amorite, the Perizzite, the Hivite, and the Jebusite. Now, behold, the cry of the children of Israel has come to me. Moreover I have seen the oppression with which the Egyptians oppress them. Come now therefore, and I will send you to Pharaoh, that you may bring my people, the children of Israel, out of Egypt.\u201d Moses said to God, \u201cWho am I, that I should go to Pharaoh, and that I should bring the children of Israel out of Egypt?\u201d He said, \u201cCertainly I will be with you. This will be the token to you, that I have sent you: when you have brought the people out of Egypt, you shall serve God on this mountain.\u201d",
+                "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+              }
+            ],
+            "claims": [
+              {
+                "id": "claim-1",
+                "text": "Yahweh\u2019s angel appeared to him in a flame of fire out of the middle of a bush.",
+                "sourceIds": [
+                  "passage"
+                ]
+              },
+              {
+                "id": "claim-2",
+                "text": "Don\u2019t come close. Take off your sandals, for the place you are standing on is holy ground.",
+                "sourceIds": [
+                  "passage"
+                ]
+              }
+            ],
+            "answerClaimId": "claim-2",
+            "explanationClaimIds": [
+              "claim-1",
+              "claim-2"
+            ],
+            "scriptureReference": "Exodus 3:1-12",
+            "translation": "WEB"
+          },
+          "reasons": [
+            "factoid_too_wordy"
+          ],
+          "completedAt": "2026-10-28T21:35:46.723Z"
+        }
+      ]
+    },
+    {
+      "slug": "a-question-in-the-wilderness",
+      "sourceReference": "Exodus 16:11-22",
+      "targetDifficulty": "moderate",
+      "id": "91fd82ae-c858-4b47-982b-ed63af40e15e",
+      "status": "pending",
+      "attempts": [
+        {
+          "number": 1,
+          "status": "rejected",
+          "startedAt": "2026-10-28T21:35:46.728Z",
+          "reasons": [
+            "generation_or_verification_failed"
+          ],
+          "errorStatus": null,
+          "completedAt": "2026-10-28T21:36:20.722Z"
+        }
+      ]
+    },
+    {
+      "slug": "ruth-s-commitment",
+      "sourceReference": "Ruth 1:11-22",
+      "targetDifficulty": "moderate",
+      "id": "fe787a96-bef8-44f6-a6d0-a8b80077c9b4",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "david-s-sling",
+      "sourceReference": "1 Samuel 17:46-57",
+      "targetDifficulty": "moderate",
+      "id": "886297bd-49fb-4eb9-89c9-62e0ad161cf0",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "solomon-s-request",
+      "sourceReference": "1 Kings 3:6-17",
+      "targetDifficulty": "moderate",
+      "id": "d382b0c2-7da2-4643-a424-ae76e2692b47",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "elijah-listens",
+      "sourceReference": "1 Kings 19:8-19",
+      "targetDifficulty": "moderate",
+      "id": "58aa24f6-c3b9-45ac-9acf-8754cfb075af",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "naaman-and-the-jordan",
+      "sourceReference": "2 Kings 5:7-18",
+      "targetDifficulty": "moderate",
+      "id": "0b6b4adc-6013-4784-930a-bb8dd0c10716",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-opening-of-psalm-23",
+      "sourceReference": "Psalms 23:1-6",
+      "targetDifficulty": "moderate",
+      "id": "f51990cb-be82-451a-bedc-3250acf19cba",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-lamp-for-the-path",
+      "sourceReference": "Psalms 119:102-113",
+      "targetDifficulty": "moderate",
+      "id": "b7f2ab31-d12b-4aa1-bc55-43cfd1ae8a55",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-gentle-answer",
+      "sourceReference": "Proverbs 15:1-12",
+      "targetDifficulty": "moderate",
+      "id": "7c0fcac7-e8ca-4d9e-8778-f2a240bad35f",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-wording-of-jonah",
+      "sourceReference": "Jonah 1:14-17",
+      "targetDifficulty": "moderate",
+      "id": "f7a69896-3a61-4e38-a74b-e6fae06071fc",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "three-actions-in-micah",
+      "sourceReference": "Micah 6:5-16",
+      "targetDifficulty": "moderate",
+      "id": "3339efb3-2902-45f9-aa00-e0d27a999408",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "matthew-s-stated-location",
+      "sourceReference": "Matthew 2:1-12",
+      "targetDifficulty": "moderate",
+      "id": "b433617f-9ab7-425f-af34-0855dd1c80b8",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-gifts-matthew-names",
+      "sourceReference": "Matthew 2:8-19",
+      "targetDifficulty": "moderate",
+      "id": "8ee33f1c-6200-4f9d-a8df-a1502e851c55",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-beatitude-about-peace",
+      "sourceReference": "Matthew 5:6-17",
+      "targetDifficulty": "moderate",
+      "id": "9ddfe476-3831-4da8-a42f-55fa3201b060",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-flowers-in-matthew",
+      "sourceReference": "Matthew 6:25-34",
+      "targetDifficulty": "moderate",
+      "id": "aa6138e6-ea47-42e1-bd1b-8e74d8463a09",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-brothers-by-the-sea",
+      "sourceReference": "Mark 1:13-24",
+      "targetDifficulty": "moderate",
+      "id": "f5966ad7-6867-454f-a2fc-5d54de254509",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-name-mark-supplies",
+      "sourceReference": "Mark 10:43-52",
+      "targetDifficulty": "moderate",
+      "id": "e3a834d9-675c-4e46-935d-0eaf79a3b5ea",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-messenger-in-luke",
+      "sourceReference": "Luke 1:23-34",
+      "targetDifficulty": "moderate",
+      "id": "b3f14db3-3eed-437b-b329-410e3694fd33",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-field-in-luke-s-account",
+      "sourceReference": "Luke 2:5-16",
+      "targetDifficulty": "moderate",
+      "id": "97c16aac-abc2-4485-8e48-35d4d6a66950",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-traveler-who-stops",
+      "sourceReference": "Luke 10:30-41",
+      "targetDifficulty": "moderate",
+      "id": "bde6d1a0-df92-4df9-b9f7-99ef3a1b4c2d",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "zacchaeus-above-the-crowd",
+      "sourceReference": "Luke 19:1-12",
+      "targetDifficulty": "moderate",
+      "id": "4f45a1bf-7824-4850-ae6d-0c4a8184ef6e",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-road-in-luke-24",
+      "sourceReference": "Luke 24:10-21",
+      "targetDifficulty": "moderate",
+      "id": "0c776008-dc63-4920-9c6e-042c957eae4d",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-wedding-john-describes",
+      "sourceReference": "John 2:1-12",
+      "targetDifficulty": "moderate",
+      "id": "4d3e8538-b2a4-479f-99d3-3a5f78cce7dc",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-visitor-by-night",
+      "sourceReference": "John 3:1-12",
+      "targetDifficulty": "moderate",
+      "id": "fead83f2-fa09-4f00-8856-b0b6207f636a",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-well-in-john-4",
+      "sourceReference": "John 4:2-13",
+      "targetDifficulty": "moderate",
+      "id": "7b57a573-adc2-446f-9b53-3443d8bd72b3",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-brief-verse-in-john",
+      "sourceReference": "John 11:32-44",
+      "targetDifficulty": "easy",
+      "id": "b99b1747-0f1d-4185-848c-2845477c9782",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "mary-s-first-impression",
+      "sourceReference": "John 20:12-23",
+      "targetDifficulty": "moderate",
+      "id": "a3b2ad53-16ec-49d0-a3fb-75b970da69ac",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-day-named-in-acts",
+      "sourceReference": "Acts 2:1-12",
+      "targetDifficulty": "moderate",
+      "id": "e44bdc64-1dc9-4341-9dfe-020e23105206",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-disciple-in-damascus",
+      "sourceReference": "Acts 9:7-18",
+      "targetDifficulty": "moderate",
+      "id": "0a6fc2c7-7c9d-427b-9ed9-c223b7115ceb",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "the-name-in-acts-11",
+      "sourceReference": "Acts 11:22-30",
+      "targetDifficulty": "moderate",
+      "id": "635ff93f-297e-4a9f-a976-4a36748b54d4",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "lydia-s-trade",
+      "sourceReference": "Acts 16:11-22",
+      "targetDifficulty": "moderate",
+      "id": "b09e462c-6321-4e82-9c88-fdacbd0377b6",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "a-shared-trade-in-acts",
+      "sourceReference": "Acts 18:1-12",
+      "targetDifficulty": "moderate",
+      "id": "c1519534-0c9d-4dc5-a0da-9987adf17388",
+      "status": "pending",
+      "attempts": []
+    },
+    {
+      "slug": "phoebe-s-community",
+      "sourceReference": "Romans 16:1-12",
+      "targetDifficulty": "moderate",
+      "id": "12041e90-b3d4-44fe-aa8e-5ac011f92889",
+      "status": "pending",
+      "attempts": []
+    }
+  ],
+  "stopReason": "provider_invalid_request",
+  "completedAt": "2026-10-28T21:36:37.841Z",
+  "experimentStatus": "superseded_by_coherent_scene_pilot"
+}

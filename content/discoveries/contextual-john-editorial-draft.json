@@ -1,0 +1,67 @@
+[
+  {
+    "id": "a0d6e697-6f98-4b15-83a1-a67dd3d872bc",
+    "slug": "tears-and-burial-wrappings",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In John, Jesus weeps before calling Lazarus out. What does the account say covers Lazarus’s face?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Spices"
+        },
+        {
+          "id": "option-2",
+          "text": "Oil"
+        },
+        {
+          "id": "option-3",
+          "text": "Cloth"
+        },
+        {
+          "id": "option-4",
+          "text": "Dust"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "burial-wrappings",
+          "text": "Lazarus comes out with his hands and feet bound and his face wrapped in a cloth.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "burial-wrappings",
+      "explanationClaimIds": [
+        "burial-wrappings"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Assistant-authored contextual revision, requiring the same independent evidence and craft checks as model-written candidates.",
+      "origin": "assistant_contextual_revision",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "pending",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "Cloth"
+    }
+  }
+]

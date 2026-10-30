@@ -1,0 +1,1260 @@
+{
+  "project": "cmakuvkjxknwhonfqbit",
+  "applied": true,
+  "audit": {
+    "id": "e41d4ba3-d7e9-4ddb-b30a-7a83cb7d97a2",
+    "manifestId": "reviewer-pair-repair-2026-10-29",
+    "manifestSha256": "9c5291b9710dd44bc8ecd7d9c69dede42a852150f766f9013bd1d2853875b66d",
+    "createdAt": "2026-10-29T21:31:36.369Z",
+    "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+    "reason": "The production mini verifier assigned below-threshold confidence to an explicit source premise without identifying a factual issue. The stronger first verifier has been source-checked for Responses/strict schema support and tested on six adversarial rejection controls plus three positive drafts. All six controls were rejected; two positives passed and the third was rejected for craft, so thresholds and the independent Astra check remain intact. Perform one explicit reviewer-configuration repair for the only remaining exhausted date; preserve every earlier attempt and do not reset failures from the new pair.",
+    "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+    "changes": [
+      {
+        "date": "2026-11-02",
+        "weekStart": "2026-11-02",
+        "previousEpoch": 3,
+        "previousAttempts": 3,
+        "previousSources": [
+          {
+            "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+            "sourceReference": "Acts 18:1-4",
+            "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+          },
+          {
+            "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+            "sourceReference": "John 4:25-30",
+            "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+          },
+          {
+            "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+            "sourceReference": "Matthew 2:9-12",
+            "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+          }
+        ],
+        "sources": [
+          {
+            "sourceReference": "Acts 18:1-4",
+            "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+            "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials."
+          },
+          {
+            "sourceReference": "John 4:25-30",
+            "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399",
+            "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location."
+          },
+          {
+            "sourceReference": "Matthew 2:9-12",
+            "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078",
+            "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors."
+          }
+        ]
+      }
+    ],
+    "mode": "reviewer_revision",
+    "writerVersion": "sanctuary-trivia-writer-v4",
+    "previousReviewModels": [
+      "gpt-5-mini",
+      "gpt-6-astra"
+    ],
+    "reviewModels": [
+      "gpt-6.1-sol",
+      "gpt-6-astra"
+    ]
+  },
+  "plans": [
+    {
+      "startDate": "2026-11-02",
+      "before": {
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "days": [
+          {
+            "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+            "date": "2026-11-02",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                "sourceReference": "Acts 18:1-4",
+                "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+              },
+              {
+                "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                "sourceReference": "John 4:25-30",
+                "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+              },
+              {
+                "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                "sourceReference": "Matthew 2:9-12",
+                "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+              }
+            ],
+            "sourceReference": "Acts 18:1-4",
+            "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+            "date": "2026-11-03",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                "sourceReference": "Exodus 2:1-10",
+                "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+              },
+              {
+                "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                "sourceReference": "Luke 24:28-35",
+                "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+              },
+              {
+                "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                "sourceReference": "Daniel 6:16-23",
+                "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+              }
+            ],
+            "sourceReference": "Exodus 2:1-10",
+            "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+            "date": "2026-11-04",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                "sourceReference": "2 Kings 22:8-13",
+                "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+              },
+              {
+                "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                "sourceReference": "Acts 27:27-32",
+                "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+              },
+              {
+                "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                "sourceReference": "Acts 16:11-15",
+                "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+              }
+            ],
+            "sourceReference": "2 Kings 22:8-13",
+            "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the one healed man who returns and gives thanks with his explicitly stated identity.",
+            "date": "2026-11-05",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the one healed man who returns and gives thanks with his explicitly stated identity.",
+                "sourceReference": "Luke 17:11-19",
+                "sourceSha256": "efe48b4421bcbea2869d1f91f7664cc822cd1b714bcc6166e41cb8e8e564ec00"
+              },
+              {
+                "angle": "Connect the disciples’ directions through the city with the distinctive object carried by the man they follow.",
+                "sourceReference": "Mark 14:12-16",
+                "sourceSha256": "85359f7c17f528c828b812bd8b8f381e21915483ea30e674dfaebdee88d2d4db"
+              },
+              {
+                "angle": "Connect Naaman’s instructions and initial anger with the exact number of times he washes in the Jordan.",
+                "sourceReference": "2 Kings 5:9-14",
+                "sourceSha256": "1c19c979bd42f7473e90c3c148f89edcf9f8ce7a22cec91a9dfb27e91a2cd884"
+              }
+            ],
+            "sourceReference": "Luke 17:11-19",
+            "sourceSha256": "efe48b4421bcbea2869d1f91f7664cc822cd1b714bcc6166e41cb8e8e564ec00",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "make the setting useful to the answer rather than decorative",
+            "date": "2026-11-06",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "make the setting useful to the answer rather than decorative",
+                "sourceReference": "Matthew 19:1-12",
+                "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08"
+              },
+              {
+                "angle": "Connect the unbroken net with the exact counted number of fish.",
+                "sourceReference": "John 21:8-14",
+                "sourceSha256": "579f2907039d8905ac666fe388c435a067f909228c83469634426f3205ec874d"
+              },
+              {
+                "angle": "Distinguish the port where Jonah finds a ship from his intended destination.",
+                "sourceReference": "Jonah 1:1-6",
+                "sourceSha256": "f53906a02d7b96eb9236c754171a4350fea427438cb648db497c4365717a1a27"
+              }
+            ],
+            "sourceReference": "Matthew 19:1-12",
+            "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08",
+            "targetDifficulty": "challenging"
+          },
+          {
+            "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+            "date": "2026-11-07",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+                "sourceReference": "1 Samuel 24:1-7",
+                "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9"
+              },
+              {
+                "angle": "Connect Demetrius's concern for the craftsmen's livelihood with the deity named on their silver shrines. Keep the claim within Acts's account and use distinct named deities as options.",
+                "sourceReference": "Acts 19:23-28",
+                "sourceSha256": "fe1c307688b8b131ea0eb2e31cbf5eaaac04914f8a1ca4d1f42fdd43e801dbf0"
+              },
+              {
+                "angle": "Connect Sisera asking for water in Jael's tent with the different drink she gives him. Do not add motives or events beyond this short excerpt.",
+                "sourceReference": "Judges 4:17-20",
+                "sourceSha256": "3dec1f425179256bf850c16009e591c44b759f31b88453ae649df87996d6a29d"
+              }
+            ],
+            "sourceReference": "1 Samuel 24:1-7",
+            "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "In the parable, connect lighting a lamp and sweeping the house with the lost object.",
+            "date": "2026-11-08",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "In the parable, connect lighting a lamp and sweeping the house with the lost object.",
+                "sourceReference": "Luke 15:8-10",
+                "sourceSha256": "3152a5c6ef4ba72c42e8aa7da376ca0f16451c8f6912a4430e79de6663fd9ea4"
+              },
+              {
+                "angle": "Connect Saul’s loss of sight with the exact number of days without food or drink.",
+                "sourceReference": "Acts 9:1-9",
+                "sourceSha256": "1a6572650b4399d7afa3a849f2f625b479ba6367be1bf5d3d5a65d72fb24d9f4"
+              },
+              {
+                "angle": "Connect Ruth’s return to her mother-in-law with the explicit quantity of barley.",
+                "sourceReference": "Ruth 3:14-18",
+                "sourceSha256": "13d4389e83ea3f53b17b9b3d1b905fae260594118caaeef6c8bbd4f62235cd8c"
+              }
+            ],
+            "sourceReference": "Luke 15:8-10",
+            "sourceSha256": "3152a5c6ef4ba72c42e8aa7da376ca0f16451c8f6912a4430e79de6663fd9ea4",
+            "targetDifficulty": "easy"
+          }
+        ],
+        "endDate": "2026-11-08",
+        "learningGoal": "Follow the events and objects named in the Exodus accounts.",
+        "replannedFrom": {
+          "plan": {
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "days": [
+              {
+                "angle": "identify a person through a concrete action and scene",
+                "date": "2026-11-02",
+                "devotionalAligned": true,
+                "sourceReference": "Ephesians 5:20-31",
+                "sourceSha256": "5731be6261142c6c4f9c9a19f6e5ce073704ae4b999da4465ea88b128c55f3b1",
+                "targetDifficulty": "easy"
+              },
+              {
+                "angle": "connect a place to a distinctive event described there",
+                "date": "2026-11-03",
+                "devotionalAligned": true,
+                "sourceReference": "Genesis 2:13-24",
+                "sourceSha256": "e29a4188d583cc3c4e13b67ed494ec68111c16a432511e89ef25c5e4668b3f18",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "connect an explicit action to its stated circumstance",
+                "date": "2026-11-04",
+                "devotionalAligned": true,
+                "sourceReference": "Philippians 2:1-12",
+                "sourceSha256": "e7e6d9a878c2dc31e11b9e25a06801f34350bc860d50d84ac836159f3bc56749",
+                "targetDifficulty": "easy"
+              },
+              {
+                "angle": "use an object or image as a clue to a supported connection",
+                "date": "2026-11-05",
+                "devotionalAligned": true,
+                "sourceReference": "Romans 12:5-16",
+                "sourceSha256": "d2e187efc3b171c221b2f601068ec88f248675005a21a1cf872046fa60841811",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "make the setting useful to the answer rather than decorative",
+                "date": "2026-11-06",
+                "devotionalAligned": true,
+                "sourceReference": "Matthew 19:1-12",
+                "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08",
+                "targetDifficulty": "challenging"
+              },
+              {
+                "angle": "connect two events whose sequence is explicit in the passage",
+                "date": "2026-11-07",
+                "devotionalAligned": true,
+                "sourceReference": "Proverbs 13:15-25",
+                "sourceSha256": "94bc311c19f8cd9931ab34e104be85b7e284478cbb1ecb192ebc6c0a8a30a933",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "explore a distinctive phrase through its immediate context",
+                "date": "2026-11-08",
+                "devotionalAligned": true,
+                "sourceReference": "Psalms 127:1-5",
+                "sourceSha256": "f6a66f58c0f47734c3bef7f6f0b402f33925d9186503cfa3fdf8a23675bfe2a0",
+                "targetDifficulty": "easy"
+              }
+            ],
+            "endDate": "2026-11-08",
+            "learningGoal": "Follow the events and objects named in the Exodus accounts.",
+            "startDate": "2026-11-02",
+            "theme": "Exodus and wilderness",
+            "version": "discovery-biblical-curriculum-v2",
+            "weekNumber": 2
+          },
+          "reason": "Narrative-first sources and precommitted alternate passages; accepted scheduled questions preserved except the explicit future editorial hold.",
+          "reviewedAt": "2026-10-28T23:48:35.227Z"
+        },
+        "sourcePolicy": "Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.",
+        "sourceRepairs": [
+          {
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "changes": [
+              {
+                "date": "2026-11-02",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "Use the unusual way of drinking water as context for the exact number of men retained.",
+                    "sourceReference": "Judges 7:4-8",
+                    "sourceSha256": "dc32fd2fabc8dda74d893c811da8c8f6bb300e498879ea3069d448992336621b"
+                  },
+                  {
+                    "angle": "In the parable, distinguish what is put on the son’s finger from what is put on his feet.",
+                    "sourceReference": "Luke 15:20-24",
+                    "sourceSha256": "b3457390558389812053220a9f5b3a3a7f3188318b857aa5f41cb766795a51f7"
+                  },
+                  {
+                    "angle": "Connect the fire and viper with the explicitly named island.",
+                    "sourceReference": "Acts 28:1-6",
+                    "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman's rush to invite the city to meet Jesus with the object she leaves behind. Do not add where she leaves it if the excerpt does not say.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-03",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "connect a place to a distinctive event described there",
+                    "sourceReference": "Genesis 2:13-24",
+                    "sourceSha256": "e29a4188d583cc3c4e13b67ed494ec68111c16a432511e89ef25c5e4668b3f18"
+                  },
+                  {
+                    "angle": "Connect the temple-tax instruction with the exact location where Peter is told he will find a coin.",
+                    "sourceReference": "Matthew 17:24-27",
+                    "sourceSha256": "4fd70f83a1f0adcde53b23e8e1e063e4a5a43bc9a493d858d29b12d7dadabbcd"
+                  },
+                  {
+                    "angle": "Connect David setting aside the armor with the exact number of smooth stones he selects.",
+                    "sourceReference": "1 Samuel 17:38-40",
+                    "sourceSha256": "8a0166d0ece4c5520f637884a9a441451ffc965338915f977674c8e4d8889b89"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-04",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "Connect the crowded house and lowered bed with the explicit number of people carrying the man.",
+                    "sourceReference": "Mark 2:1-12",
+                    "sourceSha256": "fa87c8472b81d4888a8acd8a9f44fd7f9e47c752402f4e78d6a32a1eeb8f1d09"
+                  },
+                  {
+                    "angle": "Connect Judas’s agreement with the exact number of silver pieces.",
+                    "sourceReference": "Matthew 26:14-16",
+                    "sourceSha256": "957aa6fc0de47364c2b14d7b1d6501401b1a585f42e28231d7992ae1e7b56998"
+                  },
+                  {
+                    "angle": "Connect the brook and morning/evening provisions with the birds named as bringing food.",
+                    "sourceReference": "1 Kings 17:1-6",
+                    "sourceSha256": "9b8ebc0f2c342ca00e7a0cd1dcaaee1edfb40832d44fe67703957be342aacdef"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-07",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "In the parable, connect the innkeeper’s care with the exact amount of money handed over. Keep every option an exact amount, not overlapping expense categories.",
+                    "sourceReference": "Luke 10:30-35",
+                    "sourceSha256": "72836b4b6b7c0a1caa74ce44c5ab3f627577ddfe56b91175f07622a851541fbd"
+                  },
+                  {
+                    "angle": "Connect the supper, removed garments and basin with the item Jesus wraps around himself.",
+                    "sourceReference": "John 13:3-11",
+                    "sourceSha256": "0d33977573eb0f2199050c64c449a292e1d1c6305e6764ac831cc0e8683c231d"
+                  },
+                  {
+                    "angle": "Connect Jonah’s shade plant with the creature appointed to damage it.",
+                    "sourceReference": "Jonah 4:5-8",
+                    "sourceSha256": "5a9038e9cee74684a4534e558b181897ca20d4770567ed49a06d4f03bce31500"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+                    "sourceReference": "1 Samuel 24:1-7",
+                    "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9"
+                  },
+                  {
+                    "angle": "Connect Demetrius's concern for the craftsmen's livelihood with the deity named on their silver shrines. Keep the claim within Acts's account and use distinct named deities as options.",
+                    "sourceReference": "Acts 19:23-28",
+                    "sourceSha256": "fe1c307688b8b131ea0eb2e31cbf5eaaac04914f8a1ca4d1f42fdd43e801dbf0"
+                  },
+                  {
+                    "angle": "Connect Sisera asking for water in Jael's tent with the different drink she gives him. Do not add motives or events beyond this short excerpt.",
+                    "sourceReference": "Judges 4:17-20",
+                    "sourceSha256": "3dec1f425179256bf850c16009e591c44b759f31b88453ae649df87996d6a29d"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              }
+            ],
+            "createdAt": "2026-10-29T20:54:24.188Z",
+            "id": "878104cf-0192-4df3-b49b-88df35f0781a",
+            "manifestId": "narrative-source-repair-2026-10-29",
+            "manifestSha256": "73728a1402b8a90499eb85554bbbb6728bf1ac049ef08b4ca8dad7920b093dfe",
+            "reason": "Reviewed production rejections showed arbitrary numeric recall, weak choices, unsupported contextual phrasing and short-excerpt genre ambiguity. Replace six exhausted source selections with concrete actions, contrasts and consequences in self-contained narrative passages. Keep the factual/craft thresholds and all earlier attempts unchanged."
+          },
+          {
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "changes": [
+              {
+                "date": "2026-11-02",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman's rush to invite the city to meet Jesus with the object she leaves behind. Do not add where she leaves it if the excerpt does not say.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-03",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-04",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              }
+            ],
+            "createdAt": "2026-10-29T21:19:57.033Z",
+            "id": "98f8fc76-af6b-4492-b0f9-f597df81400d",
+            "manifestId": "writer-contract-repair-2026-10-29",
+            "manifestSha256": "3957ae679c25a19ef85913a4525caec0d55d048eeb9b6adf63ebdccd7e729c28",
+            "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+            "mode": "writer_revision",
+            "previousWriterVersion": "sanctuary-trivia-writer-v3",
+            "reason": "The v3 writer prompt included instructions to rate craft/difficulty, causing review commentary to leak into claims and repeated factoid-budget failures. Writer v4 removes grading tasks, constrains the strict schema to two factual sentences of fourteen words each, and preserves all v3 evidence/craft thresholds. Three source-bound live pilot drafts passed; six adversarial controls were rejected. This is one explicit policy repair for three exhausted v3 dates, not an automatic retry reset or factual approval.",
+            "writerVersion": "sanctuary-trivia-writer-v4"
+          }
+        ],
+        "startDate": "2026-11-02",
+        "theme": "Exodus and wilderness",
+        "version": "discovery-biblical-curriculum-v3",
+        "weekNumber": 2
+      },
+      "after": {
+        "corpusVersion": "web-classic-2026-10-28-v1",
+        "days": [
+          {
+            "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+            "date": "2026-11-02",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "sourceReference": "Acts 18:1-4",
+                "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+                "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials."
+              },
+              {
+                "sourceReference": "John 4:25-30",
+                "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399",
+                "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location."
+              },
+              {
+                "sourceReference": "Matthew 2:9-12",
+                "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078",
+                "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors."
+              }
+            ],
+            "sourceReference": "Acts 18:1-4",
+            "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+            "date": "2026-11-03",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                "sourceReference": "Exodus 2:1-10",
+                "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+              },
+              {
+                "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                "sourceReference": "Luke 24:28-35",
+                "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+              },
+              {
+                "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                "sourceReference": "Daniel 6:16-23",
+                "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+              }
+            ],
+            "sourceReference": "Exodus 2:1-10",
+            "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+            "date": "2026-11-04",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                "sourceReference": "2 Kings 22:8-13",
+                "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+              },
+              {
+                "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                "sourceReference": "Acts 27:27-32",
+                "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+              },
+              {
+                "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                "sourceReference": "Acts 16:11-15",
+                "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+              }
+            ],
+            "sourceReference": "2 Kings 22:8-13",
+            "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858",
+            "targetDifficulty": "easy"
+          },
+          {
+            "angle": "Connect the one healed man who returns and gives thanks with his explicitly stated identity.",
+            "date": "2026-11-05",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect the one healed man who returns and gives thanks with his explicitly stated identity.",
+                "sourceReference": "Luke 17:11-19",
+                "sourceSha256": "efe48b4421bcbea2869d1f91f7664cc822cd1b714bcc6166e41cb8e8e564ec00"
+              },
+              {
+                "angle": "Connect the disciples’ directions through the city with the distinctive object carried by the man they follow.",
+                "sourceReference": "Mark 14:12-16",
+                "sourceSha256": "85359f7c17f528c828b812bd8b8f381e21915483ea30e674dfaebdee88d2d4db"
+              },
+              {
+                "angle": "Connect Naaman’s instructions and initial anger with the exact number of times he washes in the Jordan.",
+                "sourceReference": "2 Kings 5:9-14",
+                "sourceSha256": "1c19c979bd42f7473e90c3c148f89edcf9f8ce7a22cec91a9dfb27e91a2cd884"
+              }
+            ],
+            "sourceReference": "Luke 17:11-19",
+            "sourceSha256": "efe48b4421bcbea2869d1f91f7664cc822cd1b714bcc6166e41cb8e8e564ec00",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "make the setting useful to the answer rather than decorative",
+            "date": "2026-11-06",
+            "devotionalAligned": true,
+            "sourceOptions": [
+              {
+                "angle": "make the setting useful to the answer rather than decorative",
+                "sourceReference": "Matthew 19:1-12",
+                "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08"
+              },
+              {
+                "angle": "Connect the unbroken net with the exact counted number of fish.",
+                "sourceReference": "John 21:8-14",
+                "sourceSha256": "579f2907039d8905ac666fe388c435a067f909228c83469634426f3205ec874d"
+              },
+              {
+                "angle": "Distinguish the port where Jonah finds a ship from his intended destination.",
+                "sourceReference": "Jonah 1:1-6",
+                "sourceSha256": "f53906a02d7b96eb9236c754171a4350fea427438cb648db497c4365717a1a27"
+              }
+            ],
+            "sourceReference": "Matthew 19:1-12",
+            "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08",
+            "targetDifficulty": "challenging"
+          },
+          {
+            "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+            "date": "2026-11-07",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+                "sourceReference": "1 Samuel 24:1-7",
+                "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9"
+              },
+              {
+                "angle": "Connect Demetrius's concern for the craftsmen's livelihood with the deity named on their silver shrines. Keep the claim within Acts's account and use distinct named deities as options.",
+                "sourceReference": "Acts 19:23-28",
+                "sourceSha256": "fe1c307688b8b131ea0eb2e31cbf5eaaac04914f8a1ca4d1f42fdd43e801dbf0"
+              },
+              {
+                "angle": "Connect Sisera asking for water in Jael's tent with the different drink she gives him. Do not add motives or events beyond this short excerpt.",
+                "sourceReference": "Judges 4:17-20",
+                "sourceSha256": "3dec1f425179256bf850c16009e591c44b759f31b88453ae649df87996d6a29d"
+              }
+            ],
+            "sourceReference": "1 Samuel 24:1-7",
+            "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9",
+            "targetDifficulty": "moderate"
+          },
+          {
+            "angle": "In the parable, connect lighting a lamp and sweeping the house with the lost object.",
+            "date": "2026-11-08",
+            "devotionalAligned": false,
+            "sourceOptions": [
+              {
+                "angle": "In the parable, connect lighting a lamp and sweeping the house with the lost object.",
+                "sourceReference": "Luke 15:8-10",
+                "sourceSha256": "3152a5c6ef4ba72c42e8aa7da376ca0f16451c8f6912a4430e79de6663fd9ea4"
+              },
+              {
+                "angle": "Connect Saul’s loss of sight with the exact number of days without food or drink.",
+                "sourceReference": "Acts 9:1-9",
+                "sourceSha256": "1a6572650b4399d7afa3a849f2f625b479ba6367be1bf5d3d5a65d72fb24d9f4"
+              },
+              {
+                "angle": "Connect Ruth’s return to her mother-in-law with the explicit quantity of barley.",
+                "sourceReference": "Ruth 3:14-18",
+                "sourceSha256": "13d4389e83ea3f53b17b9b3d1b905fae260594118caaeef6c8bbd4f62235cd8c"
+              }
+            ],
+            "sourceReference": "Luke 15:8-10",
+            "sourceSha256": "3152a5c6ef4ba72c42e8aa7da376ca0f16451c8f6912a4430e79de6663fd9ea4",
+            "targetDifficulty": "easy"
+          }
+        ],
+        "endDate": "2026-11-08",
+        "learningGoal": "Follow the events and objects named in the Exodus accounts.",
+        "replannedFrom": {
+          "plan": {
+            "corpusVersion": "web-classic-2026-10-28-v1",
+            "days": [
+              {
+                "angle": "identify a person through a concrete action and scene",
+                "date": "2026-11-02",
+                "devotionalAligned": true,
+                "sourceReference": "Ephesians 5:20-31",
+                "sourceSha256": "5731be6261142c6c4f9c9a19f6e5ce073704ae4b999da4465ea88b128c55f3b1",
+                "targetDifficulty": "easy"
+              },
+              {
+                "angle": "connect a place to a distinctive event described there",
+                "date": "2026-11-03",
+                "devotionalAligned": true,
+                "sourceReference": "Genesis 2:13-24",
+                "sourceSha256": "e29a4188d583cc3c4e13b67ed494ec68111c16a432511e89ef25c5e4668b3f18",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "connect an explicit action to its stated circumstance",
+                "date": "2026-11-04",
+                "devotionalAligned": true,
+                "sourceReference": "Philippians 2:1-12",
+                "sourceSha256": "e7e6d9a878c2dc31e11b9e25a06801f34350bc860d50d84ac836159f3bc56749",
+                "targetDifficulty": "easy"
+              },
+              {
+                "angle": "use an object or image as a clue to a supported connection",
+                "date": "2026-11-05",
+                "devotionalAligned": true,
+                "sourceReference": "Romans 12:5-16",
+                "sourceSha256": "d2e187efc3b171c221b2f601068ec88f248675005a21a1cf872046fa60841811",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "make the setting useful to the answer rather than decorative",
+                "date": "2026-11-06",
+                "devotionalAligned": true,
+                "sourceReference": "Matthew 19:1-12",
+                "sourceSha256": "66893326396ab055387f37ac67d8f064496f3016c48dadfa2ee9cc8f09940a08",
+                "targetDifficulty": "challenging"
+              },
+              {
+                "angle": "connect two events whose sequence is explicit in the passage",
+                "date": "2026-11-07",
+                "devotionalAligned": true,
+                "sourceReference": "Proverbs 13:15-25",
+                "sourceSha256": "94bc311c19f8cd9931ab34e104be85b7e284478cbb1ecb192ebc6c0a8a30a933",
+                "targetDifficulty": "moderate"
+              },
+              {
+                "angle": "explore a distinctive phrase through its immediate context",
+                "date": "2026-11-08",
+                "devotionalAligned": true,
+                "sourceReference": "Psalms 127:1-5",
+                "sourceSha256": "f6a66f58c0f47734c3bef7f6f0b402f33925d9186503cfa3fdf8a23675bfe2a0",
+                "targetDifficulty": "easy"
+              }
+            ],
+            "endDate": "2026-11-08",
+            "learningGoal": "Follow the events and objects named in the Exodus accounts.",
+            "startDate": "2026-11-02",
+            "theme": "Exodus and wilderness",
+            "version": "discovery-biblical-curriculum-v2",
+            "weekNumber": 2
+          },
+          "reason": "Narrative-first sources and precommitted alternate passages; accepted scheduled questions preserved except the explicit future editorial hold.",
+          "reviewedAt": "2026-10-28T23:48:35.227Z"
+        },
+        "sourcePolicy": "Narrative details first; devotional alignment only for narrative passages; alternate trusted source on each failed attempt.",
+        "sourceRepairs": [
+          {
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "changes": [
+              {
+                "date": "2026-11-02",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "Use the unusual way of drinking water as context for the exact number of men retained.",
+                    "sourceReference": "Judges 7:4-8",
+                    "sourceSha256": "dc32fd2fabc8dda74d893c811da8c8f6bb300e498879ea3069d448992336621b"
+                  },
+                  {
+                    "angle": "In the parable, distinguish what is put on the son’s finger from what is put on his feet.",
+                    "sourceReference": "Luke 15:20-24",
+                    "sourceSha256": "b3457390558389812053220a9f5b3a3a7f3188318b857aa5f41cb766795a51f7"
+                  },
+                  {
+                    "angle": "Connect the fire and viper with the explicitly named island.",
+                    "sourceReference": "Acts 28:1-6",
+                    "sourceSha256": "fa3ad015c4e55b8d0a8a53ddf571afb39973dedd59f81fe32926fece5e816103"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman's rush to invite the city to meet Jesus with the object she leaves behind. Do not add where she leaves it if the excerpt does not say.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-03",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "connect a place to a distinctive event described there",
+                    "sourceReference": "Genesis 2:13-24",
+                    "sourceSha256": "e29a4188d583cc3c4e13b67ed494ec68111c16a432511e89ef25c5e4668b3f18"
+                  },
+                  {
+                    "angle": "Connect the temple-tax instruction with the exact location where Peter is told he will find a coin.",
+                    "sourceReference": "Matthew 17:24-27",
+                    "sourceSha256": "4fd70f83a1f0adcde53b23e8e1e063e4a5a43bc9a493d858d29b12d7dadabbcd"
+                  },
+                  {
+                    "angle": "Connect David setting aside the armor with the exact number of smooth stones he selects.",
+                    "sourceReference": "1 Samuel 17:38-40",
+                    "sourceSha256": "8a0166d0ece4c5520f637884a9a441451ffc965338915f977674c8e4d8889b89"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-04",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "Connect the crowded house and lowered bed with the explicit number of people carrying the man.",
+                    "sourceReference": "Mark 2:1-12",
+                    "sourceSha256": "fa87c8472b81d4888a8acd8a9f44fd7f9e47c752402f4e78d6a32a1eeb8f1d09"
+                  },
+                  {
+                    "angle": "Connect Judas’s agreement with the exact number of silver pieces.",
+                    "sourceReference": "Matthew 26:14-16",
+                    "sourceSha256": "957aa6fc0de47364c2b14d7b1d6501401b1a585f42e28231d7992ae1e7b56998"
+                  },
+                  {
+                    "angle": "Connect the brook and morning/evening provisions with the birds named as bringing food.",
+                    "sourceReference": "1 Kings 17:1-6",
+                    "sourceSha256": "9b8ebc0f2c342ca00e7a0cd1dcaaee1edfb40832d44fe67703957be342aacdef"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-07",
+                "previousAttempts": 3,
+                "previousEpoch": 1,
+                "previousSources": [
+                  {
+                    "angle": "In the parable, connect the innkeeper’s care with the exact amount of money handed over. Keep every option an exact amount, not overlapping expense categories.",
+                    "sourceReference": "Luke 10:30-35",
+                    "sourceSha256": "72836b4b6b7c0a1caa74ce44c5ab3f627577ddfe56b91175f07622a851541fbd"
+                  },
+                  {
+                    "angle": "Connect the supper, removed garments and basin with the item Jesus wraps around himself.",
+                    "sourceReference": "John 13:3-11",
+                    "sourceSha256": "0d33977573eb0f2199050c64c449a292e1d1c6305e6764ac831cc0e8683c231d"
+                  },
+                  {
+                    "angle": "Connect Jonah’s shade plant with the creature appointed to damage it.",
+                    "sourceReference": "Jonah 4:5-8",
+                    "sourceSha256": "5a9038e9cee74684a4534e558b181897ca20d4770567ed49a06d4f03bce31500"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect David's chance to harm Saul in the cave with the garment he cuts instead. Avoid adding later events or changing the narrative's attribution of the men's words.",
+                    "sourceReference": "1 Samuel 24:1-7",
+                    "sourceSha256": "ab7a5be821822eb21dc84ea8725e3f20e71ec420f7c006ea4d023b166ac6b5a9"
+                  },
+                  {
+                    "angle": "Connect Demetrius's concern for the craftsmen's livelihood with the deity named on their silver shrines. Keep the claim within Acts's account and use distinct named deities as options.",
+                    "sourceReference": "Acts 19:23-28",
+                    "sourceSha256": "fe1c307688b8b131ea0eb2e31cbf5eaaac04914f8a1ca4d1f42fdd43e801dbf0"
+                  },
+                  {
+                    "angle": "Connect Sisera asking for water in Jael's tent with the different drink she gives him. Do not add motives or events beyond this short excerpt.",
+                    "sourceReference": "Judges 4:17-20",
+                    "sourceSha256": "3dec1f425179256bf850c16009e591c44b759f31b88453ae649df87996d6a29d"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              }
+            ],
+            "createdAt": "2026-10-29T20:54:24.188Z",
+            "id": "878104cf-0192-4df3-b49b-88df35f0781a",
+            "manifestId": "narrative-source-repair-2026-10-29",
+            "manifestSha256": "73728a1402b8a90499eb85554bbbb6728bf1ac049ef08b4ca8dad7920b093dfe",
+            "reason": "Reviewed production rejections showed arbitrary numeric recall, weak choices, unsupported contextual phrasing and short-excerpt genre ambiguity. Replace six exhausted source selections with concrete actions, contrasts and consequences in self-contained narrative passages. Keep the factual/craft thresholds and all earlier attempts unchanged."
+          },
+          {
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "changes": [
+              {
+                "date": "2026-11-02",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman's rush to invite the city to meet Jesus with the object she leaves behind. Do not add where she leaves it if the excerpt does not say.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-03",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the sister's offer to find a nurse and Pharaoh's daughter's promise of wages with the baby's mother being brought. Do not supply the sister's or mother's unstated personal names.",
+                    "sourceReference": "Exodus 2:1-10",
+                    "sourceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c"
+                  },
+                  {
+                    "angle": "Connect the invitation to stay and the recognition at the table with the breaking of bread. Do not add the village name, which is outside this excerpt.",
+                    "sourceReference": "Luke 24:28-35",
+                    "sourceSha256": "001cdcc5c0c074c2e742747411f55a4ca4ed878edeed3711882e192a933201a9"
+                  },
+                  {
+                    "angle": "Connect the king's sleepless night with the action he takes at daybreak. Keep it a statement of Daniel's account, not independent historical confirmation.",
+                    "sourceReference": "Daniel 6:16-23",
+                    "sourceSha256": "563305d82000b78a63b52647806fbf6bc913a88dc0ea346c26ed42b82fe73ec5"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              },
+              {
+                "date": "2026-11-04",
+                "previousAttempts": 3,
+                "previousEpoch": 2,
+                "previousSources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "sources": [
+                  {
+                    "angle": "Connect the discovered book and reading before the king with the king's immediate reaction of tearing his clothes. Do not supply the king's name from outside the excerpt.",
+                    "sourceReference": "2 Kings 22:8-13",
+                    "sourceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858"
+                  },
+                  {
+                    "angle": "Connect sailors pretending to lower anchors while trying to escape with what the soldiers cut to release the boat. Do not quiz the sounding depths or anchor count.",
+                    "sourceReference": "Acts 27:27-32",
+                    "sourceSha256": "424470b092b28032b1f8b270acb63e3bb58f6d81c687af46afd6558b207dc214"
+                  },
+                  {
+                    "angle": "Connect the riverside meeting with Lydia's invitation to stay at her house. If asking about her business, retain the exact phrase seller of purple without inferring a specific material.",
+                    "sourceReference": "Acts 16:11-15",
+                    "sourceSha256": "c0fc68638d11886017dd5e54032262ef9b0b58a375e5935783c7a028053f3357"
+                  }
+                ],
+                "weekStart": "2026-11-02"
+              }
+            ],
+            "createdAt": "2026-10-29T21:19:57.033Z",
+            "id": "98f8fc76-af6b-4492-b0f9-f597df81400d",
+            "manifestId": "writer-contract-repair-2026-10-29",
+            "manifestSha256": "3957ae679c25a19ef85913a4525caec0d55d048eeb9b6adf63ebdccd7e729c28",
+            "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+            "mode": "writer_revision",
+            "previousWriterVersion": "sanctuary-trivia-writer-v3",
+            "reason": "The v3 writer prompt included instructions to rate craft/difficulty, causing review commentary to leak into claims and repeated factoid-budget failures. Writer v4 removes grading tasks, constrains the strict schema to two factual sentences of fourteen words each, and preserves all v3 evidence/craft thresholds. Three source-bound live pilot drafts passed; six adversarial controls were rejected. This is one explicit policy repair for three exhausted v3 dates, not an automatic retry reset or factual approval.",
+            "writerVersion": "sanctuary-trivia-writer-v4"
+          },
+          {
+            "id": "e41d4ba3-d7e9-4ddb-b30a-7a83cb7d97a2",
+            "manifestId": "reviewer-pair-repair-2026-10-29",
+            "manifestSha256": "9c5291b9710dd44bc8ecd7d9c69dede42a852150f766f9013bd1d2853875b66d",
+            "createdAt": "2026-10-29T21:31:36.369Z",
+            "actor": "90de876e-49cf-40df-9f65-20c7e881c4f8",
+            "reason": "The production mini verifier assigned below-threshold confidence to an explicit source premise without identifying a factual issue. The stronger first verifier has been source-checked for Responses/strict schema support and tested on six adversarial rejection controls plus three positive drafts. All six controls were rejected; two positives passed and the third was rejected for craft, so thresholds and the independent Astra check remain intact. Perform one explicit reviewer-configuration repair for the only remaining exhausted date; preserve every earlier attempt and do not reset failures from the new pair.",
+            "method": "Explicit operator source repair under owner authorization; not human factual approval.",
+            "changes": [
+              {
+                "date": "2026-11-02",
+                "weekStart": "2026-11-02",
+                "previousEpoch": 3,
+                "previousAttempts": 3,
+                "previousSources": [
+                  {
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials.",
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd"
+                  },
+                  {
+                    "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location.",
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399"
+                  },
+                  {
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors.",
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078"
+                  }
+                ],
+                "sources": [
+                  {
+                    "sourceReference": "Acts 18:1-4",
+                    "sourceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+                    "angle": "Connect Paul living and working with Aquila and Priscilla with their shared trade. Keep choices parallel occupations and avoid claims about modern tent materials."
+                  },
+                  {
+                    "sourceReference": "John 4:25-30",
+                    "sourceSha256": "482555356b6cc3753e855ba21602871af2f68bbc552e6113811d286d3feb4399",
+                    "angle": "Connect the woman leaving to invite the city to meet Jesus with the object she leaves behind. The excerpt does not state that she rushed; do not add urgency or an unstated location."
+                  },
+                  {
+                    "sourceReference": "Matthew 2:9-12",
+                    "sourceSha256": "5aa72e8016f08baf5af277e0fae7fdf4c093b74705da8f88e0039e95de2c6078",
+                    "angle": "Connect the warning in a dream with the changed route home. Ask about the warned-against recipient of a return visit, not the unstated number of visitors."
+                  }
+                ]
+              }
+            ],
+            "mode": "reviewer_revision",
+            "writerVersion": "sanctuary-trivia-writer-v4",
+            "previousReviewModels": [
+              "gpt-5-mini",
+              "gpt-6-astra"
+            ],
+            "reviewModels": [
+              "gpt-6.1-sol",
+              "gpt-6-astra"
+            ]
+          }
+        ],
+        "startDate": "2026-11-02",
+        "theme": "Exodus and wilderness",
+        "version": "discovery-biblical-curriculum-v3",
+        "weekNumber": 2
+      }
+    }
+  ],
+  "appliedAt": "2026-10-29T21:31:38.699Z"
+}

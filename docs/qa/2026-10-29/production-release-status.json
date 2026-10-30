@@ -1,0 +1,196 @@
+{
+  "capturedAt": "2026-10-29T12:09:17.114Z",
+  "project": "cmakuvkjxknwhonfqbit",
+  "runtime": {
+    "enabled": false,
+    "rollout_percentage": 0
+  },
+  "reminders": {
+    "enabled": false,
+    "rollout_stage": "dry_run",
+    "send_local_time": "18:00:00"
+  },
+  "status": {
+    "today": "2026-10-29",
+    "targetDate": "2026-11-27",
+    "runwayDays": 30,
+    "healthy": false,
+    "contiguousDays": 2,
+    "runwayThrough": "2026-10-30",
+    "missingDates": [
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-07",
+      "2026-11-12",
+      "2026-11-13",
+      "2026-11-14",
+      "2026-11-15",
+      "2026-11-16",
+      "2026-11-17",
+      "2026-11-18",
+      "2026-11-19",
+      "2026-11-20",
+      "2026-11-21",
+      "2026-11-22",
+      "2026-11-23",
+      "2026-11-24",
+      "2026-11-25",
+      "2026-11-26",
+      "2026-11-27"
+    ],
+    "exhaustedDates": [
+      "2026-10-31",
+      "2026-11-01",
+      "2026-11-02",
+      "2026-11-03",
+      "2026-11-04",
+      "2026-11-07"
+    ],
+    "awaitingReviewDates": [],
+    "slots": [
+      {
+        "publication_date": "2026-10-29",
+        "status": "scheduled",
+        "attempts": 1,
+        "lease_until": null,
+        "discovery_id": "66a4755a-4153-456d-84e1-fbe902f35be8"
+      },
+      {
+        "publication_date": "2026-10-30",
+        "status": "scheduled",
+        "attempts": 2,
+        "lease_until": null,
+        "discovery_id": "ac5099c6-3aa1-4cb6-94c8-bc529d66e69b"
+      },
+      {
+        "publication_date": "2026-10-31",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-01",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-02",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-03",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-04",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-05",
+        "status": "scheduled",
+        "attempts": 2,
+        "lease_until": null,
+        "discovery_id": "10fed907-1335-4854-b8f9-c890f4d7871f"
+      },
+      {
+        "publication_date": "2026-11-06",
+        "status": "scheduled",
+        "attempts": 2,
+        "lease_until": null,
+        "discovery_id": "22e47bdb-ac30-4c9f-b7ed-84900775843e"
+      },
+      {
+        "publication_date": "2026-11-07",
+        "status": "exhausted",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": null
+      },
+      {
+        "publication_date": "2026-11-08",
+        "status": "scheduled",
+        "attempts": 1,
+        "lease_until": null,
+        "discovery_id": "34259804-a46b-46dd-902a-fd39bc25996b"
+      },
+      {
+        "publication_date": "2026-11-09",
+        "status": "scheduled",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": "ed02f779-b61a-4fea-b7d5-ad7c6d3f32cd"
+      },
+      {
+        "publication_date": "2026-11-10",
+        "status": "scheduled",
+        "attempts": 3,
+        "lease_until": null,
+        "discovery_id": "f8bd9c71-07aa-4f71-9275-05ea5e0ec424"
+      },
+      {
+        "publication_date": "2026-11-11",
+        "status": "scheduled",
+        "attempts": 2,
+        "lease_until": null,
+        "discovery_id": "2bce5c1a-a81a-4864-96a0-bc15d1771206"
+      },
+      {
+        "publication_date": "2026-11-12",
+        "status": "generating",
+        "attempts": 1,
+        "lease_until": "2026-10-29T08:37:51.883648+00:00",
+        "discovery_id": null
+      }
+    ]
+  },
+  "discoveryDeliveryCount": 0,
+  "health": 200,
+  "publicBundle": {
+    "status": 200,
+    "enabled": false,
+    "itemCount": 0
+  },
+  "reminderDryRun": {
+    "status": 200,
+    "body": {
+      "generatedAt": "2026-10-29T12:09:17.533Z",
+      "results": [
+        {
+          "category": "discovery",
+          "dryRun": true,
+          "rolloutStage": "dry_run",
+          "eligible": 0,
+          "attempted": 0,
+          "accepted": 0,
+          "optedOut": 0,
+          "quietHours": 0,
+          "frequencyCapped": 0,
+          "missingContent": 0,
+          "invalidEndpoint": 0,
+          "outsideWindow": 46,
+          "outsideRollout": 0,
+          "deduplicated": 0,
+          "alreadyPlayed": 0,
+          "unsupportedClient": 0,
+          "failed": 0
+        }
+      ],
+      "gates": []
+    }
+  }
+}

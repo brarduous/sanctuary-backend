@@ -1,5 +1,42 @@
 services:
   - type: cron
+    name: sanctuary-daily-discovery-curriculum
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "15 8 * * *"
+    buildCommand: npm install
+    startCommand: npm run cron-discoveries
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DISCOVERY_CURRICULUM_ENABLED
+        value: "true"
+      - key: DISCOVERY_AUTO_APPROVE_BIBLICAL
+        value: "true"
+      - key: DISCOVERY_MIN_EVIDENCE_SCORE
+        value: 95
+      - key: DISCOVERY_RUNWAY_DAYS
+        value: 30
+      - key: DISCOVERY_MAX_DAYS_PER_RUN
+        value: 7
+      - key: DISCOVERY_MAX_TOKENS_PER_RUN
+        value: 150000
+      - key: DISCOVERY_GENERATOR_MODEL
+        value: gpt-5.6-sol
+      - key: DISCOVERY_VERIFIER_MODEL
+        value: gpt-6.1-sol
+      - key: DISCOVERY_ADVERSARIAL_MODEL
+        value: gpt-6-astra
+  - type: cron
     name: sanctuary-news-editorial-audit
     runtime: node
     plan: starter

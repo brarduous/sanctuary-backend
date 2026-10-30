@@ -20,6 +20,13 @@ const EVALUATION_SOURCES = {
         outputLabel: 'Scriptural outlook JSON',
         sampleCount: 5,
     },
+    daily_news_synopsis: {
+        table: 'daily_news_synopses',
+        contentField: 'synopsis',
+        idField: 'id',
+        outputLabel: 'Daily news brief, thought, and prayer',
+        sampleCount: 5,
+    },
     advice_guidance_generator: {
         table: 'advice_guidance',
         contentField: 'advice_points',
@@ -133,12 +140,12 @@ const promptUsage = {
     },
     daily_news_synopsis: {
         label: 'Daily news synopsis',
-        status: 'live_uncovered',
+        status: 'evaluated',
         category: 'News',
         role: 'System prompt',
-        usedBy: ['getDailyNewsSynopsisPrompt', 'news ingestion jobs'],
+        usedBy: ['getDailyNewsSynopsisPrompt', 'cron/dailyNewsSynopsis.js'],
         outputs: [
-            { table: 'news_articles', contentField: 'synopsis', idField: 'id', description: 'Article synopsis used downstream by news features.' },
+            { table: 'daily_news_synopses', contentField: 'synopsis', idField: 'id', description: 'Daily brief, with thought stored in scripture and a separate prayer.' },
         ],
     },
     general_devotional_generator: {

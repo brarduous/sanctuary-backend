@@ -1,0 +1,25 @@
+{
+  "target": "gjwvtqdfqprzcpgqrfhr",
+  "verifiedAt": "2026-10-30T13:43:47.564Z",
+  "before": {
+    "accepts_v2": true,
+    "authenticated_execute": false,
+    "devotionals": 39,
+    "reviews": 0,
+    "schedules": 0
+  },
+  "rollback": {
+    "accepts_v2": false,
+    "authenticated_execute": false,
+    "devotionals": 39,
+    "reviews": 0,
+    "schedules": 0
+  },
+  "reapply": {
+    "accepts_v2": true,
+    "authenticated_execute": false,
+    "devotionals": 39,
+    "reviews": 0,
+    "schedules": 0
+  }
+}

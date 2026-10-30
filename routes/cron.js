@@ -2,6 +2,7 @@ const express = require('express');
 const { ensureDevotionalRunway, generateWeeklyBatch, getCurriculumStatus } = require('../cron/generateGeneralDevotionals');
 const supabase = require('../config/supabase');
 const { sendPushToAll, sendPushToUsers } = require('../utils/push');
+const {generateDiscoveries,getDiscoveryCurriculumStatus}=require('../cron/generateDiscoveries');
 
 const router = express.Router();
 
@@ -44,6 +45,21 @@ router.get('/general-devotionals/status', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message || 'Failed to inspect general devotional runway' });
   }
+});
+
+const handleDiscoveriesCron=async (req,res)=>{
+  if(!hasValidCronSecret(req))return res.status(401).json({error:'Unauthorized'});
+  try {
+    const result=await generateDiscoveries();
+    res.status(result.status.exhaustedDates.length ? 503:200).json({success:result.status.exhaustedDates.length===0,...result});
+  }catch(error){console.error('[Cron] Discovery curriculum failed:',error.message);res.status(500).json({error:'Discovery curriculum generation failed; inspect the private run audit.'});}
+};
+router.get('/discoveries',handleDiscoveriesCron);
+router.post('/discoveries',handleDiscoveriesCron);
+router.get('/discoveries/status',async (req,res)=>{
+  if(!hasValidCronSecret(req))return res.status(401).json({error:'Unauthorized'});
+  try {const status=await getDiscoveryCurriculumStatus();res.status(status.healthy ? 200:503).json({success:status.healthy,...status});}
+  catch {res.status(500).json({error:'Discovery curriculum status is unavailable.'});}
 });
 
 router.get('/notifications/daily-devotional', async (req, res) => {

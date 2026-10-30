@@ -1,6 +1,7 @@
 const supabase = require('../config/supabase');
 const openai = require('../config/openai'); // Using your existing config
-const { getRenderedPrompt } = require('../prompts');
+const { getRenderedPrompt, getPersonalizedDevotionalPrompt, getAdviceGuidancePrompt, getScripturalOutlookPrompt, getDailyNewsSynopsisPrompt } = require('../prompts');
+const { EVALUATION_CRITERIA } = require('../utils/audienceContentPolicy');
 const { EVALUATION_SOURCES } = require('../utils/promptRegistry');
 require('dotenv').config();
 
@@ -121,6 +122,16 @@ const EVAL_CONFIG = [
     {
         promptKey: 'daily_devotional_generator',
         ...EVALUATION_SOURCES.daily_devotional_generator,
+        effectivePrompt: () => getPersonalizedDevotionalPrompt({}, {
+            title: '[Curriculum title supplied per request]',
+            scripture_reference: '[Featured reference supplied per request]',
+            content: '[Curriculum core message supplied per request]',
+        }),
+        criteria: EVALUATION_CRITERIA,
+        sampleBuilder: async samples => samples.map((sample, index) => formatStandardSample({
+            ...sample,
+            content: { title: sample.title, scripture: sample.scripture, content: sample.content, short_form: sample.short_form },
+        }, EVALUATION_SOURCES.daily_devotional_generator, index)).join('\n\n---\n\n'),
     },
     {
         promptKey: 'daily_prayer_generator',
@@ -129,10 +140,24 @@ const EVAL_CONFIG = [
     {
         promptKey: 'news_generator',
         ...EVALUATION_SOURCES.news_generator,
+        effectivePrompt: getScripturalOutlookPrompt,
+        criteria: EVALUATION_CRITERIA,
+    },
+    {
+        promptKey: 'daily_news_synopsis',
+        ...EVALUATION_SOURCES.daily_news_synopsis,
+        effectivePrompt: getDailyNewsSynopsisPrompt,
+        criteria: EVALUATION_CRITERIA,
+        sampleBuilder: async samples => samples.map((sample, index) => formatStandardSample({
+            ...sample,
+            synopsis: { synopsis: sample.synopsis, thought_to_remember: sample.scripture, prayer: sample.prayer },
+        }, EVALUATION_SOURCES.daily_news_synopsis, index)).join('\n\n---\n\n'),
     },
     {
         promptKey: 'advice_guidance_generator',
         ...EVALUATION_SOURCES.advice_guidance_generator,
+        effectivePrompt: getAdviceGuidancePrompt,
+        criteria: EVALUATION_CRITERIA,
     },
     {
         promptKey: 'sermon_generator',
@@ -213,6 +238,9 @@ async function evaluate() {
             console.error(`[Error] Could not find prompt: ${config.promptKey}`, promptError);
             continue;
         }
+        // Grade the composed prompt actually used at runtime, including quality
+        // and audience policies, rather than only the database template.
+        const effectivePrompt = config.effectivePrompt ? await config.effectivePrompt() : promptData.content;
 
         // 2. Fetch 5 latest samples using the correct ID fields
         let samplesQuery = supabase
@@ -241,7 +269,7 @@ async function evaluate() {
         // 3. The "Batch Judge" Prompt
         const judgeSystemPrompt = await getRenderedPrompt('prompt_batch_evaluator', {
             source_table: config.table,
-            system_prompt: promptData.content,
+            system_prompt: effectivePrompt,
             generated_batch: batchContent,
             extra_criteria: config.criteria || ''
         });
@@ -263,7 +291,7 @@ async function evaluate() {
                     source_table: config.table,
                     source_id: samples[0][config.idField], // Link to the first ID in the batch as reference
                     generated_content: `Batch of 5 IDs: ${sampleIds}`,
-                    original_prompt: promptData.content,
+                    original_prompt: effectivePrompt,
                     ...result
                 });
 
@@ -279,4 +307,5 @@ async function evaluate() {
     console.log('\n✨ All batches processed.');
 }
 
-evaluate();
+if (require.main === module) evaluate().catch(error => { console.error(error.message); process.exitCode = 1; });
+module.exports = { EVAL_CONFIG, evaluate };

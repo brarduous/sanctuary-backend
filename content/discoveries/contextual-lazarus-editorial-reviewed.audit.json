@@ -1,0 +1,486 @@
+{
+  "id": "a3ce1e48-3bd8-4ae5-914d-5a95b7e93690",
+  "recheckedAt": "2026-10-28T22:05:27.880Z",
+  "input": "contextual-lazarus-editorial-draft.json",
+  "originalDraft": {
+    "id": "1076057b-a764-4382-96ed-fe1095522a37",
+    "slug": "four-days-and-a-stone",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In John, Martha warns of a stench when Jesus orders Lazarus’s tomb opened. How long has Lazarus been dead?",
+      "heading": "A detail in John 11:32-44",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "One day"
+        },
+        {
+          "id": "option-2",
+          "text": "Two days"
+        },
+        {
+          "id": "option-3",
+          "text": "Three days"
+        },
+        {
+          "id": "option-4",
+          "text": "Four days"
+        }
+      ],
+      "correctOptionId": "option-4",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/JHN11.htm",
+          "locator": "John 11:32-44",
+          "excerpt": "Therefore when Mary came to where Jesus was and saw him, she fell down at his feet, saying to him, “Lord, if you would have been here, my brother wouldn’t have died.” When Jesus therefore saw her weeping, and the Jews weeping who came with her, he groaned in the spirit, and was troubled, and said, “Where have you laid him?” They told him, “Lord, come and see.” Jesus wept. The Jews therefore said, “See how much affection he had for him!” Some of them said, “Couldn’t this man, who opened the eyes of him who was blind, have also kept this man from dying?” Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it. Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.” Jesus said to her, “Didn’t I tell you that if you believed, you would see God’s glory?” So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me. I know that you always listen to me, but because of the multitude standing around I said this, that they may believe that you sent me.” When he had said this, he cried with a loud voice, “Lazarus, come out!” He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "four-days",
+          "text": "Martha says Lazarus has been dead four days and warns of a stench. The stone is removed after her warning.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "four-days",
+      "explanationClaimIds": [
+        "four-days"
+      ],
+      "scriptureReference": "John 11:32-44",
+      "translation": "WEB"
+    },
+    "verification": {
+      "method": "Assistant-authored contextual revision, requiring the same independent evidence and craft checks as model-written candidates.",
+      "origin": "assistant_contextual_revision",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "pending",
+      "evidenceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+      "answerText": "Four days"
+    }
+  },
+  "noDatabaseWrites": true,
+  "decision": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v1",
+      "minimumScore": 6,
+      "score": 6,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 7,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 1,
+            "fairChallenge": 2,
+            "choiceQuality": 2
+          },
+          "rationale": "The question points to a specific, well-bounded scene (John 11:32–44) and asks for a single concrete detail. The detail is interesting to readers because it ties into Jewish burial practices and the miracle's sign. The correct answer is directly supported but the distractors are plausible numeric alternatives, making it a fair short challenge."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v1",
+          "score": 6,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 1,
+            "fairChallenge": 1,
+            "choiceQuality": 2
+          },
+          "rationale": "Passes at 6/8. The command to open the tomb supplies a concise scene, and Martha's warning adds a grounded identifying clue. The duration is worthwhile because it explains her objection, although the task remains direct recall. All four choices are parallel, plausible durations, and the text clearly distinguishes the correct one."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 95,
+    "candidateSha256": "c924ae0d444ecdd508c7652e002fb44b83c661d319bc4a3349c140f1633f48d3",
+    "sourceSha256": "ae7b86685d5db4f41387bbdedb0e9fe1f1bf7ac4a624a29cb42925a5f8b283e1",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "523809a8b773d492cb7051e23c95d81e20d3bbfbb2af4c5fc3a700db39efad1e",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "moderate",
+      "score": 3
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "question_context_quote_missing_or_invalid",
+      "fabricated_or_missing_quote"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "Jesus orders the stone of Lazarus’s tomb to be taken away.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it."
+              }
+            ]
+          },
+          {
+            "text": "Martha warns that there will be a stench when the tomb is opened.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ]
+          },
+          {
+            "text": "Martha states that Lazarus has been dead four days.",
+            "status": "supported",
+            "confidence": 99,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 17,
+                "quote": ""
+              }
+            ]
+          },
+          {
+            "text": "The stone is removed after Martha’s warning.",
+            "status": "supported",
+            "confidence": 95,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 41,
+                "quote": "So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 1,
+          "fairChallenge": 2,
+          "choiceQuality": 2,
+          "rationale": "The question points to a specific, well-bounded scene (John 11:32–44) and asks for a single concrete detail. The detail is interesting to readers because it ties into Jewish burial practices and the miracle's sign. The correct answer is directly supported but the distractors are plausible numeric alternatives, making it a fair short challenge."
+        },
+        "claims": [
+          {
+            "claimId": "four-days",
+            "status": "supported",
+            "confidence": 99,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 17,
+                "quote": ""
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The passage explicitly states Lazarus had been dead four days, so 'one day' contradicts the text.",
+            "evidence": [],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "The passage explicitly states Lazarus had been dead four days, so 'two days' contradicts the text.",
+            "evidence": [],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "The passage explicitly states Lazarus had been dead four days, so 'three days' contradicts the text.",
+            "evidence": [],
+            "confidence": 95
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "John 11:39 (and John 11:17 in the chapter context) explicitly states that Lazarus had been dead four days when Jesus ordered the stone removed.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 17,
+                "quote": ""
+              }
+            ],
+            "confidence": 99
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "The detail is a recognizable episode but the specific number of days is a textual detail (familiar to some readers). The answer appears directly in a single verse (no multi-step inference), and the numeric distractors are closely related, so distinguishing the correct number requires reading the verse."
+        },
+        "model": "gpt-5-mini-2025-08-07",
+        "requestedModel": "gpt-5-mini",
+        "responseId": "resp_007390c0a4b5a3dc016ae2719135a887d2b5137ca8c9c7b583"
+      },
+      {
+        "solvedOptionId": "option-4",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The scene occurs in John, within the stated John 11:32–44 passage.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ]
+          },
+          {
+            "text": "The tomb in this scene contains Lazarus, who has died.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 41,
+                "quote": "So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          },
+          {
+            "text": "Jesus orders the tomb opened by having its stone removed.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 38,
+                "quote": "Jesus therefore, again groaning in himself, came to the tomb. Now it was a cave, and a stone lay against it."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ]
+          },
+          {
+            "text": "Martha warns of a stench.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ]
+          },
+          {
+            "text": "Martha's warning follows Jesus's command and precedes the actual removal of the stone.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 41,
+                "quote": "So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 1,
+          "fairChallenge": 1,
+          "choiceQuality": 2,
+          "rationale": "Passes at 6/8. The command to open the tomb supplies a concise scene, and Martha's warning adds a grounded identifying clue. The duration is worthwhile because it explains her objection, although the task remains direct recall. All four choices are parallel, plausible durations, and the text clearly distinguishes the correct one."
+        },
+        "claims": [
+          {
+            "claimId": "four-days",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 41,
+                "quote": "So they took away the stone from the place where the dead man was lying. Jesus lifted up his eyes, and said, “Father, I thank you that you listened to me."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 43,
+                "quote": "When he had said this, he cried with a loud voice, “Lazarus, come out!”"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 44,
+                "quote": "He who was dead came out, bound hand and foot with wrappings, and his face was wrapped around with a cloth. Jesus said to them, “Free him, and let him go.”"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "One day conflicts with the duration Martha explicitly states.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Two days is not the elapsed time since death stated in Martha's warning.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Three days conflicts with Martha's explicit statement.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "supported",
+            "rationale": "Martha explicitly gives four days as the duration of his death when explaining the stench.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 39,
+                "quote": "Jesus said, “Take away the stone.” Martha, the sister of him who was dead, said to him, “Lord, by this time there is a stench, for he has been dead four days.”"
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 2,
+          "rationale": "Moderate (3/8). Lazarus's raising is recognizable, but the precise duration is a less familiar detail. One verse directly supplies the answer without inference; the distractors are closely related numerical durations."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0fdf9cdc51a75eb7016ae2719130a887d28165b93bb3f745ac"
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-5-mini-2025-08-07",
+      "responseId": "resp_007390c0a4b5a3dc016ae2719135a887d2b5137ca8c9c7b583",
+      "usage": {
+        "inputTokens": 4496,
+        "outputTokens": 2428,
+        "totalTokens": 6924
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0fdf9cdc51a75eb7016ae2719130a887d28165b93bb3f745ac",
+      "usage": {
+        "inputTokens": 4496,
+        "outputTokens": 1195,
+        "totalTokens": 5691
+      }
+    }
+  ]
+}

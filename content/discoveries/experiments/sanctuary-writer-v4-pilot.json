@@ -1,0 +1,278 @@
+[
+  {
+    "id": "5d68785c-a49e-4a62-a528-3a40e13977df",
+    "slug": "writer-v4-2026-11-02",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In Acts, Paul lived and worked with Aquila and Priscilla because they shared what trade?",
+      "heading": "A detail in Acts 18:1-4",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "Carpenters"
+        },
+        {
+          "id": "option-2",
+          "text": "Fishermen"
+        },
+        {
+          "id": "option-3",
+          "text": "Tent makers"
+        },
+        {
+          "id": "option-4",
+          "text": "Merchants"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/ACT18.htm",
+          "locator": "Acts 18:1-4",
+          "excerpt": "After these things Paul departed from Athens, and came to Corinth. He found a certain Jew named Aquila, a man of Pontus by race, who had recently come from Italy, with his wife Priscilla, because Claudius had commanded all the Jews to depart from Rome. He came to them, and because he practiced the same trade, he lived with them and worked, for by trade they were tent makers. He reasoned in the synagogue every Sabbath and persuaded Jews and Greeks.",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Paul, Aquila, and Priscilla were tent makers.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "Paul reasoned in the synagogue every Sabbath.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "Acts 18:1-4",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "d7326aa13220e4b5e386e59a5a273dfba93dd73ca258a8d9c1ed7a79b2b3b4cd",
+      "answerText": "Tent makers",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-v4-pilot.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v4",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_01b6d535c699cb0a016ae3b519bdbc87d28a0c5a89d0d1428b",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_035a093c1b5c6aa1016ae3b51def7887d29c64a60960600918",
+        "resp_0bba2b898cf227d2016ae3b51e149087d29c2dfc650315eeb4"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "58a7a765-35e4-4474-9747-23e50cdd8f14",
+    "slug": "writer-v4-2026-11-03",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In Exodus, after the sister offered to find a nurse, whom did Pharaoh’s daughter promise wages?",
+      "heading": "A detail in Exodus 2:1-10",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "a Hebrew midwife"
+        },
+        {
+          "id": "option-2",
+          "text": "an Egyptian nurse"
+        },
+        {
+          "id": "option-3",
+          "text": "the child’s mother"
+        },
+        {
+          "id": "option-4",
+          "text": "the child’s sister"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/EXO02.htm",
+          "locator": "Exodus 2:1-10",
+          "excerpt": "A man of the house of Levi went and took a daughter of Levi as his wife. The woman conceived and bore a son. When she saw that he was a fine child, she hid him three months. When she could no longer hide him, she took a papyrus basket for him, and coated it with tar and with pitch. She put the child in it, and laid it in the reeds by the river’s bank. His sister stood far off, to see what would be done to him. Pharaoh’s daughter came down to bathe at the river. Her maidens walked along by the riverside. She saw the basket among the reeds, and sent her servant to get it. She opened it, and saw the child, and behold, the baby cried. She had compassion on him, and said, “This is one of the Hebrews’ children.” Then his sister said to Pharaoh’s daughter, “Should I go and call a nurse for you from the Hebrew women, that she may nurse the child for you?” Pharaoh’s daughter said to her, “Go.” The young woman went and called the child’s mother. Pharaoh’s daughter said to her, “Take this child away, and nurse him for me, and I will give you your wages.” The woman took the child, and nursed it. The child grew, and she brought him to Pharaoh’s daughter, and he became her son. She named him Moses, and said, “Because I drew him out of the water.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "Pharaoh’s daughter promised the child’s mother wages for nursing him.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "When the child grew, she brought him to Pharaoh’s daughter.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "Exodus 2:1-10",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "moderate",
+        "score": 3
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "b7868e9c95597f38b16877d17d09982352663fe04b304ef1022c4ae8600c864c",
+      "answerText": "the child’s mother",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-v4-pilot.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v4",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_00d7fabee576a4af016ae3b532464c87d295f6befd4779ab04",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0321b8ebeda2b0bc016ae3b540130487d2b77bad1a23b92a25",
+        "resp_0bc43831f69b4730016ae3b540125487d2976a0d14b3d3d563"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  },
+  {
+    "id": "bd9773bf-bcbf-4e80-b547-d18561fd2bdd",
+    "slug": "writer-v4-2026-11-04",
+    "content": {
+      "kind": "biblical_text",
+      "category": "Bible and context",
+      "prompt": "In 2 Kings, after Shaphan read the discovered book before the king, what did the king immediately do?",
+      "heading": "A detail in 2 Kings 22:8-13",
+      "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+      "choices": [
+        {
+          "id": "option-1",
+          "text": "covered his face"
+        },
+        {
+          "id": "option-2",
+          "text": "fell to his knees"
+        },
+        {
+          "id": "option-3",
+          "text": "tore his clothes"
+        },
+        {
+          "id": "option-4",
+          "text": "dismissed the scribe"
+        }
+      ],
+      "correctOptionId": "option-3",
+      "sources": [
+        {
+          "id": "passage",
+          "type": "scripture",
+          "title": "World English Bible (classic)",
+          "publisher": "eBible.org / World English Bible",
+          "url": "https://ebible.org/eng-web/2KI22.htm",
+          "locator": "2 Kings 22:8-13",
+          "excerpt": "Hilkiah the high priest said to Shaphan the scribe, “I have found the book of the law in Yahweh’s house.” Hilkiah delivered the book to Shaphan, and he read it. Shaphan the scribe came to the king, and brought the king word again, and said, “Your servants have emptied out the money that was found in the house, and have delivered it into the hands of the workmen who have the oversight of Yahweh’s house.” Shaphan the scribe told the king, saying, “Hilkiah the priest has delivered a book to me.” Then Shaphan read it before the king. When the king had heard the words of the book of the law, he tore his clothes. The king commanded Hilkiah the priest, Ahikam the son of Shaphan, Achbor the son of Micaiah, Shaphan the scribe, and Asaiah the king’s servant, saying, “Go inquire of Yahweh for me, and for the people, and for all Judah, concerning the words of this book that is found; for great is Yahweh’s wrath that is kindled against us, because our fathers have not listened to the words of this book, to do according to all that which is written concerning us.”",
+          "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+        }
+      ],
+      "claims": [
+        {
+          "id": "claim-1",
+          "text": "The king tore his clothes after hearing the book of the law.",
+          "sourceIds": [
+            "passage"
+          ]
+        },
+        {
+          "id": "claim-2",
+          "text": "He then commanded five men to inquire of Yahweh.",
+          "sourceIds": [
+            "passage"
+          ]
+        }
+      ],
+      "answerClaimId": "claim-1",
+      "explanationClaimIds": [
+        "claim-1",
+        "claim-2"
+      ],
+      "scriptureReference": "2 Kings 22:8-13",
+      "translation": "WEB",
+      "difficulty": {
+        "rubricVersion": "discovery-difficulty-v1",
+        "level": "easy",
+        "score": 2
+      }
+    },
+    "verification": {
+      "method": "Generated and assessed by the actual curriculum model pipeline; unpublished draft, not a human approval or measured probability of truth.",
+      "evidenceSha256": "e56913274776c27039f9d495c2e0f56b1b367f2777deb9f623af6cd95f8f7858",
+      "answerText": "tore his clothes",
+      "humanReviewStatus": "pending",
+      "automatedReviewStatus": "passed",
+      "auditFile": "sanctuary-writer-v4-pilot.audit.json",
+      "writerVersion": "sanctuary-trivia-writer-v4",
+      "writerModel": "gpt-5.6-sol",
+      "writerResponseId": "resp_0d06613b3a6949e6016ae3b4e4380c87d29242955e23d8a02b",
+      "reviewModels": [
+        "gpt-5-mini-2025-08-07",
+        "gpt-6-astra"
+      ],
+      "reviewResponseIds": [
+        "resp_0a269e4ff07b450a016ae3b4ec28b487d2a1cd3314c7618840",
+        "resp_0734385e815f13a7016ae3b4ec4b6087d28952467d61168b2d"
+      ],
+      "policyVersion": "discovery-evidence-v3",
+      "evidenceScore": 95,
+      "questionCraftScore": 6
+    }
+  }
+]
