@@ -51,7 +51,7 @@ function assessCandidate(content,evidence,reviews,options={}) {
   for(const review of reviews || []) {
     for(const field of ['questionAccuracy','scopeAccuracy','explanationCoverage'])recordScore(review[field],`${field}_below_threshold`);
     if(review.simpleTextualFact!==true || !Array.isArray(review.unresolvedIssues) || review.unresolvedIssues.length)reasons.push('unresolved_or_complex_claim');
-    try {const rating=assessQuestionCraft(review.questionCraft);craft.push(rating);if(!rating.accepted)reasons.push('question_craft_below_threshold');}catch{reasons.push('question_craft_missing_or_invalid');}
+    try {const rating=assessQuestionCraft(review.questionCraft);craft.push(rating);if(!rating.accepted)reasons.push('question_craft_below_threshold');if(options.dailySet && (rating.score<7 || rating.dimensions.fairChallenge!==2))reasons.push('daily_set_editorial_gate');}catch{reasons.push('question_craft_missing_or_invalid');}
     if(!Array.isArray(review.questionPremises) || !review.questionPremises.length)reasons.push('question_premises_not_verified');
     for(const premise of review.questionPremises || []) {
       if(typeof premise.text!=='string' || !premise.text.trim() || premise.status!=='supported')reasons.push('question_context_unsupported');
@@ -78,10 +78,11 @@ function assessCandidate(content,evidence,reviews,options={}) {
   }
   let difficulty=null;
   try {difficulty=consensusDifficulty(reviews);}catch{reasons.push('difficulty_disagreement');}
+  if(options.dailySet && difficulty?.level!==options.targetDifficulty)reasons.push('daily_set_difficulty_mismatch');
   return {policyVersion:POLICY,copyPolicyVersion:COPY_POLICY,questionCraft:{policyVersion:CRAFT_POLICY,minimumScore:6,score:craft.length===2 ? Math.min(...craft.map(rating=>rating.score)):0,assessments:craft},accepted:reasons.length===0,minimumScore:threshold,evidenceScore:scores.length ? Math.min(...scores) : 0,candidateSha256:sha(content),sourceSha256:evidence.sourceSha256,corpusVersion:evidence.corpusVersion,corpusSha256:evidence.corpusSha256,questionFingerprint:fingerprint(content),difficulty,difficultyTargetMet:difficulty?.level===options.targetDifficulty,reasons:[...new Set(reasons)],reviews};
 }
 function retryFeedback(verification,reasons=[]) {
-  const comments=(verification?.reviews || []).flatMap(review=>[...(review.unresolvedIssues || []),review.questionCraft?.rationale]).filter(value=>typeof value==='string').map(value=>value.slice(0,700));
+  const comments=(verification?.reviews || []).flatMap(review=>[...(review.unresolvedIssues || []),review.questionCraft?.rationale,review.difficulty?.rationale]).filter(value=>typeof value==='string').map(value=>value.slice(0,700));
   return [...new Set([...reasons,...comments])].slice(0,12);
 }
 module.exports={POLICY,MIN_SCORE,SCOPE,candidateFromDraft,fingerprint,similarity,exactQuote,deterministicChecks,assessCandidate,retryFeedback};

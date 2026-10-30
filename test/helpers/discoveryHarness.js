@@ -47,7 +47,7 @@ function transport(db) {
   }
  };
 }
-async function createHarness({listen=false,port=0,curriculum=false}={}) {
+async function createHarness({listen=false,port=0,curriculum=false,dailySets=false}={}) {
  const db=await PGlite.create({parsers:{[types.DATE]:value=>value}});
  await db.exec(`create schema auth; create table auth.users(id uuid primary key); create table public.user_profiles(user_id uuid primary key, role text); create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public to anon,authenticated,service_role;`);
  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028120000_daily_discoveries.sql'),'utf8'));
@@ -58,6 +58,7 @@ async function createHarness({listen=false,port=0,curriculum=false}={}) {
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028220000_discovery_question_craft.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028234500_discovery_source_options.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8'));
+  if(dailySets)await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
  }
  for(const [id,role] of [[ADMIN,'admin'],[MEMBER,'member'],[OTHER,'member']]) {
   await db.query('insert into auth.users values($1)',[id]);await db.query('insert into user_profiles values($1,$2)',[id,role]);

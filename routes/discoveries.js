@@ -41,28 +41,41 @@ async function projectSchedule(schedule) {
   return schedule.flatMap(row => {
     const parent = parents.get(row.discovery_id);
     const content = revisions.find(candidate => candidate.discovery_id === row.discovery_id && candidate.revision === row.revision);
-    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), correctionNotice: parent.correction_notice || null }];
+    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), ...(row.position ? {setPosition:row.position,setDifficulty:['easy','medium','hard'][row.position-1]}:{}), correctionNotice: parent.correction_notice || null }];
   });
 }
 async function releasedRows(id, rev) {
   const cutoff = localDate(new Date(),'Pacific/Kiritimati');
-  const queries = ['discovery_schedule','discovery_publication_history'].map(table => {
-    let query = supabase.from(table).select('publication_date,discovery_id,revision').eq('discovery_id',id).lte('publication_date',cutoff);
+  const queries = ['discovery_schedule','discovery_publication_history','discovery_daily_set_items'].map(table => {
+    let query = supabase.from(table).select(`publication_date,discovery_id,revision${table==='discovery_daily_set_items' ? ',position':''}`).eq('discovery_id',id).lte('publication_date',cutoff);
     if (rev) query = query.eq('revision',rev);
     return query.order('publication_date',{ascending:false}).limit(100);
   });
-  return (await Promise.all(queries)).flatMap(unwrap).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision);
+  return (await Promise.all(queries)).flatMap(result=>missingSchema(result.error) ? []:unwrap(result)).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision);
+}
+async function dailySetRows(today,requestedDate) {
+  const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').gte('publication_date',requestedDate || shiftDate(today,-1)).lte('publication_date',requestedDate || shiftDate(today,7)).order('publication_date').order('position'));
+  const projected=await projectSchedule(scheduled);
+  // A withdrawn/missing question hides its whole set, never silently substitutes
+  // another puzzle or changes the Easy → Medium → Hard result order.
+  return projected.filter(item=>projected.filter(other=>other.publicationDate===item.publicationDate).length===3);
 }
 router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
   try {
     const today = localDate(new Date(), String(req.query.timeZone || 'UTC'));
+    const requestedDate=req.query.date;
+    if(requestedDate!==undefined && (!date(requestedDate) || requestedDate>today))invalid('Choose a released daily trivia date.');
     const installationId = UUID.test(req.query.installationId) ? req.query.installationId : 'unassigned';
     const runtime = await settings();
     const enabled = runtime.enabled && ((req.user && runtime.internal_user_ids.includes(req.user.id)) || cohort(req.user?.id || installationId) < runtime.rollout_percentage);
     let items = [];
     let evergreen = [];
     let withdrawnIds = [];
-    if (enabled) {
+    const dailySet=req.query.dailySet==='1';
+    if (enabled && dailySet) {
+      const [daily,withdrawn]=await Promise.all([dailySetRows(today,requestedDate),supabase.from('discoveries').select('id').eq('withdrawn',true).limit(1000)]);
+      items=daily;withdrawnIds=unwrap(withdrawn).map(row=>row.id);
+    } else if (enabled) {
       const [scheduled, fallback, withdrawn] = await Promise.all([
         supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').gte('publication_date', shiftDate(today,-1)).lte('publication_date',shiftDate(today,7)).order('publication_date'),
         supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').lte('publication_date',today).order('publication_date',{ascending:false}).limit(10),

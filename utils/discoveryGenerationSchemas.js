@@ -29,4 +29,5 @@ function reviewForVerses(verseNumbers) {
   };
   visit(schema);return schema;
 }
-module.exports={draft,review,reviewForVerses};
+const setReview=object({approved:bool,issues:list(text),rationale:text});
+module.exports={draft,review,reviewForVerses,setReview};
