@@ -1,0 +1,3131 @@
+{
+  "version": "trivia-reference-pilot-v1",
+  "createdAt": "2026-10-30T16:55:39.122708+00:00",
+  "sources": [
+    {
+      "id": "web",
+      "title": "World English Bible (classic)",
+      "url": "https://ebible.org/web/",
+      "license": "Public domain",
+      "attribution": "World English Bible / eBible.org",
+      "version": "sha256:00a12b4ef1482a44e719d04140a7328dc83583192ce1e5fbcf65e7dffd573b5a",
+      "originalFile": "web-corpus.json",
+      "sha256": "00a12b4ef1482a44e719d04140a7328dc83583192ce1e5fbcf65e7dffd573b5a",
+      "bytes": 4762790,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1"
+    },
+    {
+      "id": "step-tbesg",
+      "title": "STEPBible Translators Brief lexicon of Extended Strongs for Greek",
+      "url": "https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/Lexicons/TBESG%20-%20Translators%20Brief%20lexicon%20of%20Extended%20Strongs%20for%20Greek%20-%20STEPBible.org%20CC%20BY.txt",
+      "license": "CC BY 4.0",
+      "attribution": "STEPBible.org / Tyndale House, Cambridge; https://github.com/STEPBible/STEPBible-Data",
+      "version": "sha256:312f723d7b8ef263bbdfb0451c9b8057125804dfff390b6f8544cff2a84b57f4",
+      "originalFile": "step-tbesg.txt",
+      "sha256": "312f723d7b8ef263bbdfb0451c9b8057125804dfff390b6f8544cff2a84b57f4",
+      "bytes": 4736912,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1"
+    },
+    {
+      "id": "openbible-geo",
+      "title": "OpenBible.info Bible Geocoding: ancient places",
+      "url": "https://raw.githubusercontent.com/openbibleinfo/Bible-Geocoding-Data/main/data/ancient.jsonl",
+      "license": "CC BY 4.0",
+      "attribution": "OpenBible.info; https://www.openbible.info/geo/. No images or OSM geometry included.",
+      "version": "sha256:b8187aa4737e8517ccc090f765d2be11da4c548cd2a59d3cdcb62e952cb8c0f2",
+      "originalFile": "openbible-ancient.jsonl",
+      "sha256": "b8187aa4737e8517ccc090f765d2be11da4c548cd2a59d3cdcb62e952cb8c0f2",
+      "bytes": 11550193,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1"
+    },
+    {
+      "id": "pleiades-501482",
+      "title": "Pleiades ancient place 501482",
+      "url": "https://pleiades.stoa.org/places/501482/json",
+      "license": "CC BY 3.0",
+      "attribution": "Pleiades: Krenides/Philippi/Col. Augusta Iulia Philippensis; E.N. Borza, DARMC, Brady Kiesling, Sean Gillies, Johan Åhlfeldt, Jeffrey Becker, Tom Elliott, Catherine Bouras, G. Reger, R. Talbert, Chris de Lisle; https://pleiades.stoa.org/places/501482",
+      "version": "sha256:16e59f09cb0e98fe5727ba189af7bada5199f6b0fd56748e33e018a4c7e3e66d",
+      "originalFile": "pleiades-501482.json",
+      "sha256": "16e59f09cb0e98fe5727ba189af7bada5199f6b0fd56748e33e018a4c7e3e66d",
+      "bytes": 64751,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1"
+    },
+    {
+      "id": "pleiades-678299",
+      "title": "Pleiades ancient place 678299",
+      "url": "https://pleiades.stoa.org/places/678299/json",
+      "license": "CC BY 3.0",
+      "attribution": "Pleiades: Nazareth; E.M. Meyers, J.P. Brown, DARMC, R. Talbert, Sean Gillies, Tom Elliott, Jeffrey Becker; https://pleiades.stoa.org/places/678299",
+      "version": "sha256:7a75d7f7f29630f9d60472d05a4c63a6d1c1817d501228d9c8ee081c89387d47",
+      "originalFile": "pleiades-678299.json",
+      "sha256": "7a75d7f7f29630f9d60472d05a4c63a6d1c1817d501228d9c8ee081c89387d47",
+      "bytes": 15522,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1"
+    },
+    {
+      "id": "sword-mhc",
+      "title": "Matthew Henry’s Complete Commentary",
+      "url": "https://crosswire.org/ftpmirror/pub/sword/packages/rawzip/MHC.zip",
+      "license": "Public domain (CrossWire module distribution)",
+      "attribution": "CrossWire SWORD; original module notices retained",
+      "version": "2.2",
+      "originalFile": "MHC.zip",
+      "sha256": "6bcb936873ca144e317805e5c1677940fd86e2403f7c14517752e44f25c8882b",
+      "bytes": 15195123,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1",
+      "moduleNotice": "Matthew Henry's Complete Commentary on the Whole Bible\\par Public Domain--Copy Freely.\\par This text was prepared from the Christian Classics Ethereal Library located at www.ccel.org.\\par Thanks also to Logos Research, Inc. for providing CCEL with their text of Matthew Henrey's Complete Commentary, from which this edition has been prepared.",
+      "extractedEntries": [
+        {
+          "file": "sword-MHC-John-9-7.txt",
+          "locator": "John 9:7",
+          "sha256": "23022d5bff58e1457a825b22943b49ceac07be80961665a5f7db636a988b360e"
+        },
+        {
+          "file": "sword-MHC-Acts-16-14.txt",
+          "locator": "Acts 16:14",
+          "sha256": "623ca0fc15f9e971e2b274b8956dbd649b083cc07f8af5e493630409726afc27"
+        },
+        {
+          "file": "sword-MHC-Acts-9-36.txt",
+          "locator": "Acts 9:36",
+          "sha256": "7e63dc95f8c99114d4b9d8eb1b6f36c49c35f89a81578c73a08718e4a0e8bda2"
+        },
+        {
+          "file": "sword-MHC-Ruth-4-7.txt",
+          "locator": "Ruth 4:7",
+          "sha256": "f54ed38b0871d8d5f91aa336421931caef53dd03ad4896a7083f80d5dc5f1734"
+        }
+      ]
+    },
+    {
+      "id": "sword-wesley",
+      "title": "John Wesley’s Notes on the Bible",
+      "url": "https://crosswire.org/ftpmirror/pub/sword/packages/rawzip/Wesley.zip",
+      "license": "Public domain (CrossWire module distribution)",
+      "attribution": "CrossWire SWORD; original module notices retained",
+      "version": "1.1",
+      "originalFile": "Wesley.zip",
+      "sha256": "d4423b084bfc2a4dd00f7ed0b2004113d62010317ddb14a62c1b31801fff360e",
+      "bytes": 1895943,
+      "retrievedAt": "2026-10-30T16:55:39.122708+00:00",
+      "extractionVersion": "trivia-reference-pilot-v1",
+      "moduleNotice": "John Wesley's Notes on the Bible\\par Based on the electronic edition by Sulu Kelley and Bill Brown, but with markup added in-house. Please share this work with a friend.",
+      "extractedEntries": [
+        {
+          "file": "sword-Wesley-John-9-7.txt",
+          "locator": "John 9:7",
+          "sha256": "e0120210e4c1d4b565cb14d959cc282e696dc60e9ae40729495631d06591a01e"
+        },
+        {
+          "file": "sword-Wesley-Acts-16-14.txt",
+          "locator": "Acts 16:14",
+          "sha256": "b051f1c5b53e7390dfd9c62ea378b52ade014d9bfebb1dff9b006610c3cd6592"
+        },
+        {
+          "file": "sword-Wesley-Acts-9-36.txt",
+          "locator": "Acts 9:36",
+          "sha256": "792542dfac1320c580142cdada16dba0ff0524a252f92c594964edfd3e6b4a95"
+        },
+        {
+          "file": "sword-Wesley-Ruth-4-7.txt",
+          "locator": "Ruth 4:7",
+          "sha256": "6f6b6932de0fb22994e0bf236bf3f48eeda5258c5296129694c3a10b81c6aca0"
+        }
+      ]
+    }
+  ],
+  "entries": [
+    {
+      "id": "step-tbesg:761",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 761",
+      "text": "ἀπόστολος , -ου, ὁ (ἀοστέλλω), [in LXX; 3Ki.14:6 A (שָׁלַח) * ;] __1. a fleet, an expedition (Dem.). __2. a messenger, one sent on a mission (Hdt., LXX, l.with, and π.; see M, Pr. , 37 f.; MM, see word; M, Th. , i, 2:7 and reff.): Jhn.13:16 , 2Co.8:23 Php.2:25 . __3. In NT, an Apostle of Christ __(a) with special ref. to the Twelve: Mat.10:2 , Mrk.3:14 , Luk.11:49 , Eph.3:5 , Rev.18:20 , al., equality with whom is claimed by St. Paul, Gal.1:1, 11 ff, 1Ti.2:7 , a1.; __(b) in a wider sense of prominent Christian teachers, as Barnabas, Act.14:14 , apparently also Silvanus and Timothy, 1Th.2:6 , and perhaps Andronicus and Junias (Junia?), Rom.16:7 (see ICC , in l); of false teachers, claiming apostleship : 2Co.11:5 11:13 , Rev.2:2 . (On the different uses of the term in NT, see Lit., Gal. , 92-101; Cremer, 530; DB , i, 126; DCG , i, 105; Enc. Br., ii, 196 ff.) (AS)",
+      "excerptSha256": "02725308f0cd44b7d10d1c8cded65ea9915bcdf5690c56b8daaa804d49d1e77c",
+      "language": "grc",
+      "lemma": "ἀπόστολος",
+      "transliteration": "apostolos",
+      "strongId": "G0652",
+      "extendedId": "G0652",
+      "gloss": "apostle",
+      "aliases": [
+        "G0652",
+        "G0652",
+        "ἀπόστολος",
+        "apostolos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "1Ki.14.6",
+        "Jhn.13.16",
+        "2Co.8.23",
+        "Php.2.25",
+        "Mat.10.2",
+        "Mrk.3.14",
+        "Luk.11.49",
+        "Eph.3.5",
+        "Rev.18.20",
+        "Gal.1.1, 11",
+        "1Ti.2.7",
+        "Act.14.14",
+        "1Th.2.6",
+        "Rom.16.7",
+        "2Co.11.5; 11.13",
+        "Rev.2.2"
+      ]
+    },
+    {
+      "id": "step-tbesg:2535",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 2535",
+      "text": "Ἰάκωβος , -ου, ὁ (Heb., see previous word) James ; __1. Son of Zebedee : Mat.4:21 , Mrk.1:19, 29 , Act.1:13 12:2 , al. __2. Son of Alphæus : Mat.10:3 , Mrk.2:14 , al.; commonly identified with Ἰ. ὁ μικρός, James the little, son of Mary (see: Μαρία, 3; Κλωπᾶς), Mat.27:56 , Mrk.15:40 16:1 (cf. Jhn.19:25 ). __3. The Lord's brother (see: ἀδελφός): Mat.13:55 , Mrk.6:3 , Act.12:17 , al., 1Co.15:7 (probably), Gal.1:19 2:9, 12 , Jas.1:1 , Ju 1 . __4. The father of the apostle, Ἰούδας Ἰακώβου : Luk.6:16 , Act.1:13 (AS)",
+      "excerptSha256": "b32198f03410fbde3c7eb7e55817f25305cb4e095fdf027e83700e67597edfda",
+      "language": "grc",
+      "lemma": "Ἰάκωβος",
+      "transliteration": "Iakōbos",
+      "strongId": "G2385",
+      "extendedId": "G2385G",
+      "gloss": "James",
+      "aliases": [
+        "G2385",
+        "G2385G",
+        "Ἰάκωβος",
+        "Iakōbos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Mat.4.21",
+        "Mrk.1.19, 29",
+        "Act.1.13; 12.2",
+        "Mat.10.3",
+        "Mrk.2.14",
+        "Mat.27.56",
+        "Mrk.15.40; 16.1",
+        "Jhn.19.25",
+        "Mat.13.55",
+        "Mrk.6.3",
+        "Act.12.17",
+        "1Co.15.7",
+        "Gal.1.19; 2.9, 12",
+        "Jas.1.1",
+        "Jude.1",
+        "Luk.6.16",
+        "Act.1.13"
+      ]
+    },
+    {
+      "id": "step-tbesg:2536",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 2536",
+      "text": "Ἰάκωβος , -ου, ὁ (Heb., see previous word) James ; __1. Son of Zebedee : Mat.4:21 , Mrk.1:19, 29 , Act.1:13 12:2 , al. __2. Son of Alphæus : Mat.10:3 , Mrk.2:14 , al.; commonly identified with Ἰ. ὁ μικρός, James the little, son of Mary (see: Μαρία, 3; Κλωπᾶς), Mat.27:56 , Mrk.15:40 16:1 (cf. Jhn.19:25 ). __3. The Lord's brother (see: ἀδελφός): Mat.13:55 , Mrk.6:3 , Act.12:17 , al., 1Co.15:7 (probably), Gal.1:19 2:9, 12 , Jas.1:1 , Ju 1 . __4. The father of the apostle, Ἰούδας Ἰακώβου : Luk.6:16 , Act.1:13 (AS)",
+      "excerptSha256": "b32198f03410fbde3c7eb7e55817f25305cb4e095fdf027e83700e67597edfda",
+      "language": "grc",
+      "lemma": "Ἰάκωβος",
+      "transliteration": "Iakōbos",
+      "strongId": "G2385",
+      "extendedId": "G2385H",
+      "gloss": "James",
+      "aliases": [
+        "G2385",
+        "G2385H",
+        "Ἰάκωβος",
+        "Iakōbos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Mat.4.21",
+        "Mrk.1.19, 29",
+        "Act.1.13; 12.2",
+        "Mat.10.3",
+        "Mrk.2.14",
+        "Mat.27.56",
+        "Mrk.15.40; 16.1",
+        "Jhn.19.25",
+        "Mat.13.55",
+        "Mrk.6.3",
+        "Act.12.17",
+        "1Co.15.7",
+        "Gal.1.19; 2.9, 12",
+        "Jas.1.1",
+        "Jude.1",
+        "Luk.6.16",
+        "Act.1.13"
+      ]
+    },
+    {
+      "id": "step-tbesg:2537",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 2537",
+      "text": "Ἰάκωβος , -ου, ὁ (Heb., see previous word) James ; __1. Son of Zebedee : Mat.4:21 , Mrk.1:19, 29 , Act.1:13 12:2 , al. __2. Son of Alphæus : Mat.10:3 , Mrk.2:14 , al.; commonly identified with Ἰ. ὁ μικρός, James the little, son of Mary (see: Μαρία, 3; Κλωπᾶς), Mat.27:56 , Mrk.15:40 16:1 (cf. Jhn.19:25 ). __3. The Lord's brother (see: ἀδελφός): Mat.13:55 , Mrk.6:3 , Act.12:17 , al., 1Co.15:7 (probably), Gal.1:19 2:9, 12 , Jas.1:1 , Ju 1 . __4. The father of the apostle, Ἰούδας Ἰακώβου : Luk.6:16 , Act.1:13 (AS)",
+      "excerptSha256": "b32198f03410fbde3c7eb7e55817f25305cb4e095fdf027e83700e67597edfda",
+      "language": "grc",
+      "lemma": "Ἰάκωβος",
+      "transliteration": "Iakōbos",
+      "strongId": "G2385",
+      "extendedId": "G2385I",
+      "gloss": "James",
+      "aliases": [
+        "G2385",
+        "G2385I",
+        "Ἰάκωβος",
+        "Iakōbos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Mat.4.21",
+        "Mrk.1.19, 29",
+        "Act.1.13; 12.2",
+        "Mat.10.3",
+        "Mrk.2.14",
+        "Mat.27.56",
+        "Mrk.15.40; 16.1",
+        "Jhn.19.25",
+        "Mat.13.55",
+        "Mrk.6.3",
+        "Act.12.17",
+        "1Co.15.7",
+        "Gal.1.19; 2.9, 12",
+        "Jas.1.1",
+        "Jude.1",
+        "Luk.6.16",
+        "Act.1.13"
+      ]
+    },
+    {
+      "id": "step-tbesg:2538",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 2538",
+      "text": "Ἰάκωβος , -ου, ὁ (Heb., see previous word) James ; __1. Son of Zebedee : Mat.4:21 , Mrk.1:19, 29 , Act.1:13 12:2 , al. __2. Son of Alphæus : Mat.10:3 , Mrk.2:14 , al.; commonly identified with Ἰ. ὁ μικρός, James the little, son of Mary (see: Μαρία, 3; Κλωπᾶς), Mat.27:56 , Mrk.15:40 16:1 (cf. Jhn.19:25 ). __3. The Lord's brother (see: ἀδελφός): Mat.13:55 , Mrk.6:3 , Act.12:17 , al., 1Co.15:7 (probably), Gal.1:19 2:9, 12 , Jas.1:1 , Ju 1 . __4. The father of the apostle, Ἰούδας Ἰακώβου : Luk.6:16 , Act.1:13 (AS)",
+      "excerptSha256": "b32198f03410fbde3c7eb7e55817f25305cb4e095fdf027e83700e67597edfda",
+      "language": "grc",
+      "lemma": "Ἰάκωβος",
+      "transliteration": "Iakōbos",
+      "strongId": "G2385",
+      "extendedId": "G2385J",
+      "gloss": "James",
+      "aliases": [
+        "G2385",
+        "G2385J",
+        "Ἰάκωβος",
+        "Iakōbos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Mat.4.21",
+        "Mrk.1.19, 29",
+        "Act.1.13; 12.2",
+        "Mat.10.3",
+        "Mrk.2.14",
+        "Mat.27.56",
+        "Mrk.15.40; 16.1",
+        "Jhn.19.25",
+        "Mat.13.55",
+        "Mrk.6.3",
+        "Act.12.17",
+        "1Co.15.7",
+        "Gal.1.19; 2.9, 12",
+        "Jas.1.1",
+        "Jude.1",
+        "Luk.6.16",
+        "Act.1.13"
+      ]
+    },
+    {
+      "id": "step-tbesg:3802",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 3802",
+      "text": "ὄνομα , -τος, τό, [in LXX chiefly for שֵׁם ;] __1. in general, the name by which a person or thing is called: Mat.10:2 , Mrk.3:16 , Luk.1:63 , Jhn.18:10 , al.; ἄνθρωπος (etc.), ᾧ (οὗ) ὄ. (τ. ὄ), sc. ἦν or ἐστίν (BL, §30, 3), Mrk.14:32 , Luk.1:26 , 27; with same ellipsis, καὶ τ. ὄ. αὐτοῦ, Luk.1:5 , Jhn.1:6 , al.; ὀνόματι, before nom. prop., Mat.27:32 , Mrk.5:22 , Luk.1:5 , Act.5:1 , al.; accusative absol. (Bl., §34, 7), τοὔνομα (= τ. ὄνομα), Mat.27:57; ὄ. μοι (sc. ἐστίν; cf. Hom., Od. , ix, 366), Mrk.5:9 (cf. Luk.8:30 ); ἔξειν ὄ., Rev.9:11; καλεῖν (ἐπιτιθέναι) ὄ. (Bl., §33, 1), Mat.1:21 , Mrk.3:16 ; τ. ὄ. ἐν (τ.) βίβλῳ ζωῆς (cf. Deiss., LAE , 121), Php.4:3 , Rev.13:8 , cf. Luk.10:20 (ἐν τ. οὐρανοῖς); ὄ. βλασφημίας, Rev.13:1; the name as opposite to the reality, Rev.3:1 (cf. Hdt., vii, 138); as a title: Eph.1:21 , Php.2:9, 10 (Lft., in l.). __2. By a usage similar to that with ref. to Heb. שֵׁם (Lft., Notes , 106f.), but also common in Hellenistic (M, Pr. , 100; Bl., §39, 4; Deiss, BS , 146f., 196f.; LAE , 123:4, of all that the name implies, of rank, authority, character, etc.: of acting on one's authority or in his behalf, ἐν (εἰς) ὄ., with genitive of person(s) (see reff. supr.), Mat.10:41 21:9 28:19 , Mrk.11:9 , Luk.13:35 , Jhn.5:43 , Act.8:16 , 1Co.1:13 ; of the name Christian, 1Pe.4:16; esp. of the name of God as expressing the divine attributes: ἁγιάζειν (ἅγιον) τὸ ὄ. (τ. Πατρός, Κυρίου), Mat.6:9 , Luk.1:49 11:2 ; ψάλλειν (ὁμολογεῖν) τῷ ὀ., Rom.15:9 , Heb.13:15 ; δοξάζειν (φανεροῦν, φοβεῖσθαι) τὸ ὄ., Jhn.12:28 17:6, 26 Rev.11:18 15:4 ; βλασφημεῖν, Rom.2:24 , 1Ti.6:1 , Rev.13:6 ; similarly, of the name of Christ: τ. καλὂν ὄ. (Deiss., LAE , 276); πιστεύειν τῷ ὀ., 1Jn.3:23; π. εἰς τ. ὄ. (Bl., §39, 4), Jhn.1:12 2:23 3:18 ; ὀνομάζειν τὸ ὄ., 2Ti.2:19; κρατεῖν, Rev.2:13; οὐκ ἀρνεῖσθαι, Rev.3:8; ἐν τ. ὀ. (see reff. supr.), Mrk.9:38 16:[17], Luk.10:17 , Jhn.14:13 16:23, 24 20:31 , Act.3:6 4:12 , Eph.5:20 , 1Pe.4:14 , al.; εἰς τ. ὄ. συνάγεσθαι, Mat.18:20; ἕνεκεν τοῦ ὀ., Mat.19:29; διὰ τὸ ὄ., Mat.10:22 , Mrk.13:13 , al.; διὰ τοῦ ὀ., 1Co.1:10; ὑπὲρ τοῦ ὀ., Act.9:16 , Rom.1:5 , al.; id. absol., Act.5:41 , 3Jo.7 ; πρὸς τὸ ὄ., Act.26:9. __3. cause, ground, reason (in cl., usually in bad sense, pretext ): Mrk.9:41 (Swete, in l.; Dalman, Words , 305f.). __4. In late Greek (Deiss., BS ., 196f.), an individual, a person : Act.1:15 , Rev.3:4 11:13 . (AS)",
+      "excerptSha256": "28ed14fe637ea6bfb96b8d4ca369fdfe1bc5742bb41b0f9d4b339bc8f12d742f",
+      "language": "grc",
+      "lemma": "ὄνομα",
+      "transliteration": "onoma",
+      "strongId": "G3686",
+      "extendedId": "G3686",
+      "gloss": "name",
+      "aliases": [
+        "G3686",
+        "G3686",
+        "ὄνομα",
+        "onoma"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Mat.10.2",
+        "Mrk.3.16",
+        "Luk.1.63",
+        "Jhn.18.10",
+        "Mrk.14.32",
+        "Luk.1.26",
+        "Luk.1.5",
+        "Jhn.1.6",
+        "Mat.27.32",
+        "Mrk.5.22",
+        "Luk.1.5",
+        "Act.5.1",
+        "Mat.27.57",
+        "Mrk.5.9",
+        "Luk.8.30",
+        "Rev.9.11",
+        "Mat.1.21",
+        "Mrk.3.16",
+        "Php.4.3",
+        "Rev.13.8",
+        "Luk.10.20",
+        "Rev.13.1",
+        "Rev.3.1",
+        "Eph.1.21",
+        "Phil.2.9, 10",
+        "Mat.10.41; 21.9; 28.19",
+        "Mrk.11.9",
+        "Luk.13.35",
+        "Jhn.5.43",
+        "Act.8.16",
+        "1Co.1.13",
+        "1Pe.4.16",
+        "Mat.6.9",
+        "Luk.1.49; 11.2",
+        "Rom.15.9",
+        "Heb.13.15",
+        "Jhn.12.28; 17.6, 26",
+        "Rev.11.18; 15.4",
+        "Rom.2.24",
+        "1Ti.6.1",
+        "Rev.13.6",
+        "1Jn.3.23",
+        "Jhn.1.12; 2.23; 3.18",
+        "2Ti.2.19",
+        "Rev.2.13",
+        "Rev.3.8",
+        "Mrk.9.38",
+        "Luk.10.17",
+        "Jhn.14.13; 16.23, 24; 20.31",
+        "Act.3.6; 4.12",
+        "Eph.5.20",
+        "1Pe.4.14",
+        "Mat.18.20",
+        "Mat.19.29",
+        "Mat.10.22",
+        "Mrk.13.13",
+        "1Co.1.10",
+        "Act.9.16",
+        "Rom.1.5",
+        "Act.5.41",
+        "3Jn.7",
+        "Act.26.9.",
+        "Mrk.9.41",
+        "Act.1.15",
+        "Rev.3.4; 11.13"
+      ]
+    },
+    {
+      "id": "step-tbesg:4338",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 4338",
+      "text": "πορφύρα , -ας, ἡ [in LXX for אַרְגָּמָן, אַרְגְּוָן ;] __1. the purple fish (cf. 1Ma.4:23 ). __2. purple dye. __3. Later, = πορφυρίς, a purple gar­ment : Mrk.15:17, 20 , Luk.16:19 , Rev.18:12 .† (AS)",
+      "excerptSha256": "f0dde4cd9cbd05d1f602b7b29a56c4bf732a20b4c5c349a06f77e9fc65d558e3",
+      "language": "grc",
+      "lemma": "πορφύρα",
+      "transliteration": "porphura",
+      "strongId": "G4209",
+      "extendedId": "G4209",
+      "gloss": "purple cloth",
+      "aliases": [
+        "G4209",
+        "G4209",
+        "πορφύρα",
+        "porphura"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "1Ma.4.23",
+        "Mrk.15.17, 20",
+        "Luk.16.19",
+        "Rev.18.12"
+      ]
+    },
+    {
+      "id": "step-tbesg:4339",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 4339",
+      "text": "πορφύρεος , -α, -ον contr., -οῦς, -ᾶ, -οῦν (ποπφύρα), [in LXX for אַרְגָּמָן ;] purple : Jhn.19:2 , 5; as subst., πορφυροῦν (sc. ἱμάτιον), Rev.17:4 18:6 .† (AS)",
+      "excerptSha256": "9d1e9f344c4fd2ea0118af1ea6951ca896ba2139a1fda906e8c84ec3e4fff30f",
+      "language": "grc",
+      "lemma": "πορφύρεος",
+      "transliteration": "porphureos",
+      "strongId": "G4210",
+      "extendedId": "G4210",
+      "gloss": "purple",
+      "aliases": [
+        "G4210",
+        "G4210",
+        "πορφύρεος",
+        "porphureos"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Jhn.19.2",
+        "Rev.17.4; 18.6"
+      ]
+    },
+    {
+      "id": "step-tbesg:4340",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 4340",
+      "text": "πορφυρόπωλις , -ιδος, ἡ a seller of purple fabrics : Act.16:14. † (AS)",
+      "excerptSha256": "f1434ab2825404e373f60e86c59e025cf63c93f02025170b8dda2dbadb1663dd",
+      "language": "grc",
+      "lemma": "πορφυρόπωλις",
+      "transliteration": "porphuropōlis",
+      "strongId": "G4211",
+      "extendedId": "G4211",
+      "gloss": "dealer in purple",
+      "aliases": [
+        "G4211",
+        "G4211",
+        "πορφυρόπωλις",
+        "porphuropōlis"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Act.16.14."
+      ]
+    },
+    {
+      "id": "step-tbesg:4749",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 4749",
+      "text": "Σιλωάμ (indecl., but in FlJ, genitive, ᾶ, B.J., ii, 16, 2), ὁ (Heb. שִׁלֹחַ), Siloam (see DB , iii, 515 f.): Luk.13:4 , Jhn.9:7, 11 .† (AS)",
+      "excerptSha256": "c885296149e80b211f87fe66b2a0c24ba0dc6dc76a44218ac3d847ec6daf8e68",
+      "language": "grc",
+      "lemma": "Σιλωάμ",
+      "transliteration": "Silōam",
+      "strongId": "G4611",
+      "extendedId": "H7975A",
+      "gloss": "Siloam",
+      "aliases": [
+        "G4611",
+        "H7975A",
+        "Σιλωάμ",
+        "Silōam"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Luk.13.4",
+        "Jhn.9.7, 11"
+      ]
+    },
+    {
+      "id": "step-tbesg:4860",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 4860",
+      "text": "στάδιον , -ου, τό pl., στάδια ( Jhn.6:19 , T), and metapl., στάδιοι (see B1., 9, 1), [in LXX: Dan LXX 4:9, Sus 1:37 , 2Ma.11:5 2Mac 12:9 ff. * ;] a stadium, i.e. __1. a measure of length = 600 Greek feet or 1⁄8 of a Roman mile Mat.14:24 (Rec., WH, txt., R, mg.), Luk.24:13 , Jhn.6:19 11:18 , Rev.14:20 21:16 , and, this being the length of the Olympic course, __2. a race-course : 1Co.9:24. † (AS)",
+      "excerptSha256": "99f060769e96caba0801975b94298e12020a7491e81ef173ee3675a19e079c81",
+      "language": "grc",
+      "lemma": "στάδιος",
+      "transliteration": "stadios",
+      "strongId": "G4712",
+      "extendedId": "G4712",
+      "gloss": "stadium",
+      "aliases": [
+        "G4712",
+        "G4712",
+        "στάδιος",
+        "stadios"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Jhn.6.19",
+        "Sus.1.37",
+        "2Ma.11.5",
+        "2Mac.12.9",
+        "Mat.14.24",
+        "Luk.24.13",
+        "Jhn.6.19; 11.18",
+        "Rev.14.20; 21.16",
+        "1Co.9.24."
+      ]
+    },
+    {
+      "id": "step-tbesg:5023",
+      "sourceId": "step-tbesg",
+      "type": "lexicon",
+      "locator": "TBESG line 5023",
+      "text": "συν-αλίζω [in Al.: Psa.141:4 * ;] to assemble with : Act.1:4 (EV, mg., eating with, but on this rendering and on the force of the Pres. ptcp. here, see Field, Notes , 110).† (AS)",
+      "excerptSha256": "790d7d23fe633798e2119c0c49cb9f01123d4a3d4b4e0bf77fd93e9dee48f94f",
+      "language": "grc",
+      "lemma": "συναλίζω",
+      "transliteration": "sunalizō",
+      "strongId": "G4871",
+      "extendedId": "G4871",
+      "gloss": "to assemble",
+      "aliases": [
+        "G4871",
+        "G4871",
+        "συναλίζω",
+        "sunalizō"
+      ],
+      "uncertainty": "Lexicon senses are not an assigned meaning for a particular verse. No root-based meaning inference.",
+      "passages": [
+        "Psa.141.4",
+        "Act.1.4"
+      ]
+    },
+    {
+      "id": "openbible:a0aa8cf",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Bethesda",
+      "text": "Bethesda; candidate identifications: Pool of Bethesda",
+      "excerptSha256": "986375525eec4d2696740fbd1fd5dcb850f28d0a9f200b7e5aee0352a3b79749",
+      "aliases": [
+        "Bethesda"
+      ],
+      "placeId": "a0aa8cf",
+      "candidates": [
+        {
+          "name": "Pool of Bethesda",
+          "sourceId": "m48007f",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "pool"
+          ]
+        }
+      ],
+      "passages": [
+        "John.5.2"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a112427",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Bethlehem 1",
+      "text": "Bethlehem 1; candidate identifications: Bethlehem",
+      "excerptSha256": "790b016432c7307389796f5f139d07ce1bcf589518fdbabc2e9ba4ebdecd968d",
+      "aliases": [
+        "Bethlehem 1"
+      ],
+      "placeId": "a112427",
+      "candidates": [
+        {
+          "name": "Bethlehem",
+          "sourceId": "m9b8daa",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Gen.35.19",
+        "Gen.48.7",
+        "Judg.17.7",
+        "Judg.17.8",
+        "Judg.17.9",
+        "Judg.19.1",
+        "Judg.19.2",
+        "Judg.19.3",
+        "Judg.19.18",
+        "Ruth.1.1",
+        "Ruth.1.2",
+        "Ruth.1.19",
+        "Ruth.1.22",
+        "Ruth.2.1",
+        "Ruth.2.4",
+        "Ruth.4.11",
+        "1Sam.16.1",
+        "1Sam.16.4",
+        "1Sam.16.18",
+        "1Sam.17.12",
+        "1Sam.17.15",
+        "1Sam.17.58",
+        "1Sam.20.6",
+        "1Sam.20.28",
+        "2Sam.2.32",
+        "2Sam.21.19",
+        "2Sam.23.14",
+        "2Sam.23.15",
+        "2Sam.23.16",
+        "2Sam.23.24",
+        "1Chr.2.51",
+        "1Chr.2.54",
+        "1Chr.4.4",
+        "1Chr.11.16",
+        "1Chr.11.17",
+        "1Chr.11.18",
+        "1Chr.11.26",
+        "2Chr.11.6",
+        "Ezra.2.21",
+        "Neh.7.26",
+        "Jer.41.17",
+        "Mic.5.2",
+        "Matt.2.1",
+        "Matt.2.5",
+        "Matt.2.6",
+        "Matt.2.8",
+        "Matt.2.9",
+        "Matt.2.16",
+        "Luke.2.4",
+        "Luke.2.11",
+        "Luke.2.15",
+        "John.7.42"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a308715",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Bethlehem 2",
+      "text": "Bethlehem 2; candidate identifications: Beit Lahm",
+      "excerptSha256": "f9d22bf36b82bbc3e65c44772e78b1c5269530cd677880d32c75f806abae8ced",
+      "aliases": [
+        "Bethlehem 2"
+      ],
+      "placeId": "a308715",
+      "candidates": [
+        {
+          "name": "Beit Lahm",
+          "sourceId": "ma3ac8b",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Josh.19.15"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:ab1a343",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Bethlehem 3",
+      "text": "Bethlehem 3; candidate identifications: another name for Bethlehem 2; another name for Bethlehem 1",
+      "excerptSha256": "622c44023ab9e3ba9f2236e0c1b69474e9f34d9d4cfcf5ab420efd372e5be6d8",
+      "aliases": [
+        "Bethlehem 3"
+      ],
+      "placeId": "ab1a343",
+      "candidates": [
+        {
+          "name": "another name for Bethlehem 2",
+          "sourceId": "a308715",
+          "assessment": {
+            "time_best_fits": [
+              787,
+              777,
+              766,
+              755,
+              745,
+              733
+            ],
+            "time_intercept": 2867,
+            "time_r_squared": 0.015,
+            "time_slope": -1.056,
+            "time_total": 733,
+            "time_values": [
+              900,
+              667,
+              569,
+              894,
+              920,
+              613
+            ],
+            "vote_average": 24,
+            "vote_count": 20,
+            "vote_total": 487
+          },
+          "types": [
+            "settlement"
+          ]
+        },
+        {
+          "name": "another name for Bethlehem 1",
+          "sourceId": "a112427",
+          "assessment": {
+            "time_best_fits": [
+              88,
+              97,
+              107,
+              116,
+              126,
+              136
+            ],
+            "time_intercept": -1793,
+            "time_r_squared": 0.011,
+            "time_slope": 0.955,
+            "time_total": 136,
+            "time_values": [
+              0,
+              0,
+              431,
+              106,
+              0,
+              133
+            ],
+            "vote_average": 15,
+            "vote_count": 5,
+            "vote_total": 74
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Judg.12.8",
+        "Judg.12.10"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:aede336",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Gibeon",
+      "text": "Gibeon; candidate identifications: El Jib",
+      "excerptSha256": "ae01812afd39d0f5577b0cb071639fc80bb396f75b9d17bb678bcc266191dae8",
+      "aliases": [
+        "Gibeon"
+      ],
+      "placeId": "aede336",
+      "candidates": [
+        {
+          "name": "El Jib",
+          "sourceId": "mf55105",
+          "assessment": {
+            "time_best_fits": [
+              852,
+              864,
+              876,
+              887,
+              899,
+              912
+            ],
+            "time_intercept": -1471,
+            "time_r_squared": 0.144,
+            "time_slope": 1.18,
+            "time_total": 912,
+            "time_values": [
+              800,
+              950,
+              833,
+              927,
+              863,
+              917
+            ],
+            "vote_average": 27,
+            "vote_count": 38,
+            "vote_total": 1015
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Josh.9.3",
+        "Josh.9.17",
+        "Josh.10.1",
+        "Josh.10.2",
+        "Josh.10.4",
+        "Josh.10.5",
+        "Josh.10.6",
+        "Josh.10.7",
+        "Josh.10.10",
+        "Josh.10.12",
+        "Josh.10.41",
+        "Josh.11.19",
+        "Josh.18.25",
+        "Josh.21.17",
+        "2Sam.2.12",
+        "2Sam.2.13",
+        "2Sam.2.16",
+        "2Sam.2.24",
+        "2Sam.3.30",
+        "2Sam.20.8",
+        "2Sam.21.9",
+        "1Kgs.3.4",
+        "1Kgs.3.5",
+        "1Kgs.9.2",
+        "1Chr.6.60",
+        "1Chr.8.29",
+        "1Chr.9.35",
+        "1Chr.12.4",
+        "1Chr.14.16",
+        "1Chr.16.39",
+        "1Chr.21.29",
+        "2Chr.1.3",
+        "2Chr.1.5",
+        "2Chr.1.13",
+        "Neh.3.7",
+        "Neh.7.25",
+        "Jer.28.1",
+        "Jer.41.12",
+        "Jer.41.16"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:abf2fc1",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Heshbon",
+      "text": "Heshbon; candidate identifications: Tell Hesban; Tall Jalul; Tall al Umayri",
+      "excerptSha256": "b886f7a5355eb19989c6a92c90f4a6e3c84d6c0062e8d89354d0e68cca20861e",
+      "aliases": [
+        "Heshbon"
+      ],
+      "placeId": "abf2fc1",
+      "candidates": [
+        {
+          "name": "Tell Hesban",
+          "sourceId": "m12c75e",
+          "assessment": {
+            "time_best_fits": [
+              781,
+              713,
+              644,
+              576,
+              508,
+              433
+            ],
+            "time_intercept": 14198,
+            "time_r_squared": 0.434,
+            "time_slope": -6.814,
+            "time_total": 433,
+            "time_values": [
+              900,
+              778,
+              450,
+              500,
+              404,
+              623
+            ],
+            "vote_average": 17,
+            "vote_count": 32,
+            "vote_total": 551
+          },
+          "types": [
+            "settlement"
+          ]
+        },
+        {
+          "name": "Tall Jalul",
+          "sourceId": "ma96621",
+          "assessment": {
+            "time_best_fits": [
+              65,
+              78,
+              92,
+              106,
+              119,
+              134
+            ],
+            "time_intercept": -2603,
+            "time_r_squared": 0.094,
+            "time_slope": 1.355,
+            "time_total": 134,
+            "time_values": [
+              0,
+              189,
+              0,
+              180,
+              125,
+              100
+            ],
+            "vote_average": 12,
+            "vote_count": 9,
+            "vote_total": 111
+          },
+          "types": [
+            "settlement"
+          ]
+        },
+        {
+          "name": "Tall al Umayri",
+          "sourceId": "m432f6a",
+          "assessment": {
+            "time_best_fits": [
+              4,
+              11,
+              19,
+              26,
+              33,
+              41
+            ],
+            "time_intercept": -1436,
+            "time_r_squared": 0.161,
+            "time_slope": 0.731,
+            "time_total": 41,
+            "time_values": [
+              0,
+              0,
+              0,
+              67,
+              67,
+              0
+            ],
+            "vote_average": 10,
+            "vote_count": 3,
+            "vote_total": 30
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Num.21.25",
+        "Num.21.26",
+        "Num.21.27",
+        "Num.21.28",
+        "Num.21.30",
+        "Num.21.34",
+        "Num.32.3",
+        "Num.32.37",
+        "Deut.1.4",
+        "Deut.2.24",
+        "Deut.2.26",
+        "Deut.2.30",
+        "Deut.3.2",
+        "Deut.3.6",
+        "Deut.4.46",
+        "Deut.29.7",
+        "Josh.9.10",
+        "Josh.12.2",
+        "Josh.12.5",
+        "Josh.13.10",
+        "Josh.13.17",
+        "Josh.13.21",
+        "Josh.13.26",
+        "Josh.13.27",
+        "Josh.21.39",
+        "Judg.11.19",
+        "Judg.11.26",
+        "1Chr.6.81",
+        "Neh.9.22",
+        "Song.7.4",
+        "Isa.15.4",
+        "Isa.16.8",
+        "Isa.16.9",
+        "Jer.48.2",
+        "Jer.48.34",
+        "Jer.48.45",
+        "Jer.49.3"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:ae023a9",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Joppa",
+      "text": "Joppa; candidate identifications: Jaffa",
+      "excerptSha256": "bad14e9bd6baf92df8bf1d5bc3753c5878e474ef5c2dbc4ae80f8072c153f3d8",
+      "aliases": [
+        "Joppa"
+      ],
+      "placeId": "ae023a9",
+      "candidates": [
+        {
+          "name": "Jaffa",
+          "sourceId": "mcb49f3",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Josh.19.46",
+        "2Chr.2.16",
+        "Ezra.3.7",
+        "Jonah.1.3",
+        "Acts.9.36",
+        "Acts.9.38",
+        "Acts.9.42",
+        "Acts.9.43",
+        "Acts.10.5",
+        "Acts.10.8",
+        "Acts.10.23",
+        "Acts.10.32",
+        "Acts.11.5",
+        "Acts.11.13"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a57835d",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Malta",
+      "text": "Malta; candidate identifications: Malta",
+      "excerptSha256": "28b62769d6a60d5a76005d1d285c283cf0711402dd9bbcccc7b1fe834234b471",
+      "aliases": [
+        "Malta"
+      ],
+      "placeId": "a57835d",
+      "candidates": [
+        {
+          "name": "Malta",
+          "sourceId": "m2672d3",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "island"
+          ]
+        }
+      ],
+      "passages": [
+        "Acts.28.1"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:af5884f",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Nazareth",
+      "text": "Nazareth; candidate identifications: Nazareth",
+      "excerptSha256": "fb6fdffea8b3df3c503a703962f496d0a44033e16c42fd7c775a4e57cc5d05eb",
+      "aliases": [
+        "Nazareth"
+      ],
+      "placeId": "af5884f",
+      "candidates": [
+        {
+          "name": "Nazareth",
+          "sourceId": "mb3f688",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Matt.2.23",
+        "Matt.4.13",
+        "Matt.13.54",
+        "Matt.21.11",
+        "Matt.26.71",
+        "Mark.1.9",
+        "Mark.1.24",
+        "Mark.6.1",
+        "Mark.10.47",
+        "Mark.14.67",
+        "Mark.16.6",
+        "Luke.1.26",
+        "Luke.2.4",
+        "Luke.2.39",
+        "Luke.2.43",
+        "Luke.2.51",
+        "Luke.4.16",
+        "Luke.4.34",
+        "Luke.18.37",
+        "Luke.24.19",
+        "John.1.45",
+        "John.1.46",
+        "John.18.5",
+        "John.18.7",
+        "John.19.19",
+        "Acts.2.22",
+        "Acts.3.6",
+        "Acts.4.10",
+        "Acts.6.14",
+        "Acts.10.38",
+        "Acts.22.8",
+        "Acts.26.9"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a49e1d0",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Philippi",
+      "text": "Philippi; candidate identifications: Philippi",
+      "excerptSha256": "455806dc27a2afaa6685508258c4a6ce4794a4b9d5fac6cef8d292449f6b69ff",
+      "aliases": [
+        "Philippi"
+      ],
+      "placeId": "a49e1d0",
+      "candidates": [
+        {
+          "name": "Philippi",
+          "sourceId": "mec5201",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Acts.16.12",
+        "Acts.20.6",
+        "Phil.1.1",
+        "1Thess.2.2"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a294859",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Siloam",
+      "text": "Siloam; candidate identifications: Pool of Siloam",
+      "excerptSha256": "7e1830a0f89649be5cb07bd19671165b2710fca0a6a79b11a328f2392df1cef9",
+      "aliases": [
+        "Siloam"
+      ],
+      "placeId": "a294859",
+      "candidates": [
+        {
+          "name": "Pool of Siloam",
+          "sourceId": "m068207",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "pool"
+          ]
+        }
+      ],
+      "passages": [
+        "Neh.2.14",
+        "Neh.3.15",
+        "Luke.13.4",
+        "John.9.7",
+        "John.9.11"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "openbible:a94b661",
+      "sourceId": "openbible-geo",
+      "type": "geography",
+      "locator": "Thyatira",
+      "text": "Thyatira; candidate identifications: Akhisar",
+      "excerptSha256": "71c48da01b30bf4b1437de63e7b5bffb294354165ff05b9640e6baa268f60adc",
+      "aliases": [
+        "Thyatira"
+      ],
+      "placeId": "a94b661",
+      "candidates": [
+        {
+          "name": "Akhisar",
+          "sourceId": "m4e3e3e",
+          "assessment": {
+            "time_best_fits": [],
+            "time_intercept": 1000,
+            "time_r_squared": 0,
+            "time_slope": 0,
+            "time_total": 1000,
+            "time_values": [],
+            "vote_average": 500,
+            "vote_count": 1,
+            "vote_total": 500
+          },
+          "types": [
+            "settlement"
+          ]
+        }
+      ],
+      "passages": [
+        "Acts.16.14",
+        "Rev.1.11",
+        "Rev.2.18",
+        "Rev.2.24"
+      ],
+      "periods": [],
+      "uncertainty": "Dataset identifications and scores are proposals, not archaeological certainty or calibrated probabilities."
+    },
+    {
+      "id": "pleiades:501482",
+      "sourceId": "pleiades-501482",
+      "type": "geography",
+      "locator": "https://pleiades.stoa.org/places/501482",
+      "text": "An ancient city founded as Philippi by the king of Macedon, Philip II of Macedon, on the site of the Thasian colony of Krinides.",
+      "excerptSha256": "c2e99e7b5f4ee69ee45e69d19d6be987d3d543ce1ab8e8a2622d8e8b1bbe2a0b",
+      "aliases": [
+        "Krenides/Philippi/Col. Augusta Iulia Philippensis",
+        "Krenides",
+        "Philippi",
+        "Col. Augusta Iulia Philippensis",
+        "Assyla",
+        "Col. Victrix Philippensis",
+        "Philippes",
+        "Krinídes Kaválas"
+      ],
+      "placeId": "501482",
+      "periods": [
+        "classical",
+        "hellenistic-republican",
+        "late-antique",
+        "roman",
+        "twenty-first-ce"
+      ],
+      "attestations": [
+        {
+          "name": "Krenides",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "classical",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/classical",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": -550,
+          "end": -330
+        },
+        {
+          "name": "Philippi",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "classical",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/classical",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "hellenistic-republican",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/hellenistic-republican",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "roman",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/roman",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "late-antique",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/late-antique",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": -550,
+          "end": 640
+        },
+        {
+          "name": "Col. Augusta Iulia Philippensis",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "roman",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/roman",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "late-antique",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/late-antique",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": -30,
+          "end": 640
+        },
+        {
+          "name": "Assyla",
+          "certainty": "certain",
+          "periods": [],
+          "start": null,
+          "end": null
+        },
+        {
+          "name": "Col. Victrix Philippensis",
+          "certainty": "certain",
+          "periods": [],
+          "start": null,
+          "end": null
+        },
+        {
+          "name": "Philippes",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "twenty-first-ce",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/twenty-first-ce",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": 2000,
+          "end": 2099
+        },
+        {
+          "name": "Krinídes Kaválas",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "twenty-first-ce",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/twenty-first-ce",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": 2000,
+          "end": 2099
+        }
+      ],
+      "references": [
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.worldcat.org/oclc/43970336",
+          "citationDetail": "51 C2 Krenides/Philippi/Col. Augusta Iulia Philippensis",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "BAtlas",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/MIAGQ5C6",
+          "formattedCitation": "<div class=\"csl-entry\">Talbert, Richard J. A., ed. <i>Barrington Atlas of the Greek and Roman World</i>. Princeton, N.J.: Princeton University Press, 2000. http://www.worldcat.org/oclc/43970336.</div>",
+          "otherIdentifier": " ",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "",
+          "citationDetail": "405-408",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Papazoglou 1988",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/FVWQ2MGN",
+          "formattedCitation": "<div class=\"csl-entry\">Papazoglou, Fanoula. <i>Les Villes de Macédoine à l’époque Romaine</i>. Bulletin de Correspondance Hellénique, Supplément 16. Paris: Diffusion de Boccard, 1988.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.worldcat.org/oclc/32371506",
+          "citationDetail": "45-47",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "TIR Philippi",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/WUA7IQ6E",
+          "formattedCitation": "<div class=\"csl-entry\">Union académique internationale. <i>Philippi</i>. Edited by Anna Avramea and Pavlina Karanastassi. Tabula Imperii Romani K35, I. Athènes: SGMH; Greece: Geographike Hyperesia; Akademia Athenon, 1992. http://www.worldcat.org/oclc/32371506.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://en.wikipedia.org/wiki/Philippi",
+          "citationDetail": "Philippi",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Wikipedia (English)",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/CI6F6W7W",
+          "formattedCitation": "<div class=\"csl-entry\"><i>Wikipedia: The Free Encyclopedia That Anyone Can Edit</i>. Wikimedia Foundation, 2001. https://en.wikipedia.org.</div>",
+          "otherIdentifier": " ",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.cambridge.org/us/talbert/talbertdatabase/TPPlace2040.html",
+          "citationDetail": "7B3 Philippis (Talbert 2040)",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsEvidence",
+          "shortTitle": "TP (Talbert: CUP)",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/QT8GLGGI",
+          "formattedCitation": "<div class=\"csl-entry\">Talbert, Richard. “Database: Peutinger Map Names and Features, with Commentary and User’s Guide.” In <i>Explore the Peutinger Map</i>. Cambridge UP, 2010. http://www.cambridge.org/us/talbert/talbertdatabase/prm.html.</div>",
+          "otherIdentifier": " ",
+          "type": "citesAsEvidence"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://www.livius.org/articles/place/philippi/",
+          "citationDetail": "Philippi",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Livius.org",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/726HWVKS",
+          "formattedCitation": "<div class=\"csl-entry\">Lendering, Jona. <i>Livius - Articles on Ancient History</i>, 1995. http://www.livius.org/.</div>",
+          "otherIdentifier": " ",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0006:entry=philippi",
+          "citationDetail": "PHILIPPI (Krenides) Thrace, Greece",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "PECS (Perseus)",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/PV9N7BQD",
+          "formattedCitation": "<div class=\"csl-entry\">Stillwell, Richard, William L MacDonald, and Marian Holland McAllister, eds. <i>The Princeton Encyclopedia of Classical Sites</i>. Princeton, N.J.: Princeton University Press, 1976. http://www.perseus.tufts.edu/hopper/text?doc=Perseus:text:1999.04.0006.</div>",
+          "otherIdentifier": " ",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://topostext.org/place/410243PPhi",
+          "citationDetail": "Philippoi (Kavala)",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "ToposText",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/MC9RGDVB",
+          "formattedCitation": "<div class=\"csl-entry\">Kiesling, Brady. <i>ToposText – a Reference Tool for Greek Civilization</i>. Version 2.0. Aikaterini Laskaridis Foundation, 2016. https://topostext.org/.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://books.openedition.org/efa/3137",
+          "citationDetail": "",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Brélaz 2020",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/RK4XZNZX",
+          "formattedCitation": "<div class=\"csl-entry\">Brélaz, Cédric. <i>Philippes, colonie romaine d’Orient : Recherches d’histoire institutionnelle et sociale</i>. Suppléments du BCH. Athènes: École française d’Athènes, 2020. http://books.openedition.org/efa/3137.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://journals.openedition.org/baefe/7185",
+          "citationDetail": "",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Sève 2023a",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/LKIIFDFF",
+          "formattedCitation": "<div class=\"csl-entry\">Sève, Michel, and Patrick Weber. “Philippes. Forum (2022).” <i>Bulletin archéologique des Écoles françaises à l’étranger</i>, February 21, 2023. https://doi.org/10.4000/baefe.7185.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://chronique.efa.gr/?kroute=topo_public&id=9586",
+          "citationDetail": "Toponyme 9586: Philippi, Krenides, Crenides",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "CFL/AGO",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/9KVQ7A64",
+          "formattedCitation": "<div class=\"csl-entry\">Veronique Chankowski, Amélie Perrier, Catherine Bouras, Sabine Fourrier, John Bennet, Michaeol Loy, Kostis Christakis, L. Mulot, and G. Bejjaji. <i>Chronique Des Fouilles En Ligne = Archaeology in Greece Online</i>. Athens: Ecole française d’Athènes and British School at Athens, 2018. https://chronique.efa.gr/?kroute=homepage.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://chronique.efa.gr/?kroute=report&id=18564",
+          "citationDetail": "Report 18564: PHILIPPES. – Céramique romaine et byzantine - 2022",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "CFL/AGO",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/9KVQ7A64",
+          "formattedCitation": "<div class=\"csl-entry\">Veronique Chankowski, Amélie Perrier, Catherine Bouras, Sabine Fourrier, John Bennet, Michaeol Loy, Kostis Christakis, L. Mulot, and G. Bejjaji. <i>Chronique Des Fouilles En Ligne = Archaeology in Greece Online</i>. Athens: Ecole française d’Athènes and British School at Athens, 2018. https://chronique.efa.gr/?kroute=homepage.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://darmc.harvard.edu/",
+          "citationDetail": "4225 and 24722",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "DARMC",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/9UD9W75C",
+          "formattedCitation": "<div class=\"csl-entry\">Michael McCormick, Giovanni Zambotti, Leland Grigoli, and Kelly Gibson, eds. <i>The Digital Atlas of Roman and Medieval Civilizations</i>. Cambridge (Massachusetts): Harvard University, 2007. https://darmc.harvard.edu/.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://journals.openedition.org/bch/1256",
+          "citationDetail": "",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Sève 2023",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/AIYMN9DX",
+          "formattedCitation": "<div class=\"csl-entry\">Sève, Michel. “Varia Philippica, 3. Que s’est‑il passé à Philippes dans la seconde moitié du vie s. apr. J.‑C. ?” <i>Bulletin de correspondance hellénique</i>, no. 145.1 (November 15, 2021): 47–63. https://doi.org/10.4000/bch.1256.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.worldcat.org/oclc/936644063",
+          "citationDetail": "320,5",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "ItAnt (Cuntz)",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/M4UH8NCU",
+          "formattedCitation": "<div class=\"csl-entry\">Cuntz, Otto, ed. <i>Itineraria Antonini Augusti et Burdigalense</i>. Itineraria Romana 1. Leipzig: Teubner, 1929. http://www.worldcat.org/oclc/936644063.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.worldcat.org/oclc/6684340",
+          "citationDetail": "523",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "ItMiller",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/Q8X83VMV",
+          "formattedCitation": "<div class=\"csl-entry\">Miller, Konrad. <i>Itineraria romana: Römische Reisewege an der Hand der Tabula Peutingeriana</i>. Stuttgart: Strecker und Schröder, 1916. http://www.worldcat.org/oclc/6684340.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://nomisma.org/id/philippi",
+          "citationDetail": "Philippi",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "nomisma.org",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/N5BAUNTN",
+          "formattedCitation": "<div class=\"csl-entry\">Meadows, Andrew, Sebastian Heath, and Ethan Gruber. <i>Nomisma.Org</i>. New York: American Numismatic Society, 2010. http://nomisma.org/.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://www.wikidata.org/wiki/Q379652",
+          "citationDetail": "Philippi (Q379652)",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "Wikidata",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/BCQIKDKS",
+          "formattedCitation": "<div class=\"csl-entry\"><i>Wikidata: The Free Knowledge Base That Anyone Can Edit</i>. Wikimedia Foundation, 2014. https://www.wikidata.org/.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://journals.openedition.org/mefra/2879",
+          "citationDetail": "esp. fig. 3",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Rizakis 2015",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/IFSCNE73",
+          "formattedCitation": "<div class=\"csl-entry\">Rizakis, Athanasios D. “Expropriations et confiscations des terres dans le cadre de la colonisation romaine en Achaïe et en Macédoine.” <i>Mélanges de l’École française de Rome - Antiquité</i>, no. 127–2 (2015): 469–85. https://doi.org/10.4000/mefra.2879.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://tp-online.ku.de/trefferanzeige_en.php?id=1134",
+          "citationDetail": "1134: Philippis",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "KU TP Database (Rathmann)",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/KDZ6Q72N",
+          "formattedCitation": "<div class=\"csl-entry\">Ingolstadt, Katholische Universität Eichstätt-. “Tabula Peutingeriana.” Datenbank tp-online, 2019. https://www.ku.de/ggf/geschichte/alte-geschichte/forschung/datenbank-tp-online.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://vici.org/vici/2213/",
+          "citationDetail": "2213: Krenides",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "vici.org",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/CQWHNDIM",
+          "formattedCitation": "<div class=\"csl-entry\">Voorburg, René. <i>Vici.Org: Archaeological Atlas of Antiquity</i>, 2012. https://vici.org/.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        }
+      ],
+      "uncertainty": "Use each name’s attested periods and certainty. A modern identification does not prove every ancient claim."
+    },
+    {
+      "id": "pleiades:678299",
+      "sourceId": "pleiades-678299",
+      "type": "geography",
+      "locator": "https://pleiades.stoa.org/places/678299",
+      "text": "An ancient place, cited: BAtlas 69 B4 Nazareth",
+      "excerptSha256": "bd629b0f6f37bf2207df150f26dceda83cf0d77f4ecb887b440d49722cd3a312",
+      "aliases": [
+        "Nazareth",
+        "Nazareth"
+      ],
+      "placeId": "678299",
+      "periods": [
+        "hellenistic-republican",
+        "late-antique",
+        "roman"
+      ],
+      "attestations": [
+        {
+          "name": "Nazareth",
+          "certainty": "certain",
+          "periods": [
+            {
+              "timePeriod": "hellenistic-republican",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/hellenistic-republican",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "roman",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/roman",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            },
+            {
+              "timePeriod": "late-antique",
+              "timePeriodURI": "https://pleiades.stoa.org/vocabularies/time-periods/late-antique",
+              "confidence": "confident",
+              "confidenceURI": "https://pleiades.stoa.org/vocabularies/attestation-confidence/confident"
+            }
+          ],
+          "start": -330,
+          "end": 640
+        }
+      ],
+      "references": [
+        {
+          "alternateURI": "",
+          "accessURI": "http://www.worldcat.org/oclc/43970336",
+          "citationDetail": "69 B4 Nazareth",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "BAtlas",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/MIAGQ5C6",
+          "formattedCitation": "<div class=\"csl-entry\">Talbert, Richard J. A., ed. <i>Barrington Atlas of the Greek and Roman World</i>. Princeton, N.J.: Princeton University Press, 2000. http://www.worldcat.org/oclc/43970336.</div>",
+          "otherIdentifier": " ",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "",
+          "citationDetail": "",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "",
+          "bibliographicURI": "http://atlantides.org/bibliography/t.html#TIR-Iudaea-194",
+          "formattedCitation": "TIR Iudaea 194",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "http://public.eblib.com/choice/PublicFullRecord.aspx?p=6128166",
+          "citationDetail": "",
+          "citationTypeURI": "http://purl.org/spar/cito/seeFurther",
+          "shortTitle": "Dark 2020",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/2K2VBHJL",
+          "formattedCitation": "<div class=\"csl-entry\">Dark, Ken. <i>Nazareth</i>. Milton: Routledge, 2020. http://public.eblib.com/choice/PublicFullRecord.aspx?p=6128166.</div>",
+          "otherIdentifier": "",
+          "type": "seeFurther"
+        },
+        {
+          "alternateURI": "",
+          "accessURI": "https://www.wikidata.org/wiki/Q430776",
+          "citationDetail": "Q430776",
+          "citationTypeURI": "http://purl.org/spar/cito/citesAsRelated",
+          "shortTitle": "Wikidata",
+          "bibliographicURI": "https://www.zotero.org/groups/pleiades/items/BCQIKDKS",
+          "formattedCitation": "<div class=\"csl-entry\"><i>Wikidata: The Free Knowledge Base That Anyone Can Edit</i>. Wikimedia Foundation, 2014. https://www.wikidata.org/.</div>",
+          "otherIdentifier": "",
+          "type": "citesAsRelated"
+        }
+      ],
+      "uncertainty": "Use each name’s attested periods and certainty. A modern identification does not prove every ancient claim."
+    },
+    {
+      "id": "sword:MHC:John:9:7:0",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "1 And as Jesus passed by, he saw a man which was blind from his birth. 2 And his disciples asked him, saying, Master, who did sin, this man, or his parents, that he was born blind? 3 Jesus answered, Neither hath this man sinned, nor his parents: but that the works of God should be made manifest in him. 4 I must work the works of him that sent me, while it is day: the night cometh, when no man can work. 5 As long as I am in the world, I am the light of the world. 6 When he had thus spoken, he spat on the ground, and made clay of the spittle, and he anointed the eyes of the blind man with the clay, 7 And said unto him, Go, wash in the pool of Siloam, (which is by interpretation, Sent.) He went his way therefore, and washed, and came seeing.   We have here sight given to a poor beggar that had been blind from his birth. Observe,   I. The notice which our Lord Jesus took of the piteous case of this poor blind man (v. 1): As Jesus passed by he saw a man which was blind from his birth. The first words seem to refer to the last of the foregoing chapter, and countenance the opinion of those who in the harmony place this story immediately after that. There it was said, paregen—he passed by,",
+      "excerptSha256": "3e49e101b7ec5f542b9b6c869fd584316212293ed36261d1a3adf5623235209e",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 0,
+      "end": 1200,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:1200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": " and here, without so much as repeating him name (though our translators supply it) kai parago—and as he passed by. 1. Though the Jews had so basely abused him, both by word and deed gave him the highest provocation imaginable, yet he did not miss any opportunity of doing good among them, nor take up a resolution, as justly he might have done, never to have favoured them with any good offices. The cure of this blind man was a kindness to the public, enabling him to work for his living who before was a charge and burden to the neighbourhood. It is noble, and generous, and Christ-like, to be willing to serve the public, even when we are slighted and disobliged by them, or think ourselves so. Though he was in his flight from a threatening danger, and escaping for his life, yet he willingly halted and staid awhile to show mercy to this poor man. We make more haste than good speed when we out-run opportunities of doing good. 3. When the Pharisees drove Christ from them, he went to this poor blind beggar. Some of the ancients make this a figure of the bringing of the gospel to the Gentiles, who sat in darkness, when the Jews had rejected it, and driven it from them. 4. Christ took this p",
+      "excerptSha256": "96115171cac1bad8c686978973110f03fb6ae62c172950620612b80de8500478",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 1200,
+      "end": 2400,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:2400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "oor blind man in his way, and cured him in transitu—as he passed by. Thus should we take occasions of doing good, even as we pass by, wherever we are.   Now, (1.) The condition of this poor man was very sad. He was blind, and had been so from his birth. If the light is sweet, how melancholy must it needs be for a man, all his days, to eat in darkness! He that is blind has no enjoyment of the light, but he that is born blind has no idea of it. Methinks such a one would give a great deal to have his curiosity satisfied with but one day's sight of light and colours, shapes and figures, though he were never to see them more. Why is the light of life given to one that is in this misery, that is deprived of the light of the sun, whose way is thus hid, and whom God hath thus hedged in? Job iii. 20-23. Let us bless God that it was not our case. The eye is one of the most curious parts of the body, its structure exceedingly nice and fine. In the formation of animals, it is said to be the first part that appears distinctly discernible. What a mercy is it that there was no miscarriage in the making of ours! Christ cured many that were blind by disease or accident, but here he cured one that w",
+      "excerptSha256": "dc9e6976a51c883c05c3157f1f6d31c9b46628bf210aaf0a5147095cc664a8ee",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 2400,
+      "end": 3600,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:3600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "as born blind. [1.] That he might give an instance of his power to help in the most desperate cases, and to relieve when none else can. [2.] That he might give a specimen of the work of his grace upon the souls of sinners, which gives sight to those that were by nature blind.   (2.) The compassions of our Lord Jesus towards him were very tender. He saw him; that is, he took cognizance of his case, and looked upon him with concern. When God is about to work deliverance, he is said to see the affliction; so Christ saw this poor man. Others saw him, but not as he did. This poor man could not see Christ, but Christ saw him, and anticipated both his prayers and expectations with a surprising cure. Christ is often found of those that seek him not, nor see him, Isa. lxv. 1. And, if we know or apprehend any thing of Christ, it is because we were first known of him (Gal. iv. 9) and apprehended by him, Phil. iii. 12.   II. The discourse between Christ and his disciples concerning this man. When he departed out of the temple they went along with him: for these were they that continued with him in his temptations, and followed him whithersoever he went; and they lost nothing by their adherence",
+      "excerptSha256": "1cf3a6210a630383cd62f3c7d345e47974608e81dce1e9268e69f7cb3828aefd",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 3600,
+      "end": 4800,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:4800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": " to him, but gained experience abundantly. Observe,   1. The question which the disciples put to their Master upon this blind man's case, v. 2. When Christ looked upon him, they had an eye to him too; Christ's compassion should kindle ours. It is probable that Christ told them this poor man was born blind, or they knew it by common fame; but they did not move Christ to heal him. Instead of this, they started a very odd question concerning him: Rabbi, who sinned, this man or his parents, that he was born blind? Now this question of theirs was,   (1.) Uncharitably censorious. They take it for granted that this extraordinary calamity was the punishment of some uncommon wickedness, and that this man was a sinner above all men that dwelt at Jerusalem, Luke xiii. 4. For the barbarous people to infer, Surely this man is a murderer, was not so strange; but it was inexcusable in them, who knew the scriptures, who had read that all things come alike to all, and knew that it was adjudged in Job's case that the greatest sufferers are not therefore to be looked upon as the greatest sinners. The grace of repentance calls our own afflictions punishments, but the grace of charity calls the afflict",
+      "excerptSha256": "9922406e13ac88b8bb289629d39fb3affed1b939556ddab6db424d54a7d46c06",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 4800,
+      "end": 6000,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:6000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ions of others trials, unless the contrary is very evident.   (2.) It was unnecessarily curious. Concluding this calamity to be inflicted for some very heinous crime, they ask, Who were the criminals, this man or his parents? And what was this to them? Or what good would it do them to know it? We are apt to be more inquisitive concerning other people's sins than concerning our own; whereas, it is more our concern to know wherefore God contends with us than wherefore he contends with others; for to judge ourselves is our sin. They enquire, [1.] Whether this man was punished thus for some sin of his own, either committed or foreseen before his birth. Some think that the disciples were tainted with the Pythagorean notion of the pre-existence of souls, and their transmigration from one body to another. Was this man's soul condemned to the dungeon of this blind body to punish it for some great sin committed in another body which it had before animated? The Pharisees seem to have had the same opinion of his case when they said, Thou wast altogether born in sin (v. 34), as if all those, and those only, were born in sin whom nature had stigmatized. Or, [2.] Whether he was punished for the ",
+      "excerptSha256": "f5767e909747edf77977bab3239003d9a72e31c1bb2fa82eafe2871dd7f5abe4",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 6000,
+      "end": 7200,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:7200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "wickedness of his parents, which God sometimes visits upon the children. It is a good reason why parents should take heed of sin, lest their children smart for it when they are gone. Let not us thus be cruel to our own, as the ostrich in the wilderness. Perhaps the disciples asked this, not as believing that this was the punishment of some actual sin of his own or his parents, but Christ having intimated to another patient that his sin was the cause of this impotency (ch. v. 14), \"Master,\" say they, \"whose sin is the cause of this impotency?\" Being at a loss what construction to put upon this providence, they desire to be informed. The equity of God's dispensations is always certain, for his righteousness is as the great mountains, but not always to be accounted for, for his judgments are a great deep.   2. Christ's answer to this question. He was always apt to teach, and to rectify his disciples' mistakes.   (1.) He gives the reason of this poor man's blindness: \"Neither has this man sinned nor his parents, but he was born blind, and has continued so to this day, that now at last the works of God should be made manifest in him,\" v. 3. Here Christ, who perfectly knew the secret spr",
+      "excerptSha256": "73a099a31fa94e002e469e1fc4106cdb1ab3281dd339427ac3c967b72160506e",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 7200,
+      "end": 8400,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:8400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ings of the divine counsels, told them two things concerning such uncommon calamities:—[1.] That they are not always inflicted as punishments of sin. The sinfulness of the whole race of mankind does indeed justify God in all the miseries of human life; so that those who have the least share of them must say that God is kind, and those who have the largest share must not say that he is unjust; but many are made much more miserable than others in this life who are not at all more sinful. Not but that this man was a sinner, and his parents sinners, but is was not any uncommon guilt that God had an eye to in inflicting this upon him. Note, We must take heed of judging any to be great sinners merely because they are great sufferers, lest we be found, not only persecuting those whom God has smitten (Ps. lxix. 26), but accusing those whom he has justified, and condemning those for whom Christ died, which is daring and dangerous, Rom. viii. 33, 34. [2.] That they are sometimes intended purely for the glory of God, and the manifesting of his works. God has a sovereignty over all his creatures and an exclusive right in them, and may make them serviceable to his glory in such a way as he thin",
+      "excerptSha256": "ac0f73629c3a062c5b255986d7595a370aa8eda2565628cb974a6e1a74e1e3c5",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 8400,
+      "end": 9600,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:9600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ks fit, in doing or suffering; and if God be glorified, either by us or in us, we were not made in vain. This man was born blind, and it was worth while for him to be so, and to continue thus long dark, that the works of God might be manifest in him. That is, First, That the attributes of God might be made manifest in him: his justice in making sinful man liable to such grievous calamities; his ordinary power and goodness in supporting a poor man under such a grievous and tedious affliction, especially that his extraordinary power and goodness might be manifested in curing him. Note, The difficulties of providence, otherwise unaccountable, may be resolved into this—God intends in them to show himself, to declare his glory, to make himself to be taken notice of. Those who regard him not in the ordinary course of things are sometimes alarmed by things extraordinary. How contentedly then may a good man be a loser in his comforts, while he is sure that thereby God will be one way or other a gainer in his glory! Secondly, That the counsels of God concerning the Redeemer might be manifested in him. He was born blind that our Lord Jesus might have the honour of curing him, and might there",
+      "excerptSha256": "3546fc3a6ceb0e59ad206e938cc7593954cf0ce37ac862c3ae383fd1657a7d7b",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 9600,
+      "end": 10800,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:10800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "in prove himself sent of God to be the true light to the world. Thus the fall of man was permitted, and the blindness that followed it, that the works of God might be manifest in opening the eyes of the blind. It was now a great while since this man was born blind, and yet it never appeared till now why he was so. Note, The intentions of Providence commonly do not appear till a great while after the event, perhaps many years after. The sentences in the book of providence are sometimes long, and you must read a great way before you can apprehend the sense of them.   (2.) He gives the reason of his own forwardness and readiness to help and heal him, v. 4, 5. It was not for ostentation, but in pursuance of his undertaking: I must work the works of him that sent me (of which this is one), while it is day, and working time; the night cometh, the period of that day, when no man can work. This is not only a reason why Christ was constant in doing good to the souls and bodies of men, but why particularly he did this, though it was the sabbath day, on which works of necessity might be done, and he proves this to be a work of necessity.   [1.] It was his Father's will: I must work the works ",
+      "excerptSha256": "c8ea701e916b667f9e69b25dc7333ba09c285d05e3c14f1dc5c04dd7e1720958",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 10800,
+      "end": 12000,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:12000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "of him that sent me. Note, First, The Father, when he sent his Son into the world, gave him work to do; he did not come into the world to take state, but to do business; whom God sends he employs, for he sends none to be idle. Secondly, The works Christ had to do were the works of him that sent him, not only appointed by him, but done for him; he was a worker together with God. Thirdly, He was pleased to lay himself under the strongest obligations to do the business he was sent about: I must work. He engaged his heart, in the covenant of redemption, to draw near, and approach to God as Mediator, Jer. xxx. 21. Shall we be willing to be loose, when Christ was willing to be bound? Fourthly, Christ, having laid himself under obligations to do his work, laid out himself with the utmost vigour and industry in his work. He worked the works he had to do; did ergazesthai ta erga—made a business of that which was his business. It is not enough to look at our work, and talk over it, but we must work it.   [2.] Now was his opportunity: I must work while it is day, while the time lasts which is appointed to work in, and while the light lasts which is given to work by. Christ himself had his day",
+      "excerptSha256": "4659f746a677a5fdcf7faad883f4fcfd7e9b7e0222964cbc4900c2f20a8d6995",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 12000,
+      "end": 13200,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:13200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": ". First, All the business of the mediatorial kingdom was to be done within the limits of time, and in this world; for at the end of the world, when time shall be no more, the kingdom shall be delivered up to God, even the Father, and the mystery of God finished. Secondly, all the work he had to do in his own person here on earth was to be done before his death; the time of his living in this world is the day here spoken of. Note, The time of our life is our day, in which it concerns us to do the work of the day. Day-time is the proper season for work (Ps. civ. 22, 23); during the day of life we must be busy, not waste day-time, nor play by day-light; it will be time enough to rest when our day is done, for it is but a day.   [3.] The period of his opportunity was at hand, and therefore he would be busy; The night comes when no man can work. Note, The consideration of our death approaching should quicken us to improve all the opportunities of life, both for doing and getting good. The night comes, it will come certainly, may come suddenly, is coming nearer and nearer. We cannot compute how nigh our sun is, it may go down at noon; nor can we promise ourselves a twilight between the d",
+      "excerptSha256": "033032271ec7eac784ea4b6568f4f925b5389d0a10a689129a5bb5d3e2c963da",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 13200,
+      "end": 14400,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:14400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ay of life and the night of death. When the night comes we cannot work, because the light afforded us to work by is extinguished; the grave is a land of darkness, and our work cannot be done in the dark. And, besides, our time allotted us for our work will then have expired; when our Master tied us to duty he tied us to time too; when night comes, call the labourers; we must then show our work, and receive according to the things done. In the world of retribution we are no longer probationers; it is too late to bid when the inch of candle is dropped. Christ uses this as an argument with himself to be diligent, though he had no opposition from within to struggle with; much more need have we to work upon our hearts these and the like considerations to quicken us.   [4.] His business in the world was to enlighten it (v. 5): As long as I am in the world, and that will not be long, I am the light of the world. He had said this before, ch. viii. 12. He is the Sun of righteousness, that has not only light in his wings for those that can see, but healing in his wings, or beams, for those that are blind and cannot see, therein far exceeding in virtue that great light which rules by day. Chr",
+      "excerptSha256": "accf156a01139de00928af64dc67345896bee29132644f677e168e5092c38a34",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 14400,
+      "end": 15600,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:15600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ist would cure this blind man, the representative of a blind world, because he came to be the light of the world, not only to give light, but to give sight. Now this gives us, First, A great encouragement to come to him, as a guiding, quickening, refreshing light. To whom should we look but to him? Which way should we turn our eyes, but to the light? We partake of the sun's light, and so we may of Christ's grace, without money and without price. Secondly, A good example of usefulness in the world. What Christ saith of himself, he saith of his disciples: You are lights in the world, and, if so, Let your light shine. What were candles made for but to burn?   III. The manner of the cure of the blind man, v. 6, 7. The circumstances of the miracle are singular, and no doubt significant. When he had thus spoken for the instruction of his disciples, and the opening of their understandings, he addressed himself to the opening of the blind man's eyes. He did not defer it till he could do it either more privately, for his greater safety, or more publicly, for his greater honour, or till the sabbath was past, when it would give less offence. What good we have opportunity of doing we should do",
+      "excerptSha256": "a38ccbaa6decb37b67d9d47911b5bbdf20e5ebedce0da21317bd76b999deff1f",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 15600,
+      "end": 16800,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:16800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": " quickly; he that will never do a good work till there is nothing to be objected against it will leave many a good work for ever undone, Eccl. xi. 4. In the cure observe,   1. The preparation of the eye-salve. Christ spat on the ground, and made clay of the spittle. He could have cured him with a word, as he did others, but he chose to do it in this way to show that he is not tied to any method. He made clay of his own spittle, because there was no water near; and he would teach us not to be nice or curious, but, when we have at any time occasion, to be willing to take up with that which is next hand, if it will but serve the turn. Why should we go about for that which may as well be had and done a nearer way? Christ's making use of his own spittle intimates that there is healing virtue in every thing that belongs to Christ; clay made of Christ's spittle was much more precious than the balm of Gilead.   2. The application of it to the place: He anointed the eyes of the blind man with the clay. Or, as the margin reads it, He spread (epechrise), he daubed the clay upon the eyes of the blind man, like a tender physician; he did it himself with his own hand, though the patient was a be",
+      "excerptSha256": "025ea2fb1fb92b535404d639f9becbd2bfd2c0054842d95ff67477c5f13082db",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 16800,
+      "end": 18000,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:18000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ggar. Now Christ did this, (1.) To magnify his power in making a blind man to see by that method which one would think more likely to make a seeing man blind. Daubing clay on the eyes would close them up, but never open them. Note, The power of God often works by contraries; and he makes men feel their own blindness before he gives them sight. (2.) To give an intimation that it was his mighty hand, the very same that at first made man out of the clay; for by him God made the worlds, both the great world, and man the little world. Man was formed out of the clay, and moulded like the clay, and here Christ used the same materials to give sight to the body that at first he used to give being to it. (3.) To represent and typify the healing and opening of the eyes of the mind by the grace of Jesus Christ. The design of the gospel is to open men's eyes, Acts xxvi. 18. Now the eye-salve that does the work is of Christ's preparing; it is made up, not as this, of his spittle, but of his blood, the blood and water that came out of his pierced side; we must come to Christ for the eye-salve, Rev. iii. 18. He only is able, and he only is appointed, to make it up, Luke iv. 18. The means used in t",
+      "excerptSha256": "a14afd96696e9308f7cdc9506f0b779fcdecff6cad863ae6fa1a6bb071292426",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 18000,
+      "end": 19200,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:19200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "his work are very weak and unlikely, and are made effectual only by the power of Christ; when a dark world was to be enlightened, and nations of blind souls were to have their eyes opened, God chose the foolish things, and weak, and despised, for the doing of it. And the method Christ takes is first to make men feel themselves blind, as this poor man did whose eyes were daubed with clay, and then to give them sight. Paul in his conversion was struck blind for three days, and then the scales fell from his eyes. The way prescribed for getting spiritual wisdom is, Let a man become a fool, that he may be wise, 1 Cor. iii. 18. We must be made uneasy with our blindness, as this man here, and then healed.   3. The directions given to the patient, v. 7. His physician said to him, Go, wash in the pool of Siloam. Not that this washing was needful to effect the cure; but, (1.) Christ would hereby try his obedience, and whether he would with an implicit faith obey the orders of one he was so much a stranger to. (2.) He would likewise try how he stood affected to the tradition of the elders, which taught, and perhaps had taught him (for many that are blind are very knowing), that it was not law",
+      "excerptSha256": "13e61d1a13f513b28e1e2436536831b104469cb562883bc8fce6898ca8c8a89a",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 19200,
+      "end": 20400,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:20400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ful to wash the eyes, no not with spittle medicinally, on the sabbath day, much less to go to a pool of water to wash them. (3.) He would hereby represent the method of spiritual healing, in which, though the effect is owing purely to his power and grace, there is duty to be done by us. Go, search the scriptures, attend upon the ministry, converse with the wise; this is like washing in the pool of Siloam. Promised graces must be expected in the way of instituted ordinances. The waters of baptism were to those who had been trained up in darkness like the pool of Siloam, in which they might not only wash and be clean, but wash, and have their eyes opened. Hence they that were baptized are said to be photisthentes—enlightened; and the ancients called baptism photismos—illumination. Concerning the pool of Siloam observe, [1.] That it was supplied with water from mount Zion, so that these were the waters of the sanctuary (Ps. xlvi. 4), living waters, which were healing, Ezek. xlvii. 9. [2.] That the waters of Siloam had of old signified the throne and kingdom of the house of David, pointing at the Messiah (Isa. viii. 6), and the Jews who refused the waters of Shiloah, Christ's doctrine ",
+      "excerptSha256": "8cca35f3e48ad726cd016e927e0356d00d62a93fb1ef1e878635dda98cba7288",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 20400,
+      "end": 21600,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:21600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "and law, and rejoiced in the tradition of the elders. Christ would try this man, whether he would cleave to the waters of Siloam or no. [3.] The evangelist takes notice of the signification of the name, its being interpreted sent. Christ is often called the sent of God, the Messenger of the covenant (Mal. iii. 1); so that when Christ sent him to the pool of Siloam he did in effect send him to himself; for Christ is all in all to the healing of souls. Christ as a prophet directs us to himself as a priest. Go, wash in the fountain opened, a fountain of life, not a pool.   4. The patient's obedience to these directions: He went his way therefore, probably led by some friend or other; or perhaps he was so well acquainted with Jerusalem that he could find the way himself. Nature often supplies the want of sight with an uncommon sagacity; and he washed his eyes; probably the disciples, or some stander by, informed him that he who bade him do it was that Jesus whom he had heard so much of, else he would not have gone, at his bidding, on that which looked so much like a fool's errand; in confidence of Christ's power, as well as in obedience to his command, he went, and washed.   5. The cur",
+      "excerptSha256": "106365a61a08a493654213b907ecb05b803950931bdb1d4a4525c2b9ad4f8fda",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 21600,
+      "end": 22800,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:22800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "e effected: He came seeing. There is more glory in this concise narrative, He went and washed, and came seeing, than in Cæsar's Veni, vidi, vici—I came, I saw, I conquered. When the clay was washed off from his eyes, all the other impediments were removed with it; so when the pangs and struggles of the new birth are over, and the pains and terrors of conviction past, the bands of sin fly off with them, and a glorious light and liberty succeed. See here an instance, (1.) Of the power of Christ. What cannot he do who could not only do this, but do it thus? With a lump of clay laid on either eye, and washed off again, he couched those cataracts immediately which the most skilful oculist, with the finest instrument and the most curious hand, could not remove. No doubt this is he that should come, for by him the blind receive their sight. (2.) It is an instance of the virtue of faith and obedience. This man let Christ do what he pleased, and did what he appointed him to do, and so was cured. Those that would be healed by Christ must be ruled by him. He came back from the pool to his neighbours and acquaintance, wondering and wondered at; he came seeing. This represents the benefit graci",
+      "excerptSha256": "a17a86234df503d3f3f0c47e83ed0ab7ea98c50a5c7174ba9db226751ca57256",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 22800,
+      "end": 24000,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:John:9:7:24000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "ous souls find in attending on instituted ordinances, according to Christ's appointment; they have gone to the pool of Siloam weak, and have come away strengthened; have gone doubting, and come away satisfied; have gone mourning, and come away rejoicing; have gone trembling, and come away triumphing; have gone blind, and come away seeing, come away singing, Isa. lii. 8.",
+      "excerptSha256": "ba48707eceff42040e58f8e4c63247c116c2346b8924b3c9458353bf97878d86",
+      "entryId": "sword:MHC:John:9:7",
+      "start": 24000,
+      "end": 24372,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:0",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "6 Now when they had gone throughout Phrygia and the region of Galatia, and were forbidden of the Holy Ghost to preach the word in Asia, 7 After they were come to Mysia, they assayed to go into Bithynia: but the Spirit suffered them not. 8 And they passing by Mysia came down to Troas. 9 And a vision appeared to Paul in the night; There stood a man of Macedonia, and prayed him, saying, Come over into Macedonia, and help us. 10 And after he had seen the vision, immediately we endeavoured to go into Macedonia, assuredly gathering that the Lord had called us for to preach the gospel unto them. 11 Therefore loosing from Troas, we came with a straight course to Samothracia, and the next day to Neapolis; 12 And from thence to Philippi, which is the chief city of that part of Macedonia, and a colony: and we were in that city abiding certain days. 13 And on the sabbath we went out of the city by a river side, where prayer was wont to be made; and we sat down, and spake unto the women which resorted thither. 14 And a certain woman named Lydia, a seller of purple, of the city of Thyatira, which worshipped God, heard us: whose heart the Lord opened, that she attended unto the things which were ",
+      "excerptSha256": "e3e56cacdc082fac08e3e76c11932bbcf227e0c3b325ed1d1d66a29f2bc95ce9",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 0,
+      "end": 1200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:1200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "spoken of Paul. 15 And when she was baptized, and her household, she besought us, saying, If ye have judged me to be faithful to the Lord, come into my house, and abide there. And she constrained us.   In these verses we have,   I. Paul's travels up and down to do good. 1. He and Silas his colleague went throughout Phrygia and the region of Galatia, where, it should seem, the gospel was already planted, but whether by Paul's hand or no is not mentioned; it is likely it was, for in his epistle to the Galatians he speaks of his preaching the gospel to them at the first, and how very acceptable he was among them, Gal. iv. 13-15. And it appears by that epistle that the judaizing teachers had then done a great deal of mischief to these churches of Galatia, had prejudiced them against Paul and drawn them from the gospel of Christ, for which he there severely reproves them. But probably that was a great while after this. 2. They were forbidden at this time to preach the gospel in Asia (the country properly so called), because it did not need, other hands being at work there; or because the people were not yet prepared to receive it, as they were afterwards (ch. xix. 10), when all those th",
+      "excerptSha256": "c2abc8e7d7d29cce2fa7a58a09b2db821e08b40342b23935f98b3a1e6b4fcf10",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 1200,
+      "end": 2400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:2400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "at dwelt in Asia heard the word of the Lord; or, as Dr. Lightfoot suggests, because at this time Christ would employ Paul in a piece of new work, which was to preach the gospel to a Roman colony at Philippi, for hitherto the Gentiles to whom he had preached were Greeks. The Romans were more particularly hated by the Jews than other Gentiles; their armies were the abomination of desolation; and therefore there is this among other things extraordinary in his call thither that he is forbidden to preach the gospel in Asia and other places, in order to his preaching it there, which is an intimation that the light of the gospel would in aftertimes be directed more westward than eastward. It was the Holy Ghost that forbade them, either by secret whispers in the minds of both of them, which, when they came to compare notes, they found to be the same, and to come from the same Spirit; or by some prophets who spoke to them from the Spirit. The removals of ministers, and the dispensing of the means of grace by them, are in a particular manner under a divine guidance and direction. We find an Old-Testament minister forbidden to preach at all (Ezek. iii. 26): Thou shalt be dumb. But these New-T",
+      "excerptSha256": "b7b785a8cac6192f8c8aedf8df0f867be2d7c71fc562f9f6e9c03c5c9694a553",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 2400,
+      "end": 3600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:3600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "estament ministers are only forbidden to preach in one place, while they are directed to another where there is more need. 3. They would have gone into Bithynia, but were not permitted: the Spirit suffered them not, v. 7. They came to Mysia, and, as it should seem, preached the gospel there; for though it was a very mean contemptible country, even to a proverb (Mysorum ultimus, in Cicero, is a most despicable man), yet the apostles disdained not to visit it, owning themselves debtors both to the wise and to the unwise, Rom. i. 14. In Bithynia was the city of Nice, where the first general council was held against the Arians; into these countries Peter sent his epistle (1 Pet. i. 1); and there were flourishing churches here, for, though they had not the gospel sent them now, they had it in their turn, not long after. Observe, Though their judgment and inclination were to go into Bithynia, yet, having then extraordinary ways of knowing the mind of God, they were overruled by them, contrary to their own mind. We must now follow providence, and submit to the guidance of that pillar of cloud and fire; and, if this suffer us not to do what we assay to do, we ought to acquiesce, and believ",
+      "excerptSha256": "cdb22e547271dfddae14719d5e81074e339cac870bdd0c48ce82b5a68be42b73",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 3600,
+      "end": 4800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:4800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "e it for the best. The Spirit of Jesus suffered them not; so many ancient copies read it. The servants of the Lord Jesus ought to be always under the check and conduct of the Spirit of the Lord Jesus, by whom he governs men's minds. 4. They passed by Mysia, or passed through it (so some), sowing good seed, we may suppose, as they went along; and they came down to Troas, the city of Troy, so much talked of, or the country thereabouts, which took its denomination from it. Here a church was planted; for here we find one in being, ch. xx. 6, 7, and probably planted at this time, and in a little time. It should seem that at Troas Luke fell in with Paul, and joined himself to his company; for henceforward, for the most part, when he speaks of Paul's journeys, he puts himself into the number of his retinue, we went, v. 10.   II. Paul's particular call to Macedonia, that is, to Philippi, the chief city, inhabited mostly by Romans, as appears, v. 21. Here we have,   1. The vision Paul had, v. 9. Paul had many visions, sometimes to encourage, sometimes, as here, to direct him in his work. An angel appeared to him, to intimate to him that it was the will of Christ he should go to Macedonia. L",
+      "excerptSha256": "c63ad5fcac43f196d42afd1d5f760ee2241c1c044a221b2ea5d0b05ce8d38c27",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 4800,
+      "end": 6000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:6000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "et him not be discouraged by the embargo laid upon him once and again, by which his designs were crossed; for, though he shall not go where he has a mind to go, he shall go where God has work for him to do. Now observe, (1.) The person Paul saw. There stood by him a man of Macedonia, who by his habit or dialect seemed so to Paul, or who told him he was so. The angel, some think, assumed the shape of such a man; or, as others think, impressed upon Paul's fancy, when between asleep and awake, the image of such a man: he dreamt he saw such a one. Christ would have Paul directed to Macedonia, not as the apostles were at other times, by a messenger from heaven, to send him thither, but by a messenger thence to call him thither, because in this way he would afterwards ordinarily direct the motions of his ministers, by inclining the hearts of those who needed them to invite them. Paul shall be called to Macedonia by a man of Macedonia, and by him speaking in the name of the rest. Some make this man to be the tutelar angel of Macedonia, supposing angels to have charge of particular places as well as persons, and that so much is intimated Dan. x. 20, where we read of the princes of Persia a",
+      "excerptSha256": "01f5b443872b3587590ea488b9d4edca1b8684e0ef0a88ec33302dd18133aacc",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 6000,
+      "end": 7200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:7200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "nd Grecia, that seem to have been angels. But there is no certainty of this. There was presented either to Paul's eyes or to his mind a man of Macedonia. The angel must not preach the gospel himself to the Macedonians, but must bring Paul to them. Nor must he by the authority of an angel order him to go, but in the person of a Macedonian court him to come. A man of Macedonia, not a magistrate of the country, much less a priest (Paul was not accustomed to receive invitations from such) but an ordinary inhabitant of that country, a plain man, that carried in his countenance marks of probity and seriousness, that did not come to banter Paul nor trifle with him, but in good earnest and with all earnestness to importune his assistance. (2.) The invitation given him. This honest Macedonian prayed him, saying, Come over into Macedonia, and help us; that is, \"Come and preach the gospel to us; let us have the benefit of thy labours.\" [1.] \"Thou hast helped many; we have heard of those in this and the other country to whom thou hast been very useful; and why may we not put in for a share? O come and help us.\" The benefits others have received from the gospel should quicken our enquiries, our",
+      "excerptSha256": "ca47569f4a572ce525577fd98f0fa486ec295eff8609335c07b5fc43bd01b509",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 7200,
+      "end": 8400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:8400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": " further enquiries, after it. [2.] \"It is thy business, and it is thy delight, to help poor souls; thou art a physician for the sick, that art to be ready at the call of every patient; O come and help us.\" [3.] \"We have need of thy help, as much as any people; we in Macedonia are as ignorant and as careless in religion as any people in the world are, are as idolatrous and as vicious as any, and as ingenious and industrious to ruin ourselves as any; and therefore, O come, come with all speed among us. If thou canst do any thing, have compassion on us, and help us.\" [4.] \"Those few among us that have any sense of divine things, and any concern for their own souls and the souls of others, have done what can be done, by the help of natural light; I have done my part for one. We have carried the matter as far as it will go, to persuade our neighbours to fear and worship God, but we can do little good among them. O come come, thou over, and help us. The gospel thou preachest has arguments and powers beyond those we have yet been furnished with.\" [5.] \"Do not only help us with thy prayers here: this will not do; thou must come over and help us.\" Note, People have great need of help for th",
+      "excerptSha256": "3fb9081237ae516aeb21dabafe8690f4d652e503e0572098aa15642828abb942",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 8400,
+      "end": 9600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:9600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "eir souls, and it is their duty to look out for it and invite those among them that can help them.   2. The interpretation made of the vision (v. 10): They gathered assuredly from this that the Lord had called them to preach the gospel there; and they were ready to go wherever God directed. Note, We may sometimes infer a call of God from a call of man. If a man of Macedonia says, Come and help us, Paul thence gathers assuredly that God says, Go an help them. Ministers may go on with great cheerfulness and courage in their work when they perceive Christ calling them, not only to preach the gospel, but to preach it at this time, in this place, to this people.   III. Paul's voyage to Macedonia hereupon: He was not disobedient to the heavenly vision, but followed this divine direction much more cheerfully, and with more satisfaction, than he would have followed any contrivance or inclination of his own. 1. Thitherward he turned his thoughts. Now that he knows the mind of God in the matter he is determined, for this is all he wanted; now he thinks no more of Asia, nor Bithynia, but immediately we endeavoured to go into Macedonia. Paul only had the vision, but he communicated it to his c",
+      "excerptSha256": "0a7f2508e1599bb2d9d49e71b62e4be3014eb73f4133dd862365b76d9f71b2b9",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 9600,
+      "end": 10800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:10800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "ompanions, and they all, upon the credit of this, resolved for Macedonia. As Paul will follow Christ, so all his will follow him, or rather follow Christ with him. They are getting things in readiness for this expedition immediately, without delay. Note, God's calls must be complied with immediately. As our obedience must not be disputed, so it must not be deferred; do it to-day, lest thy heart be hardened. Observe, They could not immediately go into Macedonia; but they immediately endeavoured to go. If we cannot be so quick as we would be in our performances, yet we may be in our endeavours, and this shall be accepted. 2. Thitherward he steered his course. They set sail by the first shipping and with the first fair wind from Troas; for they may be sure they have done what they had to do there when God calls them to another place. They came with a straight course, a prosperous voyage, to Samothracia; the next day they came to Neapolis, a city on the confines of Thrace and Macedonia; and at last they landed at Philippi, a city so called from Philip king of Macedon, the father of Alexander the Great; it is said (v. 12) to be, (1.) The chief city of that part of Macedonia; or, as some",
+      "excerptSha256": "7d9d30adb6757b624a21206fe148df9efbd9d0785b7eb550303b55421f39cabd",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 10800,
+      "end": 12000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:12000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": " read it, the first city, the first they came to when they came from Troas. As an army that lands in a country of which they design to make themselves masters begin with the reduction of the first place they come to, so did Paul and his assistants: they began with the first city, because, if the gospel were received there, it would the more easily spread thence all the country over. (2.) It was a colony. The Romans not only had a garrison, but the inhabitants of the city were Romans, the magistrates at least, and the governing part. There were the greatest numbers and variety of people, and therefore the most likelihood of doing good.   IV. The cold entertainment which Paul and his companions met with at Philippi. One would have expected that having such a particular call from God thither they would have had a joyful welcome there, as Peter had with Cornelius when the angel sent him thither. Where was the man of Macedonia that begged Paul to come thither with all speed? Why did not he stir up his countrymen, some of them at least, to go and meet him? Why was not Paul introduced with solemnity, and the keys of the city put into his hand? Here is nothing like this; for, 1. It is a go",
+      "excerptSha256": "fa66c4b762aa0253fa36bf1d8f4b6f2890a52b8c2c0f84a736c1c215ebef7f75",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 12000,
+      "end": 13200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:13200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "od while before any notice at all is taken of him: We were in that city abiding certain days, probably at a public house and at their own charge, for they had no friend to invite them so much as to a meal's meat, till Lydia welcomed them. They had made all the haste they could thither, but, now that they are there, they are almost tempted to think they might as well have staid where they were. But so it was ordered for their trial whether they could bear the pain of silence and lying by, when this was their lot. Those eminent and useful men are not fit to live in this world that know not how to be slighted and overlooked. Let not ministers think it strange if they be first strongly invited to a place, and then looked shyly upon when they come. 2. When they have an opportunity of preaching it is in an obscure place, and to a mean and small auditory, v. 13. There was no synagogue of the Jews there, for aught that appears, to be a door of entrance to them, and they never went to the idol-temples of the Gentiles, to preach to the auditories there; but here, upon enquiry, they found out a little meeting of good women, that were proselytes of the gate, who would be thankful to them if th",
+      "excerptSha256": "dee9c88eb4ad78de9928c264b607c71f4bb2e7fdb2bfcf2dba90890c6396e447",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 13200,
+      "end": 14400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:14400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "ey would give them a sermon. The place of this meeting is out of the city; there it was connived at, but would not be suffered any where within the walls. It was a place where prayer was wont to be made; proseuche—where an oratory or house of prayer was (so some), a chapel, or smaller synagogue. But I rather take it, as we read it, where prayer was appointed or accustomed to be. Those that worshipped the true God, and would not worship idols, met there to pray together, and, according to the description of the most ancient and universal devotion, to call upon the name of the Lord. Each of them prayed apart every day; this was always the practice of those that worshipped God: but, besides this, they came together on the sabbath day. Though they were but a few and discountenanced by the town, though their meeting was at some distance, though, for aught that appears, there were none but women, yet a solemn assembly the worshippers of God must have, if by any means it be possible, on the sabbath day. When we cannot do as we would we must do as we can; if we have not synagogues, we must be thankful for more private places, and resort to them, not forsaking the assembling of ourselves to",
+      "excerptSha256": "2ea5fd5392ab1467de9e289b56f26ba96d3a3fbe9803c389ab7389f3f6fdd8ae",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 14400,
+      "end": 15600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:15600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "gether, according as our opportunities are. This place is said to be by a river side, which perhaps was chosen, as befriending contemplation. Idolaters are said to take their lot among the smooth stones of the stream, Isa. lvii. 6. But these proselytes had in their eye, perhaps, the example of those prophets who had their visions, one by the river of Chebar (Ezek. i. 1), another by the great river Hiddekel, Dan. x. 4. Thither Paul and Silas and Luke went, and sat down, to instruct the congregation, that they might the better pray with them. They spoke unto the women who resorted thither, encouraged them in practising according to the light they had, and led them on further to the knowledge of Christ.   V. The conversion of Lydia, who probably was the first that was wrought upon there to believe in Christ, though not the last. In this story of the Acts, we have not only the conversion of places recorded, but of many particular persons; for such is the worth of souls that the reducing of one to God is a great matter. Nor have we only the conversions that were effected by miracle, as Paul's, but some that were brought about by the ordinary methods of grace, as Lydia's here. Observe,  ",
+      "excerptSha256": "f150e5b5003f30b3f804137dd9d0d78e000c3040c8eb702093a78ea7202e9bce",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 15600,
+      "end": 16800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:16800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": " 1. Who this convert was that there is such particular notice taken of. Four things are recorded of her:—   (1.) Her name, Lydia. It is an honour to her to have her name recorded here in the book of God, so that wherever the scriptures are read there shall this be told concerning her. Note, The names of the saints are precious with God, and should be so with us; we cannot have our names recorded in the Bible, but, if God open our hearts, we shall find them written in the book of life, and this is better (Phil. iv. 3) and more to be rejoiced in, Luke x. 20.   (2.) Her calling. She was a seller of purple, either of purple dye or of purple cloth or silk. Observe, [1.] She had a calling, an honest calling, which the historian takes notice of to her praise; she was none of those women that the apostle speaks of (1 Tim. v. 13), who learn to be idle, and not only idle, &amp;c. [2.] It was a mean calling. She was a seller of purple, not a wearer of purple, few such are called. The notice here taken of this is an intimation to those who are employed in honest callings, if they be honest in the management of them, not to be ashamed of them. [3.] Though she had a calling to mind, yet she was ",
+      "excerptSha256": "570e4a8610f12c1c9aa45db659b713483cf1faa340fd8cf7510b62103bd4d77b",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 16800,
+      "end": 18000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:18000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "a worshipper of God, and found time to improve advantages for her soul. The business of our particular callings may be made to consist very well with the business of religion, and therefore it will not excuse us from religious exercises alone, and in our families, or in solemn assemblies, to say, We have shops to look after, and a trade to mind; for have we not also a God to serve and a soul to look after? Religion does not call us from our business in the world, but directs us in it. Every thing in its time and place.   (3.) The place she was of—of the city of Thyatira, which was a great way from Philippi; there she was born and bred, but either married at Philippi, or brought by her trade to settle there. The providence of God, as it always appoints, so it often removes, the bounds of our habitation, and sometimes makes the change of our outward condition or place of our abode wonderfully subservient to the designs of his grace concerning our salvation. Providence brings Lydia to Philippi, to be under Paul's ministry, and there, where she met with it, she made a good use of it; so should we improve opportunities.   (4.) Her religion before the Lord opened her heart. [1.] She wors",
+      "excerptSha256": "10970309ce1b545c81121dc9d1d6bae8741f069743aa8e538bcdac94395c2506",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 18000,
+      "end": 19200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:19200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "hipped God according to the knowledge she had; she was one of the devout women. Sometimes the grace of God wrought upon those who, before their conversion, were very wicked and vile, publicans and harlots; such were some of you, 1 Cor. vi. 11. But sometimes it fastened upon those who were of a good character, who had some good in them, as the eunuch, Cornelius, and Lydia. Note, It is not enough to be worshippers of God, but we must be believers in Jesus Christ, for there is no coming to God as a Father, but by him as Mediator. But those who worshipped God according to the light they had stood fair for the discoveries of Christ, and his grace to them; for to him that has shall be given: and to them Christ would be welcome; for those that know what it is to worship God see their need of Christ, and know what use to make of his mediation. [2.] She heard the apostles. Here, where prayer was made, when there was an opportunity, the word was preached; for hearing the word of God is a part of religious worship, and how can we expect God should hear our prayers if we will not hearken to his word? Those that worshipped God according to the light they had looked out for further light; we mus",
+      "excerptSha256": "06a6b22b6bb7c6c29fbac0f18f4e33a97ec201f41184857af2e0f88f122e117a",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 19200,
+      "end": 20400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:20400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "t improve the day of small things, but must not rest in it.   2. What the work was that was wrought upon her: Whose heart the Lord opened. Observe here, (1.) The author of this work: it was the Lord,—the Lord Christ, to whom this judgment is committed,—the Spirit of the Lord, who is the sanctifier. Note, Conversion-work is God's work; it is he that works in us both to will and to do; not as if we had nothing to do, but of ourselves, without God's grace, we can do nothing; nor as if God were in the least chargeable with the ruin of those that perish, but the salvation of those that are saved must be wholly ascribed to him. (2.) The seat of this work; it is in the heart that the change is made, it is to the heart that this blessed turn is given; it was the heart of Lydia that was wrought upon. Conversion-work is heart-work; it is a renewing of the heart, the inward man, the spirit of the mind. (3.) The nature of the work; she had not only her heart touched, but her heart opened. An unconverted soul is shut up, and fortified against Christ, straitly shut up, as Jericho against Joshua, Josh. vi. 1. Christ, in dealing with the soul, knocks at the door that is shut against him (Rev. iii.",
+      "excerptSha256": "937a3b3c5a17225f94585de47177c2419e1185d6396a5a92abe0149afdd9f656",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 20400,
+      "end": 21600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:21600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": " 20); and, when a sinner is effectually persuaded to embrace Christ, then the heart is opened for the King of glory to come in—the understanding is open to receive the divine light, the will opened to receive the divine law, and the affections opened to receive the divine love. When the heart is thus opened to Christ, the ear is opened to his word, the lips opened in prayer, the hand opened in charity, and the steps enlarged in all manner of gospel obedience.   3. What were the effects of this work on the heart. (1.) She took great notice of the word of God. Her heart was so opened that she attended to the things that were spoken by Paul; she not only gave attendance on Paul's preaching, but gave attention to it; she applied to herself (so some read it) the things that were spoken by Paul; and then only the word does us good, and makes an abiding impression upon us, when we apply it to ourselves. Now this was an evidence of the opening of her heart, and was the fruit of it; wherever the heart is opened by the grace of God, it will appear by a diligent attendance on, and attention to, the word of God, both for Christ's sake, whose word it is, and for our own sakes, who are so nearly",
+      "excerptSha256": "ba5e9eb3873012ac3731215fa30c04177cd3c63c47a6f6ad804e24ed8ccc345b",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 21600,
+      "end": 22800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:22800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": " interested in it. (2.) She gave up her name to Jesus Christ, and took upon her the profession of his holy religion; She was baptized, and by this solemn rite was admitted a member of the church of Christ; and with her her household also was baptized, those of them that were infants in her right, for if the root be holy so are the branches, and those that were grown up by her influence and authority. She and her household were baptized by the same rule that Abraham and his household were circumcised, because the seal of the covenant belongs to the covenanters and their seed. (3.) She was very kind to the ministers, and very desirous to be further instructed by them in the things pertaining to the kingdom of God: She besought us saying \"If you have judged me to be faithful to the Lord, if you take me to be a sincere Christian, manifest your confidence in me by this, come into my house, and abide there.\" Thus she desired an opportunity, [1.] To testify her gratitude to those who had been the instruments of divine grace in this blessed change that was wrought upon her. When her heart was open to Christ, her house was open to his ministers for his sake, and they were welcome to the bes",
+      "excerptSha256": "bae5f2be840a9b62fa492ea3a1a825962922cce8da8e20729692a7a1beaada8c",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 22800,
+      "end": 24000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:24000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "t entertainment she had, which she did not think too good for those of whose spiritual things she had reaped so plentifully. Nay, they are not only welcome to her house, but she is extremely pressing and importunate with them: She constrained us; which intimates that Paul was very backward and unwilling to go, because he was afraid of being burdensome to the families of the young converts, and would study to make the gospel of Christ without charge (1 Cor. ix. 18; Acts xx. 34), that those who were without might have no occasion given them to reproach the preachers of the gospel as designing, self-seeking men, and that those who were within might have no occasion to complain of the expenses of their religion: but Lydia will have no nay; she will not believe that they take her to be a sincere Christian unless they will oblige her herein; like Abraham inviting the angels (Gen. xviii. 3), If now I have found favour in thy sight, pass not away from thy servant. [2.] She desired an opportunity of receiving further instruction. If she might but have them for awhile in her family, she might hear them daily (Prov. viii. 34), and not merely on sabbath days at the meeting. In her own house sh",
+      "excerptSha256": "ba1b4fa629c3b08b96100a2868e4fd7728ec6a1aa74d133b94e3124cee563cd4",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 24000,
+      "end": 25200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:16:14:25200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "e might not only hear them, but ask them questions; and she might have them to pray with her daily, and to bless her household. Those that know something of Christ cannot but desire to know more, and seek opportunities of increasing their acquaintance with his gospel.",
+      "excerptSha256": "2760cda23bcd207c2f3a14d1622205334ced89db53bbe6d988d3904c1a4c16c4",
+      "entryId": "sword:MHC:Acts:16:14",
+      "start": 25200,
+      "end": 25468,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:0",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "36 Now there was at Joppa a certain disciple named Tabitha, which by interpretation is called Dorcas: this woman was full of good works and almsdeeds which she did. 37 And it came to pass in those days, that she was sick, and died: whom when they had washed, they laid her in an upper chamber. 38 And forasmuch as Lydda was nigh to Joppa, and the disciples had heard that Peter was there, they sent unto him two men, desiring him that he would not delay to come to them. 39 Then Peter arose and went with them. When he was come, they brought him into the upper chamber: and all the widows stood by him weeping, and showing the coats and garments which Dorcas made, while she was with them. 40 But Peter put them all forth, and kneeled down, and prayed; and turning him to the body said, Tabitha, arise. And she opened her eyes: and when she saw Peter, she sat up. 41 And he gave her his hand, and lifted her up, and when he had called the saints and widows, presented her alive. 42 And it was known throughout all Joppa; and many believed in the Lord. 43 And it came to pass, that he tarried many days in Joppa with one Simon a tanner.   Here we have another miracle wrought by Peter, for the confirm",
+      "excerptSha256": "20b12ea6d2bbcf35c85d8d4488d30327f49a403bb82027c56362607bed835325",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 0,
+      "end": 1200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:1200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "ing of the gospel, and which exceeded the former—the raising of Tabitha to life when she had been for some time dead. Here is,   I. The life, and death, and character of Tabitha, on whom this miracle was wrought, v. 36, 37. 1. She lived at Joppa, a sea-port town in the tribe of Dan, where Jonah took shipping to go to Tarshish, now called Japho. 2. Her name was Tabitha, a Hebrew name, the Greek for which is Dorcas, both signifying a doe, or hind, or deer, a pleasant creature. Naphtali is compared to a hind let loose, giving goodly words; and the wife to the kind and tender husband is as the loving hind, and as the pleasant roe, Prov. v. 19. 3. She was a disciple, one that had embraced the faith of Christ and was baptized; and not only so, but was eminent above many for works of charity. She showed her faith by her works, her good works, which she was full of, that is, in which she abounded. Her head was full of cares and contrivances which way she should do good. She devised liberal things, Isa. xxxii. 8. Her hands were full of good employment; she made a business of doing good, was never idle, having learned to maintain good works (Tit. iii. 8), to keep up a constant course and met",
+      "excerptSha256": "744f99116e0d838eef7aedb7e1cda68bf7214a97a64c5055a9cd0fcc1d629212",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 1200,
+      "end": 2400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:2400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "hod of them. She was full of good works, as a tree that is full of fruit. Many are full of good words, who are empty and barren in good works; but Tabitha was a great doer, no great talker: Non magna loquimur, sed vivimus—We do not talk great things, but we live them. Among other good works, she was remarkable for her alms—deeds, which she did, not only her works of piety, which are good works and the fruits of faith, but works of charity and beneficence, flowing from love to her neighbour and a holy contempt of this world. Observe, She is commended not only for the alms which she gave, but for the alms—deeds which she did. Those that have not estates wherewith to give in charity may yet be able to do in charity, working with their hands, or walking with their feet, for the benefit of the poor. And those who will not do a charitable deed, whatever they may pretend, if they were rich would not bestow a charitable gift. She was full of alms—deeds, hon epoiei—which she made; there is an emphasis upon her doing them, because what her hand found to do of this kind she did with all her might, and persevered in. They were alms—deeds, not which she purposed and designed and said she would ",
+      "excerptSha256": "756f239e7c8eda38e1a14e0035fa7a0a6ab5480587cfc3b6f965ffde41d93ad7",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 2400,
+      "end": 3600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:3600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "do, but which she did; not which she began to do, but which she did, which she went through with, which she performed the doing of, 2 Cor. viii. 11; ix. 7. This is the life and character of a certain disciple,; and should be of all the disciples of Christ; for, if we thus bear much fruit, then are we his disciples indeed, John xv. 8. 4. She was removed in the midst of her usefulness (v. 37): In those days she fell sick, and died. It is promised to those who consider the poor, not that they shall never be sick, but that the Lord will strengthen them upon the bed of languishing, at least with strength in their souls, and so will make all their bed in their sickness, will make it easy, Ps. xli. 1, 3. They cannot hope that they shall never die (merciful men are taken away, and merciful women too, witness Tabitha), but they may hope that they shall find mercy of the Lord in that day, 2 Tim. i. 18. 5. Her friends and those about her did not presently bury her, as usual, because they were in hopes Peter would come and raise her to life again; but they washed the dead body, according to the custom, which, it is said, was with warm water, which, if there were any life remaining in the body,",
+      "excerptSha256": "c6aafa4f0038bb6512048d5bbd3b89fead6ccff8928b3517633e92fcd4e0dfa4",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 3600,
+      "end": 4800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:4800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": " would recover it; so that this was done to show that she was really and truly dead. They tried all the usual methods to bring her to life, and could not. Conclamatum est—the last cry was uttered. They laid her out in her grave-clothes in an upper chamber, which Dr. Lightfoot thinks was probably the public meeting-room for the believers of that town; and they laid the body there, that Peter, if he would come, might raise her to life the more solemnly in that place.   II. The request which her Christian friends sent to Peter to come to them with all speed, not to attend the funeral, but, if it might be, to prevent it, v. 38. Lydda, where Peter now was, was nigh to Joppa, and the disciples at Joppa had heard that Peter was there, and that he had raised Eneas from a bed of languishing; and therefore they sent him two men, to make the message the more solemn and respectful, desiring him that he would not delay to come to them; not telling him the occasion, lest he should modestly decline coming upon so great an errand as to raise the dead: if they can but get him to them, they will leave it to him. Their friend was dead, and it was too late to send for a physician, but not too late to ",
+      "excerptSha256": "12a980bfdbcd1b9b52c45d41336451265c2fb4518a5df4324c326e7c27004e56",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 4800,
+      "end": 6000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:6000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "send for Peter. Post mortem medicus—a physician after death, is an absurdity, but not Post mortem apostolus—an apostle after death.   III. The posture in which he found the survivors, when he came to them (v. 30): Peter arose and went with them. Though they did not tell him what they wanted him for, yet he was willing to go along with them, believing it was upon some good account or other that he was sent for. Let not faithful ministers grudge to be at every body's beck, as far as they have ability, when the great apostle made himself the servant of all, 1 Cor. ix. 19. He found the corpse laid in the upper chamber, and attended by widows, probably such as were in the communion of the church, poor widows; there they were,   1. Commending the deceased—a good work, when there was that in them which was truly commendable, and worthy of imitation, and when it is done modestly and soberly, and without flattery of the survivors or any sinister intention, but purely for the glory of God and the exciting of others to that which is virtuous and praiseworthy. The commendation of Tabitha was like her own virtues, not in word, but in deed. Here were no encomiums of her in orations, nor poems in",
+      "excerptSha256": "8485b547265356d98ebd47d61f6e7aa7842379ea1109c173f891cc80d6d1208d",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 6000,
+      "end": 7200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:7200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "scribed to her memory; but the widows showed the coats and garments which she made for them, and bestowed upon them while she was with them. It was the comfort of Job, while he lived, that the loins of the poor blessed him, because they were warmed with the fleece of his sheep, Job xxxi. 20. And here it was the credit of Tabitha, when she was dead, that the backs of the widows praised her for the garments which she made them. And those are certainly best praised whose own works praise them in the gates, whether the words of others do or no. It is much more honourable to clothe a company of decrepit widows with needful clothing for night and day, who will pray for their benefactors when they do not see them, than to clothe a company of lazy footmen with rich liveries, who perhaps behind their backs will curse those that clothe them (Eccl. vii. 21); and it is what all that are wise and good will take a greater pleasure in, for goodness is true greatness, and will pass better in the account shortly. Observe, (1.) Into what channel Tabitha turned much of her charity. Doubtless there were other instances of her alms—deeds which she did, but this was now produced; she did, as it should s",
+      "excerptSha256": "74c8e3e4a3056793d025ec4785cf7191a310071bc69bee15394dff6619002d21",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 7200,
+      "end": 8400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:8400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "eem with her own hands, make coats and garments for poor widows, who perhaps with their own labour could make a shift to get their bread, but could not earn enough to buy clothes. And this is an excellent piece of charity, If thou seest the naked, that thou cover him (Isa. lviii. 7), and not think it enough to say, Be ye warmed, James ii. 15, 16. (2.) What a grateful sense the poor had of her kindness: They showed the coats, not ashamed to own that they were indebted to her for the clothes on their backs. Those are horribly ungrateful indeed who have kindness shown them and will not make at least an acknowledgment of it, by showing the kindness that is done them, as these widows here did. Those who receive alms are not obliged so industriously to conceal it, as those are who give alms. When the poor reflect upon the rich as uncharitable and unmerciful, they ought to reflect upon themselves, and consider whether they are not unthankful and ungrateful. Their showing the coats and garments which Dorcas made tended to the praise not only of her charity, but of her industry, according to the character of the virtuous woman, that she lays her hands to the spindle, or at least to the need",
+      "excerptSha256": "8aac0a7165db0b530b379ece0386c5155fd0522dcc5a71bf536b32abb550664e",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 8400,
+      "end": 9600,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:9600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "le, and then stretches out her hand to the poor, and reaches forth her hands to the needy, of what she has worked; and, when God and the poor have thus had their due, she makes herself coverings of tapestry and her own clothing is silk and purple, Prov. xxxi. 19-22.   2. They were here lamenting the loss of her: The widows stood by Peter, weeping. When the merciful are taken away, it should be laid to heart, especially by those to whom they have been in a particular manner merciful. They need not weep for her; she is taken from the evil to come, she rests from her labours and her works follow her, besides those she leaves behind her: but they weep for themselves and for their children, who will soon find the want of such a good woman, that has not left her fellow. Observe, They take notice of what good Dorcas did while she was with them, but now she is gone from them, and this is their grief. Those that are charitable will find that the poor they have always with them; but it is well if those that are poor find that they have always the charitable with them. We must make a good use of the lights that yet a little while are with us, because they will not be always with us, will not ",
+      "excerptSha256": "c47015dec705e8b5e00ca3e5804c0d4777f95c4a46509726d5d4461c4773e6e2",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 9600,
+      "end": 10800,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:10800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "be long with us: and when they are gone we shall think what they did when they were with us. It should seem, the widows wept before Peter, as an inducement to him, if he could do any thing, to have compassion on them and help them, and restore one to them that used to have compassion on them. When charitable people are dead, there is no praying them to life again; but, when they are sick, this piece of gratitude is owing to them, to pray for their recovery, that, if it be the will of God, those may be spared to live who can ill be spared to die.   IV. The manner in which she was raised to life. 1. Privately: She was laid in the upper room where they used to have their public meetings, and, it should seem, there was great crowding about the dead body, in expectation of what would be done; but Peter put them all forth, all the weeping widows, all but some few relations of the family, or perhaps the heads of the church, to join with him in prayer; as Christ did, Matt. ix. 25. Thus Peter declined every thing that looked like vainglory and ostentation; they came to see, but he did not come to be seen. He put them all forth, that he might with the more freedom pour out his soul before Go",
+      "excerptSha256": "f2df7226afc25eb8bd71fa9b06c0d54ae3f89b277496a055b986ee69657ae06b",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 10800,
+      "end": 12000,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:12000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "d in prayer upon this occasion, and not be disturbed with their noisy and clamorous lamentations. 2. By prayer. In his healing Eneas there was an implied prayer, but in this greater work he addressed himself to God by solemn prayer, as Christ when he raised Lazarus; but Christ's prayer was with the authority of a Son, who quickens whom he will; Peter's with the submission of a servant, who is under direction, and therefore he knelt down and prayed. 3. By the word, a quickening word, a word which is spirit and life: He turned to the body, which intimates that when he prayed he turned from it; lest the sight of it should discourage his faith, he looked another way, to teach us, like Abraham, against hope, to believe in hope, and overlook the difficulties that lie in the way, not considering the body as now dead, lest we should stagger at the promise, Rom. iv. 19, 20. But, when he had prayed, he turned to the body, and spoke in his Master's name, according to his example: \"Tabitha, arise; return to life again.\" Power went along with this word, and she came to life, opened her eyes which death had closed. Thus, in the raising of dead souls to spiritual life, the first sign of life is t",
+      "excerptSha256": "3bcd28e413eb59df5ecdbd1ace7ec9f1254bf7331e7a52acdaf453ef34942d47",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 12000,
+      "end": 13200,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:13200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "he opening of the eyes of the mind, ch. xxvi. 18. When she saw Peter, she sat up, to show that she was really and truly alive; and (v. 41) he gave her his hand and lifted her up, not as if she laboured under any remaining weakness, but thus he would as it were welcome her to life again, and give her the right hand of fellowship among the living, from whom she had been cut off. And, lastly, he called the saints and widows, who were all in sorrow for her death, and presented her alive to them, to their great comfort, particularly of the widows, who laid her death much to heart (v. 41); to them he presented her, as Elijah (1 Kings xvii. 23), and Elisha (2 Kings iv. 36), and Christ (Luke vii. 15), presented the dead sons alive to their mothers. The greatest joy and satisfaction are expressed by life from the dead.   V. The good effect of this miracle. 1. Many were by it convinced of the truth of the gospel, that is was from heaven, and not of men, and believed in the Lord, v. 42. The thing was known throughout all Joppa; it would be in every body's mouth quickly, and, it being a town of seafaring men, the notice of it would be the sooner carried thence to other countries, and though so",
+      "excerptSha256": "53578e1a1323b593ccc9db637be7e17e4226e33b31fd20ab5bf8d4a0acb29dd1",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 13200,
+      "end": 14400,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Acts:9:36:14400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "me never minded it many were wrought upon by it. This was the design of miracles, to confirm a divine revelation. 2. Peter was hereby induced to continue some time in this city, v. 43. Finding that a door of opportunity was opened for him there, he tarried there many days, till he was sent thence, and sent for thence upon business to another place. He tarried not in the house of Tabitha, though she was rich, lest he should seem to seek his own glory; but he took up his lodgings with one Simon a tanner, an ordinary tradesman, which is an instance of his condescension and humility: and hereby he has taught us not to mind high things, but to condescend to those of low estate, Rom. xii. 16. And, though Peter might seem to be buried in obscurity here in the house of a poor tanner by the sea-side, yet hence God fetched him to a noble piece of service, which is recorded in the next chapter; for those that humble themselves shall be exalted.",
+      "excerptSha256": "5605928cfca77df6ea721aa5e04c7f49f0b843367917f72935ffacea6fa3ad45",
+      "entryId": "sword:MHC:Acts:9:36",
+      "start": 14400,
+      "end": 15347,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:0",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "1 Then went Boaz up to the gate, and sat him down there: and, behold, the kinsman of whom Boaz spake came by; unto whom he said, Ho, such a one! turn aside, sit down here. And he turned aside, and sat down. 2 And he took ten men of the elders of the city, and said, Sit ye down here. And they sat down. 3 And he said unto the kinsman, Naomi, that is come again out of the country of Moab, selleth a parcel of land, which was our brother Elimelech's: 4 And I thought to advertise thee, saying, Buy it before the inhabitants, and before the elders of my people. If thou wilt redeem it, redeem it: but if thou wilt not redeem it, then tell me, that I may know: for there is none to redeem it beside thee; and I am after thee. And he said, I will redeem it. 5 Then said Boaz, What day thou buyest the field of the hand of Naomi, thou must buy it also of Ruth the Moabitess, the wife of the dead, to raise up the name of the dead upon his inheritance. 6 And the kinsman said, I cannot redeem it for myself, lest I mar mine own inheritance: redeem thou my right to thyself; for I cannot redeem it. 7 Now this was the manner in former time in Israel concerning redeeming and concerning changing, for to conf",
+      "excerptSha256": "f92acb8a31eb1d3d586f204e347b8841c915f4d537ce84f8a7ac48626ea8104e",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 0,
+      "end": 1200,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:1200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "irm all things; a man plucked off his shoe, and gave it to his neighbour: and this was a testimony in Israel. 8 Therefore the kinsman said unto Boaz, Buy it for thee. So he drew off his shoe.   Here, 1. Boaz calls a court immediately. It is probable he was himself one of the elders (or aldermen) of the city; for he was a mighty man of wealth. Perhaps he was father of the city, and sat chief; for he seems here to have gone up to the gate as one having authority, and not as a common person; like Job, ch. xxix. 7, &amp;c. We cannot suppose him less than a magistrate in his city who was grandson to Nahshon, prince of Judah; and his lying at the end of a heap of corn in the threshing-floor the night before was not at all inconsistent, in those days of plainness, with the honour of his sitting judge in the gate. But why was Boaz so hasty, why so fond of the match? Ruth was not rich, but lived upon alms; not honourable, but a poor stranger. She was never said to be beautiful; if ever she had been so, we may suppose that weeping, and travelling, and gleaning, had withered her lilies and roses. But that which made Boaz in love with her, and solicitous to expedite the affair, was that all he",
+      "excerptSha256": "5bd3dd55f9335d1c832e2df685c7c6f3051aba95d6804343a3cf237376201938",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 1200,
+      "end": 2400,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:2400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "r neighbours agreed she was a virtuous woman. This set her price with him far above rubies (Prov. xxxi. 10); and therefore he thinks, if by marrying her he might do her a real kindness, he should also do himself a very great kindness. He will therefore bring it to a conclusion immediately. It was not court-day, but he got ten men of the elders of the city to meet him in the town-hall over the gate, where public business used to be transacted, v. 2. So many, it is probable, by the custom of the city, made a full court. Boaz, though a judge, would not be judge in his own cause, but desired the concurrence of other elders. Honest intentions dread not a public cognizance. 2. He summons his rival to come and hear the matter that was to be proposed to him (v. 1): \"Ho, such a one, sit down here.\" He called him by his name, no doubt, but the divine historian thought not fit to record it, for, because he refused to raise up the name of the dead, he deserved not to have his name preserved to future ages in this history. Providence favoured Boaz in ordering it so that this kinsman should come by thus opportunely, just when the matter was ready to be proposed to him. Great affairs are sometime",
+      "excerptSha256": "583510c4aa8767a119052651b6c8b6b1ca48d7f83aaf0b0c72c27cd6076e653d",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 2400,
+      "end": 3600,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:3600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "s much furthered by small circumstances, which facilitate and expedite them. 3. He proposes to the other kinsman the redemption of Naomi's land, which, it is probable, had been mortgaged for money to buy bread with when the famine was in the land (v. 3): \"Naomi has a parcel of land to sell, namely, the equity of the redemption of it out of the hands of the mortgagee, which she is willing to part with;\" or, as some think, it was her jointure for her life, and, wanting money, for a small matter she would sell her interest to the heir at law, who was fittest to be the purchaser. This he gives the kinsman legal notice of (v. 4), that he might have the refusal of it. Whoever had it must pay for it, and Boaz might have said, \"My money is as good as my kinsman's; if I have a mind to it, why may not I buy it privately, since I had the first proffer of it, and say nothing to my kinsman?\" No, Boaz, though fond enough of the purchase, would not do so mean a thing as to take a bargain over another man's head that was nearer a-kin to it; and we are taught by his example to be not only just and honest, but fair and honourable, in all our dealings, and to do nothing which we are unwilling should ",
+      "excerptSha256": "004b8496fcef31f573b924893abae27266f89c3644bc3fa3fb7d6fa125eeaecd",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 3600,
+      "end": 4800,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:4800",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "see the light, but be above-board. 4. The kinsman seemed forward to redeem the land till he was told that, if he did that, he must marry the widow, and then he flew off. He liked the land well enough, and probably caught at that the more greedily because he hoped that the poor widow being under a necessity of selling he have so much the better bargain: \"I will redeem it\" (said he) \"with all my heart,\" thinking it would be a fine addition to his estate, v. 4. But Boaz told him there was a young widow in the case, and, if he have the land, he must take her with it, Terra transit cum onere—The estate passes with this incumbrance; either the divine law or the usage of the country would oblige him to it, or Naomi insisted upon it that she would not sell the land but upon this condition, v. 5. Some think this does not relate to the law of marrying the brother's widow (for that seems to oblige only the children of the same father, Deut. xxv. 5, unless by custom it was afterwards made to extend to the next of kin), but to the law of redemption of inheritances (Lev. xxv. 24, 25), for it is a goel, a redeemer, that is here enquired for; and if so it was not by the law, but by Naomi's own res",
+      "excerptSha256": "b0a701f7a376e5d0ffc59d40f744141d847d13c7e949f3e83643eccbeeb8cfa7",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 4800,
+      "end": 6000,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:6000",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "olution, that the purchaser was to marry the widow. However it was, this kinsman, when he heard the conditions of the bargain, refused it (v. 6): \"I cannot redeem it for myself. I will not meddle with it upon these terms, lest I mar my own inheritance.\" The land, he thought, would be an improvement of his inheritance, but not the land with the woman; that would mar it. Perhaps he thought it would be a disparagement to him to marry such a poor widow that had come from a strange country, and almost lived upon alms. He fancied it would be a blemish to his family, it would mar his blood, and disgrace his posterity. Her eminent virtues were not sufficient in his eye to counterbalance this. The Chaldee paraphrase makes his reason for this refusal to be that he had another wife, and, if he should take Ruth, it might occasion strife and contention in his family, which would mar the comfort of his inheritance. Or he thought she might bring him a great many children, and they would all expect shares out of his estate, which would scatter it into too many hands, so that the family would make the less figure. This makes many shy of the great redemption: they are not willing to espouse religion",
+      "excerptSha256": "47b72b76a09b24c1eb59bdfb42ea601588b44f8902cbb377b4cc1cf64f75c96d",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 6000,
+      "end": 7200,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:7200",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": ". They have heard well of it, and have nothing to say against it; they will give it their good word, but at the same time they will give their good word with it; they are willing to part with it, and cannot be bound to it, for fear of marring their own inheritance in this world. Heaven they could be glad of, but holiness they can dispense with; it will not agree with the lusts they have already espoused, and therefore, let who will purchase heaven at that rate, they cannot. 5. The right of redemption is fairly resigned to Boaz. If this nameless kinsman lost a good bargain, a good estate, and a good wife too, he may thank himself for not considering it better, and Boaz will thank him for making his way clear to that which he valued and desired above any thing. In those ancient times it was not the usage to pass estates by writings, as afterwards (Jer. xxxii. 10, &amp;c.), but by some sign or ceremony, as with us by livery and seisin, as we commonly call it, that is, the delivery of seisin, seisin of a house by giving the key, of land by giving turf and a twig. The ceremony here used was, he that surrendered plucked off his shoe (the Chaldee says it was the glove of his right hand) a",
+      "excerptSha256": "a7c4be3487ef125f92800bc0acc398daca563f1f2d11cf2044f22bbcad4c0cda",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 7200,
+      "end": 8400,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:8400",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "nd gave it to him to whom he made the surrender, intimating thereby that, whatever right he had to tread or go upon the land, he conveyed and transferred it, upon a valuable consideration, to the purchaser: this was a testimony in Israel, v. 7. And it was done in this case, v. 8. If this kinsman had been bound by the law to marry Ruth, and his refusal had been a contempt of that law, Ruth must have plucked off his shoe and spit in his face, Deut. xxv. 9. But, though his relation should in some measure oblige him to the duty, yet the distance of his relation might serve to excuse him from the penalty, or Ruth might very well dispense with it, since his refusal was all she desired from him. But bishop Patrick, and the best interpreters, think this had no relation to that law, and that the drawing off of the shoe was not any disgrace as there, but a confirmation of the surrender, and an evidence that it was not fraudulently nor surreptitiously obtained. Note, Fair and open dealing in all matters of contract and commerce is what all those must make conscience of that would approve themselves Israelites indeed, without guile. How much more honourably and honestly does Boaz come by this ",
+      "excerptSha256": "53426e5120b921379f726189e974236c4a0d48d3da32b3a575426fcf48def056",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 8400,
+      "end": 9600,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:MHC:Ruth:4:7:9600",
+      "sourceId": "sword-mhc",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "purchase than if he had secretly undermined his kinsman, and privately struck up a bargain with Naomi, unknown to him. Honesty will be found the best policy.",
+      "excerptSha256": "3a911b354a9957564fa562d67228903a1e43685144d210f3a5f86817bca6068c",
+      "entryId": "sword:MHC:Ruth:4:7",
+      "start": 9600,
+      "end": 9757,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:Wesley:John:9:7:0",
+      "sourceId": "sword-wesley",
+      "type": "commentary",
+      "locator": "John 9:7",
+      "text": "Go, wash at the pool of Siloam - Perhaps our Lord intended to make the miracle more taken notice of. For a crowd of people would naturally gather round him to observe the event of so strange a prescription, and it is exceeding probable, the guide who must have led him in traversing a great part of the city, would mention the errand he was going upon, and so call all those who saw him to a greater attention. From the fountain of Siloam, which was without the walls of Jerusalem, a little stream flowed into the city, and was received in a kind of basin, near the temple, and called the pool of Siloam. Which is, by interpretation, Sent - And so was a type of the Messiah, who was sent of God. He went and washed, and came seeing - He believed, and obeyed, and found a blessing. Had he been wise in his own eyes, and reasoned, like Naaman, on the impropriety of the means, he had justly been left in darkness. Lord, may our proud hearts be subdued to the methods of thy recovering grace! May we leave thee to choose how thou wilt bestow favours, which it is our highest interest to receive on any terms.",
+      "excerptSha256": "e0120210e4c1d4b565cb14d959cc282e696dc60e9ae40729495631d06591a01e",
+      "entryId": "sword:Wesley:John:9:7",
+      "start": 0,
+      "end": 1105,
+      "aliases": [
+        "John"
+      ],
+      "passages": [
+        "John 9:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:Wesley:Acts:16:14:0",
+      "sourceId": "sword-wesley",
+      "type": "commentary",
+      "locator": "Acts 16:14",
+      "text": "A worshipper of God - Probably acquainted with the prophetic writings whose heart the Lord opened - The Greek word properly refers to the opening of the eyes: and the heart has its eyes, . These are closed by nature and to open them is the peculiar work of God.",
+      "excerptSha256": "b051f1c5b53e7390dfd9c62ea378b52ade014d9bfebb1dff9b006610c3cd6592",
+      "entryId": "sword:Wesley:Acts:16:14",
+      "start": 0,
+      "end": 261,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 16:14"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:Wesley:Acts:9:36:0",
+      "sourceId": "sword-wesley",
+      "type": "commentary",
+      "locator": "Acts 9:36",
+      "text": "Tabitha, which is by interpretation Dorcas - She was probably a Hellenist Jew, known among the Hebrews by the Syriac name Tabitha, while the Greeks called her in their own language, Dorcas. They are both words of the same import, and signify a roe or fawn.",
+      "excerptSha256": "792542dfac1320c580142cdada16dba0ff0524a252f92c594964edfd3e6b4a95",
+      "entryId": "sword:Wesley:Acts:9:36",
+      "start": 0,
+      "end": 256,
+      "aliases": [
+        "Acts"
+      ],
+      "passages": [
+        "Acts 9:36"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    },
+    {
+      "id": "sword:Wesley:Ruth:4:7:0",
+      "sourceId": "sword-wesley",
+      "type": "commentary",
+      "locator": "Ruth 4:7",
+      "text": "All things - That is, in all alienation of lands. So that it is no wonder if this ceremony differ a little from that, , because that concerned only one case, but this is more general. Besides, he pleads not the command of God, but only ancient custom, for this practice. Gave it - He who relinquished his right to another, plucked off his own shoe and gave it to him. This was symbolical, and a significant and convenient ceremony, as if he said, take this shoe wherewith I used to go and tread upon my land, and in that shoe do thou enter upon it, and take possession of it. This was a testimony - This was admitted for sufficient evidence in all such cases.",
+      "excerptSha256": "6f6b6932de0fb22994e0bf236bf3f48eeda5258c5296129694c3a10b81c6aca0",
+      "entryId": "sword:Wesley:Ruth:4:7",
+      "start": 0,
+      "end": 659,
+      "aliases": [
+        "Ruth"
+      ],
+      "passages": [
+        "Ruth 4:7"
+      ],
+      "periods": [],
+      "uncertainty": "Historical commentary and interpretation, not independent proof. The linked entry may discuss neighboring verses."
+    }
+  ],
+  "restrictions": [
+    "Research only. Published claims still require the saved WEB passage.",
+    "No images, maps or OSM geometry redistributed.",
+    "No AI-generated STEP proper-name/concept dataset ingested."
+  ]
+}

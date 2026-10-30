@@ -1,0 +1,9 @@
+{
+  "verifiedAt": "2026-10-30T18:53:36.533339+00:00",
+  "approvedBy": "Brandon Jones: explicit in-session production deployment, regeneration and main-branch integration requests",
+  "ticket": "https://github.com/brarduous/sanctuary-backend/pull/19",
+  "backupInventory": "docs/qa/2026-10-30-trivia/production-backup-inventory.json",
+  "rehearsal": "docs/qa/2026-10-30-trivia/hosted-rehearsal.json",
+  "priorProductionShapeRehearsal": "docs/qa/2026-10-30-audience/recovery-preflight.json",
+  "scope": "Fresh production PITR availability check and isolated hosted additive-function compatibility rollback/roll-forward. This is not a full production-user-data disaster restore."
+}

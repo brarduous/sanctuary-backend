@@ -1,0 +1,53 @@
+{
+  "version": "trivia-launch-supplement-v3",
+  "cases": [
+    {
+      "id": "bartimaeus-reveal",
+      "reference": "Mark 10:46-52",
+      "prompt": "In Mark, what did Bartimaeus throw aside before getting up to meet Jesus?",
+      "choices": [
+        "His staff",
+        "His cloak",
+        "His bag",
+        "His sandals"
+      ],
+      "correct": "His cloak",
+      "claims": [
+        "Bartimaeus threw aside his cloak and came to Jesus.",
+        "The blind beggar had been sitting beside the road."
+      ]
+    },
+    {
+      "id": "prison-hymns",
+      "reference": "Acts 16:23-34",
+      "prompt": "In Acts, what were Paul and Silas doing at midnight while the other prisoners listened?",
+      "choices": [
+        "Telling parables",
+        "Arguing their case",
+        "Singing hymns",
+        "Reading a scroll"
+      ],
+      "correct": "Singing hymns",
+      "claims": [
+        "Paul and Silas were praying and singing hymns at midnight.",
+        "The prison doors opened after an earthquake."
+      ]
+    },
+    {
+      "id": "ark-wood",
+      "reference": "Exodus 25:10-22",
+      "prompt": "In Exodus, the ark was covered in gold; which wood was underneath?",
+      "choices": [
+        "Cedar wood",
+        "Cypress wood",
+        "Olive wood",
+        "Acacia wood"
+      ],
+      "correct": "Acacia wood",
+      "claims": [
+        "The ark was made of acacia wood and overlaid with gold.",
+        "Its carrying poles were also acacia wood covered in gold."
+      ]
+    }
+  ]
+}

@@ -74,10 +74,10 @@ function devotionalCopy({ title, scripture, variant, weekday }) {
 
 function discoveryCopy(variant=1) {
   const variants={
-    1:{heading:'Your daily trivia is ready',body:'One question, 20 seconds, and a fresh discovery in Scripture. Ready to play?'},
-    2:{heading:'A little curiosity for today',body:'Today’s Sanctuary trivia is ready. Play a quick round and explore the Scripture behind it.'},
+    1:{heading:'Trivia is ready',body:'Three questions. Easy, medium, hard. Play and share your three squares.'},
+    2:{heading:'A little curiosity for today',body:'Today’s Trivia is ready. Try three questions and share your squares.'},
     3:{heading:'A moment for discovery',body:'Try today’s Bible trivia, then see the detail behind the answer.'},
-    4:{heading:'What will you discover today?',body:'A new Sanctuary trivia question is waiting. Take 20 seconds when you have a moment.'},
+    4:{heading:'What will you discover today?',body:'Three Trivia questions are waiting. Start easy and see how far you get.'},
   };
   return variants[variant] || variants[1];
 }

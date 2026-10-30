@@ -47,7 +47,7 @@ function transport(db) {
   }
  };
 }
-async function createHarness({listen=false,port=0,curriculum=false}={}) {
+async function createHarness({listen=false,port=0,curriculum=false,dailySets=false}={}) {
  const db=await PGlite.create({parsers:{[types.DATE]:value=>value}});
  await db.exec(`create schema auth; create table auth.users(id uuid primary key); create table public.user_profiles(user_id uuid primary key, role text); create role anon; create role authenticated; create role service_role bypassrls; grant usage on schema public to anon,authenticated,service_role;`);
  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028120000_daily_discoveries.sql'),'utf8'));
@@ -58,6 +58,7 @@ async function createHarness({listen=false,port=0,curriculum=false}={}) {
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028220000_discovery_question_craft.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028234500_discovery_source_options.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8'));
+  if(dailySets)await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
  }
  for(const [id,role] of [[ADMIN,'admin'],[MEMBER,'member'],[OTHER,'member']]) {
   await db.query('insert into auth.users values($1)',[id]);await db.query('insert into user_profiles values($1,$2)',[id,role]);
@@ -68,7 +69,7 @@ async function createHarness({listen=false,port=0,curriculum=false}={}) {
  const admin=(req,res,next)=>req.user.id===ADMIN ? next():res.sendStatus(403);
  const module={exports:{}};
  vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../../routes/discoveries.js'),'utf8'),{module,console,URL,Date,require:name=>{
-  const overrides={'../config/supabase':client,'../middleware/auth':auth,'../middleware/optionalAuth':optional,'../middleware/adminAuth':admin,'../utils/discoveries':require('../../utils/discoveries')};
+  const overrides={'../config/supabase':client,'../middleware/auth':auth,'../middleware/optionalAuth':optional,'../middleware/adminAuth':admin,'../utils/discoveries':require('../../utils/discoveries'),'../utils/discoveryDailyPlan':require('../../utils/discoveryDailyPlan')};
   return name in overrides ? overrides[name]:require(name);
  }});
  const app=express();app.use(require('cors')({origin:['http://localhost:3010','http://127.0.0.1:3010','http://localhost:8083']}));app.use(express.json());app.use('/api/v1/discoveries',module.exports.router);app.use('/admin/discoveries',module.exports.adminRouter);

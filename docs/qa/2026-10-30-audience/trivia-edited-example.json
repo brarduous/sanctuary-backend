@@ -1,0 +1,441 @@
+{
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Mark, a man regaining his sight compared people to what?",
+    "heading": "A detail in Mark 8:22-26",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "Trees"
+      },
+      {
+        "id": "option-2",
+        "text": "Statues"
+      },
+      {
+        "id": "option-3",
+        "text": "Shadows"
+      },
+      {
+        "id": "option-4",
+        "text": "Scarecrows"
+      }
+    ],
+    "correctOptionId": "option-1",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/MRK08.htm",
+        "locator": "Mark 8:22-26",
+        "excerpt": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him. He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything. He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly. He sent him away to his house, saying, \u201cDon\u2019t enter into the village, nor tell anyone in the village.\u201d",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "The man compared people to trees walking.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "After a second touch, he saw everyone clearly.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Mark 8:22-26",
+    "translation": "WEB"
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 6,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 6,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 1,
+            "choiceQuality": 1
+          },
+          "rationale": "Passes at 6/8. The short setup gives an accessible situation without church jargon. The distinctive discovery worth retelling is that people initially looked like walking trees, rather than simply that the man recovered his sight. The answer is not inferable from everyday expectations, but the task remains direct recall rather than a textual connection. Statues and shadows are credible visual-comparison distractors; scarecrows are a weaker, though understandable, human-shaped alternative."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 7,
+          "accepted": true,
+          "dimensions": {
+            "context": 2,
+            "interest": 2,
+            "fairChallenge": 1,
+            "choiceQuality": 2
+          },
+          "rationale": "The sight-restoration scene is clear without church jargon or unnecessary clues. The memorable discovery is the unusual image of people resembling walking trees during an intermediate stage of recovery, not merely the successful healing. The question requires straightforward recall rather than a further textual connection, but everyday expectations do not reveal the key. All three distractors are credible visual comparisons for indistinct human figures. Total: 7/8; passes the craft requirements."
+        }
+      ]
+    },
+    "accepted": true,
+    "minimumScore": 95,
+    "evidenceScore": 100,
+    "candidateSha256": "31f73735114c4686ca25036381c8cf86570d99455cf9777a5445859de3f9c946",
+    "sourceSha256": "f61b24f6ab815722b5178939badaa1e37d06526d22cf9a56dc70bf7d232df0e4",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "0cc357d1ba2bd4c050932602f17bb79f5e44485ce198524678e28c3d56e65144",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "easy",
+      "score": 2
+    },
+    "difficultyTargetMet": false,
+    "reasons": [],
+    "reviews": [
+      {
+        "solvedOptionId": "option-1",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The question and heading refer to the sight-restoration account in the supplied Mark 8:22\u201326 passage.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "text": "The man had been blind.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              }
+            ]
+          },
+          {
+            "text": "He made the comparison while regaining sight, before he could see everyone clearly.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "text": "The man compared the people he saw to something else.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 1,
+          "choiceQuality": 1,
+          "rationale": "Passes at 6/8. The short setup gives an accessible situation without church jargon. The distinctive discovery worth retelling is that people initially looked like walking trees, rather than simply that the man recovered his sight. The answer is not inferable from everyday expectations, but the task remains direct recall rather than a textual connection. Statues and shadows are credible visual-comparison distractors; scarecrows are a weaker, though understandable, human-shaped alternative."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "supported",
+            "rationale": "Trees are explicitly the object of the man's comparison. This is the sole supported answer.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "The passage does not identify statues as his comparison. Human-shaped statues could plausibly attract a player imagining indistinct figures.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "The passage does not identify shadows as his comparison. Shadows are a credible guess for someone imagining unclear vision.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "The passage does not identify scarecrows as his comparison. Their human-like outlines make the choice understandable, but it is less naturally suggested by the scene than the other distractors.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy (2/8). This is a less familiar detail within a recognizable healing account. One verse states the answer directly, with no inference required. The alternatives are comparable visual images rather than unrelated categories."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_0ed40eca4a712b3a016ae4b74c58b487d2a02a88d4c7808a54"
+      },
+      {
+        "solvedOptionId": "option-1",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [],
+        "questionPremises": [
+          {
+            "text": "The scene occurs in Mark, within the cited passage.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "The person describing what he sees is a man who had been blind.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "The comparison occurs while his sight is returning, before he sees everyone clearly.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "text": "The man compares the people he sees to something else.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 2,
+          "fairChallenge": 1,
+          "choiceQuality": 2,
+          "rationale": "The sight-restoration scene is clear without church jargon or unnecessary clues. The memorable discovery is the unusual image of people resembling walking trees during an intermediate stage of recovery, not merely the successful healing. The question requires straightforward recall rather than a further textual connection, but everyday expectations do not reveal the key. All three distractors are credible visual comparisons for indistinct human figures. Total: 7/8; passes the craft requirements."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "supported",
+            "rationale": "Trees are the explicit object of the man's comparison. The added movement in his description does not make this shorter answer incomplete.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "not_supported",
+            "rationale": "Statues are not his stated comparison. Their human shapes make them a plausible guess for someone recalling indistinct figures.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "Shadows are not his stated comparison. They are nevertheless a credible guess for poorly resolved human outlines.",
+            "evidence": [],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "Scarecrows are not his stated comparison. Their rough human silhouettes make this a plausible alternative visual image, without overlapping the correct answer.",
+            "evidence": [],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy (2/8). This is a less familiar detail within a recognizable healing account. One verse directly supplies the answer, with no inference required; the alternatives are plausible visual comparisons."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0bb3b58f149319a9016ae4b74c55c887d2b43b011943744e7a"
+      }
+    ]
+  },
+  "noDatabaseWrites": true,
+  "purpose": "Assistant-edited style example; automated reviews are not owner approval or audience testing."
+}

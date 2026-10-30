@@ -24,6 +24,11 @@ function unwrap(result) {
 function itemId(value) { if (!UUID.test(value)) invalid('A discovery UUID is required.'); return value; }
 function revision(value) { if (!Number.isInteger(value) || value < 1) invalid('A positive revision is required.'); return value; }
 function missingSchema(error) { return ['42P01','PGRST205'].includes(error?.code); }
+function legacyProjection(item) {
+  const {setPosition,setDifficulty,...compatible}=item;
+  if(compatible.difficulty?.rubricVersion==='discovery-difficulty-v2')delete compatible.difficulty;
+  return compatible;
+}
 async function settings() {
   const result = await supabase.from('discovery_runtime_settings').select('*').eq('singleton', true).maybeSingle();
   if (missingSchema(result.error)) return { enabled: false, rollout_percentage: 0, internal_user_ids: [] };
@@ -41,28 +46,41 @@ async function projectSchedule(schedule) {
   return schedule.flatMap(row => {
     const parent = parents.get(row.discovery_id);
     const content = revisions.find(candidate => candidate.discovery_id === row.discovery_id && candidate.revision === row.revision);
-    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), correctionNotice: parent.correction_notice || null }];
+    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), ...(row.position ? {setPosition:row.position,setDifficulty:['easy','medium','hard'][row.position-1]}:{}), correctionNotice: parent.correction_notice || null }];
   });
 }
 async function releasedRows(id, rev) {
   const cutoff = localDate(new Date(),'Pacific/Kiritimati');
-  const queries = ['discovery_schedule','discovery_publication_history'].map(table => {
-    let query = supabase.from(table).select('publication_date,discovery_id,revision').eq('discovery_id',id).lte('publication_date',cutoff);
+  const queries = ['discovery_schedule','discovery_publication_history','discovery_daily_set_items'].map(table => {
+    let query = supabase.from(table).select(`publication_date,discovery_id,revision${table==='discovery_daily_set_items' ? ',position':''}`).eq('discovery_id',id).lte('publication_date',cutoff);
     if (rev) query = query.eq('revision',rev);
     return query.order('publication_date',{ascending:false}).limit(100);
   });
-  return (await Promise.all(queries)).flatMap(unwrap).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision);
+  return (await Promise.all(queries)).flatMap(result=>missingSchema(result.error) ? []:unwrap(result)).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision || (b.position || 0)-(a.position || 0));
+}
+async function dailySetRows(today,requestedDate) {
+  const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').gte('publication_date',requestedDate || shiftDate(today,-1)).lte('publication_date',requestedDate || shiftDate(today,7)).order('publication_date').order('position'));
+  const projected=await projectSchedule(scheduled);
+  // A withdrawn/missing question hides its whole set, never silently substitutes
+  // another puzzle or changes the Easy → Medium → Hard result order.
+  return projected.filter(item=>projected.filter(other=>other.publicationDate===item.publicationDate).length===3);
 }
 router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
   try {
     const today = localDate(new Date(), String(req.query.timeZone || 'UTC'));
+    const requestedDate=req.query.date;
+    if(requestedDate!==undefined && (!date(requestedDate) || requestedDate>today))invalid('Choose a released daily trivia date.');
     const installationId = UUID.test(req.query.installationId) ? req.query.installationId : 'unassigned';
     const runtime = await settings();
     const enabled = runtime.enabled && ((req.user && runtime.internal_user_ids.includes(req.user.id)) || cohort(req.user?.id || installationId) < runtime.rollout_percentage);
     let items = [];
     let evergreen = [];
     let withdrawnIds = [];
-    if (enabled) {
+    const dailySet=req.query.dailySet==='1';
+    if (enabled && dailySet) {
+      const [daily,withdrawn]=await Promise.all([dailySetRows(today,requestedDate),supabase.from('discoveries').select('id').eq('withdrawn',true).limit(1000)]);
+      items=daily;withdrawnIds=unwrap(withdrawn).map(row=>row.id);
+    } else if (enabled) {
       const [scheduled, fallback, withdrawn] = await Promise.all([
         supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').gte('publication_date', shiftDate(today,-1)).lte('publication_date',shiftDate(today,7)).order('publication_date'),
         supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').lte('publication_date',today).order('publication_date',{ascending:false}).limit(10),
@@ -70,6 +88,7 @@ router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
       ]);
       [items, evergreen] = await Promise.all([projectSchedule(unwrap(scheduled)),projectSchedule(unwrap(fallback))]);
       evergreen = evergreen.slice(0,1);
+      items=items.map(legacyProjection);evergreen=evergreen.map(legacyProjection);
       withdrawnIds = unwrap(withdrawn).map(row => row.id);
     }
     const body = { schemaVersion: 1, enabled: Boolean(enabled), items, evergreen, withdrawnIds };
@@ -112,7 +131,7 @@ router.get('/:id',readLimiter, async (req,res,next) => {
     const items = await projectSchedule(schedule);
     if (!items.length) return res.status(410).json({error:{code:'DISCOVERY_WITHDRAWN',message:'This discovery has been withdrawn for review.'}});
     // Revalidate on every online visit so a withdrawal/correction is respected.
-    res.set('Cache-Control','no-store').json({ discovery: items[0] });
+    res.set('Cache-Control','no-store').json({ discovery: req.query.dailySet==='1' ? items[0]:legacyProjection(items[0]) });
   } catch(error) { next(error); }
 });
 router.post('/:id/reports',reportLimiter,optionalAuth,async (req,res,next) => {
@@ -129,6 +148,25 @@ router.post('/:id/reports',reportLimiter,optionalAuth,async (req,res,next) => {
 });
 
 adminRouter.use(auth,requireAdmin);
+adminRouter.get('/daily-sets',async (_req,res,next)=>{
+  try {
+    const [jobs,attempts]=await Promise.all([
+      supabase.from('discovery_daily_jobs').select('*').order('publication_date',{ascending:false}).limit(30),
+      supabase.from('discovery_daily_attempts').select('*').order('created_at',{ascending:false}).limit(120),
+    ]);
+    res.set('Cache-Control','no-store').json({jobs:unwrap(jobs),attempts:unwrap(attempts)});
+  }catch(error){next(error);}
+});
+adminRouter.post('/daily-sets/:date/retry',async (req,res,next)=>{
+  try {
+    if(!date(req.params.date))invalid('A valid daily-set date is required.');
+    const reason=typeof req.body.reason==='string' ? req.body.reason.trim():'';
+    if(reason.length<20 || reason.length>1000)invalid('Explain the concrete editorial revision in 20–1000 characters.');
+    const {buildDailySetPlan}=require('../utils/discoveryDailyPlan');
+    const job=unwrap(await supabase.rpc('discovery_daily_retry',{p_date:req.params.date,p_plan:buildDailySetPlan(req.params.date),p_reason:reason,p_operator:req.user.id}));
+    res.json({retried:true,date:req.params.date,epoch:job.epoch});
+  }catch(error){next(error);}
+});
 adminRouter.get('/curriculum',async (_req,res,next)=>{
   try {
     const [runs,attempts,plans]=await Promise.all([

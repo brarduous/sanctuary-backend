@@ -1,0 +1,26 @@
+{
+  "project": "nwrozzdrlwlzjpfhgtlk.supabase.co",
+  "startedAt": "2026-10-30T18:51:26.745Z",
+  "checks": [
+    "Three hosted questions in fixed order",
+    "Server derives three outcomes and positions",
+    "Authenticated owner is canonical",
+    "First accepted results survive retries",
+    "Second JWT cannot read another player",
+    "Direct table reads denied",
+    "Weekly context RPC denied to client",
+    "Ordinary member cannot inspect generation audits"
+  ],
+  "cleanup": [
+    {
+      "id": "612dc612-62a3-4eec-8e6b-a062f72be508",
+      "deleted": true
+    },
+    {
+      "id": "58518002-156e-4897-999f-235e7ea9d58f",
+      "deleted": true
+    }
+  ],
+  "passed": true,
+  "completedAt": "2026-10-30T18:51:28.866Z"
+}
