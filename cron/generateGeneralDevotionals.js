@@ -167,6 +167,7 @@ ${VOICE}
 - Select seven different Scripture references. Each passage must genuinely support its day's central claim in context.
 - Include a short interpretation_note for each passage naming its speaker/author, audience or setting, and relevant claim. Do not import language from another biblical passage as though it came from the selected text.
 - Each practice_brief must specify a visible same-day behavior, plus a time/setting or recipient. Reflection alone is not a practice unless it produces a written, spoken, scheduled, given, asked, heard, or served response.
+- Begin each practice_brief with a concrete verb accepted by the practice check: Write, Speak, Say, Tell, Text, Call, Send, Schedule, Give, Ask, Listen, Serve, Name, List, Set, Offer, Apologize, Thank, Invite, Read, Pray, Share, Place, Remove, or Visit. Do not use an abstract or unobservable instruction as the entire practice.
 - Assign share_mode as one of: none, send, discuss, do_together, serve, church. Use a relational mode on at least two days, but never force sharing.
 - Titles must be 4-9 words, make sense without the theme label, and reveal the day's distinctive tension, discovery, or action.
 - Do not begin titles with: ${BANNED_TITLE_OPENINGS.join(', ')}.
