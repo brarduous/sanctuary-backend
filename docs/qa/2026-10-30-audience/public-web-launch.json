@@ -1,0 +1,89 @@
+{
+  "enabledAt": "2026-10-30T15:15:03.329Z",
+  "runtime": {
+    "singleton": true,
+    "enabled": true,
+    "rollout_percentage": 100,
+    "internal_user_ids": []
+  },
+  "notificationsUnchanged": true,
+  "publicBundleStatus": 200,
+  "items": 9,
+  "today": {
+    "id": "cc362d16-f68a-4c5e-91fa-05ce21835f6f",
+    "revision": 1,
+    "date": "2026-10-30"
+  },
+  "url": "https://sanctuaryapp.us/discoveries",
+  "merges": {
+    "backend": {
+      "branch": "main",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872",
+      "pr": 17
+    },
+    "web": {
+      "branch": "master",
+      "commit": "940ec3dc8537f271bbae4afba05cc78d2d891f4b",
+      "pr": 3
+    },
+    "mobile": {
+      "branch": "main",
+      "commit": "ca6db3a33c9b710f96524866f0bc3b3269176a79",
+      "pr": 3
+    }
+  },
+  "render": [
+    {
+      "name": "backend",
+      "service": "srv-d1uqipvdiees73b0kj20",
+      "deploy": "dep-dbib857lk1mc73fq8qi0",
+      "status": "live",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872"
+    },
+    {
+      "name": "devotionals",
+      "service": "crn-d5isg1ur433s738nr3mg",
+      "deploy": "dep-dbib851srm7s73dp5n3g",
+      "status": "live",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872"
+    },
+    {
+      "name": "articleNews",
+      "service": "crn-d2vlmtodl3ps739au0p0",
+      "deploy": "dep-dbib853bc2fs73ak8o4g",
+      "status": "live",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872"
+    },
+    {
+      "name": "dailyNews",
+      "service": "crn-d4qns70gjchc73bfk8og",
+      "deploy": "dep-dbib855g1s2s73egvhc0",
+      "status": "live",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872"
+    },
+    {
+      "name": "trivia",
+      "service": "crn-dbh7s9ek1f9s73aur280",
+      "deploy": "dep-dbib854s728c73cs0eig",
+      "status": "live",
+      "commit": "d6ab81e26da5d9dada8de681be2720331d06f872"
+    }
+  ],
+  "vercel": {
+    "deployment": "dpl_9HSgAd4sxJWwu5pVLWM3aaQg626x",
+    "state": "READY",
+    "target": "production",
+    "sourceCommit": "940ec3dc8537f271bbae4afba05cc78d2d891f4b"
+  },
+  "checks": {
+    "landingHttp": 200,
+    "directQuestionHttp": 200,
+    "healthHttp": 200,
+    "unauthenticatedPushDispatchHttp": 401,
+    "privateBrowserRound": "passed: start, correct selection, result, explanation, Scripture",
+    "normalBrowserProgressUnchanged": true,
+    "releaseHeadsIncludedInDefaultBranches": true
+  },
+  "approvedScheduledDates": 29,
+  "scheduledThrough": "2026-11-27"
+}

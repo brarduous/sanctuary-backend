@@ -1,6 +1,14 @@
 # Younger-audience content rollout — October 30, 2026
 
-Later owner-requested trivia refresh: today's older writer-v3 question was replaced by a writer-v5 question after two independent reviews and the unchanged SQL evidence/craft gate. Two rejected drafts and the accepted third draft are retained in the production attempt history; the old scheduled question is retained in publication history. The [verified direct browser link](https://sanctuary-layperson-webapp-8zbezsxul.vercel.app/discoveries/cc362d16-f68a-4c5e-91fa-05ce21835f6f) is playable while the broader public-feed launch remains disabled. [Replacement evidence](qa/2026-10-30-audience/today-trivia-replacement.json).
+Later owner-requested trivia refresh: today's older writer-v3 question was replaced by a writer-v5 question after two independent reviews and the unchanged SQL evidence/craft gate. Two rejected drafts and the accepted third draft are retained in the production attempt history; the old scheduled question is retained in publication history. The [verified direct browser link](https://sanctuaryapp.us/discoveries/cc362d16-f68a-4c5e-91fa-05ce21835f6f) is now live on the production domain. [Replacement evidence](qa/2026-10-30-audience/today-trivia-replacement.json).
+
+## Public browser launch and canonical branches
+
+The owner subsequently authorized production launch and merging the release work into the default branches. Backend [PR #17](https://github.com/brarduous/sanctuary-backend/pull/17) and mobile [PR #3](https://github.com/brarduous/sanctuary-mobile/pull/3) merged into `main`; web [PR #3](https://github.com/brarduous/sanctuary-layperson-web/pull/3) merged into its default branch, `master`. All release heads are ancestors of their remote default branches, and local checkouts track those branches.
+
+All five Render services now track `main` and are live from merge commit `d6ab81e26da5d9dada8de681be2720331d06f872`. Vercel production serves web merge commit `940ec3dc8537f271bbae4afba05cc78d2d891f4b`. The daily public bundle was enabled at 100% on October 30 at 15:15 UTC, with 29 approved scheduled dates through November 27. Notification settings were verified unchanged; Discovery notifications remain disabled. No native store publication was performed by this browser launch.
+
+The [daily trivia page](https://sanctuaryapp.us/discoveries) and today's direct link return HTTP 200. A private browser round verified the new question, answer selection, result, explanation, and Scripture text without changing the owner's normal browser progress. Backend health returned 200; the unauthenticated push-dispatch endpoint returned 401. [Launch evidence](qa/2026-10-30-audience/public-web-launch.json).
 
 The production backend and all four content jobs are deployed with the younger-audience copy policy. All **31 shared devotionals from October 30 through November 29** were regenerated and read back successfully. Today's one existing personalized devotional and its prayer were also refreshed in place. No notifications were sent by the refresh.
 
@@ -18,11 +26,11 @@ Evidence: [shared content and archive readback](qa/2026-10-30-audience/content-v
 
 ## Deployment and ongoing generation
 
-Runtime code is on `release/daily-discoveries`. The backend, devotional job, article-news job and daily-news job track this reviewed branch; the trivia job already tracked it. The original audience release was `00f7ffd`; subsequent refresh-tooling and planner fixes are included through `80a64f9`. Each service's exact live commit and deployment ID is in the [deployment evidence](qa/2026-10-30-audience/deployments.json). Trivia's unchanged writer-v5/reviewer policy is live from `00f7ffd`.
+The initial rollout used `release/daily-discoveries`; that work is now merged into `main` and all five services track `main`. The original audience release was `00f7ffd`; subsequent refresh-tooling and planner fixes are included through `80a64f9`. The [initial deployment evidence](qa/2026-10-30-audience/deployments.json) records that rollout; the [launch evidence](qa/2026-10-30-audience/public-web-launch.json) records the later deployments from the merged default branches. Trivia retains the writer-v5/reviewer policy introduced in `00f7ffd`.
 
 The daily devotional job continues at 08:00 UTC with its existing 28-day runway target. The refreshed schedule extends through November 29. New generation uses the updated voice, practice and slide requirements. The planner explicitly requests practice verbs accepted by its validator; a live model call for the next curriculum theme produced a validated seven-day plan without database writes. See the [live planner check](qa/2026-10-30-audience/future-planner-check.json).
 
-The API health endpoint returned 200. Public trivia remains disabled with an empty public bundle; this deployment did not change its launch or notification settings. New news and advice requests use the updated prompts. Historical news and private advice records were not bulk rewritten.
+The API health endpoint returned 200. Public trivia was initially held, then enabled under the subsequent owner-authorized browser launch documented above. Notification settings remain unchanged. New news and advice requests use the updated prompts. Historical news and private advice records were not bulk rewritten.
 
 ## Database compatibility
 
