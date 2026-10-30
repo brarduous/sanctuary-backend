@@ -1,0 +1,488 @@
+{
+  "purpose": "Editorial regression case from owner feedback; not an independent hold-out or audience study.",
+  "writerVersion": "sanctuary-trivia-writer-v6",
+  "promptHashes": {
+    "writer": "3b190620c2666c815c9adf0527f2d85bbb81d1a599104fd7ebca4f907f4c2beb",
+    "reviewer": "ca5d333fdfdb9283b959f4cef0252582893baa447d89f5008e7a55ff0c9a074d"
+  },
+  "content": {
+    "kind": "biblical_text",
+    "category": "Bible and context",
+    "prompt": "In Mark\u2019s account, the man saw unclearly at first; what happened after Jesus laid hands on his eyes again?",
+    "heading": "A detail in Mark 8:22-26",
+    "scopeNote": "This discovery describes what the cited passage says in the World English Bible.",
+    "choices": [
+      {
+        "id": "option-1",
+        "text": "saw only Jesus clearly"
+      },
+      {
+        "id": "option-2",
+        "text": "saw everyone clearly"
+      },
+      {
+        "id": "option-3",
+        "text": "saw people as shadows"
+      },
+      {
+        "id": "option-4",
+        "text": "lost his sight again"
+      }
+    ],
+    "correctOptionId": "option-2",
+    "sources": [
+      {
+        "id": "passage",
+        "type": "scripture",
+        "title": "World English Bible (classic)",
+        "publisher": "eBible.org / World English Bible",
+        "url": "https://ebible.org/eng-web/MRK08.htm",
+        "locator": "Mark 8:22-26",
+        "excerpt": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him. He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything. He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly. He sent him away to his house, saying, \u201cDon\u2019t enter into the village, nor tell anyone in the village.\u201d",
+        "rights": "World English Bible text is public domain. https://ebible.org/eng-web/copyright.htm"
+      }
+    ],
+    "claims": [
+      {
+        "id": "claim-1",
+        "text": "After Jesus laid hands on him again, the man saw everyone clearly.",
+        "sourceIds": [
+          "passage"
+        ]
+      },
+      {
+        "id": "claim-2",
+        "text": "Jesus then sent him home and told him not to enter the village.",
+        "sourceIds": [
+          "passage"
+        ]
+      }
+    ],
+    "answerClaimId": "claim-1",
+    "explanationClaimIds": [
+      "claim-1",
+      "claim-2"
+    ],
+    "scriptureReference": "Mark 8:22-26",
+    "translation": "WEB",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "easy",
+      "score": 2
+    }
+  },
+  "verification": {
+    "policyVersion": "discovery-evidence-v3",
+    "copyPolicyVersion": "discovery-concise-v2",
+    "questionCraft": {
+      "policyVersion": "discovery-question-craft-v2",
+      "minimumScore": 6,
+      "score": 3,
+      "assessments": [
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 3,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 0,
+            "fairChallenge": 0,
+            "choiceQuality": 1
+          },
+          "rationale": "The prompt clearly establishes a man with initially unclear sight and Jesus touching his eyes again, without requiring church jargon. However, the tested fact is simply successful restoration after further healing. The passage's distinctive image of people resembling walking trees is not the discovery being tested. A player can favor complete restoration through ordinary expectations about a healing story, without biblical knowledge. The alternatives are parallel visual outcomes; restricted clarity and continued blurred sight are plausible incomplete-restoration guesses, but renewed blindness is a weak distractor. Total: 3/8; reject."
+        },
+        {
+          "policyVersion": "discovery-question-craft-v2",
+          "score": 3,
+          "accepted": false,
+          "dimensions": {
+            "context": 2,
+            "interest": 0,
+            "fairChallenge": 0,
+            "choiceQuality": 1
+          },
+          "rationale": "The scene is clear, concise, and free of unexplained church jargon. However, the potentially memorable connection\u2014restoration occurring in stages\u2014is supplied in the setup rather than discovered through the answer. The requested fact is merely the expected successful healing outcome. Everyday expectations strongly favor complete restoration over continued impairment or renewed blindness. Two limited-vision distractors are credible given the initial partial sight, but renewed blindness is weak. Total: 3/8; reject despite full textual accuracy."
+        }
+      ]
+    },
+    "accepted": false,
+    "minimumScore": 95,
+    "evidenceScore": 100,
+    "candidateSha256": "79eeeee72de7e80a209767a03d016f2caaae7acfb6ea8d080101e740532fdfc9",
+    "sourceSha256": "f61b24f6ab815722b5178939badaa1e37d06526d22cf9a56dc70bf7d232df0e4",
+    "corpusVersion": "web-classic-2026-10-28-v1",
+    "corpusSha256": "21bd65524953171847b53a088b4b580d0f819c652d7e467681d7d4a071461e4a",
+    "questionFingerprint": "c96b09eb80c37113378f18356c44c14abac069fca87c688f5392dfd1982e98ad",
+    "difficulty": {
+      "rubricVersion": "discovery-difficulty-v1",
+      "level": "easy",
+      "score": 2
+    },
+    "difficultyTargetMet": false,
+    "reasons": [
+      "unresolved_or_complex_claim",
+      "question_craft_below_threshold"
+    ],
+    "reviews": [
+      {
+        "solvedOptionId": "option-2",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Reject on editorial craft: the question asks for an expected successful healing outcome rather than a distinctive discovery.",
+          "The setup and success-versus-incomplete-healing alternatives make the answer readily guessable without knowing the passage.",
+          "The craft total is 3/8, with zero scores for interest and fairChallenge; factual accuracy does not overcome these failures."
+        ],
+        "questionPremises": [
+          {
+            "text": "The scene belongs to the supplied passage identified as Mark 8:22\u201326.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "text": "The man initially saw unclearly.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "Jesus had already laid his hands on the man before the man's report of unclear sight.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "Jesus subsequently laid his hands on the man's eyes again.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 0,
+          "fairChallenge": 0,
+          "choiceQuality": 1,
+          "rationale": "The prompt clearly establishes a man with initially unclear sight and Jesus touching his eyes again, without requiring church jargon. However, the tested fact is simply successful restoration after further healing. The passage's distinctive image of people resembling walking trees is not the discovery being tested. A player can favor complete restoration through ordinary expectations about a healing story, without biblical knowledge. The alternatives are parallel visual outcomes; restricted clarity and continued blurred sight are plausible incomplete-restoration guesses, but renewed blindness is a weak distractor. Total: 3/8; reject."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 26,
+                "quote": "He sent him away to his house, saying, \u201cDon\u2019t enter into the village, nor tell anyone in the village.\u201d"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The result is clear sight of everyone, not sight restricted to Jesus. A player might consider this as another stage of incomplete restoration focused on the person treating him, but the passage does not support it.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "supported",
+            "rationale": "This is the explicitly stated result after the repeated laying on of hands and the only supported answer. It is also the expected successful outcome, which weakens the challenge.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "The passage reports clear sight after the second touch, not shadowlike figures. Continued blurred sight is a plausible guess because the prompt establishes an earlier incomplete improvement, but it is wrong for the specified stage.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "The man is restored rather than becoming blind again. Nothing in the setup suggests a reversal, so this is unlikely to attract a reasonable guess and is a weak distractor.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy, totaling 2/8. This is a recognizable healing account with a less familiar detail, but the answer is directly stated in one verse and requires no inference. The choices describe alternative visual outcomes, although the successful outcome is readily guessable."
+        },
+        "model": "gpt-6.1-sol",
+        "requestedModel": "gpt-6.1-sol",
+        "responseId": "resp_0513293d92e2af18016ae4b6722de887d287e4d01c50de6e3b"
+      },
+      {
+        "solvedOptionId": "option-2",
+        "questionAccuracy": 100,
+        "scopeAccuracy": 100,
+        "explanationCoverage": 100,
+        "simpleTextualFact": true,
+        "unresolvedIssues": [
+          "Editorial rejection: craft totals 3/8, with zero scores for interest and fairChallenge.",
+          "The question supplies the distinctive two-stage healing detail, then asks only for the expected successful outcome.",
+          "The successful-restoration answer is readily guessable against alternatives describing incomplete vision or renewed blindness."
+        ],
+        "questionPremises": [
+          {
+            "text": "The question concerns the episode identified by the saved source as Mark 8:22\u201326.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 22,
+                "quote": "He came to Bethsaida. They brought a blind man to him, and begged him to touch him."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "text": "The man initially saw unclearly.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "His initial unclear sight followed an earlier laying on of hands.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 23,
+                "quote": "He took hold of the blind man by the hand, and brought him out of the village. When he had spat on his eyes, and laid his hands on him, he asked him if he saw anything."
+              },
+              {
+                "sourceId": "passage",
+                "verseNumber": 24,
+                "quote": "He looked up, and said, \u201cI see men; for I see them like trees walking.\u201d"
+              }
+            ]
+          },
+          {
+            "text": "Jesus subsequently laid his hands on the man's eyes again.",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          }
+        ],
+        "questionCraft": {
+          "context": 2,
+          "interest": 0,
+          "fairChallenge": 0,
+          "choiceQuality": 1,
+          "rationale": "The scene is clear, concise, and free of unexplained church jargon. However, the potentially memorable connection\u2014restoration occurring in stages\u2014is supplied in the setup rather than discovered through the answer. The requested fact is merely the expected successful healing outcome. Everyday expectations strongly favor complete restoration over continued impairment or renewed blindness. Two limited-vision distractors are credible given the initial partial sight, but renewed blindness is weak. Total: 3/8; reject despite full textual accuracy."
+        },
+        "claims": [
+          {
+            "claimId": "claim-1",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ]
+          },
+          {
+            "claimId": "claim-2",
+            "status": "supported",
+            "confidence": 100,
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 26,
+                "quote": "He sent him away to his house, saying, \u201cDon\u2019t enter into the village, nor tell anyone in the village.\u201d"
+              }
+            ]
+          }
+        ],
+        "options": [
+          {
+            "optionId": "option-1",
+            "status": "not_supported",
+            "rationale": "The restoration is not limited to seeing Jesus clearly. This could attract a reader imagining that the initial limited vision improved only enough to distinguish the person treating him.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-2",
+            "status": "supported",
+            "rationale": "The passage directly identifies clear sight of everyone as the result of the second laying on of hands. It is the sole supported answer, but also the obvious successful-outcome choice.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-3",
+            "status": "not_supported",
+            "rationale": "The second touch results in clear sight, not shadow-like perception. Continued indistinct vision is a plausible distractor because the setup explicitly describes an earlier stage of impaired sight.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          },
+          {
+            "optionId": "option-4",
+            "status": "not_supported",
+            "rationale": "The passage reports restoration rather than renewed blindness. This is a weak distractor: neither the text nor the setup gives a reasonable reason to expect deterioration after the second touch.",
+            "evidence": [
+              {
+                "sourceId": "passage",
+                "verseNumber": 25,
+                "quote": "Then again he laid his hands on his eyes. He looked intently, and was restored, and saw everyone clearly."
+              }
+            ],
+            "confidence": 100
+          }
+        ],
+        "difficulty": {
+          "familiarity": 1,
+          "evidenceNavigation": 0,
+          "reasoningSteps": 0,
+          "distractorSimilarity": 1,
+          "rationale": "Easy (2/8). The staged-healing detail is less familiar than the general healing theme, but the answer requires only direct identification in one verse. The choices describe alternative visual outcomes without requiring any textual synthesis."
+        },
+        "model": "gpt-6-astra",
+        "requestedModel": "gpt-6-astra",
+        "responseId": "resp_0cb6e2fc4c14d2b6016ae4b6722bb087d29137148a19ba5e80"
+      }
+    ]
+  },
+  "responses": [
+    {
+      "model": "gpt-6.1-sol",
+      "responseId": "resp_0513293d92e2af18016ae4b6722de887d287e4d01c50de6e3b",
+      "usage": {
+        "inputTokens": 3876,
+        "outputTokens": 1520,
+        "totalTokens": 5396
+      }
+    },
+    {
+      "model": "gpt-6-astra",
+      "responseId": "resp_0cb6e2fc4c14d2b6016ae4b6722bb087d29137148a19ba5e80",
+      "usage": {
+        "inputTokens": 3876,
+        "outputTokens": 1310,
+        "totalTokens": 5186
+      }
+    }
+  ],
+  "noDatabaseWrites": true
+}
