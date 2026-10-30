@@ -1,0 +1,34 @@
+{
+  "verifiedAt": "2026-10-30T15:03:56.434Z",
+  "runId": "62e60ee9-5b34-4bde-930b-75b7c2978117",
+  "date": "2026-10-30",
+  "previousSchedule": {
+    "publication_date": "2026-10-30",
+    "locale": "en",
+    "discovery_id": "ac5099c6-3aa1-4cb6-94c8-bc529d66e69b",
+    "revision": 1
+  },
+  "writerVersion": "sanctuary-trivia-writer-v5",
+  "attempts": 3,
+  "evidenceScore": 100,
+  "currentSchedule": {
+    "discovery_id": "cc362d16-f68a-4c5e-91fa-05ce21835f6f",
+    "publication_date": "2026-10-30",
+    "revision": 1
+  },
+  "url": "https://sanctuary-layperson-webapp-8zbezsxul.vercel.app/discoveries/cc362d16-f68a-4c5e-91fa-05ce21835f6f",
+  "craftPolicy": "discovery-question-craft-v2",
+  "craftScore": 6,
+  "reviewModels": [
+    "gpt-6.1-sol",
+    "gpt-6-astra"
+  ],
+  "attemptStatuses": [
+    "rejected",
+    "rejected",
+    "auto_approved"
+  ],
+  "originalArchived": true,
+  "publicFeedEnabled": false,
+  "browserVerified": true
+}

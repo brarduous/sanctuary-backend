@@ -1,5 +1,7 @@
 # Younger-audience content rollout — October 30, 2026
 
+Later owner-requested trivia refresh: today's older writer-v3 question was replaced by a writer-v5 question after two independent reviews and the unchanged SQL evidence/craft gate. Two rejected drafts and the accepted third draft are retained in the production attempt history; the old scheduled question is retained in publication history. The [verified direct browser link](https://sanctuary-layperson-webapp-8zbezsxul.vercel.app/discoveries/cc362d16-f68a-4c5e-91fa-05ce21835f6f) is playable while the broader public-feed launch remains disabled. [Replacement evidence](qa/2026-10-30-audience/today-trivia-replacement.json).
+
 The production backend and all four content jobs are deployed with the younger-audience copy policy. All **31 shared devotionals from October 30 through November 29** were regenerated and read back successfully. Today's one existing personalized devotional and its prayer were also refreshed in place. No notifications were sent by the refresh.
 
 ## Content verification
