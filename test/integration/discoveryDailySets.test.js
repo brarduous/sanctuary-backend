@@ -184,3 +184,18 @@ test('weekly publication rejects a stale neighbor context and missing weekly app
   await h.db.exec('set role anon');await assert.rejects(h.db.query('select discovery_daily_week_context($1)',[today]));await h.db.exec('reset role');
  }finally{await h.close();}
 });
+
+test('a rejected writer contract retains the raw draft, response and specific correction feedback',async()=>{
+ const h=await createHarness({curriculum:true,dailySets:true});try{
+  const models=adapter(h),generate=models.generate;let first=true,sawFeedback=false;
+  const draft={prompt:'A malformed fixture draft retained for the editorial audit.'};
+  models.generate=async input=>{
+   if(first){first=false;const e=Object.assign(new Error('The claim exceeds the fourteen-word contract.'),{code:'candidate_contract_invalid',discoveryGeneration:{model:'fixture-writer',responseId:'fixture-invalid-draft',usage:{totalTokens:17},draft}});throw e;}
+   if(input.day.setPosition===1)sawFeedback=input.failures.some(f=>f.includes('fourteen-word')) && input.failures.some(f=>f.includes(draft.prompt));
+   return generate(input);
+  };
+  const result=await run(h,models);assert.equal(result.published,1);assert.equal(result.rejectedAttempts,1);assert.equal(sawFeedback,true);
+  const rejected=(await h.db.query("select verification from discovery_daily_attempts where status='rejected'")).rows[0].verification;
+  assert.deepEqual(rejected.generation.draft,draft);assert.equal(rejected.generation.responseId,'fixture-invalid-draft');assert.match(rejected.generation.contractIssue,/fourteen-word/);
+ }finally{await h.close();}
+});

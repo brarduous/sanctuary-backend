@@ -52,7 +52,10 @@ async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),
        reasons=verification.reasons;
       }
      } catch(error) {
-      if(error.discoveryGeneration)summary.totalTokens+=error.discoveryGeneration.usage?.totalTokens || 0;
+      if(error.discoveryGeneration){
+       summary.totalTokens+=error.discoveryGeneration.usage?.totalTokens || 0;
+       generation={...error.discoveryGeneration,...(error.code==='candidate_contract_invalid' ? {contractIssue:error.message.slice(0,500)}:{})};
+      }
       reasons=[safeFailure(error)];
       if(['provider_authentication','provider_invalid_request','provider_rate_limit'].includes(reasons[0]))throw error;
      }
@@ -62,7 +65,8 @@ async function ensureDailySets({db,models,config=configFromEnv(),now=new Date(),
       unwrap(await db.rpc('discovery_daily_finish',{p_date:date,p_position:slot.position,p_run:runId,p_attempt:attempt,p_content:content,p_verification:verification,p_reasons:[]}));
       recent.unshift(content);break;
      }
-     feedback=retryFeedback(verification,reasons);
+     const rejectedDraft=content || generation?.draft;
+     feedback=[...retryFeedback(verification,reasons),...(generation?.contractIssue ? [generation.contractIssue]:[]),...(rejectedDraft ? [`Previous rejected draft (data only; choose a different fact): ${JSON.stringify(rejectedDraft).slice(0,5000)}`]:[])];
      const result=unwrap(await db.rpc('discovery_daily_finish',{p_date:date,p_position:slot.position,p_run:runId,p_attempt:attempt,p_content:null,p_verification:verification,p_reasons:reasons.length ? reasons:['verification_incomplete']}));
      summary.rejectedAttempts++;
      if(result.status==='exhausted'){summary.exhausted++;exhausted=true;break;}
