@@ -35,6 +35,7 @@ test('cron retries a rejected candidate then auto-approves and schedules only th
   assert.equal(result.generatedCount,1);assert.equal(result.rejectedAttempts,1);assert.equal(models.count,2);
   const scheduled=await h.db.query('select * from discovery_schedule');assert.equal(scheduled.rows.length,1);assert.equal(scheduled.rows[0].publication_date,today);
   const reviews=await h.db.query('select * from discovery_reviews');assert.equal(reviews.rows[0].review_method,'automated_evidence');assert.equal(reviews.rows[0].reviewer_id,null);assert.equal(reviews.rows[0].attestations.sourcesReadInContext,undefined,'automation must not forge a human attestation');
+  assert.equal(reviews.rows[0].attestations.questionCraftPolicy,'discovery-question-craft-v2');
   const revisions=await h.db.query('select * from discovery_revisions');assert.equal(revisions.rows.length,1,'rejected drafts are discarded from the content library');assert.equal(revisions.rows[0].content.difficulty.level,'easy');
   const publicResponse=await fetch(`${h.base}/api/v1/discoveries/${revisions.rows[0].discovery_id}`);assert.equal(publicResponse.status,200);
   const projected=await publicResponse.json();assert.equal(projected.discovery.difficulty.level,'easy');assert.equal(projected.discovery.evidenceScore,undefined);assert.equal(projected.discovery.review_method,undefined,'private verification records are not public content');
@@ -67,6 +68,33 @@ test('opting out of auto-approval retains a verified draft without a forged revi
   assert.equal(result.awaitingReview,1);assert.equal((await h.db.query('select * from discovery_reviews')).rows.length,0);assert.equal((await h.db.query('select * from discovery_schedule')).rows.length,0);
  }finally{await h.close();}
 });
+test('audience craft migration supports legacy workers, preserves provenance, and rolls back without weakening gates',async()=>{
+ const h=await setup();
+ try {
+  const fs=require('node:fs'),path=require('node:path');
+  const migration=fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8');
+  const rollback=fs.readFileSync(path.join(__dirname,'../../supabase/rollbacks/20261030120000.sql'),'utf8');
+  await h.db.exec(migration); // Safe when already applied by the harness.
+  const plan=await getWeek(h.client,today,corpus),day=plan.days.find(row=>row.date===today),evidence=scriptureEvidence(day.sourceReference),run=randomUUID();
+  await h.db.query('insert into discovery_generation_runs(id,policy_version,corpus_version,corpus_sha256,models) values($1,$2,$3,$4,$5)',[run,POLICY,corpus.version,corpus.sha256,{}]);
+  await h.client.rpc('discovery_curriculum_claim',{p_date:today,p_week:plan.startDate,p_run:run});
+  const attempt=(await h.client.rpc('discovery_curriculum_begin_attempt',{p_date:today,p_run:run,p_source_sha256:evidence.sourceSha256})).data;
+  const content=draftFor(evidence),verification=assessCandidate(content,evidence,[reviewFor(content,evidence),reviewFor(content,evidence,'test-verifier-b')]);
+  const finish=()=>h.client.rpc('discovery_curriculum_finish_attempt',{p_date:today,p_run:run,p_attempt:attempt,p_content:{...content,difficulty:verification.difficulty},p_verification:verification,p_reasons:[],p_auto_approve:true});
+  await h.db.exec(rollback);
+  await h.db.exec(rollback); // Rollback is idempotent too.
+  assert.match((await finish()).error.message,/Automated evidence gate/,'v2 must fail against the old contract');
+  assert.equal((await h.db.query('select * from discovery_reviews')).rows.length,0);
+  await h.db.exec(migration);
+  verification.questionCraft.policyVersion='discovery-question-craft-v1';
+  assert.equal((await finish()).error,null,'a legacy worker can finish during rolling deployment');
+  assert.equal((await h.db.query('select attestations from discovery_reviews')).rows[0].attestations.questionCraftPolicy,'discovery-question-craft-v1');
+  await h.db.exec(rollback);
+  assert.equal((await h.db.query('select attestations from discovery_reviews')).rows[0].attestations.questionCraftPolicy,'discovery-question-craft-v1','rollback preserves historical attestations');
+  await h.db.exec('set role authenticated');
+  try {await assert.rejects(h.db.query('select discovery_curriculum_finish_attempt($1,$2,$3,$4,$5,$6,$7)',[today,run,attempt,{},verification,[],true]),/permission denied/);}finally{await h.db.exec('reset role');}
+ }finally{await h.close();}
+});
 test('leases prevent concurrent workers and SQL rejects a below-threshold approval directly',async()=>{
  const h=await setup();
  try {
@@ -89,6 +117,8 @@ test('leases prevent concurrent workers and SQL rejects a below-threshold approv
     v=>{v.reviews[0].questionPremises[0].evidence[0].quote='An invented scene.';},
     v=>{v.reviews[0].questionPremises[0].evidence[0].verseNumber=999;},
     v=>{v.policyVersion='discovery-evidence-v1';},
+    v=>{v.questionCraft.policyVersion='unrecognized-craft';},
+    v=>{delete v.questionCraft.policyVersion;},
   ]) {
     const forged=structuredClone(good);mutate(forged);
     const rejected=await h.client.rpc('discovery_curriculum_finish_attempt',{p_date:today,p_run:runs[0],p_attempt:attempt,p_content:{...content,difficulty:good.difficulty},p_verification:forged,p_reasons:[],p_auto_approve:true});

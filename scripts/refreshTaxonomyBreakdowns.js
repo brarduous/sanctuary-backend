@@ -1,12 +1,13 @@
 const OpenAI = require('openai');
 const supabase = require('../config/supabase');
+const { applyAudiencePolicy } = require('../utils/audienceContentPolicy');
 require('dotenv').config();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-const TAXONOMY_PROMPT = `# ROLE
+const TAXONOMY_PROMPT = applyAudiencePolicy('news_taxonomy_breakdown_generator', `# ROLE
 You are a concise news analyst for a Christian news app.
 
 # INPUT
@@ -38,7 +39,7 @@ Return valid JSON only:
 {
   "scriptural_breakdown": "string",
   "image_prompt": "string"
-}`;
+}`);
 
 const RECENT_WINDOW_DAYS = Number(process.env.TAXONOMY_REFRESH_DAYS || 15);
 const MIN_RECENT_ARTICLES = Number(process.env.TAXONOMY_REFRESH_THRESHOLD || 10);

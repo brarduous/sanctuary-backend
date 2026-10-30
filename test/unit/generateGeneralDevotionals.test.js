@@ -93,6 +93,8 @@ test('weekly planner excludes recent content and generic title openings', () => 
   assert.match(prompt, /seven-day Christian formation journey/i);
   assert.match(prompt, /A Familiar Title — Psalm 46:10/);
   assert.match(prompt, /Do not begin titles with/i);
+  assert.match(prompt, /late teens and young adults/);
+  assert.match(prompt, /feasible without money or special resources/);
 });
 
 test('single-day prompt applies the research-grounded formation playbook', () => {
@@ -113,6 +115,9 @@ test('single-day prompt applies the research-grounded formation playbook', () =>
   assert.match(prompt, /Required Scripture: Psalm 3:1/);
   assert.match(prompt, /A Familiar Title/);
   assert.match(prompt, /Other days in this week/);
+  assert.match(prompt, /young-adult-content-v1/);
+  assert.match(prompt, /Practice \(10-25 words\)/);
+  assert.ok(prompt.indexOf('# FINAL AUDIENCE COPY POLICY') > prompt.indexOf('## Short-form story playbook'));
 });
 
 

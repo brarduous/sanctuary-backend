@@ -4,6 +4,7 @@ const OpenAI = require('openai');
 require('dotenv').config();
 
 const {getDailyNewsSynopsisPrompt} = require('../prompts');
+const { articleBriefInput, parseNewsBriefResponse } = require('../utils/newsBrief');
 const { logEvent } = require('../utils/helpers');
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -21,15 +22,9 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
     response_format: { type: responseFormatType },
   });
   const generatedContent = chatCompletion.choices[0].message.content;
-  generatedContent.tokens = chatCompletion.usage.total_tokens;
   console.log('AI Generated Content:', generatedContent);
   if (responseFormatType === 'json_object') {
-    try {
-      return JSON.parse(generatedContent);
-    } catch (e) {
-      // Fall back to raw text if parsing fails
-      return { summary: generatedContent, scripture: null, prayer: null, tokens: chatCompletion.usage.total_tokens };
-    }
+    return parseNewsBriefResponse(generatedContent, chatCompletion.usage?.total_tokens);
   }
   return generatedContent;
 }
@@ -59,10 +54,7 @@ async function generateDailyNewsSynopsisFromLast24h() {
     return;
   }
 
-  const combinedContent = outlooks.map((o, index) => {
-    const description = o.ai_outlook?.synopsis || o.article_body;
-    return `Article ${index + 1} Title: ${o.article_title}\nArticle ${index + 1} Description: ${description}\n\n`;
-  }).join('');
+  const combinedContent = outlooks.map(articleBriefInput).join('\n\n');
 
   try {
     const systemPrompt = await getDailyNewsSynopsisPrompt();

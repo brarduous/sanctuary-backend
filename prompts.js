@@ -1,5 +1,6 @@
 const supabase = require('./config/supabase');
 const { FEATURED_SCRIPTURE_POLICY } = require('./utils/featuredScripture');
+const { applyAudiencePolicy } = require('./utils/audienceContentPolicy');
 
 // --- CACHING SYSTEM ---
 let promptCache = {};
@@ -164,7 +165,7 @@ const getPersonalizedDevotionalPrompt = async (userData, generalDevoData, tuning
         user_music_preferences: userData.favoriteGospelArtists?.map((artist) => artist.name).join(', ')
             || 'No preferred gospel artists supplied.'
     });
-    return `${rendered}\n\n${DEVOTIONAL_PERSONALIZATION_QUALITY_OVERLAY}`;
+    return applyAudiencePolicy('daily_devotional_personalization_wrapper', `${rendered}\n\n${DEVOTIONAL_PERSONALIZATION_QUALITY_OVERLAY}`);
 };
 
 const generateTopicSermonPrompt = async (tuningNotes = "") => {
@@ -188,11 +189,11 @@ const getDailyPrayerPrompt = async () => {
 
 const getAdviceGuidancePrompt = async () => {
     const basePrompt = await fetchPrompt('advice_guidance_generator');
-    return `${basePrompt}\n\n${ADVICE_GUIDANCE_QUALITY_OVERLAY}`;
+    return applyAudiencePolicy('advice_guidance_generator', `${basePrompt}\n\n${ADVICE_GUIDANCE_QUALITY_OVERLAY}`);
 };
 
 const getDailyDevotionalPrompt = async () => {
-    return `${await fetchPrompt('daily_devotional_generator')}\n\n${FEATURED_SCRIPTURE_POLICY}`;
+    return applyAudiencePolicy('daily_devotional_generator', `${await fetchPrompt('daily_devotional_generator')}\n\n${FEATURED_SCRIPTURE_POLICY}`);
 };
 
 const getCommunityPrayerPrompt = async () => {
@@ -200,7 +201,7 @@ const getCommunityPrayerPrompt = async () => {
 };
 
 const getDailyNewsSynopsisPrompt = async () => {
-    return await fetchPrompt('daily_news_synopsis');
+    return applyAudiencePolicy('daily_news_synopsis', await fetchPrompt('daily_news_synopsis'));
 };
 
 const getGeneralDevotionalBatchPrompt = async (themeData) => {
@@ -208,12 +209,12 @@ const getGeneralDevotionalBatchPrompt = async (themeData) => {
         theme_title: themeData.theme_title,
         scripture_focus: themeData.scripture_focus
     });
-    return `${rendered}\n\n${FEATURED_SCRIPTURE_POLICY}`;
+    return applyAudiencePolicy('general_devotional_generator', `${rendered}\n\n${FEATURED_SCRIPTURE_POLICY}`);
 };
 
 const getScripturalOutlookPrompt = async () => {
     const basePrompt = await fetchPrompt('news_generator');
-    return `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}\n\n${NEWS_EDITORIAL_JSON_INSTRUCTIONS}`;
+    return applyAudiencePolicy('news_generator', `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}\n\n${NEWS_EDITORIAL_JSON_INSTRUCTIONS}`);
 };
 
 const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {
@@ -236,10 +237,10 @@ const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomie
 };
 
 const getNewsTaxonomyBreakdownPrompt = async ({ taxonomyName, synopses }) => {
-    return await getRenderedPrompt('news_taxonomy_breakdown_generator', {
+    return applyAudiencePolicy('news_taxonomy_breakdown_generator', await getRenderedPrompt('news_taxonomy_breakdown_generator', {
         taxonomy_name: taxonomyName,
         synopses
-    });
+    }));
 };
 
 const getSermonStyleAnalysisSystemPrompt = async () => {

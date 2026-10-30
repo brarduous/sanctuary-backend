@@ -6,6 +6,7 @@ const {getWeek}=require('../../utils/discoveryCurriculum');
 const {localDate,shiftDate}=require('../../utils/discoveries');
 const {loadCorpus,scriptureEvidence}=require('../../utils/discoveryScripture');
 const {prepareSourceRepair,sourceRepairSql}=require('../../utils/discoverySourceRepair');
+const {VERSION:WRITER_VERSION}=require('../../utils/discoveryWriterPolicy');
 async function setup() {
  const h=await createHarness({curriculum:true}),date=shiftDate(localDate(new Date(),'UTC'),5);
  const plan=await getWeek(h.client,date,loadCorpus());
@@ -57,7 +58,7 @@ test('a writer-policy repair can reuse sources once, only with three audited ear
  const run=randomUUID();
  await h.db.query("insert into discovery_generation_runs(id,policy_version,corpus_version,corpus_sha256,models,status) values($1,'synthetic','synthetic',$2,'{}','completed')",[run,'0'.repeat(64)]);
  for(let attempt=1;attempt<=3;attempt++)await h.db.query("insert into discovery_generation_attempts(publication_date,generation_epoch,attempt,run_id,status,source_sha256,verification) values($1,2,$2,$3,'rejected',$4,$5)",[date,attempt,run,options[attempt-1].sourceSha256,{generation:{writerVersion:'sanctuary-trivia-writer-v3'}}]);
- const manifest={...snapshot.manifest,mode:'writer_revision',previousWriterVersion:'sanctuary-trivia-writer-v3',writerVersion:'sanctuary-trivia-writer-v4'};
+ const manifest={...snapshot.manifest,mode:'writer_revision',previousWriterVersion:'sanctuary-trivia-writer-v3',writerVersion:WRITER_VERSION};
  const attempts=options.map((_,index)=>({publication_date:date,generation_epoch:2,attempt:index+1,status:'rejected',writer_version:'sanctuary-trivia-writer-v3'}));
  assert.throws(()=>prepareSourceRepair({...snapshot,manifest:{...manifest,previousWriterVersion:manifest.writerVersion},attempts}),/earlier audited writer/);
  assert.throws(()=>prepareSourceRepair({...snapshot,manifest,attempts:attempts.map(a=>({...a,writer_version:manifest.writerVersion}))}),/three rejected attempts/);
@@ -69,7 +70,7 @@ test('a writer-policy repair can reuse sources once, only with three audited ear
 test('a reviewer change requires an audited old pair and cannot retry failures from the current pair',async t=>{
  const {h,date,snapshot}=await setup();t.after(()=>h.close());
  const previousReviewModels=['gpt-5-mini','gpt-6-astra'],reviewModels=['gpt-6.1-sol','gpt-6-astra'];
- const manifest={...snapshot.manifest,mode:'reviewer_revision',writerVersion:'sanctuary-trivia-writer-v4',previousReviewModels,reviewModels};
+ const manifest={...snapshot.manifest,mode:'reviewer_revision',writerVersion:WRITER_VERSION,previousReviewModels,reviewModels};
  const attempts=[1,2,3].map(attempt=>({publication_date:date,generation_epoch:2,attempt,status:'rejected',writer_version:manifest.writerVersion,review_models:previousReviewModels}));
  assert.throws(()=>prepareSourceRepair({...snapshot,manifest,attempts:attempts.map(a=>({...a,review_models:reviewModels}))}),/three rejected attempts/);
  assert.throws(()=>prepareSourceRepair({...snapshot,manifest:{...manifest,reviewModels:previousReviewModels},attempts}),/changed, source-checked/);

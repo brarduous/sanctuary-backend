@@ -1,8 +1,9 @@
 const {normalize}=require('./discoveryScripture');
-const VERSION='discovery-question-craft-v1';
+const VERSION='discovery-question-craft-v2';
 const DIMENSIONS=['context','interest','fairChallenge','choiceQuality'];
 const MINIMUM=6;
-const RUBRIC=`Assess question craft separately from truth and difficulty, for a general adult Christian audience.
+const RUBRIC=`Assess question craft separately from truth and difficulty, for late teens and young adults including readers new to church.
+Judge accessibility and curiosity within the existing dimensions: context cannot score 2 if the scene needs unexplained church jargon; interest cannot score 2 for an obscure detail without a rewarding connection. Recognizable human stakes must be explicit in the source, never imagined. Penalize condescension, forced slang, anachronistic scenarios, and shame in the relevant dimension. Familiar stories can earn full marks; obscurity is not quality.
 Rate each dimension 0, 1, or 2, with a specific rationale:
 - context: 0 bare chapter/verse lookup or detached recall; 1 a useful scene or situation; 2 a concise scene and a second grounded clue that help identify one answer.
 - interest: 0 arbitrary minutiae or a dull fact restated as a question; 1 a worthwhile detail; 2 an interesting contrast, connection, action or consequence worth discovering.

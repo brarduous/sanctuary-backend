@@ -4,6 +4,7 @@ require('dotenv').config();
 const { createClient } = require('@supabase/supabase-js');
 const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
+const { VOICE, VERSION: AUDIENCE_VERSION, applyAudiencePolicy } = require('../utils/audienceContentPolicy');
 const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, normalizeFeaturedReference, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -158,6 +159,8 @@ Do not repeat or closely paraphrase these recent titles and primary passages:
 ${recentContent.length ? recentContent.map(item => `- ${item.title} — ${item.scripture_reference}`).join('\n') : '- None supplied'}
 
 ## Planning requirements
+${VOICE}
+- Choose a recognizable everyday human situation for each day. Keep practices small, observable, and feasible without money or special resources. Do not assume a student or employed reader.
 - State one precise formation_goal, one theological_claim, one pastoral_need, and 2-4 guardrails.
 - Create exactly seven days with distinct movements, daily angles, human situations, central claims, practice types, and title directions.
 - Use an intentional arc such as encounter, expose, lament/confess, receive, practice, with others, and integrate/rest. Adapt labels when the theme requires it, but use at least six distinct movements.
@@ -338,6 +341,8 @@ Write the content as a seamless 120-160 word reflection that does all five moves
 - scripture_text must preserve the complete planned quotation; never shorten it to an excerpt.
 - prayer must be 1-2 sentences.
 - Return compact valid JSON only. Do not add commentary or Markdown fences.
+
+${applyAudiencePolicy('general_devotional_generator', '')}
 
 Use this exact shape:
 {
@@ -604,7 +609,7 @@ const generateWeeklyBatch = async ({ force = false, startDate = null, themeWeekN
             scripture_text: entry.scripture_text,
             content: entry.content,
             prayer: entry.prayer,
-            topics: [...new Set([...(entry.topics || []), theme.theme_title, CURRICULUM_V2_MARKER])],
+            topics: [...new Set([...(entry.topics || []), theme.theme_title, CURRICULUM_V2_MARKER, AUDIENCE_VERSION])],
             short_form: entry.short_form || null,
           },
           { onConflict: 'date' }
