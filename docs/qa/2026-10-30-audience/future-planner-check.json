@@ -1,0 +1,38 @@
+{
+  "verifiedAt": "2026-10-30T14:00:08.654Z",
+  "themeWeek": 40,
+  "theme": "True Worship",
+  "model": "gpt-5-mini",
+  "days": [
+    {
+      "reference": "Psalms 95:6",
+      "practice": "Kneel or sit quietly for two minutes in the morning or evening and say, 'You made me,' naming one small thing you noticed today (sky, breath, a sound)."
+    },
+    {
+      "reference": "Matthew 15:8",
+      "practice": "Name out loud one phrase you often say about faith (to friends or online), then say honestly to yourself where your heart is about it—do this in front of a mirror or a quiet window for three minutes."
+    },
+    {
+      "reference": "Psalms 51:17",
+      "practice": "Write one sentence naming something you regret (to yourself or to God) and then apologize to one person you can contact today by text or call."
+    },
+    {
+      "reference": "John 4:24",
+      "practice": "Read John 4:24 aloud once and then say to yourself, 'I can come as I am,' and sit five quiet minutes allowing whatever feeling comes—do this at a table or on a walk."
+    },
+    {
+      "reference": "Galatians 5:16",
+      "practice": "Set two simple checkpoints today (morning and evening) on your phone titled 'Spirit Check' and at each one take 30 seconds to ask, 'Where did I see God today?' and write one note."
+    },
+    {
+      "reference": "James 4:8",
+      "practice": "Call or visit one person you trust (friend, neighbor, or someone in church) and say, 'Can we check in about faith honestly for ten minutes?' Offer to listen to them first."
+    },
+    {
+      "reference": "1 Corinthians 14:15",
+      "practice": "List one tiny, repeatable habit (e.g., one-minute breath prayer at the start of a shift or before study) and schedule it on your phone for three days this week; write the habit down and place it where you’ll see it."
+    }
+  ],
+  "validated": true,
+  "noDatabaseWrites": true
+}

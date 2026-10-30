@@ -1,0 +1,27 @@
+{
+  "capturedAt": "2026-10-30T14:10:21.671Z",
+  "mobileCommit": "58913bf02d1131db713ca8107e06cd2e69999fae",
+  "version": "1.2.11",
+  "ios": {
+    "build": 66,
+    "buildId": "b05cbad2-507e-4942-bfa9-c9c55557511c",
+    "submissionId": "23d1ca15-5693-47fe-a7cd-61814106263f",
+    "submissionStatus": "succeeded",
+    "destination": "App Store Connect / TestFlight"
+  },
+  "android": {
+    "build": 138,
+    "buildId": "906c8f3d-9e65-4fea-b6f3-0932ab06a104",
+    "submissionId": "f31ac8e2-f82e-4ea6-b104-e2d514cce6a0",
+    "submissionStatus": "succeeded",
+    "track": "internal",
+    "googleFallbackSentForReview": true
+  },
+  "publicRelease": {
+    "publishedByThisTask": false,
+    "googleManagedPublishingOn": true,
+    "googleReadyProductionRelease": "135 (1.2.11)",
+    "googleLastPublished": "2026-10-12",
+    "existingReleaseHoldsPreserved": true
+  }
+}

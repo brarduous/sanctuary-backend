@@ -1,5 +1,7 @@
 # Younger-audience content review — October 30, 2026
 
+Deployment update: the prompts are live and 31 devotionals were regenerated for October 30–November 29. See the [production rollout and verification record](YOUNGER_AUDIENCE_DEPLOYMENT_2026_10_30.md). The design review below records the original implementation assessment.
+
 Audience assumption: late teens through young adults, including people new to church. Relatability comes from recognizable situations, plain language, useful next steps, and curiosity. Do not assume everyone attends college, has a safe family, works predictable hours, or shares the same income or relationship circumstances. Avoid forced slang and generational stereotypes.
 
 ## Editorial grades

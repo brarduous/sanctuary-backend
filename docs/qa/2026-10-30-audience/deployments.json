@@ -1,0 +1,37 @@
+[
+  {
+    "name": "backend",
+    "service": "srv-d1uqipvdiees73b0kj20",
+    "deploy": "dep-dbia4rqa6svs738p3ptg",
+    "status": "live",
+    "commit": "80a64f96d3aa9d8ede12a3670abf482016d0c501"
+  },
+  {
+    "name": "devotionals",
+    "service": "crn-d5isg1ur433s738nr3mg",
+    "deploy": "dep-dbia4rua5vhs73a3cl8g",
+    "status": "live",
+    "commit": "80a64f96d3aa9d8ede12a3670abf482016d0c501"
+  },
+  {
+    "name": "articleNews",
+    "service": "crn-d2vlmtodl3ps739au0p0",
+    "deploy": "dep-dbia4rqa6svs738p3pu0",
+    "status": "live",
+    "commit": "80a64f96d3aa9d8ede12a3670abf482016d0c501"
+  },
+  {
+    "name": "dailyNews",
+    "service": "crn-d4qns70gjchc73bfk8og",
+    "deploy": "dep-dbia4rv23o6c73eu810g",
+    "status": "live",
+    "commit": "80a64f96d3aa9d8ede12a3670abf482016d0c501"
+  },
+  {
+    "name": "trivia",
+    "service": "crn-dbh7s9ek1f9s73aur280",
+    "deploy": "dep-dbi9ur2fngtc73cnbjng",
+    "status": "live",
+    "commit": "00f7ffd62b538e9dbf0b8b1a1619e7c4e8f6004f"
+  }
+]
