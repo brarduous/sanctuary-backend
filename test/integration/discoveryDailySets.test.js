@@ -231,7 +231,12 @@ test('past daily sets require verified Pro; future sets never appear in bundles 
    await h.db.query("update user_profiles set subscription_tier='pro' where user_id=$1",[MEMBER]);
    const pro=await get('/api/v1/discoveries/bundle?dailySet=1&date='+day,MEMBER);
    assert.equal(pro.status,offset<0 ? 200:400);
-   if(offset<0)assert.equal((await pro.json()).items.length,3);
+   if(offset<0){
+    const items=(await pro.json()).items;assert.equal(items.length,3);
+    const item=items[0];
+    const completed=await fetch(h.base+'/api/v1/discoveries/completions',{method:'POST',headers:{Authorization:'Bearer '+MEMBER,'Content-Type':'application/json'},body:JSON.stringify({events:[{eventId:randomUUID(),discoveryId:item.id,revision:item.revision,mode:'answered',optionId:item.correctOptionId,occurredAt:new Date().toISOString(),localDate:today,timeZone:'UTC',puzzleDate:day,elapsedMs:1000,setPosition:1}]})});
+    assert.equal(completed.status,200);const saved=(await completed.json()).results[0];assert.equal(saved.status,'accepted');assert.equal(saved.completion.puzzle_date,day);assert.equal(saved.completion.local_date,today,'archive plays retain their original date and do not pretend to be played on release day');
+   }
    assert.equal((await get('/api/v1/discoveries/'+ids[0],MEMBER)).status,offset<0 ? 200:404);
    const defaultBundle=await (await get('/api/v1/discoveries/bundle?dailySet=1',MEMBER)).json();
    assert.equal(defaultBundle.items.length,0,'default means today only, without cached past or future sets');
