@@ -51,9 +51,9 @@ test('released content projects no reviewer identity, editorial note, or draft f
  assert.equal((await request('/api/v1/discoveries/bundle?timeZone=UTC',{user:null,headers:{'If-None-Match':response.headers.get('etag')}})).response.status,304);
  const preview=await request(`/admin/discoveries/${candidates[0].id}/revisions/1`);assert.equal(preview.body.preview.id,candidates[0].id);
 });
-test('future approved content is prefetchable but cannot be shared or completed yet',async()=>{
+test('future approved content is absent from bundles and cannot be shared or completed yet',async()=>{
  await seedReviewed(h,candidates[2],shiftDate(today,3));
- const bundle=await request('/api/v1/discoveries/bundle',{user:null});assert.ok(bundle.body.items.some(item=>item.id===candidates[2].id));
+ const bundle=await request('/api/v1/discoveries/bundle',{user:null});assert.ok(!bundle.body.items.some(item=>item.id===candidates[2].id));
  assert.equal((await request(`/api/v1/discoveries/${candidates[2].id}`,{user:null})).response.status,404);
  const result=await request('/api/v1/discoveries/completions',{user:MEMBER,method:'POST',body:{events:[event(candidates[2])]}});assert.equal(result.body.results[0].status,'unavailable');
 });
