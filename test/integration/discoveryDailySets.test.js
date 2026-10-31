@@ -7,7 +7,7 @@ const {candidateFromDraft,assessCandidate}=require('../../utils/discoveryAccurac
 const {reviewFor}=require('../helpers/discoveryAccuracyFixtures');
 const {ensureDailySets}=require('../../utils/discoveryDailySets');
 const {configFromEnv}=require('../../utils/discoveryCurriculum');
-const {localDate}=require('../../utils/discoveries');
+const {localDate,shiftDate}=require('../../utils/discoveries');
 const fs=require('node:fs'),path=require('node:path');
 const today=localDate(),corpus=loadCorpus();
 const config={...configFromEnv({}),maxTokensPerRun:150000};
@@ -198,4 +198,47 @@ test('a rejected writer contract retains the raw draft, response and specific co
   const rejected=(await h.db.query("select verification from discovery_daily_attempts where status='rejected'")).rows[0].verification;
   assert.deepEqual(rejected.generation.draft,draft);assert.equal(rejected.generation.responseId,'fixture-invalid-draft');assert.match(rejected.generation.contractIssue,/fourteen-word/);
  }finally{await h.close();}
+});
+
+
+test('past daily sets require verified Pro; future sets never appear in bundles or direct reads',async()=>{
+ for(const offset of [-1,1]){
+  const h=await createHarness({curriculum:true,dailySets:true,listen:true});
+  try{
+   const day=shiftDate(today,offset);
+   await ensureDailySets({db:h.client,models:adapter(h),config,now:new Date(shiftDate(today,1)+'T12:00:00Z'),runwayDays:1,maxDaysPerRun:1,planForDate:plan,corpus});
+   await h.db.exec('update discovery_runtime_settings set enabled=true,rollout_percentage=100');
+   // The worker correctly refuses backdated generation. Add a historical
+   // snapshot of these reviewed fixtures directly to this isolated test DB.
+   if(offset<0){
+    await h.db.query('insert into discovery_daily_sets(publication_date) values($1)',[day]);
+    const fixtures=(await h.db.query('select * from discovery_daily_set_items')).rows;
+    for(const fixture of fixtures){
+     const id=randomUUID();
+     await h.db.query('insert into discoveries(id,slug) values($1,$2)',[id,'archive-fixture-'+id]);
+     await h.db.query('insert into discovery_revisions(discovery_id,revision,content) select $1,revision,content from discovery_revisions where discovery_id=$2',[id,fixture.discovery_id]);
+     await h.db.query('insert into discovery_reviews(discovery_id,revision,review_method,note,attestations) select $1,revision,review_method,note,attestations from discovery_reviews where discovery_id=$2',[id,fixture.discovery_id]);
+     await h.db.query('insert into discovery_daily_set_items values($1,$2,$3,1)',[day,fixture.position,id]);
+    }
+   }
+   const ids=(await h.db.query('select discovery_id from discovery_daily_set_items where publication_date=$1',[day])).rows.map(r=>r.discovery_id);assert.equal(ids.length,3);
+   const get=(path,token)=>fetch(h.base+path,{headers:token ? {Authorization:'Bearer '+token}:{}});
+   for(const token of [null,MEMBER,ADMIN]){
+    const r=await get('/api/v1/discoveries/bundle?dailySet=1&date='+day,token);
+    assert.equal(r.status,offset<0 ? 403:400);
+    assert.equal((await get('/api/v1/discoveries/'+ids[0],token)).status,offset<0 ? 403:404);
+   }
+   await h.db.query("update user_profiles set subscription_tier='pro' where user_id=$1",[MEMBER]);
+   const pro=await get('/api/v1/discoveries/bundle?dailySet=1&date='+day,MEMBER);
+   assert.equal(pro.status,offset<0 ? 200:400);
+   if(offset<0)assert.equal((await pro.json()).items.length,3);
+   assert.equal((await get('/api/v1/discoveries/'+ids[0],MEMBER)).status,offset<0 ? 200:404);
+   const defaultBundle=await (await get('/api/v1/discoveries/bundle?dailySet=1',MEMBER)).json();
+   assert.equal(defaultBundle.items.length,0,'default means today only, without cached past or future sets');
+   for(const invalid of ['2026-02-30','no-date'])assert.equal((await get('/api/v1/discoveries/bundle?dailySet=1&date='+invalid,MEMBER)).status,400);
+   // A client hint cannot grant Pro, and entitlement changes take effect on the next request.
+   await h.db.query("update user_profiles set subscription_tier='free' where user_id=$1",[MEMBER]);
+   if(offset<0)assert.equal((await get('/api/v1/discoveries/bundle?dailySet=1&date='+day+'&isPro=true',MEMBER)).status,403);
+  }finally{await h.close();}
+ }
 });

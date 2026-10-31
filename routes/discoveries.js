@@ -49,8 +49,7 @@ async function projectSchedule(schedule) {
     return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), ...(row.position ? {setPosition:row.position,setDifficulty:['easy','medium','hard'][row.position-1]}:{}), correctionNotice: parent.correction_notice || null }];
   });
 }
-async function releasedRows(id, rev) {
-  const cutoff = localDate(new Date(),'Pacific/Kiritimati');
+async function releasedRows(id, rev, cutoff = localDate(new Date(),'Pacific/Kiritimati')) {
   const queries = ['discovery_schedule','discovery_publication_history','discovery_daily_set_items'].map(table => {
     let query = supabase.from(table).select(`publication_date,discovery_id,revision${table==='discovery_daily_set_items' ? ',position':''}`).eq('discovery_id',id).lte('publication_date',cutoff);
     if (rev) query = query.eq('revision',rev);
@@ -58,8 +57,15 @@ async function releasedRows(id, rev) {
   });
   return (await Promise.all(queries)).flatMap(result=>missingSchema(result.error) ? []:unwrap(result)).sort((a,b) => b.publication_date.localeCompare(a.publication_date) || b.revision-a.revision || (b.position || 0)-(a.position || 0));
 }
+async function allowArchive(req,res,requestedDate,today) {
+  if(requestedDate>=today)return true;
+  const profile=req.user ? unwrap(await supabase.from('user_profiles').select('subscription_tier').eq('user_id',req.user.id).maybeSingle()):null;
+  if(profile?.subscription_tier==='pro')return true;
+  res.set('Cache-Control','private, no-store').status(403).json({error:{code:'TRIVIA_PRO_REQUIRED',message:'Past Trivia games are included with Sanctuary Pro.'}});
+  return false;
+}
 async function dailySetRows(today,requestedDate) {
-  const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').gte('publication_date',requestedDate || shiftDate(today,-1)).lte('publication_date',requestedDate || shiftDate(today,7)).order('publication_date').order('position'));
+  const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').eq('publication_date',requestedDate || today).order('publication_date').order('position'));
   const projected=await projectSchedule(scheduled);
   // A withdrawn/missing question hides its whole set, never silently substitutes
   // another puzzle or changes the Easy → Medium → Hard result order.
@@ -70,6 +76,7 @@ router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
     const today = localDate(new Date(), String(req.query.timeZone || 'UTC'));
     const requestedDate=req.query.date;
     if(requestedDate!==undefined && (!date(requestedDate) || requestedDate>today))invalid('Choose a released daily trivia date.');
+    if(requestedDate && !await allowArchive(req,res,requestedDate,today))return;
     const installationId = UUID.test(req.query.installationId) ? req.query.installationId : 'unassigned';
     const runtime = await settings();
     const enabled = runtime.enabled && ((req.user && runtime.internal_user_ids.includes(req.user.id)) || cohort(req.user?.id || installationId) < runtime.rollout_percentage);
@@ -82,8 +89,8 @@ router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
       items=daily;withdrawnIds=unwrap(withdrawn).map(row=>row.id);
     } else if (enabled) {
       const [scheduled, fallback, withdrawn] = await Promise.all([
-        supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').gte('publication_date', shiftDate(today,-1)).lte('publication_date',shiftDate(today,7)).order('publication_date'),
-        supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').lte('publication_date',today).order('publication_date',{ascending:false}).limit(10),
+        supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').eq('publication_date',requestedDate || today).order('publication_date'),
+        supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').eq('publication_date',requestedDate || today).order('publication_date',{ascending:false}).limit(10),
         supabase.from('discoveries').select('id').eq('withdrawn',true).limit(1000),
       ]);
       [items, evergreen] = await Promise.all([projectSchedule(unwrap(scheduled)),projectSchedule(unwrap(fallback))]);
@@ -123,11 +130,13 @@ router.post('/metrics', metricLimiter, async (req,res,next) => {
     res.sendStatus(204);
   } catch (error) { next(error); }
 });
-router.get('/:id',readLimiter, async (req,res,next) => {
+router.get('/:id',readLimiter,optionalAuth, async (req,res,next) => {
   try {
     const id = itemId(req.params.id);
-    const schedule = (await releasedRows(id)).slice(0,1);
+    const today=localDate(new Date(),String(req.query.timeZone || 'UTC'));
+    const schedule = (await releasedRows(id,undefined,today)).slice(0,1);
     if (!schedule.length) return res.status(404).json({error:{code:'DISCOVERY_UNAVAILABLE',message:'This discovery is unavailable.'}});
+    if(!await allowArchive(req,res,schedule[0].publication_date,today))return;
     const items = await projectSchedule(schedule);
     if (!items.length) return res.status(410).json({error:{code:'DISCOVERY_WITHDRAWN',message:'This discovery has been withdrawn for review.'}});
     // Revalidate on every online visit so a withdrawal/correction is respected.
