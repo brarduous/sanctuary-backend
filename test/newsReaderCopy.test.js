@@ -1,6 +1,6 @@
 const test=require('node:test'),assert=require('node:assert/strict');
 const {normalizeNewsReaderCopy,validateNewsTldr,formatNewsTldr}=require('../utils/newsReaderCopy');
-const tldr={summary:'Neighbors organized a food collection for local families.',christianAssessment:{verdict:'aligned',focus:'Sharing food with neighbors',reason:'Practical care for neighbors reflects the call to show mercy.',scriptureReference:'Micah 6:8'}};
+const tldr={summary:'Neighbors organized a food collection for local families.',christianAssessment:{verdict:'aligned',focusType:'reported_conduct',focus:'Sharing food with neighbors',reason:'Practical care for neighbors reflects the call to show mercy.',scriptureReference:'Micah 6:8'}};
 test('TLDR always contains a plain Christian judgment and a real Scripture reference',()=>{
  const value=normalizeNewsReaderCopy({tldr,newsSummary:'Residents collected food for local families. Volunteers organized distribution through a community center, according to the supplied reporting.'});
  assert.match(value.synopsis,/Consistent with Christian teaching/);assert.match(value.synopsis,/Micah 6:8/);assert.ok(value.tldr.christianAssessment.scriptureExcerpt.includes('mercy'));
@@ -12,4 +12,10 @@ test('missing judgments, fabricated verses, unfocused citations and missing deta
 });
 test('mixed and uncertain assessments remain explicit instead of forcing a binary verdict',()=>{
  for(const verdict of ['mixed','unclear'])assert.match(formatNewsTldr(validateNewsTldr({...tldr,christianAssessment:{...tldr.christianAssessment,verdict}})),verdict==='mixed' ? /Mixed/:/Not enough information/);
+});
+
+test('recommended responses cannot receive uncertain or conflicting verdicts; unknown reported conduct remains explicit',()=>{
+ for(const verdict of ['unclear','concerns','mixed'])assert.throws(()=>validateNewsTldr({...tldr,christianAssessment:{...tldr.christianAssessment,focusType:'recommended_response',verdict}}));
+ assert.equal(validateNewsTldr({...tldr,christianAssessment:{...tldr.christianAssessment,focusType:'recommended_response'}}).christianAssessment.verdict,'aligned');
+ assert.throws(()=>validateNewsTldr({...tldr,christianAssessment:{...tldr.christianAssessment,focusType:undefined}}));
 });
