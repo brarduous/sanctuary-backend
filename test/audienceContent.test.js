@@ -65,7 +65,7 @@ test('daily brief uses factual summaries from object and serialized outlooks, wi
 });
 
 test('daily brief rejects malformed or prayer-only outputs and retains usage with valid nuggets', () => {
-  const valid = {synopsis:'A reported development.',details:'Officials explained the proposal; a vote has not yet taken place.',stories:[{headline:'A housing proposal',summary:'The council proposed new housing support.',christianAssessment:{verdict:'aligned',focus:'Care for neighbors',reason:'Helping neighbors find shelter reflects justice and mercy.',scriptureReference:'Micah 6:8'}}],thought_to_remember:'A short original reflection.',prayer:'Lord, help our neighbors.'};
+  const valid = {synopsis:'A reported development.',details:'Officials explained the proposal; a vote has not yet taken place.',stories:[{headline:'A housing proposal',summary:'The council proposed new housing support.',christianAssessment:{verdict:'aligned',focusType:'reported_conduct',focus:'Care for neighbors',reason:'Helping neighbors find shelter reflects justice and mercy.',scriptureReference:'Micah 6:8'}}],thought_to_remember:'A short original reflection.',prayer:'Lord, help our neighbors.'};
   const parsed=parseNewsBriefResponse(JSON.stringify(valid),321);assert.equal(parsed.tokens,321);assert.equal(parsed.details,valid.details);assert.match(parsed.synopsis,/Christian assessment/);assert.match(parsed.synopsis,/Micah 6:8/);assert.equal(parsed.stories.length,1);
   for (const invalid of ['not json', 'null', '[]', JSON.stringify({ ...valid, synopsis: '' }), JSON.stringify({ ...valid, synopsis: ['wrong type'] }), JSON.stringify({ prayer: valid.prayer })]) {
     assert.throws(() => parseNewsBriefResponse(invalid, 0));
