@@ -6,7 +6,7 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
 const { searchSpotifyTracks, selectMinistrySafeTrack } = require('../utils/spotify');
-const { loadRuntime } = require('../utils/devotionalQuality');
+const { loadRuntime, validateDevotionalOutput } = require('../utils/devotionalQuality');
 
 const normalizeStringList = (value, limit = 25) => Array.isArray(value)
     ? [...new Set(value.map((item) => String(item || '').trim()).filter(Boolean))].slice(0, limit)
@@ -149,6 +149,8 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             } else {
                 parsedContent = generatedContent; // In case your helper already parsed it
             }
+
+            validateDevotionalOutput(parsedContent, generalDevo, 'personalized');
 
             const { title, content, daily_prayer, song_search_query, short_form } = parsedContent;
 

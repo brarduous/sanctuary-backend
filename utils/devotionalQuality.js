@@ -63,4 +63,20 @@ function mayPromote(baseline, candidate) {
     && ['helpfulness', 'audience', 'freshness'].every(key => row[key] >= 80 && row[key] >= baseline[i][key]))
     && score(candidate) >= score(baseline) + 5;
 }
-module.exports = { DEFAULT_MODEL, MODELS, RULES, VARIETY_POLICY, defaults, validateRuntime, loadRuntime, overlay, bodyText, repetitionReport, normalizeReview, mayPromote, score, challengerModel };
+function validateDevotionalOutput(output, source, lane) {
+  const reference = output.scripture_reference || output.scripture;
+  if (reference !== (source.scripture_reference || source.scripture)) throw Error('Experiment changed the featured Scripture');
+  if (output.title !== source.title && lane === 'personalized') throw Error('Experiment changed curriculum title');
+  const words = String(output.content || '').match(/\S+/g) || [];
+  if (words.length < 120 || words.length > 160) throw Error('Experiment violated devotional length');
+  if (!output.short_form || output.short_form.format !== 'instagram_story_3_slide' || !Array.isArray(output.short_form.slides) || output.short_form.slides.length !== 3) throw Error('Experiment violated slide contract');
+  for (const [index, slide] of output.short_form.slides.entries()) {
+    const text = String(slide.text || ''), count = (text.match(/\S+/g) || []).length;
+    const [min, max] = [[6,12],[15,25],[10,25]][index];
+    if (count < min || count > max) throw Error('Experiment violated slide word budget');
+  }
+  if (lane === 'general' && output.scripture_text !== source.scripture_text) throw Error('Experiment changed Scripture quotation');
+  if (!String(lane === 'general' ? output.prayer : output.daily_prayer).trim()) throw Error('Experiment omitted prayer');
+  return output;
+}
+module.exports = { validateDevotionalOutput, DEFAULT_MODEL, MODELS, RULES, VARIETY_POLICY, defaults, validateRuntime, loadRuntime, overlay, bodyText, repetitionReport, normalizeReview, mayPromote, score, challengerModel };

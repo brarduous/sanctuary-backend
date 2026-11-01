@@ -20,6 +20,10 @@ Legacy `gpt-5-mini` curriculum and `gpt-4o` personalization configurations are n
 
 Each lane must complete three matched cases. Curriculum trials compare planning **and** writing with the same weekly theme and seven fixed featured passages/quotations. Personalization trials use the real prompt builder and generic spiritual-growth context, the same curriculum and recent history, and fixed practices. They are controlled replay cases, not an evaluation of each reader's private profile. The reviewer sees randomized variant labels without model names. The baseline's formatting failures remain visible as evidence; a candidate must pass the output checks.
 
+Fixed references and quotations in curriculum experiments are pinned server-side before validating the plan, so neither variant can win by choosing an easier passage or changing translation. The writer is then judged against that fixed source. Generated plans and trial samples are retained in the private report for inspection.
+
+The initial personalized comparison completed three cases: GPT-4o averaged 72.33/100 and GPT-6.1 Sol averaged 91.00/100. All candidate accuracy scores were at least 93, all other dimensions at least 80, and no case regressed. Sol and the four approved supplements were activated on November 1 at runtime revision 1, with an atomic settings-and-summary audit recorded in `system_logs` under `devotional_quality_bootstrap`. One transport timeout was rerun as a matched pair before activation; partial results were never promoted.
+
 Promotion requires at least a five-point mean improvement, accuracy ≥90, all other dimensions ≥80, no serious concern, and no per-case regression in any dimension. Incomplete responses, invalid candidates, uncertain accuracy, failed planning, or unavailable models prevent promotion. A healthy modern setup is kept. The worker makes at most 188,000 completion tokens' worth of requests per run, plus bounded inputs, with no SDK retries. It does not train model weights or discover new model names automatically.
 
 ## Persistence and operations

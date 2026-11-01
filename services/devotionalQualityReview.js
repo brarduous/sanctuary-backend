@@ -53,26 +53,11 @@ async function reviewSamples(client, model, samples, context = {}) {
   const value = await jsonCompletion(client, model, REVIEW_INSTRUCTIONS, { context, samples }, 12000);
   return normalizeReview(value, samples.map(row => row.id));
 }
-function validateTrial(output, source, lane) {
-  const reference = output.scripture_reference || output.scripture;
-  if (reference !== (source.scripture_reference || source.scripture)) throw Error('Experiment changed the featured Scripture');
-  if (output.title !== source.title && lane === 'personalized') throw Error('Experiment changed curriculum title');
-  const words = String(output.content || '').match(/\S+/g) || [];
-  if (words.length < 120 || words.length > 160) throw Error('Experiment violated devotional length');
-  if (!output.short_form || output.short_form.format !== 'instagram_story_3_slide' || !Array.isArray(output.short_form.slides) || output.short_form.slides.length !== 3) throw Error('Experiment violated slide contract');
-  for (const [index, slide] of output.short_form.slides.entries()) {
-    const text = String(slide.text || ''), count = (text.match(/\S+/g) || []).length;
-    const [min, max] = [[6,12],[15,25],[10,25]][index];
-    if (count < min || count > max) throw Error('Experiment violated slide word budget');
-  }
-  if (lane === 'general' && output.scripture_text !== source.scripture_text) throw Error('Experiment changed Scripture quotation');
-  if (!String(lane === 'general' ? output.prayer : output.daily_prayer).trim()) throw Error('Experiment omitted prayer');
-  return output;
-}
+const { validateDevotionalOutput:validateTrial } = require('../utils/devotionalQuality');
 
 async function runDevotionalQualityReview({ db = require('../config/supabase'), client = require('../config/openai'), now = new Date(), dryRun = false,
   reviewerModel = process.env.DEVOTIONAL_REVIEW_MODEL || 'gpt-6-astra', lanes = ['general','personalized'] } = {}) {
-  if (!lanes.length || lanes.some(lane=>!['general','personalized'].includes(lane))) throw Error('Invalid review lanes');
+  if (!lanes.length || new Set(lanes).size !== lanes.length || lanes.some(lane=>!['general','personalized'].includes(lane))) throw Error('Invalid review lanes');
   const window = reviewWindow(now);
   if (!dryRun) {
     const claimed = unwrap(await db.rpc('claim_devotional_quality_week', { p_week: window.start }));
@@ -137,17 +122,20 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
           const state = variant === 'baseline' ? runtime : candidateRuntime;
           const prompt = `${buildWeeklyPlanPrompt(theme,recent)}\n${overlay(state,lane)}\nFor this matched evaluation, preserve these exact seven featured references and quotations at their assigned offsets. Replan the situations, distinct claims, titles, and observable practices so each follows its own passage and avoids recent repetition. The old writing is not an authority for biblical meaning. Fixed assignments: ${JSON.stringify(assignments)}`;
           const raw = await jsonCompletion(client,state.general_model,prompt,{request:'Return the complete seven-day plan as JSON.'},10000);
-          const plan = validateWeeklyPlan(raw.plan || raw);
-          for (const day of plan.days) {
-            if (day.scripture_reference !== assignments[day.day_offset].scripture_reference || day.scripture_text !== assignments[day.day_offset].scripture_text) throw Error('Experimental plan changed the fixed passage');
-          }
+          const proposed = raw.plan || raw;
+          if (!Array.isArray(proposed.days)) throw Error('Experimental plan omitted its days');
+          // A controlled experiment fixes its passages server-side, just as the
+          // writer receives a fixed reference/quotation in production. Evaluate
+          // the planner's situations, claims and practices against those texts.
+          const plan = validateWeeklyPlan({ ...proposed, days:proposed.days.map(day => ({ ...day,
+            ...assignments.find(item=>item.day_offset===Number(day.day_offset)) })) });
           trialPlans[variant] = { plan,theme };
         }));
+        result.planningArtifacts = trialPlans;
         if (planned.some(item=>item.status==='rejected')) {
           result.planningErrors = planned.flatMap((item,index)=>item.status==='rejected'?[{variant:['baseline','candidate'][index],error:item.reason.message}]:[]);
           continue;
         }
-        result.planningArtifacts = trialPlans;
       }
       const experiments = [];
       for (const [index, source] of cases.entries()) {
