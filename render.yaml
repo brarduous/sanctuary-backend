@@ -100,7 +100,7 @@ services:
       - key: OPENAI_API_KEY
         sync: false
       - key: GENERAL_DEVOTIONAL_MODEL
-        value: gpt-5-mini
+        value: gpt-6.1-sol
       - key: GENERAL_DEVOTIONAL_RUNWAY_DAYS
         value: 28
       - key: GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN
@@ -109,3 +109,24 @@ services:
         value: "2026-09-28"
       - key: GENERAL_DEVOTIONAL_CURRICULUM_V2_START_THEME_WEEK
         value: 31
+  - type: cron
+    name: sanctuary-devotional-weekly-quality
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "0 6 * * 1"
+    buildCommand: npm ci
+    startCommand: npm run cron-devotional-quality
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NODE_ENV
+        value: production
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: DEVOTIONAL_REVIEW_MODEL
+        value: gpt-6-astra

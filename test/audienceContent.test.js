@@ -9,6 +9,9 @@ const databasePath = require.resolve('../config/supabase');
 const originalDatabaseModule = require.cache[databasePath];
 require.cache[databasePath] = { exports: {
   from(table) {
+    if (table === 'devotional_quality_runtime') return {
+      select() { return this; }, eq() { return this; }, async maybeSingle() { return { data:null, error:null }; },
+    };
     assert.equal(table, 'system_prompts');
     return { select() { return this; }, eq(_column, key) { this.key = key; return this; }, async single() {
       return { data: { content: this.key === 'daily_devotional_personalization_wrapper'

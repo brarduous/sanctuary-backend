@@ -6,6 +6,7 @@ const authenticateUser = require('../middleware/auth');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
 const { searchSpotifyTracks, selectMinistrySafeTrack } = require('../utils/spotify');
+const { loadRuntime } = require('../utils/devotionalQuality');
 
 const normalizeStringList = (value, limit = 25) => Array.isArray(value)
     ? [...new Set(value.map((item) => String(item || '').trim()).filter(Boolean))].slice(0, limit)
@@ -60,7 +61,13 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         const favoriteGospelArtists = normalizeFavoriteGospelArtists(
             savedPreferences.musicPreferences?.favoriteGospelArtists
         );
-        const recentContext = Array.isArray(recentDevotionals)
+        const history = await supabase.from('daily_devotionals')
+            .select('title,scripture,content,short_form,created_at')
+            .eq('user_id', userId).eq('status', 'completed')
+            .gte('created_at', new Date(Date.now() - 14 * 86400000).toISOString())
+            .order('created_at', { ascending: false }).limit(14);
+        if (history.error) throw history.error;
+        const recentContext = history.data?.length ? history.data : Array.isArray(recentDevotionals)
             ? recentDevotionals.slice(0, 7).map((item) => ({
                 title: String(item?.title || '').trim(),
                 scripture: String(item?.scripture || item?.scripture_reference || '').trim(),
@@ -115,11 +122,13 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
         };
 
         try {
+            const runtime = await loadRuntime();
             // Use the new dynamic prompt!
             const systemPrompt = await getPersonalizedDevotionalPrompt(
                 userData,
                 generalDevo,
-                preferenceResult.data?.ai_tuning_notes || ''
+                preferenceResult.data?.ai_tuning_notes || '',
+                runtime
             );
             
             // Note: Keep user prompt simple since the system prompt now holds the context
@@ -128,7 +137,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
             const generatedContent = await callOpenAIAndProcessResult(
                 systemPrompt,
                 userPrompt,
-                'gpt-4o', // Consider bumping to gpt-4o for complex JSON adherence
+                runtime.personalized_model,
                 5000, 
                 "json_object" // Using JSON mode ensures we reliably get the fields we need
             );
@@ -190,7 +199,7 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
                 })
                 .eq('prayer_id', newPrayer.prayer_id);
 
-            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated personalized curriculum devotional', { tokens: generatedContent.tokens }, Date.now() - startTime);
+            logEvent('ai', 'backend', userId, 'generate_devotional', 'Successfully generated personalized curriculum devotional', { tokens: generatedContent.tokens, model:runtime.personalized_model, quality_revision:runtime.revision }, Date.now() - startTime);
 
         } catch (aiError) {
             console.error(`AI generation failed for devotional ${newDevotional.devotional_id}:`, aiError);

@@ -4,7 +4,7 @@ const VERSION = 'young-adult-content-v1';
 const VOICE = `
 ## Audience and voice (${VERSION})
 Write for late teens and young adults, including people new to church. Sound like a thoughtful friend: warm, direct, respectful, and easy to read aloud. Use everyday words, contractions, active verbs, and short sentences. Explain necessary church language in place.
-Use one relevant ordinary-life moment when it fits: a tense group chat, comparison while scrolling, exam pressure, a first job, irregular shifts, money stress, friendships, family expectations, loneliness, or uncertainty about the next step. These are possibilities, not facts about the reader. Follow supplied context; never assume age, college attendance, income, relationship status, or access to a safe family or church.
+Use an ordinary-life moment only when it fits the passage and supplied context. Vary situations across days; do not default to digital conversations or repeat a stock illustration. Examples in earlier templates are possibilities, not facts about the reader. Follow supplied context; never assume age, college attendance, income, relationship status, or access to a safe family or church.
 Avoid forced slang, memes, generational labels, trendy references, lecturing, empty hype, and generic openings like "In today's fast-paced world." Relatable means recognizable and useful, not talking down. Never put private profile details into shareable copy.
 `;
 
