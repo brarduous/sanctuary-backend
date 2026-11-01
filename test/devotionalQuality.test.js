@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { PGlite } = require('@electric-sql/pglite');
-const { repetitionReport, normalizeReview, mayPromote, defaults, validateRuntime } = require('../utils/devotionalQuality');
+const { repetitionReport, normalizeReview, mayPromote, defaults, validateRuntime, challengerModel } = require('../utils/devotionalQuality');
 const { reviewWindow, selectPersonalized, validateTrial, runDevotionalQualityReview } = require('../services/devotionalQualityReview');
 const grade = (id, value = 85) => ({ id, helpfulness:value, accuracy:95, audience:value, freshness:value, seriousConcern:false, evidence:['Specific supporting excerpt'] });
 
@@ -33,6 +33,11 @@ test('promotion requires meaningful gain and no per-case accuracy or other dimen
   assert.equal(mayPromote(baseline,[...candidate.slice(0,2),{...candidate[2],accuracy:94}]),false);
   assert.equal(mayPromote(baseline,[...candidate.slice(0,2),{...candidate[2],seriousConcern:true}]),false);
   assert.equal(mayPromote(baseline,candidate.slice(0,2)),false);
+});
+test('model selection escalates weak curriculum planning and keeps personalization comparisons economical', () => {
+  assert.equal(challengerModel('general','gpt-5-mini',{accuracy:75,freshness:55},1),'gpt-6-astra');
+  assert.equal(challengerModel('personalized','gpt-4o',{accuracy:80,freshness:65},0),'gpt-6.1-sol');
+  assert.equal(challengerModel('general','gpt-6.1-sol',{accuracy:85,freshness:70},0),'gpt-6-astra');
 });
 test('review validation fails closed on incomplete, duplicated and invalid model grades', () => {
   assert.deepEqual(normalizeReview({reviews:[grade('a')]},['a']),[grade('a')]);

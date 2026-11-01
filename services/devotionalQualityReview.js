@@ -1,6 +1,6 @@
 const crypto = require('node:crypto');
 const { VOICE, EVALUATION_CRITERIA } = require('../utils/audienceContentPolicy');
-const { loadRuntime, overlay, RULES, repetitionReport, normalizeReview, mayPromote, score } = require('../utils/devotionalQuality');
+const { loadRuntime, overlay, RULES, repetitionReport, normalizeReview, mayPromote, score, challengerModel } = require('../utils/devotionalQuality');
 
 const DAY = 86400000;
 const iso = date => date.toISOString().slice(0, 10);
@@ -32,7 +32,7 @@ async function jsonCompletion(client, model, system, input, budget = 8000) {
   const response = await client.chat.completions.create({ model,
     messages: [{ role: 'system', content: system }, { role: 'user', content: JSON.stringify(input) }],
     response_format: { type: 'json_object' }, max_completion_tokens: budget,
-  }, { timeout: 120000, maxRetries: 0 });
+  }, { timeout: 180000, maxRetries: 0 });
   if (response.choices?.[0]?.finish_reason !== 'stop') throw Error('Incomplete devotional quality completion');
   return JSON.parse(response.choices[0].message.content);
 }
@@ -71,7 +71,8 @@ function validateTrial(output, source, lane) {
 }
 
 async function runDevotionalQualityReview({ db = require('../config/supabase'), client = require('../config/openai'), now = new Date(), dryRun = false,
-  reviewerModel = process.env.DEVOTIONAL_REVIEW_MODEL || 'gpt-6-astra' } = {}) {
+  reviewerModel = process.env.DEVOTIONAL_REVIEW_MODEL || 'gpt-6-astra', lanes = ['general','personalized'] } = {}) {
+  if (!lanes.length || lanes.some(lane=>!['general','personalized'].includes(lane))) throw Error('Invalid review lanes');
   const window = reviewWindow(now);
   if (!dryRun) {
     const claimed = unwrap(await db.rpc('claim_devotional_quality_week', { p_week: window.start }));
@@ -94,7 +95,7 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
     const next = { ...runtime };
     // Stable weekly hash rotates selection instead of always reviewing the busiest reader first.
     personalized.sort((a,b) => crypto.createHash('sha256').update(window.start + a.user_id).digest('hex').localeCompare(crypto.createHash('sha256').update(window.start + b.user_id).digest('hex')));
-    for (const lane of ['general','personalized']) {
+    for (const lane of lanes) {
       const rows = lane === 'general' ? general : selectPersonalized(personalized);
       if (!rows.length) { report.lanes[lane] = { skipped: 'no_completed_personalized_samples' }; continue; }
       const readerIds = new Map();
@@ -111,12 +112,16 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
       result.letterGrades = Object.fromEntries(Object.entries(result.averages).map(([key,value]) => [key,letterGrade(value)]));
       console.log('[Devotional Quality]', JSON.stringify({ lane, window, samples:rows.length, averages:result.averages }));
       const needed = Object.keys(RULES).filter(key => key === 'variety' ? repetition.repeatedReaderCount > 0 || result.averages.freshness < 85
-        : result.averages[key] < (key === 'accuracy' ? 95 : 85));
+        : (key === 'accuracy' && result.seriousConcernCount > 0) || result.averages[key] < (key === 'accuracy' ? 95 : 85));
       const currentModel = runtime[`${lane}_model`];
       // Migrate legacy models through matched evaluation even if the weekly grade is good.
       if (!needed.length && !['gpt-4o','gpt-5-mini'].includes(currentModel)) continue;
       const candidateRules = [...new Set([...runtime[`${lane}_rules`], ...needed])];
-      const candidateModel = ['gpt-4o','gpt-5-mini'].includes(currentModel) ? 'gpt-6.1-sol' : 'gpt-6-astra';
+      const candidateModel = challengerModel(lane,currentModel,result.averages,result.seriousConcernCount);
+      if (candidateModel === currentModel && candidateRules.length === runtime[`${lane}_rules`].length) {
+        result.noChangeReason = 'approved_improvements_already_active';
+        continue;
+      }
       const candidateRuntime = { ...runtime, [`${lane}_rules`]: candidateRules, [`${lane}_model`]: candidateModel };
       const { buildSingleDayPrompt, buildWeeklyPlanPrompt, validateWeeklyPlan } = require('../cron/generateGeneralDevotionals');
       const { getPersonalizedDevotionalPrompt } = require('../prompts');

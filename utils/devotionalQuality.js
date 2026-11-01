@@ -53,10 +53,14 @@ function normalizeReview(value, expectedIds) {
   return value.reviews;
 }
 const score = rows => rows.reduce((sum, row) => sum + (row.helpfulness + row.accuracy + row.audience + row.freshness) / 4, 0) / rows.length;
+function challengerModel(lane, current, averages, concerns = 0) {
+  if (!['gpt-4o','gpt-5-mini'].includes(current)) return 'gpt-6-astra';
+  return lane === 'general' && (concerns > 0 || averages.accuracy < 85 || averages.freshness < 60) ? 'gpt-6-astra' : 'gpt-6.1-sol';
+}
 function mayPromote(baseline, candidate) {
   if (!baseline.length || baseline.length !== candidate.length) return false;
   return candidate.every((row, i) => !row.seriousConcern && row.accuracy >= 90 && row.accuracy >= baseline[i].accuracy
     && ['helpfulness', 'audience', 'freshness'].every(key => row[key] >= 80 && row[key] >= baseline[i][key]))
     && score(candidate) >= score(baseline) + 5;
 }
-module.exports = { DEFAULT_MODEL, MODELS, RULES, VARIETY_POLICY, defaults, validateRuntime, loadRuntime, overlay, bodyText, repetitionReport, normalizeReview, mayPromote, score };
+module.exports = { DEFAULT_MODEL, MODELS, RULES, VARIETY_POLICY, defaults, validateRuntime, loadRuntime, overlay, bodyText, repetitionReport, normalizeReview, mayPromote, score, challengerModel };
