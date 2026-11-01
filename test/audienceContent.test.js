@@ -32,8 +32,8 @@ test('all reader generation paths apply audience policy after stale templates an
     [() => prompts.getPersonalizedDevotionalPrompt({}, { title: 'Listen Before You Reply', scripture_reference: 'James 1:19', content: 'Listen before speaking.' }), 'Listen Before You Reply'],
     [() => prompts.getGeneralDevotionalBatchPrompt({ theme_title: 'Trust', scripture_focus: 'Psalms' }), 'Trust'],
     [() => prompts.getAdviceGuidancePrompt(), '15-35 words'],
-    [() => prompts.getScripturalOutlookPrompt(), '35-60 word'],
-    [() => prompts.getDailyNewsSynopsisPrompt(), '60-100 words TOTAL'],
+    [() => prompts.getScripturalOutlookPrompt(), 'news-reader-copy-v2'],
+    [() => prompts.getDailyNewsSynopsisPrompt(), 'TLDR with Christian judgment'],
     [() => prompts.getNewsTaxonomyBreakdownPrompt({ taxonomyName: 'Housing', synopses: 'Council approves housing plan.' }), 'Housing'],
   ];
   for (const [generate, expected] of cases) {
@@ -62,8 +62,8 @@ test('daily brief uses factual summaries from object and serialized outlooks, wi
 });
 
 test('daily brief rejects malformed or prayer-only outputs and retains usage with valid nuggets', () => {
-  const valid = { synopsis: 'A reported development.\n\nA separate reported development.', thought_to_remember: 'A short original reflection.', prayer: 'Lord, help our neighbors.' };
-  assert.deepEqual(parseNewsBriefResponse(JSON.stringify(valid), 321), { ...valid, tokens: 321 });
+  const valid = {synopsis:'A reported development.',details:'Officials explained the proposal; a vote has not yet taken place.',stories:[{headline:'A housing proposal',summary:'The council proposed new housing support.',christianAssessment:{verdict:'aligned',focus:'Care for neighbors',reason:'Helping neighbors find shelter reflects justice and mercy.',scriptureReference:'Micah 6:8'}}],thought_to_remember:'A short original reflection.',prayer:'Lord, help our neighbors.'};
+  const parsed=parseNewsBriefResponse(JSON.stringify(valid),321);assert.equal(parsed.tokens,321);assert.equal(parsed.details,valid.details);assert.match(parsed.synopsis,/Christian assessment/);assert.match(parsed.synopsis,/Micah 6:8/);assert.equal(parsed.stories.length,1);
   for (const invalid of ['not json', 'null', '[]', JSON.stringify({ ...valid, synopsis: '' }), JSON.stringify({ ...valid, synopsis: ['wrong type'] }), JSON.stringify({ prayer: valid.prayer })]) {
     assert.throws(() => parseNewsBriefResponse(invalid, 0));
   }

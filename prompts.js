@@ -201,7 +201,7 @@ const getCommunityPrayerPrompt = async () => {
 };
 
 const getDailyNewsSynopsisPrompt = async () => {
-    return applyAudiencePolicy('daily_news_synopsis', await fetchPrompt('daily_news_synopsis'));
+    return applyAudiencePolicy('daily_news_synopsis', await fetchPrompt('daily_news_synopsis'))+'\nFINAL RESPONSE CONTRACT: Earlier instructions listing only synopsis, thought_to_remember and prayer are extended. You MUST also return details (string) and stories (array of 1-3 objects). Each story MUST have headline, summary and christianAssessment with verdict, focus, reason, scriptureReference. The TLDR includes the Christian judgment; more factual context goes in details.';
 };
 
 const getGeneralDevotionalBatchPrompt = async (themeData) => {
@@ -214,7 +214,7 @@ const getGeneralDevotionalBatchPrompt = async (themeData) => {
 
 const getScripturalOutlookPrompt = async () => {
     const basePrompt = await fetchPrompt('news_generator');
-    return applyAudiencePolicy('news_generator', `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}\n\n${NEWS_EDITORIAL_JSON_INSTRUCTIONS}`);
+    return applyAudiencePolicy('news_generator', `${basePrompt}\n\n${NEWS_IMPACT_JSON_INSTRUCTIONS}\n\n${NEWS_EDITORIAL_JSON_INSTRUCTIONS}`)+'\nFINAL ARTICLE CONTRACT: In addition to all existing required fields, tldr MUST be an object with summary and christianAssessment {verdict,focus,reason,scriptureReference}. newsSummary contains further factual detail rather than repeating synopsis. A real Scripture reference and explicit Christian judgment in the TLDR are mandatory.';
 };
 
 const getScripturalOutlookArticleInputPrompt = async (article, existingTaxonomies) => {

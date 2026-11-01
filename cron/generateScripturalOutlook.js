@@ -16,6 +16,8 @@ const { evaluateNewsImpactWithAI } = require('../utils/newsImpact');
 const { normalizeVerificationAssessment } = require('../utils/newsVerification');
 const { assessEvidencePackage, discoveryRankFor, wordCount } = require('../utils/newsEvidence');
 const { reconcileOutlookCluster, processRequestedClusterRegenerations } = require('../utils/newsClusters');
+const {normalizeNewsReaderCopy}=require('../utils/newsReaderCopy');
+const {reviewNewsReaderCopy}=require('../utils/newsReaderReview');
 const { evaluatePublicationEligibility, REVIEW_THRESHOLD } = require('../utils/newsEditorialPolicy');
 const {
     getScripturalOutlookPrompt,
@@ -948,6 +950,9 @@ async function saveDiscoveryCandidate(article, evidence, evidenceStatus = 'await
 }
 
 async function generateAndSaveScripturalOutlook(options = {}) {
+  const {reconcilePendingNews}=require('../services/newsPublication');
+  const recovery=await reconcilePendingNews(supabase,{apply:true});
+  console.log('Automated news publication recovery:',JSON.stringify(recovery));
   console.log('Starting scriptural outlook generation cron job...');
     try {
       const regenerated = await processRequestedClusterRegenerations();
@@ -1010,26 +1015,35 @@ async function generateAndSaveScripturalOutlook(options = {}) {
     const promptInput = await getScripturalOutlookArticleInputPrompt(article, existingTaxonomies);
     try {
       // Call the AI function with the prompt and content for the current article
-      const aiResponse = await callOpenAIAndProcessResult(outlookPrompt, promptInput, 'gpt-5-mini', 10000, 'json_object');
-      
+      let aiResponse,readerReview,readerFeedback='';
+      for(let attempt=0;attempt<2;attempt++){
+        try{
+          aiResponse=normalizeNewsReaderCopy(await callOpenAIAndProcessResult(outlookPrompt,promptInput+(readerFeedback ? '\nRequired corrections to the prior reader draft (editing feedback, not source facts): '+readerFeedback:''),'gpt-5-mini',10000,'json_object'));
+          readerReview=await reviewNewsReaderCopy(openai,{source:[article,...(article.corroboratingSources || [])],copy:aiResponse});
+          if(readerReview.accepted)break;readerFeedback=readerReview.issues.join('; ');
+        }catch(error){readerFeedback=error.message;readerReview={accepted:false};}
+      }
+      if(!readerReview?.accepted)throw new Error('News reader copy failed automatic source/Scripture/audience checks: '+readerFeedback);
       if (aiResponse && typeof aiResponse === 'object') {
-        aiResponse.contentSchemaVersion = 3;
+        aiResponse.readerCopyReview={...readerReview,method:'Separate automated source/Scripture/audience check; not human review.',checkedAt:new Date().toISOString()};
+        aiResponse.contentSchemaVersion = 4;
         aiResponse.editorialReview = {
-            status: 'pending_human_review',
+            status: 'awaiting_verification',
             reviewerName: null,
             reviewedAt: null,
         };
+        aiResponse.title=aiResponse.title || article.title;
+        aiResponse.synopsis=aiResponse.synopsis || aiResponse.newsSummary || '';
         aiResponse.generatedAt = new Date().toISOString();
         const allowedSources = [article, ...(article.corroboratingSources || [])];
         const allowedUrls = new Set(allowedSources.map((source) => source.url));
-        aiResponse.sources = Array.isArray(aiResponse.sources) && aiResponse.sources.length
-            ? aiResponse.sources.filter((source) => source && allowedUrls.has(source.url))
-            : allowedSources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' }));
+        // Publisher metadata comes from fetched reporting, never model-written source labels.
+        aiResponse.sources = allowedSources.filter(source=>allowedUrls.has(source.url)).map((source,index)=>({title:source.title,publisher:source.publisher,url:source.url,type:index===0 ? 'primary_reporting':'additional_reporting'}));
         aiResponse.additionalSourcesNeeded = aiResponse.sources.length < 2;
 
         // 1. Save the core outlook and get its ID
         const outlook = {
-            article_title: aiResponse.title,
+            article_title: aiResponse.title || article.title,
             article_url: article.url,
             article_body: article.body,
             article_thumbnail_url: article.thumbnail_url,
@@ -1068,11 +1082,10 @@ async function generateAndSaveScripturalOutlook(options = {}) {
             const verification = await persistNewsVerification(outlookId, article, aiResponse.originalArticleAssessment || {});
             const publication = evaluatePublicationEligibility({ article, generated: aiResponse, verification });
             aiResponse.editorialReview = publication.eligible
-                ? { status: 'automated_approved', reviewerName: 'Sanctuary News Editorial Desk', reviewedAt: new Date().toISOString() }
-                : { status: 'pending_human_review', reviewerName: null, reviewedAt: null, reasons: publication.reasons };
+                ? { status: 'automated_approved', reviewerName: null, reviewedAt: null }
+                : { status: 'awaiting_evidence', reviewerName: null, reviewedAt: null, reasons: publication.reasons };
             if (!publication.eligible) {
-                await supabase.from('editorial_alerts').upsert({ outlook_id: outlookId, alert_type: 'publication_review', reasons: publication.reasons, last_detected_at: new Date().toISOString() }, { onConflict: 'outlook_id,alert_type' });
-                await logEvent('warn', 'news', null, 'news_low_confidence_review_required', 'News article requires editorial review before publication', { outlookId, confidenceScore: verification.confidenceScore, threshold: REVIEW_THRESHOLD, reasons: publication.reasons });
+                await logEvent('warn', 'news', null, 'news_awaiting_evidence', 'Automated news publication checks did not pass', { outlookId, confidenceScore: verification.confidenceScore, threshold: REVIEW_THRESHOLD, reasons: publication.reasons });
             }
             aiResponse.originalArticleAssessment = {
                 truthfulnessScore: verification.truthfulnessScore,
@@ -1081,7 +1094,9 @@ async function generateAndSaveScripturalOutlook(options = {}) {
                 assessedAt: new Date().toISOString(),
                 assessmentVersion: 1,
             };
-            await supabase.from('scriptural_outlooks').update({ ai_outlook: aiResponse, publication_status: publication.eligible ? 'published' : 'pending_review', publication_review_reasons: publication.reasons, publication_checked_at: new Date().toISOString() }).eq('id', outlookId);
+            aiResponse.automatedPublication={policyVersion:'news-auto-publication-v1',checkedAt:new Date().toISOString(),notices:publication.notices};
+            const {error:publicationError}=await supabase.from('scriptural_outlooks').update({ ai_outlook: aiResponse, publication_status: publication.eligible ? 'published' : 'pending_review', publication_review_reasons: publication.reasons, publication_checked_at: new Date().toISOString() }).eq('id', outlookId);
+            if(publicationError)throw publicationError;
         } catch (verificationError) {
             console.error(`Failed to persist verification for outlook ${outlookId}:`, verificationError);
         }

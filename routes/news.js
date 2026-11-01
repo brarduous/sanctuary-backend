@@ -208,7 +208,7 @@ async function hydratePublicVerification(outlook) {
     return {
         ...outlook,
         verification: publicAssessment(scores.data?.[0], claims.data, sources.data, notices.data),
-        editorialStatus: review ? 'reviewed' : hasHighAutomatedConfidence ? 'automated_high_confidence' : 'pending_human_review',
+        editorialStatus: review ? 'reviewed' : hasHighAutomatedConfidence ? 'automated_high_confidence' : scores.data?.length ? 'automated_assessment':'limited_evidence',
         reviewedBy: review?.reviewer_display_name || null,
         reviewedAt: review?.created_at || null,
     };
