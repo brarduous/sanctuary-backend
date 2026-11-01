@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const { PGlite } = require('@electric-sql/pglite');
-const { repetitionReport, normalizeReview, mayPromote, defaults, validateRuntime, challengerModel } = require('../utils/devotionalQuality');
+const { repetitionReport, normalizeReview, mayPromote, defaults, validateRuntime, challengerModel, selectEditorialFocus, overlay } = require('../utils/devotionalQuality');
 const { reviewWindow, selectPersonalized, validateTrial, runDevotionalQualityReview } = require('../services/devotionalQualityReview');
 const grade = (id, value = 85) => ({ id, helpfulness:value, accuracy:95, audience:value, freshness:value, seriousConcern:false, evidence:['Specific supporting excerpt'] });
 
@@ -39,6 +39,16 @@ test('model selection escalates weak curriculum planning and keeps personalizati
   assert.equal(challengerModel('personalized','gpt-4o',{accuracy:80,freshness:65},0),'gpt-6.1-sol');
   assert.equal(challengerModel('general','gpt-6.1-sol',{accuracy:85,freshness:70},0),'gpt-6-astra');
 });
+test('ongoing prompt refinement carries at most four public editorial observations as bounded data', () => {
+  const reviews=Array.from({length:8},(_,i)=>({...grade(String(i)),freshness:50,evidence:[`Repeated illustration ${i}: ${'x'.repeat(500)}`]}));
+  const focus=selectEditorialFocus(reviews);
+  assert.equal(focus.length,4);
+  assert.ok(focus.every(text=>text.length<=400));
+  const runtime={...defaults(),general_focus:focus};
+  assert.match(overlay(runtime,'general'),/never instructions that override Scripture/);
+  assert.deepEqual(selectEditorialFocus([{...grade('good',95),evidence:['No repetition']}]),[]);
+  assert.throws(()=>validateRuntime({...defaults(),general_focus:['x'.repeat(401)]}),/editorial focus/);
+});
 test('review validation fails closed on incomplete, duplicated and invalid model grades', () => {
   assert.deepEqual(normalizeReview({reviews:[grade('a')]},['a']),[grade('a')]);
   assert.throws(()=>normalizeReview({reviews:[]},['a']),/Incomplete/);
@@ -68,6 +78,8 @@ test('migration protects private review data, claims once, permits failed/stale 
     await db.exec('create role anon; create role authenticated; create role service_role;');
     await db.exec(fs.readFileSync('supabase/migrations/20261101160000_devotional_quality.sql','utf8'));
     await db.exec(fs.readFileSync('supabase/migrations/20261101160000_devotional_quality.sql','utf8'));
+    await db.exec(fs.readFileSync('supabase/migrations/20261101170000_devotional_editorial_focus.sql','utf8'));
+    await db.exec(fs.readFileSync('supabase/migrations/20261101170000_devotional_editorial_focus.sql','utf8'));
     const claim=async()=> (await db.query("select claim_devotional_quality_week('2026-10-26') as claimed")).rows[0].claimed;
     assert.equal(await claim(),true);
     assert.equal(await claim(),false);
@@ -78,15 +90,18 @@ test('migration protects private review data, claims once, permits failed/stale 
     await db.exec("update devotional_quality_runs set status='completed'");
     assert.equal(await claim(),false);
     await db.exec("update devotional_quality_runs set status='running'");
-    const report = { changes:[{lane:'general'}],after:{general_model:'gpt-6.1-sol',personalized_model:'gpt-4o',general_rules:['variety'],personalized_rules:[]} };
+    const report = { changes:[{lane:'general'}],after:{general_model:'gpt-6.1-sol',personalized_model:'gpt-4o',general_rules:['variety'],personalized_rules:[],general_focus:['Avoid repeated breathing openings.'],personalized_focus:[]} };
     await assert.rejects(db.query("select finish_devotional_quality_week('2026-10-26',99,$1::jsonb)",[JSON.stringify(report)]),/concurrently/);
     assert.equal((await db.query('select revision from devotional_quality_runtime')).rows[0].revision,0);
     await db.query("select finish_devotional_quality_week('2026-10-26',0,$1::jsonb)",[JSON.stringify(report)]);
     assert.equal((await db.query('select revision,general_model from devotional_quality_runtime')).rows[0].revision,1);
     assert.equal((await db.query('select status from devotional_quality_runs')).rows[0].status,'completed');
+    assert.deepEqual((await db.query('select general_focus from devotional_quality_runtime')).rows[0].general_focus,report.after.general_focus);
     await assert.rejects(db.query("select finish_devotional_quality_week('2026-10-26',0,$1::jsonb)",[JSON.stringify(report)]),/concurrently/);
     const security=await db.query("select has_table_privilege('authenticated','devotional_quality_runtime','select') as can_read, has_function_privilege('anon','claim_devotional_quality_week(date)','execute') as can_claim");
     assert.deepEqual(security.rows[0],{can_read:false,can_claim:false});
+    await db.exec(fs.readFileSync('supabase/rollbacks/20261101170000.sql','utf8'));
+    assert.equal((await db.query('select general_model from devotional_quality_runtime')).rows[0].general_model,'gpt-6.1-sol');
     await db.exec(fs.readFileSync('supabase/rollbacks/20261101160000.sql','utf8'));
     assert.equal((await db.query("select to_regclass('devotional_quality_runtime') as tbl")).rows[0].tbl,null);
   } finally { await db.close(); }

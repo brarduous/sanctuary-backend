@@ -6,7 +6,7 @@ const OpenAI = require('openai');
 const { logEvent } = require('../utils/helpers');
 const { VOICE, VERSION: AUDIENCE_VERSION, applyAudiencePolicy } = require('../utils/audienceContentPolicy');
 const { DEVOTIONAL_PLAN_VERSION, FEATURED_SCRIPTURE_POLICY, normalizeFeaturedReference, validateFeaturedScripture, validateFeaturedWeek } = require('../utils/featuredScripture');
-const { DEFAULT_MODEL, VARIETY_POLICY, loadRuntime, overlay } = require('../utils/devotionalQuality');
+const { VARIETY_POLICY, loadRuntime, overlay } = require('../utils/devotionalQuality');
 
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY);
 let openaiClient;
@@ -17,7 +17,6 @@ const openai = new Proxy({}, {
     return typeof value === 'function' ? value.bind(openaiClient) : value;
   },
 });
-const GENERAL_DEVOTIONAL_MODEL = process.env.GENERAL_DEVOTIONAL_MODEL || DEFAULT_MODEL;
 const DEFAULT_RUNWAY_DAYS = Math.max(7, Number.parseInt(process.env.GENERAL_DEVOTIONAL_RUNWAY_DAYS, 10) || 28);
 const DEFAULT_MAX_WEEKS_PER_RUN = Math.max(1, Number.parseInt(process.env.GENERAL_DEVOTIONAL_MAX_WEEKS_PER_RUN, 10) || 2);
 const RECENT_CONTENT_DAYS = Math.max(28, Number.parseInt(process.env.GENERAL_DEVOTIONAL_RECENT_CONTENT_DAYS, 10) || 90);

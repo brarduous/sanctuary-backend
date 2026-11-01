@@ -7,6 +7,7 @@ const { DEVOTIONAL_PLAN_VERSION } = require('../utils/featuredScripture');
 const { createHash } = require('node:crypto');
 const { isDeepStrictEqual } = require('node:util');
 const { VERSION: AUDIENCE_VERSION } = require('../utils/audienceContentPolicy');
+const { loadRuntime } = require('../utils/devotionalQuality');
 
 const dateInNewYork = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
 const dateAtOffset = (start, offset) => new Date(new Date(`${start}T00:00:00Z`).getTime() + offset * 86400000).toISOString().slice(0, 10);
@@ -35,6 +36,7 @@ async function refreshScheduledDevotionals() {
   if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 3) throw new Error('Refresh concurrency must be 1-3.');
   if (process.env.DEVOTIONAL_REFRESH_CONFIRM !== cutoff) throw new Error(`Set DEVOTIONAL_REFRESH_CONFIRM=${cutoff} to refresh future scheduled content.`);
   const db = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
+  const runtime = await loadRuntime(db);
   const query = async q => { const { data, error } = await q; if (error) throw error; return data || []; };
   const windowQuery = q => includeToday ? q.gte('date', cutoff) : q.gt('date', cutoff);
   const [scheduled, weeks, themes] = await Promise.all([
@@ -51,7 +53,7 @@ async function refreshScheduledDevotionals() {
   console.log(JSON.stringify({ phase: 'snapshot', cutoff, includeToday, dates: scheduled.map(row => row.date), previousDigest: digest(scheduled) }));
   const dates = new Set(scheduled.map(row => row.date));
   const firstWeekStart = weeks[0].start_date;
-  const recent = await query(db.from('general_devotionals').select('date,title,scripture_reference').gte('date', dateAtOffset(firstWeekStart, -90)).lt('date', firstWeekStart).order('date', { ascending: false }));
+  const recent = await query(db.from('general_devotionals').select('date,title,scripture_reference,content').gte('date', dateAtOffset(firstWeekStart, -90)).lt('date', firstWeekStart).order('date', { ascending: false }));
   const prepared = [];
   for (const week of weeks.filter(week => scheduled.some(row => row.date >= week.start_date && row.date <= week.end_date))) {
     const theme = themes.find(item => item.week_number === week.theme_week_number);
@@ -60,8 +62,8 @@ async function refreshScheduledDevotionals() {
     const assignment = { ...theme, formation_goal: week.formation_goal || theme.formation_goal };
     const existingPlan = preservePlan ? validateWeeklyPlan(week.plan) : null;
     const generated = existingPlan
-      ? { ...await generatePlannedEntries(assignment, existingPlan, recent, { concurrency }), plan: existingPlan }
-      : await generateEntries(assignment, recent, { concurrency });
+      ? { ...await generatePlannedEntries(assignment, existingPlan, recent, { concurrency, runtime }), plan: existingPlan }
+      : await generateEntries(assignment, recent, { concurrency, runtime });
     const entries = validateWeeklyEntries(generated.entries);
     const rows = buildScheduledRows(week, entries, dates, cutoff, includeToday);
     // Preserve published day briefs for the partially elapsed current week.
@@ -74,7 +76,7 @@ async function refreshScheduledDevotionals() {
         : day),
     };
     prepared.push({ week, plan, rows });
-    recent.unshift(...rows.map(({ date, title, scripture_reference }) => ({ date, title, scripture_reference })));
+    recent.unshift(...rows.map(({ date, title, scripture_reference, content }) => ({ date, title, scripture_reference, content })));
     console.log(JSON.stringify({ phase: 'prepared', startDate: week.start_date, selections: rows.map(({ date, scripture_reference }) => ({ date, scripture_reference })) }));
   }
   const rows = prepared.flatMap(item => item.rows);
@@ -93,7 +95,7 @@ async function refreshScheduledDevotionals() {
   for (const { week, plan } of prepared) {
     const updated = await query(db.from('devotional_week_plans').update({
       plan, formation_goal: plan.formation_goal, prompt_version: DEVOTIONAL_PLAN_VERSION,
-      model: process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-5-mini', status: 'published', updated_at: new Date().toISOString(),
+      model: runtime.general_model, status: 'published', updated_at: new Date().toISOString(),
     }).eq('id', week.id).select('id'));
     if (updated.length !== 1) throw new Error(`Failed to update week plan ${week.start_date}.`);
   }

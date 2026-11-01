@@ -1,6 +1,6 @@
 const crypto = require('node:crypto');
 const { VOICE, EVALUATION_CRITERIA } = require('../utils/audienceContentPolicy');
-const { loadRuntime, overlay, RULES, repetitionReport, normalizeReview, mayPromote, score, challengerModel } = require('../utils/devotionalQuality');
+const { loadRuntime, overlay, RULES, repetitionReport, normalizeReview, mayPromote, score, challengerModel, QUALITY_POLICY_VERSION, selectEditorialFocus } = require('../utils/devotionalQuality');
 
 const DAY = 86400000;
 const iso = date => date.toISOString().slice(0, 10);
@@ -63,7 +63,7 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
     const claimed = unwrap(await db.rpc('claim_devotional_quality_week', { p_week: window.start }));
     if (claimed !== true) return { skipped: true, reason: 'week_already_claimed', ...window };
   }
-  const report = { ...window, reviewerModel, maxCompletionTokensPerRun:188000,
+  const report = { ...window, reviewerModel, policyVersion:QUALITY_POLICY_VERSION, sourceCommit:process.env.RENDER_GIT_COMMIT || null, maxCompletionTokensPerRun:188000,
     scoring: 'model editorial estimates; not audience research or independent source verification', lanes: {}, changes: [] };
   try {
     const runtime = await loadRuntime(db);
@@ -103,11 +103,16 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
       if (!needed.length && !['gpt-4o','gpt-5-mini'].includes(currentModel)) continue;
       const candidateRules = [...new Set([...runtime[`${lane}_rules`], ...needed])];
       const candidateModel = challengerModel(lane,currentModel,result.averages,result.seriousConcernCount);
-      if (candidateModel === currentModel && candidateRules.length === runtime[`${lane}_rules`].length) {
+      // Shared prompt refinements may only quote PUBLIC curriculum reviews.
+      // Never transfer a reader's private personalization into global prompts.
+      const publicFocus = selectEditorialFocus(report.lanes.general?.grades || []);
+      const candidateFocus = publicFocus.length ? publicFocus : runtime[`${lane}_focus`];
+      if (candidateModel === currentModel && candidateRules.length === runtime[`${lane}_rules`].length
+        && JSON.stringify(candidateFocus) === JSON.stringify(runtime[`${lane}_focus`])) {
         result.noChangeReason = 'approved_improvements_already_active';
         continue;
       }
-      const candidateRuntime = { ...runtime, [`${lane}_rules`]: candidateRules, [`${lane}_model`]: candidateModel };
+      const candidateRuntime = { ...runtime, [`${lane}_rules`]: candidateRules, [`${lane}_model`]: candidateModel, [`${lane}_focus`]:candidateFocus };
       const { buildSingleDayPrompt, buildWeeklyPlanPrompt, validateWeeklyPlan } = require('../cron/generateGeneralDevotionals');
       const { getPersonalizedDevotionalPrompt } = require('../prompts');
       const cases = [0,3,6].map(index => general[index]);
@@ -170,12 +175,13 @@ async function runDevotionalQualityReview({ db = require('../config/supabase'), 
       const baseline = experiments.filter(item => item.variant === 'baseline').map(item => item.review);
       const candidate = experiments.filter(item => item.variant === 'candidate').map(item => item.review);
       const promoted = baseline.length === 3 && mayPromote(baseline, candidate);
-      result.comparison = { baselineModel: currentModel, candidateModel, candidateRules, completedPairs: baseline.length,
+      result.comparison = { baselineModel: currentModel, candidateModel, candidateRules, candidateFocus, completedPairs: baseline.length,
         baselineScore: baseline.length ? score(baseline) : null, candidateScore: candidate.length ? score(candidate) : null, promoted };
       if (promoted) {
         next[`${lane}_model`] = candidateModel;
         next[`${lane}_rules`] = candidateRules;
-        report.changes.push({ lane, model: candidateModel, rules: candidateRules });
+        next[`${lane}_focus`] = candidateFocus;
+        report.changes.push({ lane, model: candidateModel, rules: candidateRules, focus:candidateFocus });
       }
     }
     report.after = { ...next, revision: runtime.revision + (report.changes.length ? 1 : 0) };
