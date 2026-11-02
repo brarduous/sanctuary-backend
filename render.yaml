@@ -160,6 +160,8 @@ services:
     buildCommand: npm ci
     startCommand: npm run cron-content-quality
     envVars:
+      - key: CONTENT_QUALITY_AUTOREPAIR_ENABLED
+        value: "true"
       - key: NODE_ENV
         value: production
       - key: NODE_VERSION
@@ -172,3 +174,23 @@ services:
         sync: false
       - key: APP_QUALITY_REVIEW_MODEL
         value: gpt-6-astra
+
+  - type: cron
+    name: sanctuary-automatic-content-replacements
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "*/30 * * * *"
+    buildCommand: npm ci
+    startCommand: npm run cron-content-replacements
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

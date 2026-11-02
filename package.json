@@ -61,7 +61,8 @@
     "cron-discoveries:status": "node cron/generateDiscoveries.js --status",
     "eval:discovery-accuracy": "node scripts/discoveries/evaluateAccuracy.js",
     "draft:discoveries": "node scripts/discoveries/draftBatch.js",
-    "qa:discoveries:hosted": "node scripts/discoveries/verifyHostedJourney.js"
+    "qa:discoveries:hosted": "node scripts/discoveries/verifyHostedJourney.js",
+    "cron-content-replacements": "node cron/replaceWeakContent.js"
   },
   "keywords": [],
   "author": "",

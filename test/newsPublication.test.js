@@ -29,3 +29,7 @@ test('manual withholding and failed writes cannot be reported as successful publ
  assert.deepEqual((await reconcilePendingNews(withheld,{now,apply:true})).published,[]);assert.equal(withheld.updates,0);
  const failed=await reconcilePendingNews(database(row,{failUpdate:true}),{now,apply:true});assert.deepEqual(failed.published,[]);assert.equal(failed.failed.length,1);
 });
+test('generic publication reconciliation cannot release a copy reserved for automatic replacement',async()=>{
+ const db=database({...row,publication_review_reasons:['automatic_quality_replacement']});
+ const result=await reconcilePendingNews(db,{now,apply:true});assert.deepEqual(result.published,[]);assert.equal(db.updates,0);assert.deepEqual(result.held[0].reasons,['automatic_replacement_in_progress']);
+});

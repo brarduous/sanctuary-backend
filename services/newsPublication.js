@@ -13,7 +13,7 @@ function publicationForSavedArticle(row,{sources=[],scores=[],claims=[]}) {
 }
 async function reconcilePendingNews(db,{apply=false,hours=72,limit=200,now=new Date()}={}) {
   const since=new Date(now.getTime()-Math.min(72,Math.max(1,hours))*3600000).toISOString();
-  const {data:rows,error}=await db.from('scriptural_outlooks').select('id,slug,article_title,article_url,article_thumbnail_url,publish_date,ai_outlook').eq('publication_status','pending_review').is('superseded_by_outlook_id',null).gte('created_at',since).order('created_at',{ascending:false}).limit(Math.min(200,Math.max(1,limit)));
+  const {data:rows,error}=await db.from('scriptural_outlooks').select('id,slug,article_title,article_url,article_thumbnail_url,publish_date,ai_outlook,publication_review_reasons').eq('publication_status','pending_review').is('superseded_by_outlook_id',null).gte('created_at',since).order('created_at',{ascending:false}).limit(Math.min(200,Math.max(1,limit)));
   if(error)throw error;
   const result={policyVersion:POLICY,apply,since,examined:rows?.length || 0,publishable:[],published:[],held:[],failed:[]};
   for(let offset=0;offset<(rows || []).length;offset+=50){
@@ -26,6 +26,7 @@ async function reconcilePendingNews(db,{apply=false,hours=72,limit=200,now=new D
     for(const packet of packets)if(packet.error)throw packet.error;
     const [sources,scores,claims]=packets.map(packet=>packet.data || []);
     for(const row of batch){
+      if(row.publication_review_reasons?.includes('automatic_quality_replacement')){result.held.push({id:row.id,reasons:['automatic_replacement_in_progress']});continue;}
       // Manual rejection/archival must never be reversed by an automatic retry.
       if(['rejected','archived'].includes(row.ai_outlook?.editorialReview?.status)){result.held.push({id:row.id,reasons:['editorially_withheld']});continue;}
       const assessment=publicationForSavedArticle(row,{sources,scores,claims});

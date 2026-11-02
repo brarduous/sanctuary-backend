@@ -56,7 +56,7 @@ async function operationalReport({db,now=new Date(),fetcher=fetch,baseUrl=proces
  return report;
 }
 async function runQualityJob({kind='operations',db=require('../config/supabase'),now=new Date(),...options}={}){
- const key=kind==='operations'?`operations:${now.toISOString().slice(0,13)}`:`content:${now.toISOString().slice(0,10)}`;
+ const key=kind==='operations'?`operations:${now.toISOString().slice(0,13)}`:`content:auto-v2:${now.toISOString().slice(0,10)}`;
  const commit=process.env.RENDER_GIT_COMMIT || null;
  const claim=await db.rpc('claim_app_quality_run',{p_key:key,p_kind:kind,p_commit:commit});if(claim.error)throw claim.error;if(!claim.data)return{skipped:true,key};
  try{const report=kind==='operations'?await operationalReport({db,now,...options}):await require('./contentQualityAudit').contentQualityAudit({db,now,...options});const saved=await db.from('app_quality_reports').update({status:'completed',completed_at:new Date().toISOString(),report}).eq('run_key',key);if(saved.error)throw saved.error;return{key,report};}

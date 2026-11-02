@@ -4,6 +4,7 @@ const { createHash } = require('node:crypto');
 const supabase = require('../config/supabase');
 const auth = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
+const {presentCompletions}=require('../utils/discoveryDelivery');
 const requireAdmin = require('../middleware/adminAuth');
 const { UUID, invalid, date, validateContent, validateReview, validateCompletion, publicDiscovery, localDate, shiftDate, cohort } = require('../utils/discoveries');
 const router = express.Router();
@@ -46,12 +47,12 @@ async function projectSchedule(schedule) {
   return schedule.flatMap(row => {
     const parent = parents.get(row.discovery_id);
     const content = revisions.find(candidate => candidate.discovery_id === row.discovery_id && candidate.revision === row.revision);
-    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), ...(row.position ? {setPosition:row.position,setDifficulty:['easy','medium','hard'][row.position-1]}:{}), correctionNotice: parent.correction_notice || null }];
+    return !parent || parent.withdrawn || !content ? [] : [{ ...publicDiscovery(content, row.publication_date), ...(row.position ? {setPosition:row.position,setDifficulty:['easy','medium','hard'][row.position-1]}:{}), ...(row.source_publication_date ? {sourcePublicationDate:row.source_publication_date}:{}), correctionNotice: parent.correction_notice || null }];
   });
 }
 async function releasedRows(id, rev, cutoff = localDate(new Date(),'Pacific/Kiritimati')) {
-  const queries = ['discovery_schedule','discovery_publication_history','discovery_daily_set_items'].map(table => {
-    let query = supabase.from(table).select(`publication_date,discovery_id,revision${table==='discovery_daily_set_items' ? ',position':''}`).eq('discovery_id',id).lte('publication_date',cutoff);
+  const queries = ['discovery_schedule','discovery_publication_history','discovery_daily_set_items','discovery_delivery_items'].map(table => {
+    let query = supabase.from(table).select(`publication_date,discovery_id,revision${['discovery_daily_set_items','discovery_delivery_items'].includes(table) ? ',position':''}${table==='discovery_delivery_items' ? ',source_publication_date':''}`).eq('discovery_id',id).lte('publication_date',cutoff);
     if (rev) query = query.eq('revision',rev);
     return query.order('publication_date',{ascending:false}).limit(100);
   });
@@ -64,8 +65,13 @@ async function allowArchive(req,res,requestedDate,today) {
   res.set('Cache-Control','private, no-store').status(403).json({error:{code:'TRIVIA_PRO_REQUIRED',message:'Past Trivia games are included with Sanctuary Pro.'}});
   return false;
 }
-async function dailySetRows(today,requestedDate) {
-  const scheduled=unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').eq('publication_date',requestedDate || today).order('publication_date').order('position'));
+async function dailySetRows(today,requestedDate,recycle=false) {
+  let delivered;
+  if(recycle){
+    if(!requestedDate||requestedDate===today)delivered=unwrap(await supabase.rpc('discovery_delivery_set',{p_date:today}));
+    else {const r=await supabase.from('discovery_delivery_items').select('publication_date,source_publication_date,discovery_id,revision,position').eq('publication_date',requestedDate).order('position');if(r.error&&!missingSchema(r.error))throw r.error;delivered=r.data?.length ? r.data:null;}
+  }
+  const scheduled=delivered || unwrap(await supabase.from('discovery_daily_set_items').select('publication_date,discovery_id,revision,position').eq('publication_date',requestedDate || today).order('publication_date').order('position'));
   const projected=await projectSchedule(scheduled);
   // A withdrawn/missing question hides its whole set, never silently substitutes
   // another puzzle or changes the Easy → Medium → Hard result order.
@@ -84,9 +90,9 @@ router.get('/bundle', readLimiter, optionalAuth, async (req, res, next) => {
     let evergreen = [];
     let withdrawnIds = [];
     const dailySet=req.query.dailySet==='1';
-    if (enabled && dailySet) {
-      const [daily,withdrawn]=await Promise.all([dailySetRows(today,requestedDate),supabase.from('discoveries').select('id').eq('withdrawn',true).limit(1000)]);
-      items=daily;withdrawnIds=unwrap(withdrawn).map(row=>row.id);
+    if (enabled && (dailySet || runtime.recycle_unplayed_sets)) {
+      const [daily,withdrawn]=await Promise.all([dailySetRows(today,requestedDate,runtime.recycle_unplayed_sets),supabase.from('discoveries').select('id').eq('withdrawn',true).limit(1000)]);
+      items=dailySet ? daily:daily.slice(0,1).map(legacyProjection);withdrawnIds=unwrap(withdrawn).map(row=>row.id);
     } else if (enabled) {
       const [scheduled, fallback, withdrawn] = await Promise.all([
         supabase.from('discovery_schedule').select('publication_date,discovery_id,revision').eq('publication_date',requestedDate || today).order('publication_date'),
@@ -111,22 +117,29 @@ router.post('/completions', auth, async (req, res, next) => {
     if (!Array.isArray(req.body.events) || !req.body.events.length || req.body.events.length > 50) invalid('Submit between one and fifty events.');
     const events = req.body.events.map(validateCompletion);
     const results = unwrap(await supabase.rpc('discovery_complete', { p_user: req.user.id, p_events: events }));
-    res.set('Cache-Control','no-store').json({ results });
+    const shown=await presentCompletions(supabase,results.map(r=>r.completion).filter(Boolean),localDate(new Date(),events[0]?.timeZone || 'UTC'));
+    const byId=new Map(shown.map(row=>[row.discovery_id,row]));
+    res.set('Cache-Control','no-store').json({ results:results.map(r=>r.completion ? {...r,completion:byId.get(r.completion.discovery_id)||r.completion}:r) });
   } catch (error) { next(error); }
 });
 router.get('/progress', auth, async (req,res,next) => {
   try {
     const result = await supabase.from('discovery_completions').select('*',{count:'exact'}).eq('user_id',req.user.id).order('received_at',{ascending:false}).limit(200);
-    const completions = unwrap(result);
+    const completions = await presentCompletions(supabase,unwrap(result),localDate(new Date(),String(req.query.timeZone || 'America/New_York')));
     res.set('Cache-Control','no-store').json({ total: result.count || 0, completions });
   } catch (error) { next(error); }
 });
-router.post('/metrics', metricLimiter, async (req,res,next) => {
+router.post('/metrics', metricLimiter,optionalAuth, async (req,res,next) => {
   try {
     const { eventId, discoveryId, event, platform } = req.body;
     if (!UUID.test(eventId) || !UUID.test(discoveryId) || !METRICS.has(event) || !['mobile','web'].includes(platform)) invalid('Invalid metric.');
     const scheduled = await releasedRows(discoveryId);
-    if (scheduled.length) unwrap(await supabase.from('discovery_metrics').upsert({event_id:eventId,discovery_id:discoveryId,event,platform},{onConflict:'event_id',ignoreDuplicates:true}));
+    if (scheduled.length) {
+      const runtime=await settings();
+      const internal=req.user&&runtime.recycle_unplayed_sets ? unwrap(await supabase.rpc('discovery_is_internal',{p_user:req.user.id})):false;
+      const audience=runtime.recycle_unplayed_sets ? {audience_eligible:event==='answer_committed'&&!internal}:{};
+      unwrap(await supabase.from('discovery_metrics').upsert({event_id:eventId,discovery_id:discoveryId,event,platform,...audience},{onConflict:'event_id',ignoreDuplicates:true}));
+    }
     res.sendStatus(204);
   } catch (error) { next(error); }
 });

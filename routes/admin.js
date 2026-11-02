@@ -13,7 +13,11 @@ router.get('/quality', async (_req,res) => {
     res.set('Cache-Control','private, no-store');
     const results=await Promise.all(['operations','content','release'].map(kind=>supabase.from('app_quality_reports').select('run_key,kind,status,started_at,completed_at,source_commit,report').eq('kind',kind).order('started_at',{ascending:false}).limit(1).maybeSingle()));
     if(results.some(result=>result.error))return res.status(503).json({error:'Quality reports are unavailable.'});
-    res.json({reports:results.flatMap(result=>result.data?[result.data]:[])});
+    const activity=await supabase.from('content_quality_replacement_status').select('kind,status,updated_at,final_grade').gte('updated_at',new Date(Date.now()-30*86400000).toISOString()).order('updated_at',{ascending:false}).limit(1000);
+    if(activity.error)return res.status(503).json({error:'Automatic quality status is unavailable.'});
+    const summary={windowDays:30,populationCapped:activity.data?.length===1000,byStatus:{}};
+    for(const row of activity.data||[])summary.byStatus[row.status]=(summary.byStatus[row.status]||0)+1;
+    res.json({reports:results.flatMap(result=>result.data?[{...result.data,report:{...result.data.report,...(result.data.kind==='content'?{replacementSummary:summary}:{})}}]:[])});
 });
 
 function parseLimit(value, fallback = 100, max = 500) {

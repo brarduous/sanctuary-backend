@@ -479,6 +479,7 @@ router.get('/daily-news-synopses', async (req, res) => {
         const { data, error } = await supabase
             .from('daily_news_synopses')
             .select('*')
+            .eq('quality_withheld',false)
             .gte('created_at', startDate || '1970-01-01')
             .lte('created_at', endDate || new Date().toISOString())
             .order('created_at', { ascending: order === 'asc' })

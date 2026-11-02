@@ -8,7 +8,7 @@ async function main() {
   const date = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
   const [{ data: subscribers, error: subscriberError }, { data: synopsis }, { data: articles, error: articleError }] = await Promise.all([
     supabase.from('newsletter_subscribers').select('id,email,unsubscribe_token_hash').eq('status', 'active').limit(5000),
-    supabase.from('daily_news_synopses').select('*').order('created_at', { ascending: false }).limit(1).maybeSingle(),
+    supabase.from('daily_news_synopses').select('*').eq('quality_withheld',false).order('created_at', { ascending: false }).limit(1).maybeSingle(),
     supabase.from('scriptural_outlooks').select('id,slug,article_title,news_impact_summary,ai_outlook').eq('publication_status', 'published').order('news_impact_score', { ascending: false }).limit(3),
   ]);
   if (subscriberError) throw subscriberError;

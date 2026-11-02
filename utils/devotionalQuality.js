@@ -75,7 +75,7 @@ function mayPromote(baseline, candidate) {
     && ['helpfulness', 'audience', 'freshness'].every(key => row[key] >= 80 && row[key] >= baseline[i][key]))
     && score(candidate) >= score(baseline) + 5;
 }
-function validateDevotionalOutput(output, source, lane) {
+function validateDevotionalOutput(output, source, lane, {requirePrayer=true}={}) {
   const reference = output.scripture_reference || output.scripture;
   if (reference !== (source.scripture_reference || source.scripture)) throw Error('Experiment changed the featured Scripture');
   if (output.title !== source.title && lane === 'personalized') throw Error('Experiment changed curriculum title');
@@ -88,7 +88,7 @@ function validateDevotionalOutput(output, source, lane) {
     if (count < min || count > max) throw Error('Experiment violated slide word budget');
   }
   if (lane === 'general' && output.scripture_text !== source.scripture_text) throw Error('Experiment changed Scripture quotation');
-  if (!String(lane === 'general' ? output.prayer : output.daily_prayer).trim()) throw Error('Experiment omitted prayer');
+  if (requirePrayer && !String((lane === 'general' ? output.prayer : output.daily_prayer) || '').trim()) throw Error('Experiment omitted prayer');
   return output;
 }
 module.exports = { selectEditorialFocus, QUALITY_POLICY_VERSION, validateDevotionalOutput, DEFAULT_MODEL, MODELS, RULES, VARIETY_POLICY, defaults, validateRuntime, loadRuntime, overlay, bodyText, repetitionReport, normalizeReview, mayPromote, score, challengerModel };
