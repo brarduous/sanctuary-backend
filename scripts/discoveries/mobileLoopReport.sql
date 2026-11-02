@@ -1,15 +1,15 @@
 -- Read-only aggregate report. Never export account identifiers or player keys.
 -- Run after 20261102130000; use UTC event days for retention, set_date for daily-set attribution.
 with activity as (
- select distinct player_key,(created_at at time zone 'UTC')::date day
+ select distinct player_key,(created_at at time zone 'UTC')::date as activity_day
  from discovery_metrics where player_key is not null
  and event in ('set_opened','round_started','set_completed')
 ), first_use as (
- select player_key,min(day) cohort from activity group by player_key
+ select player_key,min(activity_day) cohort from activity group by player_key
 ), retention as (
  select cohort,count(*) users,
- count(*) filter(where exists(select 1 from activity a where a.player_key=f.player_key and a.day=f.cohort+1)) day_one,
- count(*) filter(where exists(select 1 from activity a where a.player_key=f.player_key and a.day=f.cohort+7)) day_seven
+ count(*) filter(where exists(select 1 from activity a where a.player_key=f.player_key and a.activity_day=f.cohort+1)) day_one,
+ count(*) filter(where exists(select 1 from activity a where a.player_key=f.player_key and a.activity_day=f.cohort+7)) day_seven
  from first_use f group by cohort
 ), funnel as (
  select set_date,platform,entry_source,event,count(*) events,
