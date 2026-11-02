@@ -72,14 +72,11 @@ function devotionalCopy({ title, scripture, variant, weekday }) {
   return { ...selected, body: cleanPushField(`${selected.body}${weeklyPrompt}`, selected.body, 220) };
 }
 
-function discoveryCopy(variant=1) {
-  const variants={
-    1:{heading:'Trivia is ready',body:'Three questions. Easy, medium, hard. Play and share your three squares.'},
-    2:{heading:'A little curiosity for today',body:'Today’s Trivia is ready. Try three questions and share your squares.'},
-    3:{heading:'A moment for discovery',body:'Try today’s Bible trivia, then see the detail behind the answer.'},
-    4:{heading:'What will you discover today?',body:'Three Trivia questions are waiting. Start easy and see how far you get.'},
-  };
-  return variants[variant] || variants[1];
+function discoveryCopy(_variant=1,state) {
+ if(!state?.streakKnown)return {heading:'Today’s Trivia is ready',body:'Try today’s three Bible questions.'};
+ if(state.continuingStreak)return {heading:'Keep your streak going',body:'Your daily three are waiting. Finish today’s Trivia to keep your streak going.'};
+ if(state.played>0)return {heading:'Finish today’s three',body:'Pick up where you left off in today’s Bible Trivia.'};
+ return {heading:'Start your streak',body:'Today’s three Bible questions are ready. Play a little, learn something new.'};
 }
 
 module.exports = { DAY_MS, DEFAULT_TIME_ZONE, cohortBucket, copyVariant, devotionalCopy, discoveryCopy, isInRollout, isValidTimeZone, isWithinQuietHours, isWithinWindow, localParts, parseTimeMinutes, stagePercentage };

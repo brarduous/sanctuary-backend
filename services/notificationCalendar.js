@@ -210,7 +210,7 @@ async function dispatchToRecipient({ profile, campaign, category, local, content
   const trackingUrl = content?.url || '/(tabs)/advice';
   const copy = category === 'devotional'
     ? devotionalCopy({ title: content.title, scripture: content.scripture, variant, weekday: local.weekday })
-    : category === 'discovery' ? discoveryCopy(variant) : category === 'news'
+    : category === 'discovery' ? discoveryCopy(variant,content?.reminderState) : category === 'news'
       ? { heading: 'News worth a thoughtful pause', body: `${content.title} — look beyond the headline with a scriptural perspective.` }
       : { heading: 'Need a little wisdom?', body: 'What decision or relationship could use a prayerful, scriptural perspective?' };
   const payload = { title: copy.heading, body: copy.body, data: { url: trackingUrl, notificationDeliveryId: delivery.id }, url: trackingUrl, tag: `${category}-${local.date}` };
@@ -244,7 +244,7 @@ async function dispatchCategory({ category, now, dryRun, rolloutStage }) {
   if (!activeSetting.enabled && !dryRun) return { category, skipped: 'disabled', ...emptySummary() };
   if (category === 'church') return { category, skipped: 'organization_driven', ...emptySummary() };
   const audience = await loadAudience(category);
-  const discovery=category==='discovery' ? await loadDiscoveryReminderContext(supabase,now,audience.map(profile=>profile.user_id)):null;
+  const discovery=category==='discovery' ? await loadDiscoveryReminderContext(supabase,now,audience.map(profile=>profile.user_id),audience.map(profile=>localParts(now,profile.notification_time_zone).date)):null;
   const recent = await recentAcceptedByUser(audience.map(profile => profile.user_id), now);
   const content = category === 'devotional' ? await loadContent(now) : null;
   const news = category === 'news' ? await resolveNewsCampaign({ setting: activeSetting, now, dryRun }) : null;

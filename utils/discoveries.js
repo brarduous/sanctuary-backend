@@ -97,9 +97,9 @@ function validateCompletion(event) {
   if (!event || !UUID.test(event.eventId) || !UUID.test(event.discoveryId) || !Number.isInteger(event.revision) || event.revision < 1 || !['answered', 'revealed'].includes(event.mode) || !date(event.localDate) || typeof event.timeZone !== 'string' || !event.timeZone || event.timeZone.length > 100 || typeof event.occurredAt !== 'string' || !Number.isFinite(Date.parse(event.occurredAt))) invalid('Invalid completion.');
   localDate(new Date(), event.timeZone);
   if ((event.mode === 'answered' && !ID.test(event.optionId)) || (event.mode === 'revealed' && event.optionId != null)) invalid('Answer choice does not match completion mode.');
-  if(event.elapsedMs!=null && (!Number.isInteger(event.elapsedMs) || event.elapsedMs<0 || event.elapsedMs>20000 || (event.mode==='answered' && event.elapsedMs>=20000)))invalid('Invalid response time.');
+  if(event.elapsedMs!=null && (!Number.isInteger(event.elapsedMs) || event.elapsedMs<0 || event.elapsedMs>40000 || (event.mode==='answered' && event.elapsedMs>=40000)))invalid('Invalid response time.');
   if(event.timedOut!==undefined && typeof event.timedOut!=='boolean')invalid('Invalid timeout.');
-  if(event.timedOut && (event.mode!=='revealed' || event.elapsedMs!==20000))invalid('Invalid timeout.');
+  if(event.timedOut && (event.mode!=='revealed' || ![20000,40000].includes(event.elapsedMs)))invalid('Invalid timeout.');
   if(localDate(new Date(event.occurredAt),event.timeZone)!==event.localDate)invalid('Completion date does not match its time zone.');
   return { eventId: event.eventId, discoveryId: event.discoveryId, revision: event.revision, mode: event.mode, optionId: event.optionId || null, occurredAt: event.occurredAt, localDate: event.localDate, timeZone: event.timeZone,...(event.elapsedMs!=null ? {elapsedMs:event.elapsedMs}:{}),...(event.timedOut!==undefined ? {timedOut:event.timedOut}:{}) };
 }

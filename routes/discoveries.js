@@ -1,6 +1,6 @@
 const express = require('express');
 const rateLimit = require('express-rate-limit');
-const { createHash } = require('node:crypto');
+const { createHash,createHmac } = require('node:crypto');
 const supabase = require('../config/supabase');
 const auth = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
@@ -12,7 +12,7 @@ const adminRouter = express.Router();
 const readLimiter = rateLimit({ windowMs: 15 * 60000, limit: 180, standardHeaders: 'draft-7', legacyHeaders: false });
 const reportLimiter = rateLimit({ windowMs: 3600000, limit: 5, standardHeaders: 'draft-7', legacyHeaders: false });
 const metricLimiter = rateLimit({ windowMs: 15 * 60000, limit: 120, standardHeaders: 'draft-7', legacyHeaders: false });
-const METRICS = new Set(['card_viewed','question_opened','answer_committed','direct_reveal','explanation_viewed','source_opened','share_initiated','app_cta_clicked']);
+const METRICS = new Set(['card_viewed','question_opened','answer_committed','direct_reveal','explanation_viewed','source_opened','share_initiated','app_cta_clicked','set_opened','round_started','set_completed']);
 const REVISION_FIELDS = 'discovery_id,revision,content';
 function unwrap(result) {
   if (result.error) {
@@ -124,21 +124,35 @@ router.post('/completions', auth, async (req, res, next) => {
 });
 router.get('/progress', auth, async (req,res,next) => {
   try {
-    const result = await supabase.from('discovery_completions').select('*',{count:'exact'}).eq('user_id',req.user.id).order('received_at',{ascending:false}).limit(200);
-    const completions = await presentCompletions(supabase,unwrap(result),await completionDate(supabase,req.user.id,req.query.timeZone));
-    res.set('Cache-Control','no-store').json({ total: result.count || 0, completions });
+    const rows=[];let total=0;
+    for(let offset=0;;offset+=500){
+      const result=await supabase.from('discovery_completions').select('*',{count:'exact'}).eq('user_id',req.user.id).order('received_at',{ascending:false}).order('discovery_id').range(offset,offset+499);
+      const page=unwrap(result);if(offset===0)total=result.count||0;rows.push(...page);
+      if(page.length<500)break;
+    }
+    const canonical=[...new Map(rows.map(row=>[row.discovery_id,row])).values()];
+    const completions = await presentCompletions(supabase,canonical,await completionDate(supabase,req.user.id,req.query.timeZone));
+    res.set('Cache-Control','no-store').json({ total, completions });
   } catch (error) { next(error); }
 });
 router.post('/metrics', metricLimiter,optionalAuth, async (req,res,next) => {
   try {
-    const { eventId, discoveryId, event, platform } = req.body;
+    const { eventId, discoveryId, event, platform, entrySource,sessionId,setDate,installationId } = req.body;
     if (!UUID.test(eventId) || !UUID.test(discoveryId) || !METRICS.has(event) || !['mobile','web'].includes(platform)) invalid('Invalid metric.');
+    if(entrySource!=null&&!['home','games','shared_link','push','direct'].includes(entrySource))invalid('Invalid entry source.');
+    if(sessionId!=null&&!UUID.test(sessionId))invalid('Invalid metric session.');
+    if(installationId!=null&&!UUID.test(installationId))invalid('Invalid installation.');
+    if(setDate!=null&&!date(setDate))invalid('Invalid daily set date.');
     const scheduled = await releasedRows(discoveryId);
+    if(setDate&&!scheduled.some(row=>row.publication_date===setDate))invalid('Daily set is not released.');
     if (scheduled.length) {
       const runtime=await settings();
       const internal=req.user&&runtime.recycle_unplayed_sets ? unwrap(await supabase.rpc('discovery_is_internal',{p_user:req.user.id})):false;
+      const identity=req.user?.id?`account:${req.user.id}`:installationId?`installation:${installationId}`:null;
+      const playerKey=identity&&process.env.DISCOVERY_METRICS_SALT?createHmac('sha256',process.env.DISCOVERY_METRICS_SALT).update(identity).digest('hex'):null;
+      const context={entry_source:entrySource||null,session_id:sessionId||null,set_date:setDate||null,player_key:playerKey};
       const audience=runtime.recycle_unplayed_sets ? {audience_eligible:event==='answer_committed'&&!internal}:{};
-      unwrap(await supabase.from('discovery_metrics').upsert({event_id:eventId,discovery_id:discoveryId,event,platform,...audience},{onConflict:'event_id',ignoreDuplicates:true}));
+      unwrap(await supabase.from('discovery_metrics').upsert({event_id:eventId,discovery_id:discoveryId,event,platform,...context,...audience},{onConflict:'event_id',ignoreDuplicates:true}));
     }
     res.sendStatus(204);
   } catch (error) { next(error); }

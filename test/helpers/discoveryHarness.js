@@ -60,6 +60,8 @@ async function createHarness({listen=false,port=0,curriculum=false,dailySets=fal
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8'));
   if(dailySets)await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
  }
+ await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261102120000_mobile_reading_time.sql'),'utf8'));
+ await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261102130000_mobile_daily_loop.sql'),'utf8'));
  for(const [id,role] of [[ADMIN,'admin'],[MEMBER,'member'],[OTHER,'member']]) {
   await db.query('insert into auth.users values($1)',[id]);await db.query('insert into user_profiles(user_id,role) values($1,$2)',[id,role]);
  }
@@ -68,7 +70,7 @@ async function createHarness({listen=false,port=0,curriculum=false,dailySets=fal
  const optional=(req,_res,next)=>{const token=req.get('Authorization')?.replace('Bearer ','');if([ADMIN,MEMBER,OTHER].includes(token))req.user={id:token};next();};
  const admin=(req,res,next)=>req.user.id===ADMIN ? next():res.sendStatus(403);
  const module={exports:{}};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../../routes/discoveries.js'),'utf8'),{module,console,URL,Date,require:name=>{
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../../routes/discoveries.js'),'utf8'),{module,console,URL,Date,process,require:name=>{
   const overrides={'../utils/discoveryDelivery':require('../../utils/discoveryDelivery'),'../config/supabase':client,'../middleware/auth':auth,'../middleware/optionalAuth':optional,'../middleware/adminAuth':admin,'../utils/discoveries':require('../../utils/discoveries'),'../utils/discoveryDailyPlan':require('../../utils/discoveryDailyPlan')};
   return name in overrides ? overrides[name]:require(name);
  }});

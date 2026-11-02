@@ -21,7 +21,7 @@ test('unused coherent sets carry forward after admin-only play; ordinary answers
  assert.deepEqual((await serve(last)).map(i=>i.discovery_id),ids.slice(6,9),'eligible anonymous answer can advance too');
  await db.query('update discoveries set withdrawn=true where id=$1',[ids[6]]);assert.deepEqual((await serve(last)).map(i=>i.discovery_id),ids.slice(9,12),'withdrawal substitutes another complete approved set, never mixes questions');
  for(const role of ['anon','authenticated']){await db.exec('set role '+role);await assert.rejects(db.query('select discovery_delivery_set($1)',[last]),/permission denied/);await assert.rejects(db.query('select * from discovery_delivery_days'),/permission denied/);await db.exec('reset role');}
- const canonical={discovery_id:ids[0],puzzle_date:start,local_date:start};const fake={from(){return{select(){return this;},eq(){return Promise.resolve({data:[{discovery_id:ids[0],source_publication_date:start}],error:null});}}}};
+ const canonical={discovery_id:ids[0],puzzle_date:start,local_date:start};const fake={from(){return{select(){return this;},in(){return Promise.resolve({data:[{publication_date:next,discovery_id:ids[0],source_publication_date:start}],error:null});}}}};
  const displayed=await presentCompletions(fake,[canonical],next);assert.equal(displayed[0].puzzle_date,next);assert.equal(displayed[0].local_date,start);assert.equal(canonical.puzzle_date,start,'no stored completion or credit is rewritten');
  }finally{await db.close();}
 });
