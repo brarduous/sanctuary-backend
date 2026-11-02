@@ -17,7 +17,7 @@ async function verify(){
  try{
   for(const label of ['a','b']){
    const email=`qa-quality-${label}-${randomUUID()}@example.invalid`,password=randomBytes(24).toString('base64url')+'aA1!';
-   const data=unwrap(await db.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{quality_test:true}}));users.push({id:data.user.id});
+   const data=unwrap(await db.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{quality_test:true}}));users.push({id:data.user.id,email});
    const client=createClient(url,process.env.SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
    users.at(-1).client=client;
    users.at(-1).token=unwrap(await client.auth.signInWithPassword({email,password})).session.access_token;
@@ -27,6 +27,14 @@ async function verify(){
   const [a,b]=users;
   const anonymous=createClient(url,process.env.SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false}});
   const ownRaw=await a.client.from('daily_devotionals').select('devotional_id').eq('devotional_id',records[0]);
+  const subscriptionRead=await a.client.from('subscriptions').select('user_id').eq('user_id',a.id);
+  check('own_subscription_read_path_available',!subscriptionRead.error);
+  const subscriptionWrite=await a.client.from('subscriptions').update({status:'active'}).eq('user_id',a.id);
+  check('direct_subscription_privilege_write_denied',subscriptionWrite.error?.code==='42501');
+  const whitelistWrite=await a.client.from('whitelist').insert({email:a.email});
+  check('direct_allowlist_enrollment_denied',whitelistWrite.error?.code==='42501');
+  const adminList=await a.client.from('admin_emails').select('email').eq('email',a.email);
+  check('direct_admin_allowlist_hidden',adminList.error?.code==='42501');
   check('direct_owner_read_allowed',!ownRaw.error&&ownRaw.data.length===1);
   const foreignRaw=await a.client.from('daily_devotionals').select('devotional_id').eq('devotional_id',records[1]);
   check('direct_other_account_read_hidden',!foreignRaw.error&&foreignRaw.data.length===0);
@@ -61,12 +69,12 @@ async function verify(){
  }catch(error){failure=error;}
  finally{
   for(const user of users){
-   for(const remove of [...['reader_content_feedback','system_logs','user_activities','users'].map(table=>()=>db.from(table).delete().eq('user_id',user.id)),()=>db.from('daily_devotionals').delete().eq('user_id',user.id).in('devotional_id',records),()=>db.from('user_profiles').delete().eq('user_id',user.id),()=>db.auth.admin.deleteUser(user.id)]){
+   for(const remove of [()=>db.from('whitelist').delete().eq('email',user.email),()=>db.from('subscriptions').delete().eq('user_id',user.id),...['reader_content_feedback','system_logs','user_activities','users'].map(table=>()=>db.from(table).delete().eq('user_id',user.id)),()=>db.from('daily_devotionals').delete().eq('user_id',user.id).in('devotional_id',records),()=>db.from('user_profiles').delete().eq('user_id',user.id),()=>db.auth.admin.deleteUser(user.id)]){
     try{unwrap(await remove());}catch(error){cleanupFailed=true;failure ||= Error('Disposable account cleanup failed; inspect the private verification process.');console.error('Fixture cleanup requires attention:',error.code || 'unknown');}
    }
   }
  }
- const report={version:'account-isolation-v1',scope:'Disposable production accounts: direct database owner boundaries, anonymous isolation, profile privilege protection; private devotional reads/deletes, preferences, checkout impersonation, nonmember prayer access, reader feedback and admin report access.',checks,fixturesRemoved:!cleanupFailed,limitations:['Two-church membership and role combinations are covered by isolated HTTP integration tests, not this hosted probe.','This is not a complete application security certification.']};
+ const report={version:'account-isolation-v1',scope:'Disposable production accounts: direct database owner boundaries, anonymous isolation, profile privilege protection, server-managed entitlements/allowlists; private devotional reads/deletes, preferences, checkout impersonation, nonmember prayer access, reader feedback and admin report access.',checks,fixturesRemoved:!cleanupFailed,limitations:['Two-church membership and role combinations are covered by isolated HTTP integration tests, not this hosted probe.','This is not a complete application security certification.']};
  const saved=await db.from('app_quality_reports').upsert({run_key:`release:${commit}`,kind:'release',status:failure?'failed':'completed',started_at:started,completed_at:new Date().toISOString(),source_commit:commit,report},{onConflict:'run_key'});if(saved.error)throw saved.error;
  if(failure)throw failure;
  console.log(JSON.stringify({passed:checks.length,fixturesRemoved:true,commit}));

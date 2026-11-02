@@ -22,7 +22,7 @@ The release includes authenticated route ownership, congregation membership chec
 
 `QA_CONFIRM_PRODUCTION=account-isolation node scripts/verifyAccountIsolationProduction.js` creates two disposable confirmed-email accounts, reads only their synthetic private records, verifies both direct database and public HTTP boundaries, then removes its fixtures. It does not send email, publish content or invoke payment. A dated release report records checks and cleanup, not credentials. Two-church membership combinations additionally use isolated HTTP integration tests. This is scoped verification, not a security certification.
 
-Migrations 1800 and 1900 are repeatable. Apply through the normal production migration process before enabling the routes/jobs. Rollback 1800 requires disabling feedback and quality jobs and exporting history first. Rollback 1900 deliberately fails closed: it removes new permissive owner access but retains RLS, restrictive ownership boundaries, profile guards and diagnostic restrictions. It must not restore known private-data exposure.
+Migrations 1800, 1900 and 2000 are repeatable. Apply through the normal production migration process before enabling the routes/jobs. Rollback 1800 requires disabling feedback and quality jobs and exporting history first. Rollback 1900 deliberately fails closed: it removes new permissive owner access but retains RLS, restrictive ownership boundaries, profile guards and diagnostic restrictions. It must not restore known private-data exposure. Migration 2000 restricts privileged allowlists and subscription writes to the server, retaining only own-email whitelist and own-account subscription reads for existing clients. Its rollback also fails closed.
 
 ## Limits and remaining release work
 
