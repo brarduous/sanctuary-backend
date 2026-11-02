@@ -198,12 +198,10 @@ test('public API routers have v1 aliases and bounded legacy telemetry', () => {
   assert.ok(source.indexOf("app.use('/api/v1', sermonsRouter)") < source.indexOf('app.use(notFound)'));
 });
 
-test('filtered news feeds avoid the production-timeout nested taxonomy join', () => {
+test('filtered news feeds match bounded chronological candidates rather than truncated lifetime links', () => {
   assert.match(newsSource, /hydrateOutlookTaxonomies/);
-  assert.match(newsSource, /resolveFilteredOutlookIds/);
-  assert.match(newsSource, /from\('outlook_topics'\)\.select\('outlook_id'\)/);
-  assert.match(newsSource, /from\('outlook_categories'\)\.select\('outlook_id'\)/);
-  assert.match(newsSource, /Promise\.all/);
+  assert.match(newsSource, /filteredNewsPage/);
+  assert.doesNotMatch(newsSource, /resolveFilteredOutlookIds/);
   assert.doesNotMatch(newsSource, /outlook_topics!inner/);
   assert.doesNotMatch(newsSource, /outlook_categories!inner/);
 });

@@ -14,7 +14,7 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
-  const assessment={type:'object',additionalProperties:false,required:['verdict','focusType','focus','reason','scriptureReference'],properties:{verdict:{type:'string',enum:['aligned','concerns','mixed','unclear']},focusType:{type:'string',enum:['reported_conduct','recommended_response']},focus:{type:'string'},reason:{type:'string'},scriptureReference:{type:'string'}}};
+  const assessment={type:'object',additionalProperties:false,required:['verdict','focusType','focus','reason','scriptureReference'],properties:{verdict:{type:'string',enum:['aligned','concerns','mixed','unclear']},focusType:{type:'string',enum:['reported_conduct']},focus:{type:'string'},reason:{type:'string'},scriptureReference:{type:'string'}}};
   const schema={type:'object',additionalProperties:false,required:['synopsis','details','stories','thought_to_remember','prayer'],properties:{synopsis:{type:'string'},details:{type:'string'},thought_to_remember:{type:'string'},prayer:{type:'string'},stories:{type:'array',minItems:1,maxItems:3,items:{type:'object',additionalProperties:false,required:['headline','summary','christianAssessment'],properties:{headline:{type:'string'},summary:{type:'string'},christianAssessment:assessment}}}}};
   const chatCompletion = await openai.chat.completions.create({
     model,

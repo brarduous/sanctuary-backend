@@ -30,8 +30,8 @@ Recent Article Synopses:
 - For Sports and similar recreational categories, describe the teams, events, logistics, stakes, and public-interest angles only.
 
 # IMAGE STYLE REQUIREMENTS
-- Style: photorealistic journalistic photograph suitable for a news article image.
-- If the subject is a real person, satirical political-cartoon styling is allowed.
+- Style: clearly illustrated editorial still life with flat shapes, paper texture and a limited ink palette.
+- Use a simple nonhuman object relevant to the topic. No photorealism, people, political caricatures, fabricated events or spiritual stock imagery.
 - No text in the image.
 
 # OUTPUT

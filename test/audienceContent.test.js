@@ -35,7 +35,7 @@ test('all reader generation paths apply audience policy after stale templates an
     [() => prompts.getPersonalizedDevotionalPrompt({}, { title: 'Listen Before You Reply', scripture_reference: 'James 1:19', content: 'Listen before speaking.' }), 'Listen Before You Reply'],
     [() => prompts.getGeneralDevotionalBatchPrompt({ theme_title: 'Trust', scripture_focus: 'Psalms' }), 'Trust'],
     [() => prompts.getAdviceGuidancePrompt(), '15-35 words'],
-    [() => prompts.getScripturalOutlookPrompt(), 'news-reader-copy-v2'],
+    [() => prompts.getScripturalOutlookPrompt(), 'news-reader-copy-v3'],
     [() => prompts.getDailyNewsSynopsisPrompt(), 'TLDR with Christian judgment'],
     [() => prompts.getNewsTaxonomyBreakdownPrompt({ taxonomyName: 'Housing', synopses: 'Council approves housing plan.' }), 'Housing'],
   ];
