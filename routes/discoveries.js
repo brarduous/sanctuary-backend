@@ -4,7 +4,7 @@ const { createHash } = require('node:crypto');
 const supabase = require('../config/supabase');
 const auth = require('../middleware/auth');
 const optionalAuth = require('../middleware/optionalAuth');
-const {presentCompletions}=require('../utils/discoveryDelivery');
+const {presentCompletions,completionDate}=require('../utils/discoveryDelivery');
 const requireAdmin = require('../middleware/adminAuth');
 const { UUID, invalid, date, validateContent, validateReview, validateCompletion, publicDiscovery, localDate, shiftDate, cohort } = require('../utils/discoveries');
 const router = express.Router();
@@ -125,7 +125,7 @@ router.post('/completions', auth, async (req, res, next) => {
 router.get('/progress', auth, async (req,res,next) => {
   try {
     const result = await supabase.from('discovery_completions').select('*',{count:'exact'}).eq('user_id',req.user.id).order('received_at',{ascending:false}).limit(200);
-    const completions = await presentCompletions(supabase,unwrap(result),localDate(new Date(),String(req.query.timeZone || 'America/New_York')));
+    const completions = await presentCompletions(supabase,unwrap(result),await completionDate(supabase,req.user.id,req.query.timeZone));
     res.set('Cache-Control','no-store').json({ total: result.count || 0, completions });
   } catch (error) { next(error); }
 });
