@@ -7,6 +7,7 @@ const { normalizeVerificationAssessment } = require('../utils/newsVerification')
 const { refreshCluster } = require('../utils/newsClusters');
 
 const router = express.Router();
+const {copyOutlookTaxonomies} = require('../utils/newsTaxonomyRelations');
 router.use(authenticateUser, requireAdmin);
 
 const EDITABLE_FIELDS = new Set(['newsSummary','sourceAndFramingAnalysis','biblicalReflection','citedPassages','faithfulResponse','congregationalImplications','ministryActions','sermonDiscussionPrompts','reflectionQuestions','closingPrayer','sources','additionalSourcesNeeded']);
@@ -75,6 +76,7 @@ router.post('/clusters/:id/merge', async (req, res, next) => {
         const [sourceResult, targetResult] = await Promise.all([supabase.from('news_story_clusters').select('*').eq('id', req.params.id).single(), supabase.from('news_story_clusters').select('*').eq('id', targetClusterId).single()]);
         if (sourceResult.error || targetResult.error) throw sourceResult.error || targetResult.error;
         const targetCanonicalId = targetResult.data.canonical_outlook_id;
+        await copyOutlookTaxonomies(supabase, sourceResult.data.canonical_outlook_id, targetCanonicalId);
         await supabase.from('news_article_sources').update({ story_cluster_id: targetClusterId }).eq('story_cluster_id', req.params.id);
         await supabase.from('scriptural_outlooks').update({ story_cluster_id: targetClusterId, superseded_by_outlook_id: targetCanonicalId }).eq('story_cluster_id', req.params.id).neq('id', targetCanonicalId);
         await supabase.from('news_story_clusters').update({ status: 'archived', updated_at: new Date().toISOString() }).eq('id', req.params.id);
