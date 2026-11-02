@@ -3,6 +3,7 @@ const {A,B,createDatabase,installDatabase,listen}=require('../helpers/accountHar
 const db=createDatabase();installDatabase(db);
 const app=express();app.use(express.json());
 for(const name of ['devotionals','advice','prayers','user','community'])app.use(`/test/${name}`,require(`../../routes/${name}`));
+app.use('/test/admin',require('../../routes/admin'));
 let server;
 test.before(async()=>{server=await listen(app);});test.after(()=>server.close());test.beforeEach(()=>db.reset());
 async function request(path,{user='alice',method='GET',body}={}){const r=await fetch(server.base+path,{method,headers:{...(user?{Authorization:`Bearer ${user}`}:{ }),'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});return{status:r.status,text:await r.text()};}
@@ -41,4 +42,11 @@ test('congregational prayer reads require real membership and reject filter inje
  const own=await request('/test/prayers/feed?congregationId=1');assert.equal(own.status,200);assert.ok(own.text.includes('Church one'));assert.ok(!own.text.includes('Church two'));
  const publicOnly=await request('/test/prayers/feed');assert.equal(publicOnly.status,200);assert.ok(!publicOnly.text.includes('Private'));assert.ok(!publicOnly.text.includes(B));
  db.fail('organization_memberships');assert.equal((await request('/test/prayers/feed?congregationId=1')).status,503);
+});
+test('quality reports are available only to verified administrators',async()=>{
+ assert.equal((await request('/test/admin/quality',{user:null})).status,401);
+ assert.equal((await request('/test/admin/quality')).status,403);
+ db.tables.user_profiles.find(row=>row.user_id===A).role='admin';db.tables.app_quality_reports=[];
+ assert.equal((await request('/test/admin/quality')).status,200);
+ assert.equal((await request('/test/admin/quality',{user:'bob'})).status,403);
 });

@@ -395,6 +395,7 @@ app.use(async (req, res, next) => {
 
 // Import Routes
 const devotionalsRouter = require('./routes/devotionals');
+const { createReaderFeedbackRouter } = require('./routes/readerFeedback');
 const sermonsRouter = require('./routes/sermons');
 const bibleStudiesRouter = require('./routes/bibleStudies');
 const studyDeliveriesRouter = require('./routes/studyDeliveries');
@@ -469,6 +470,7 @@ app.use('/admin/news', newsEditorialRouter);
 // Stable public aliases. Legacy paths remain available while client migration
 // telemetry identifies callers that still need to move.
 app.use('/api/v1', devotionalsRouter);
+app.use('/api/v1/content-feedback', createReaderFeedbackRouter({db:supabase,authenticateUser:require('./middleware/auth')}));
 app.use('/api/v1', sermonsRouter);
 app.use('/api/v1', bibleStudiesRouter);
 app.use('/api/v1', studyDeliveriesRouter);

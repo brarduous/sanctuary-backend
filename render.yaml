@@ -130,3 +130,45 @@ services:
         sync: false
       - key: DEVOTIONAL_REVIEW_MODEL
         value: gpt-6-astra
+  - type: cron
+    name: sanctuary-hourly-app-quality
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "15 * * * *"
+    buildCommand: npm ci
+    startCommand: npm run cron-app-quality
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: QUALITY_API_BASE_URL
+        value: https://api.sanctuaryapp.us
+  - type: cron
+    name: sanctuary-weekly-content-quality
+    runtime: node
+    plan: starter
+    region: oregon
+    schedule: "30 6 * * 1"
+    buildCommand: npm ci
+    startCommand: npm run cron-content-quality
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: APP_QUALITY_REVIEW_MODEL
+        value: gpt-6-astra
