@@ -10,6 +10,7 @@ router.use(authenticateUser);
 router.use(requireAdmin);
 
 router.get('/quality', async (_req,res) => {
+    res.set('Cache-Control','private, no-store');
     const results=await Promise.all(['operations','content','release'].map(kind=>supabase.from('app_quality_reports').select('run_key,kind,status,started_at,completed_at,source_commit,report').eq('kind',kind).order('started_at',{ascending:false}).limit(1).maybeSingle()));
     if(results.some(result=>result.error))return res.status(503).json({error:'Quality reports are unavailable.'});
     res.json({reports:results.flatMap(result=>result.data?[result.data]:[])});
