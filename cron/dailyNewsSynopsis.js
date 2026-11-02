@@ -13,11 +13,12 @@ const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text") {
-  const assessment={type:'object',additionalProperties:false,required:['verdict','focusType','focus','reason','scriptureReference'],properties:{verdict:{type:'string',enum:['aligned','concerns','mixed','unclear']},focusType:{type:'string',enum:['reported_conduct','recommended_response']},focus:{type:'string'},reason:{type:'string'},scriptureReference:{type:'string'}}};
-  const schema={type:'object',additionalProperties:false,required:['synopsis','details','stories','thought_to_remember','prayer'],properties:{synopsis:{type:'string'},details:{type:'string'},thought_to_remember:{type:'string'},prayer:{type:'string'},stories:{type:'array',minItems:1,maxItems:3,items:{type:'object',additionalProperties:false,required:['headline','summary','christianAssessment'],properties:{headline:{type:'string'},summary:{type:'string'},christianAssessment:assessment}}}}};
+async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTokens, responseFormatType = "text", sourceArticles) {
+  const assessment={type:'object',additionalProperties:false,required:['verdict','focusType','focus','reason','scriptureReference'],properties:{verdict:{type:'string',enum:['aligned','concerns','mixed','unclear']},focusType:{type:'string',enum:['reported_conduct']},focus:{type:'string'},reason:{type:'string'},scriptureReference:{type:'string'}}};
+  const schema={type:'object',additionalProperties:false,required:['synopsis','details','stories','thought_to_remember','prayer'],properties:{synopsis:{type:'string'},details:{type:'string'},thought_to_remember:{type:'string'},prayer:{type:'string'},stories:{type:'array',minItems:1,maxItems:3,items:{type:'object',additionalProperties:false,required:['headline','summary','christianAssessment','sourceArticleIds'],properties:{sourceArticleIds:{type:'array',minItems:1,maxItems:4,items:{type:'integer'}},headline:{type:'string'},summary:{type:'string'},christianAssessment:assessment}}}}};
   const chatCompletion = await openai.chat.completions.create({
     model,
+    reasoning_effort: 'low',
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userPrompt },
@@ -27,7 +28,7 @@ async function callOpenAIAndProcessResult(systemPrompt, userPrompt, model, maxTo
   const generatedContent = chatCompletion.choices[0].message.content;
   console.log('AI Generated Content:', generatedContent);
   if (responseFormatType === 'json_object') {
-    return parseNewsBriefResponse(generatedContent, chatCompletion.usage?.total_tokens);
+    return parseNewsBriefResponse(generatedContent, chatCompletion.usage?.total_tokens, sourceArticles);
   }
   return generatedContent;
 }
@@ -42,11 +43,12 @@ async function generateDailyNewsSynopsisFromLast24h() {
   // Fetch articles created in today so far
   const { data: outlooks, error } = await supabase
     .from('scriptural_outlooks')
-    .select('id, article_title, article_body, ai_outlook, created_at, publish_date')
+    .select('id, slug, article_title, article_url, article_body, ai_outlook, created_at, publish_date')
     .eq('publication_status','published')
     .is('superseded_by_outlook_id',null)
-    .gte('created_at', sinceISOString)
-    .order('created_at', { ascending: false }).limit(24);
+    .gte('publish_date', sinceISOString)
+    .lte('publish_date', new Date().toISOString())
+    .order('publish_date', { ascending: false }).limit(24);
 
   if (error) {
     console.error('Error fetching articles from today so far:', error);
@@ -65,7 +67,7 @@ async function generateDailyNewsSynopsisFromLast24h() {
     let aiResponse,readerReview,feedback='';
     for(let attempt=0;attempt<2;attempt++){
       try{
-        aiResponse=await callOpenAIAndProcessResult(systemPrompt,combinedContent+(feedback ? '\nRequired corrections to the previous draft (editing feedback, not news facts): '+feedback:''),'gpt-5-mini',5000,'json_object');
+        aiResponse=await callOpenAIAndProcessResult(systemPrompt,combinedContent+(feedback ? '\nRequired corrections to the previous draft (editing feedback, not news facts): '+feedback:''),'gpt-5-mini',5000,'json_object',outlooks);
         readerReview=await reviewNewsReaderCopy(openai,{source:combinedContent,copy:aiResponse,daily:true});
         if(readerReview.accepted)break;feedback=readerReview.issues.join('; ');
       }catch(error){feedback=error.message;readerReview={accepted:false};}

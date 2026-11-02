@@ -5,6 +5,10 @@ const OpenAI = require('openai');
 const supabase = require('../config/supabase');
 const { MATCH_THRESHOLD, overlapScore, tokens } = require('./newsClusterMatching');
 
+const {applyAudiencePolicy} = require('./audienceContentPolicy');
+const {normalizeNewsReaderCopy} = require('./newsReaderCopy');
+const {reviewNewsReaderCopy} = require('./newsReaderReview');
+
 const LOOKBACK_DAYS = 120;
 
 function safeSlug(title) {
@@ -78,8 +82,11 @@ async function regenerateCanonicalOutlook(cluster, sources, comparison) {
   const sourceInputs = sources.map((source) => ({ publisher: source.publisher, title: source.title, url: source.url, suppliedText: relevantExcerpt(source.evidence_excerpt || byId.get(source.outlook_id)?.article_body || byId.get(source.outlook_id)?.ai_outlook?.newsSummary || '', cluster.title, source.title) }));
   try {
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: `Create a unified Sanctuary News update about the single core story named by clusterTitle. Return JSON fields: title, newsSummary, sourceAndFramingAnalysis, outlook, citedPassages (reference/context/application), faithfulResponse, reflectionQuestions, closingPrayer, confirmedDetails, singlyReportedDetails, disputedDetails, unresolvedQuestions. The title and every section must remain exclusively about clusterTitle. Ignore unrelated headlines or events embedded in live blogs, news wraps, navigation, or page excerpts. Attribute source-specific details and disagreements. Do not invent facts, URLs, quotations, Scripture text, or consensus. The Christian outlook must center truth, mercy, justice, peacemaking, humility, dignity, and care for vulnerable neighbors; keep it distinct from factual reporting. Use contextual Scripture without proof-texting.` }, { role: 'user', content: JSON.stringify({ clusterTitle: cluster.title, currentCanonical: canonical?.ai_outlook || {}, reports: sourceInputs, sourceComparison: comparison }) }] });
-    const generated = JSON.parse(response.choices[0]?.message?.content || '{}');
+    const response = await client.chat.completions.create({ model: 'gpt-5-mini', response_format: { type: 'json_object' }, messages: [{ role: 'system', content: applyAudiencePolicy('news_generator', `Create a unified Sanctuary News update about the single core story named by clusterTitle. Return JSON fields: title, tldr {summary, christianAssessment {verdict, focusType, focus, reason, scriptureReference}}, newsSummary, sourceAndFramingAnalysis, outlook, citedPassages (reference/context/application), faithfulResponse, reflectionQuestions, closingPrayer, confirmedDetails, singlyReportedDetails, disputedDetails, unresolvedQuestions. The title and every section must remain exclusively about clusterTitle. Ignore unrelated headlines or events embedded in live blogs, news wraps, navigation, or page excerpts. Attribute source-specific details and disagreements. Do not invent facts, URLs, quotations, Scripture text, or consensus. The Christian outlook must center truth, mercy, justice, peacemaking, humility, dignity, and care for vulnerable neighbors; keep it distinct from factual reporting. Use contextual Scripture without proof-texting.`) }, { role: 'user', content: JSON.stringify({ clusterTitle: cluster.title, currentCanonical: canonical?.ai_outlook || {}, reports: sourceInputs, sourceComparison: comparison }) }] });
+    const generated = normalizeNewsReaderCopy(JSON.parse(response.choices[0]?.message?.content || '{}'));
+    const checked = await reviewNewsReaderCopy(client, {source: sourceInputs, copy: generated});
+    if (!checked.accepted) throw new Error('Cluster reader copy failed independent checks: '+checked.issues.join('; '));
+    generated.readerCopyReview = {...checked, writerResponseId: response.id, checkedAt: new Date().toISOString(), method: 'Separate automated source/Scripture/audience check; not human review.'};
     const nextOutlook = { ...(canonical?.ai_outlook || {}), ...generated, sources: sources.map((source, index) => ({ title: source.title, publisher: source.publisher, url: source.url, type: index === 0 ? 'primary_reporting' : 'additional_reporting' })), additionalSourcesNeeded: new Set(sources.map((source) => source.publisher)).size < 2, clusterSynthesis: { confirmedDetails: generated.confirmedDetails || [], singlyReportedDetails: generated.singlyReportedDetails || [], disputedDetails: generated.disputedDetails || [], unresolvedQuestions: generated.unresolvedQuestions || [], generatedAt: new Date().toISOString() } };
     await supabase.from('scriptural_outlooks').update({ article_title: generated.title || cluster.title, ai_outlook: nextOutlook }).eq('id', cluster.canonical_outlook_id);
   } catch (error) {

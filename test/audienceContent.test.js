@@ -35,7 +35,7 @@ test('all reader generation paths apply audience policy after stale templates an
     [() => prompts.getPersonalizedDevotionalPrompt({}, { title: 'Listen Before You Reply', scripture_reference: 'James 1:19', content: 'Listen before speaking.' }), 'Listen Before You Reply'],
     [() => prompts.getGeneralDevotionalBatchPrompt({ theme_title: 'Trust', scripture_focus: 'Psalms' }), 'Trust'],
     [() => prompts.getAdviceGuidancePrompt(), '15-35 words'],
-    [() => prompts.getScripturalOutlookPrompt(), 'news-reader-copy-v2'],
+    [() => prompts.getScripturalOutlookPrompt(), 'news-reader-copy-v3'],
     [() => prompts.getDailyNewsSynopsisPrompt(), 'TLDR with Christian judgment'],
     [() => prompts.getNewsTaxonomyBreakdownPrompt({ taxonomyName: 'Housing', synopses: 'Council approves housing plan.' }), 'Housing'],
   ];
@@ -85,3 +85,12 @@ test('editorial evaluation grades effective prompts and includes slides and dail
   assert.equal(brief.table, 'daily_news_synopses');
   assert.ok((await brief.sampleBuilder([{ id: 1, synopsis: 'News', scripture: 'Original thought', prayer: 'Prayer' }])).includes('Original thought'));
 });
+
+ test('daily brief source links resolve only from supplied article IDs',()=>{
+  const sourceArticles=[{id:1,slug:'housing',article_title:'Council proposes housing',article_url:'https://publisher.example/housing'}];
+  const base={synopsis:'A summary.',details:'A little detail.',thought_to_remember:'Seek justice.',prayer:'Lord, guide us.',stories:[{headline:'Housing',summary:'Council proposes support for neighbors.',sourceArticleIds:[1],christianAssessment:{verdict:'aligned',focusType:'reported_conduct',focus:'Council support for housing',reason:'Providing shelter for neighbors reflects care for people in need.',scriptureReference:'Micah 6:8'}}]};
+  const parsed=parseNewsBriefResponse(JSON.stringify(base),0,sourceArticles);
+  assert.equal(parsed.stories[0].sourceArticles[0].sourceUrl,sourceArticles[0].article_url);
+  base.stories[0].sourceArticleIds=[999];
+  assert.throws(()=>parseNewsBriefResponse(JSON.stringify(base),0,sourceArticles),/supplied article IDs/);
+ });

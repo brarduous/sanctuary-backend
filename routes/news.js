@@ -9,6 +9,8 @@ const rateLimit = require('express-rate-limit');
 const { publicAssessment } = require('../utils/newsVerification');
 const { requireCapability } = require('../middleware/authorization');
 
+const { filteredNewsPage, taxonomyActivity, allTaxonomies, activeTopics } = require('../utils/newsFeed');
+
 const correctionLimiter = rateLimit({ windowMs: 15 * 60 * 1000, limit: 5, standardHeaders: true, legacyHeaders: false });
 
 function publicNewsOutlook(outlook) {
@@ -89,14 +91,6 @@ async function hydrateStoryClusters(articles) {
     });
 }
 
-function getWeightedNewsScore(outlook) {
-    const impactScore = Number(outlook.news_impact_score) || 0;
-    const articleTime = new Date(outlook.publish_date || outlook.created_at).getTime();
-    const ageHours = Number.isFinite(articleTime) ? (Date.now() - articleTime) / (1000 * 60 * 60) : 24;
-    const recencyScore = Math.max(0, 100 - ((Math.max(0, ageHours) / 24) * 100));
-    return (impactScore * 0.7) + (recencyScore * 0.3);
-}
-
 async function resolveTaxonomyId(tableName, value) {
     if (!value) return null;
     if (/^\d+$/.test(String(value))) return value;
@@ -109,28 +103,6 @@ async function resolveTaxonomyId(tableName, value) {
 
     if (error || !data) return null;
     return data.id;
-}
-
-function buildTaxonomyImpactMap(rows, taxonomyIdField) {
-    const map = {};
-    (rows || []).forEach((row) => {
-        const taxonomyId = row[taxonomyIdField];
-        if (!taxonomyId) return;
-
-        const outlook = row.scriptural_outlooks;
-        const impactScore = Number(outlook?.news_impact_score) || 0;
-        if (!map[taxonomyId]) {
-            map[taxonomyId] = {
-                recentArticleCount: 0,
-                impactScoreWeek: 0
-            };
-        }
-
-        map[taxonomyId].recentArticleCount += 1;
-        map[taxonomyId].impactScoreWeek += impactScore;
-    });
-
-    return map;
 }
 
 async function hydrateOutlookTaxonomies(outlooks) {
@@ -171,27 +143,6 @@ async function hydrateOutlookTaxonomies(outlooks) {
     }));
 }
 
-async function resolveFilteredOutlookIds({ resolvedTopicId, resolvedCategoryId, categoryIds }) {
-    const lookups = [];
-    if (resolvedTopicId) {
-        lookups.push(
-            supabase.from('outlook_topics').select('outlook_id').eq('topic_id', resolvedTopicId).limit(1000),
-        );
-    }
-    const requestedCategoryIds = resolvedCategoryId ? [resolvedCategoryId] : categoryIds;
-    if (requestedCategoryIds.length) {
-        lookups.push(
-            supabase.from('outlook_categories').select('outlook_id').in('category_id', requestedCategoryIds).limit(1000),
-        );
-    }
-    if (!lookups.length) return null;
-
-    const results = await Promise.all(lookups);
-    for (const result of results) if (result.error) throw result.error;
-    const idSets = results.map((result) => new Set((result.data || []).map((row) => row.outlook_id)));
-    return [...idSets[0]].filter((id) => idSets.every((values) => values.has(id)));
-}
-
 async function hydratePublicVerification(outlook) {
     const [scores, claims, sources, notices, reviews] = await Promise.all([
         supabase.from('news_score_versions').select('version,truthfulness_score,truthfulness_band,assessment_summary,assessed_at,confidence_score').eq('outlook_id', outlook.id).order('version', { ascending: false }).limit(1),
@@ -230,7 +181,10 @@ router.get('/search', optionalAuth, async (req, res) => {
             .from('scriptural_outlooks')
             .select('id, article_title, article_url, article_thumbnail_url, created_at, publish_date, slug, ai_outlook, article_body')
             .eq('publication_status', 'published')
+            .is('superseded_by_outlook_id', null)
             .or(`article_title.ilike.${pattern},article_body.ilike.${pattern},ai_outlook->>synopsis.ilike.${pattern}`)
+            .order('publish_date', { ascending: false, nullsFirst: false })
+            .order('id', { ascending: false })
             .limit(limit);
 
         if (error) {
@@ -259,7 +213,7 @@ router.get('/search', optionalAuth, async (req, res) => {
             
             return { ...row, _score: (titleScore + bodyScore + synopsisScore) };
         })
-        .filter(r => r._score > 0)
+        .filter(r => r._score > 0 && publicNewsArticle(r))
         .sort((a, b) => {
             if (b._score !== a._score) return b._score - a._score;
             const ad = a.publish_date ? new Date(a.publish_date).getTime() : 0;
@@ -278,21 +232,10 @@ router.get('/search', optionalAuth, async (req, res) => {
 // --- 2. GET ALL CATEGORIES (SORTED BY WEEKLY IMPACT) ---
 router.get('/categories', async (req, res) => {
     try {
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - 7);
-        const isoDate = startDate.toISOString();
-
-        const { data: cats, error: catError } = await supabase.from('categories').select('*');
-        if (catError) throw catError;
-
-        const { data: impactRows, error: impactErr } = await supabase
-            .from('outlook_categories')
-            .select('category_id, scriptural_outlooks!inner(created_at, news_impact_score)')
-            .gte('scriptural_outlooks.created_at', isoDate);
-
-        if (impactErr) throw impactErr;
-
-        const activityMap = buildTaxonomyImpactMap(impactRows, 'category_id');
+        const [cats, activityMap] = await Promise.all([
+            allTaxonomies(supabase, 'categories'),
+            taxonomyActivity(supabase, 'outlook_categories', 'category_id'),
+        ]);
 
         const result = cats.map(c => ({
             ...c,
@@ -362,21 +305,8 @@ router.post('/news/corrections', correctionLimiter, async (req, res) => {
 // --- 4. GET ALL TOPICS (SORTED BY WEEKLY IMPACT) ---
 router.get('/topics', async (req, res) => {
     try {
-        const startDate = new Date();
-        startDate.setDate(startDate.getDate() - 7);
-        const isoDate = startDate.toISOString();
-
-        const { data: topics, error: topError } = await supabase.from('topics').select('*');
-        if (topError) throw topError;
-
-        const { data: impactRows, error: impactErr } = await supabase
-            .from('outlook_topics')
-            .select('topic_id, scriptural_outlooks!inner(created_at, news_impact_score)')
-            .gte('scriptural_outlooks.created_at', isoDate);
-
-        if (impactErr) throw impactErr;
-
-        const activityMap = buildTaxonomyImpactMap(impactRows, 'topic_id');
+        const activityMap = await taxonomyActivity(supabase, 'outlook_topics', 'topic_id');
+        const topics = await activeTopics(supabase, activityMap);
 
         const result = topics.map(t => ({
             ...t,
@@ -479,8 +409,12 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
     const offset = (page - 1) * limit;
     
     // Date Filters
-    const startDate = req.query.startDate;
-    const endDate = req.query.endDate;
+    const parseDate = value => value && Number.isFinite(Date.parse(String(value))) ? new Date(String(value)).toISOString() : null;
+    const startDate = parseDate(req.query.startDate);
+    let endDate = parseDate(req.query.endDate);
+    if ((req.query.startDate && !startDate) || (req.query.endDate && !endDate)) return res.status(400).json({ error: 'Invalid news date range.' });
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(req.query.endDate || ''))) endDate = new Date(Date.parse(endDate) + 86400000 - 1).toISOString();
+    if (startDate && endDate && startDate > endDate) return res.status(400).json({ error: 'News start date must precede end date.' });
 
     // Taxonomy Filters
     const topic_id = req.query.topic_id;
@@ -514,68 +448,13 @@ router.get('/scriptural-outlooks', optionalAuth, async (req, res) => {
             return res.json([]);
         }
         
-        // Resolve relationship IDs before the feed query and hydrate details
-        // only for the final page. This avoids the nested PostgREST join that
-        // repeatedly exceeded the production statement timeout.
-        const filteredOutlookIds = await resolveFilteredOutlookIds({
-            resolvedTopicId,
-            resolvedCategoryId,
-            categoryIds,
-        });
-        if (filteredOutlookIds && !filteredOutlookIds.length) return res.json([]);
-        const baseColumns = NEWS_LIST_COLUMNS;
-        const selectQuery = baseColumns;
         const sort = String(req.query.sort || req.query.orderBy || 'latest').toLowerCase();
-
-        const useWeightedSort = sort === 'weighted' || sort === 'balanced';
-        const weightedCandidateLimit = Math.min(Math.max(limit * Math.max(page, 1) * 6, 120), 500);
-
-        let query = supabase
-            .from('scriptural_outlooks')
-            .select(selectQuery)
-            .is('superseded_by_outlook_id', null)
-            .eq('publication_status', 'published');
-
-        if (filteredOutlookIds) query = query.in('id', filteredOutlookIds);
-
-        if (useWeightedSort) {
-            query = query
-                .not('news_impact_score', 'is', null)
-                .order('publish_date', { ascending: false, nullsFirst: false })
-                .order('created_at', { ascending: false })
-                .limit(weightedCandidateLimit);
-        } else if (sort === 'impact' || sort === 'featured') {
-            query = query
-                .order('news_impact_score', { ascending: false, nullsFirst: false })
-                .order('publish_date', { ascending: false, nullsFirst: false })
-                .order('created_at', { ascending: false })
-                .range(offset, offset + limit - 1);
-        } else {
-            query = query
-                .order('publish_date', { ascending: false, nullsFirst: false })
-                .order('created_at', { ascending: false })
-                .range(offset, offset + limit - 1);
-        }
-
-        // Apply Date Filters
-        if (startDate) query = query.gte('created_at', startDate);
-        if (endDate) query = query.lte('created_at', endDate);
-
-        const { data, error } = await query;
-
-        if (error) throw error;
-
-        let cleanedData = (data || []).map(({ outlook_categories, outlook_topics, ...outlook }) => publicNewsArticle(outlook)).filter(Boolean);
-
-        if (useWeightedSort) {
-            cleanedData = cleanedData
-                .map(outlook => ({ ...outlook, weighted_score: getWeightedNewsScore(outlook) }))
-                .sort((a, b) => {
-                    if (b.weighted_score !== a.weighted_score) return b.weighted_score - a.weighted_score;
-                    return new Date(b.publish_date || b.created_at).getTime() - new Date(a.publish_date || a.created_at).getTime();
-                })
-                .slice(offset, offset + limit);
-        }
+        const data = await filteredNewsPage(supabase, {
+            columns: NEWS_LIST_COLUMNS, topicId: resolvedTopicId,
+            categoryId: resolvedCategoryId, categoryIds, offset, limit,
+            startDate, endDate, sort,
+        });
+        let cleanedData = data.map(publicNewsArticle).filter(Boolean);
 
         cleanedData = await hydrateOutlookTaxonomies(cleanedData);
         cleanedData = await hydrateStoryClusters(cleanedData);
