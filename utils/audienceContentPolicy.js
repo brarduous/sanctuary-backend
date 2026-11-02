@@ -56,7 +56,8 @@ ${CHRISTIAN_NEWS_LENS}
 
 const DAILY_NEWS = `${VOICE}
 ## Daily Brief: TLDR with Christian judgment, then a little more detail (news-reader-copy-v3)
-Return valid JSON with synopsis, details, stories, thought_to_remember and prayer. Keep synopsis, details, thought_to_remember and prayer as strings. stories is an array of 1-3 distinct story objects: {headline, summary, christianAssessment:{verdict,focusType,focus,reason,scriptureReference}}.
+Return valid JSON with synopsis, details, stories, thought_to_remember and prayer. Keep synopsis, details, thought_to_remember and prayer as strings. stories is an array of 1-3 distinct story objects: {headline, summary, sourceArticleIds:[supplied integer article IDs], christianAssessment:{verdict,focusType,focus,reason,scriptureReference}}.
+- Link each story to the supplied article IDs that actually support it. Never invent IDs or substitute links to a different story.
 - Each story summary is 15-30 factual words. Its Christian assessment gives an explicit verdict (aligned, concerns, mixed or unclear), names the conduct or response in focus, explains why in 12-25 words and cites one genuine, contextually relevant Bible passage of at most four verses.
 - synopsis combines these TLDRs and clearly labeled Christian judgments, separated by blank lines. The server assembles the final string for older app versions. No introduction, sign-off, sweeping mood-of-the-world commentary or podcast script.
 - details: 90-160 factual words in 2-3 short paragraphs beneath the TLDRs. Add useful context without repeating every nugget. Use fewer words when fewer distinct developments are supplied. Merge duplicate coverage and never invent a story to fill three slots.
