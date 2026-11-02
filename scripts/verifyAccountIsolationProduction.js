@@ -61,7 +61,7 @@ async function verify(){
  }catch(error){failure=error;}
  finally{
   for(const user of users){
-   for(const remove of [()=>db.from('daily_devotionals').delete().eq('user_id',user.id).in('devotional_id',records),()=>db.from('user_profiles').delete().eq('user_id',user.id),()=>db.auth.admin.deleteUser(user.id)]){
+   for(const remove of [...['reader_content_feedback','system_logs','user_activities','users'].map(table=>()=>db.from(table).delete().eq('user_id',user.id)),()=>db.from('daily_devotionals').delete().eq('user_id',user.id).in('devotional_id',records),()=>db.from('user_profiles').delete().eq('user_id',user.id),()=>db.auth.admin.deleteUser(user.id)]){
     try{unwrap(await remove());}catch(error){cleanupFailed=true;failure ||= Error('Disposable account cleanup failed; inspect the private verification process.');console.error('Fixture cleanup requires attention:',error.code || 'unknown');}
    }
   }
