@@ -9,6 +9,8 @@ const {applyAudiencePolicy} = require('./audienceContentPolicy');
 const {normalizeNewsReaderCopy} = require('./newsReaderCopy');
 const {reviewNewsReaderCopy} = require('./newsReaderReview');
 
+const {copyOutlookTaxonomies} = require('./newsTaxonomyRelations');
+
 const LOOKBACK_DAYS = 120;
 
 function safeSlug(title) {
@@ -139,14 +141,11 @@ async function reconcileOutlookCluster(outlookId, article, aiResponse) {
   await supabase.from('news_article_sources').update({ story_cluster_id: cluster.id }).eq('outlook_id', outlookId);
   if (!cluster.canonical_outlook_id) await supabase.from('news_story_clusters').update({ canonical_outlook_id: outlookId }).eq('id', cluster.id);
   if (canonicalId !== outlookId) {
-    const [{ data: categories }, { data: topics }, { data: incoming }, { data: canonicalRow }] = await Promise.all([
-      supabase.from('outlook_categories').select('category_id').eq('outlook_id', outlookId),
-      supabase.from('outlook_topics').select('topic_id').eq('outlook_id', outlookId),
+    const [{ data: incoming }, { data: canonicalRow }] = await Promise.all([
       supabase.from('scriptural_outlooks').select('publish_date,article_thumbnail_url,news_impact_score,news_impact_summary').eq('id', outlookId).single(),
       supabase.from('scriptural_outlooks').select('publish_date,news_impact_score').eq('id', canonicalId).single(),
     ]);
-    if (categories?.length) await supabase.from('outlook_categories').upsert(categories.map((row) => ({ outlook_id: canonicalId, category_id: row.category_id })), { onConflict: 'outlook_id,category_id', ignoreDuplicates: true });
-    if (topics?.length) await supabase.from('outlook_topics').upsert(topics.map((row) => ({ outlook_id: canonicalId, topic_id: row.topic_id })), { onConflict: 'outlook_id,topic_id', ignoreDuplicates: true });
+    await copyOutlookTaxonomies(supabase, outlookId, canonicalId);
     const incomingTime = new Date(incoming?.publish_date || 0).getTime();
     const canonicalTime = new Date(canonicalRow?.publish_date || 0).getTime();
     await supabase.from('scriptural_outlooks').update({ publish_date: incomingTime > canonicalTime ? incoming.publish_date : canonicalRow?.publish_date, article_thumbnail_url: incomingTime > canonicalTime && incoming?.article_thumbnail_url ? incoming.article_thumbnail_url : undefined, news_impact_score: Math.max(Number(incoming?.news_impact_score) || 0, Number(canonicalRow?.news_impact_score) || 0), news_impact_summary: Number(incoming?.news_impact_score) > Number(canonicalRow?.news_impact_score) ? incoming?.news_impact_summary : undefined }).eq('id', canonicalId);
