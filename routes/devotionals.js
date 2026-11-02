@@ -3,6 +3,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
+const ownAccount = require('../middleware/ownAccount');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyDevotionalPrompt, getPersonalizedDevotionalPrompt } = require('../prompts');
 const { searchSpotifyTracks, selectMinistrySafeTrack } = require('../utils/spotify');
@@ -215,8 +216,8 @@ router.post('/generate-devotional', authenticateUser, aiLimiter, async (req, res
     }
 });
 
-router.get('/devotionals/:userId', authenticateUser, async (req, res) => {
-    const { userId } = req.params;
+router.get('/devotionals/:userId', authenticateUser, ownAccount, async (req, res) => {
+    const userId = req.user.id;
     const { data, error } = await supabase
         .from('daily_devotionals')
         .select('*')
@@ -231,15 +232,16 @@ router.get('/devotionals/:userId', authenticateUser, async (req, res) => {
 });
 
 //get devotional by devotionalId
-router.get('/devotional/:userId/:devotionalId', authenticateUser, async (req, res) => {
+router.get('/devotional/:userId/:devotionalId', authenticateUser, ownAccount, async (req, res) => {
     const startTime = Date.now();
-    const { userId, devotionalId } = req.params;
+    const { devotionalId } = req.params;
+    const userId = req.user.id;
     const { data, error } = await supabase
         .from('daily_devotionals')
         .select('*')
         .eq('user_id', userId)
         .eq('devotional_id', devotionalId)
-        .single();
+        .maybeSingle();
     if (error) {
         console.error('Error fetching devotional by ID:', error);
         return res.status(500).json({ error: 'Failed to fetch devotional by ID.' });
@@ -257,7 +259,8 @@ router.delete('/devotional/:devotionalId', authenticateUser, async (req, res) =>
         const { error } = await supabase
             .from('daily_devotionals')
             .delete()
-            .eq('devotional_id', devotionalId);
+            .eq('devotional_id', devotionalId)
+            .eq('user_id', req.user.id);
 
         if (error) throw error;
         logEvent('info', 'backend', req.user.id, 'delete_devotional', `Deleted devotional ${devotionalId}`, {}, 0);

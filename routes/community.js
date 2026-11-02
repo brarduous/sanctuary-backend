@@ -7,7 +7,9 @@ const { community_prayer_prompt } = require('../prompts');
 const { getCommunityPrayerPrompt } = require('../prompts');
 // 1. Submit a Prayer Request
 router.post('/community/request', authenticateUser, async (req, res) => {
-    const { userId, content } = req.body;
+    const { content } = req.body;
+    if (req.body.userId && req.body.userId !== req.user.id) return res.status(403).json({error:'Account access denied.'});
+    const userId = req.user.id;
 
     try {
         // A. Check Limits (1 per week for Free)

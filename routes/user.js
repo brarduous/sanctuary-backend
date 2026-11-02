@@ -3,6 +3,8 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const openai = require('../config/openai');
 const authenticateUser = require('../middleware/auth');
+const ownAccount = require('../middleware/ownAccount');
+const optionalAuth = require('../middleware/optionalAuth');
 const { logEvent } = require('../utils/helpers');
 const { getRenderedPrompt } = require('../prompts');
 const multer = require('multer');
@@ -130,7 +132,7 @@ router.get('/app-options', authenticateUser, async (req, res) => {
 });
 
 // Get user_profile by userId
-router.get('/user-profile/:userId', authenticateUser, async (req, res) => {
+router.get('/user-profile/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     if (req.user.id !== userId) {
         return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only access your own profile.', requestId: req.requestId } });
@@ -184,7 +186,7 @@ router.get('/user-profile/:userId', authenticateUser, async (req, res) => {
     res.json(data);
 });
 //save or update user_profile by userId
-router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
+router.post('/user-profile/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     if (req.user.id !== userId) {
         return res.status(403).json({ error: 'You can only update your own profile.' });
@@ -229,7 +231,7 @@ router.post('/user-profile/:userId', authenticateUser, async (req, res) => {
     res.json({ ...(refreshed.data || data || {}), avatar_url: avatarUrl || refreshed.data?.avatar_url || refreshed.data?.user_preferences?.avatar_url });
 });
 
-router.get('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+router.get('/user-profile/:userId/personal-growth', authenticateUser, ownAccount, async (req, res, next) => {
     if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only access your own personal-growth data.', requestId: req.requestId } });
     try {
         const result = await readPersonalGrowth(req.user.id);
@@ -237,7 +239,7 @@ router.get('/user-profile/:userId/personal-growth', authenticateUser, async (req
     } catch (error) { next(error); }
 });
 
-router.put('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+router.put('/user-profile/:userId/personal-growth', authenticateUser, ownAccount, async (req, res, next) => {
     if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only update your own personal-growth data.', requestId: req.requestId } });
     const payload = {
         user_id: req.user.id,
@@ -256,7 +258,7 @@ router.put('/user-profile/:userId/personal-growth', authenticateUser, async (req
     } catch (error) { next(error); }
 });
 
-router.get('/user-profile/:userId/personal-growth/export', authenticateUser, async (req, res, next) => {
+router.get('/user-profile/:userId/personal-growth/export', authenticateUser, ownAccount, async (req, res, next) => {
     if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only export your own personal-growth data.', requestId: req.requestId } });
     try {
         const result = await readPersonalGrowth(req.user.id);
@@ -265,7 +267,7 @@ router.get('/user-profile/:userId/personal-growth/export', authenticateUser, asy
     } catch (error) { next(error); }
 });
 
-router.delete('/user-profile/:userId/personal-growth', authenticateUser, async (req, res, next) => {
+router.delete('/user-profile/:userId/personal-growth', authenticateUser, ownAccount, async (req, res, next) => {
     if (req.user.id !== req.params.userId) return res.status(403).json({ error: { code: 'FORBIDDEN', message: 'You can only delete your own personal-growth data.', requestId: req.requestId } });
     try {
         const deletion = await supabase.from('personal_growth_profiles').delete().eq('user_id', req.user.id);
@@ -281,7 +283,7 @@ router.delete('/user-profile/:userId/personal-growth', authenticateUser, async (
     } catch (error) { next(error); }
 });
 
-router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('avatar'), async (req, res) => {
+router.post('/user-profile/:userId/avatar', authenticateUser, ownAccount, upload.single('avatar'), async (req, res) => {
     const { userId } = req.params;
     if (req.user.id !== userId) {
         return res.status(403).json({ error: 'You can only update your own avatar.' });
@@ -322,8 +324,10 @@ router.post('/user-profile/:userId/avatar', authenticateUser, upload.single('ava
 });
 
 // Example Node.js/Express route for a Supabase backend
-router.post('/log-activity', async (req, res) => {
-    let { userId, activityType, activityId, description } = req.body;
+router.post('/log-activity', optionalAuth, async (req, res) => {
+    const { activityType, activityId, description } = req.body;
+    if (req.body.userId && req.body.userId !== 'anonymous' && req.body.userId !== req.user?.id) return res.status(req.user ? 403 : 401).json({error:'Account access denied.'});
+    let userId = req.user?.id || null;
 
 
     if(userId === 'anonymous'){
@@ -354,7 +358,7 @@ router.post('/log-activity', async (req, res) => {
 });
 
 // New API route to calculate and return the user's streak
-router.get('/streak/:userId/:activityType', async (req, res) => {
+router.get('/streak/:userId/:activityType', authenticateUser, ownAccount, async (req, res) => {
     const { userId, activityType } = req.params;
 
     if (!userId || !activityType) {
@@ -454,8 +458,10 @@ router.post('/contact', async (req, res) => {
     }
 });
 
-router.post('/feedback', authenticateUser, async (req, res) => {
-    const { userId, contentId, contentType, feedback } = req.body;
+router.post('/feedback', authenticateUser, ownAccount, async (req, res) => {
+    const { contentId, contentType, feedback } = req.body;
+    const userId = req.user.id;
+    if (!feedback || !Number.isInteger(feedback.rating) || feedback.rating < 1 || feedback.rating > 5 || typeof contentId !== 'string' || contentId.length > 100 || typeof contentType !== 'string' || contentType.length > 40 || [feedback.positive,feedback.negative].some(value=>value != null && (typeof value !== 'string' || value.length > 2000))) return res.status(400).json({error:'Invalid feedback.'});
     // feedback = { rating, positive, negative }
 
     try {
@@ -513,7 +519,7 @@ router.post('/feedback', authenticateUser, async (req, res) => {
 
 
 // GET Followed Categories
-router.get('/user-followed-categories/:userId', authenticateUser, async (req, res) => {
+router.get('/user-followed-categories/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     try {
         const { data, error } = await supabase
@@ -531,7 +537,7 @@ router.get('/user-followed-categories/:userId', authenticateUser, async (req, re
 });
 
 // UPDATE Followed Categories (Bulk Replace)
-router.post('/user-followed-categories/:userId', authenticateUser, async (req, res) => {
+router.post('/user-followed-categories/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     const { categoryIds } = req.body; // Expects: { categoryIds: [1, 2, 3] }
 
@@ -562,7 +568,7 @@ router.post('/user-followed-categories/:userId', authenticateUser, async (req, r
 });
 
 // GET Followed Topics
-router.get('/user-followed-topics/:userId', authenticateUser, async (req, res) => {
+router.get('/user-followed-topics/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     try {
         const { data, error } = await supabase
@@ -579,7 +585,7 @@ router.get('/user-followed-topics/:userId', authenticateUser, async (req, res) =
 });
 
 // UPDATE Followed Topics (Bulk Replace)
-router.post('/user-followed-topics/:userId', authenticateUser, async (req, res) => {
+router.post('/user-followed-topics/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     const { topicIds } = req.body;
 
@@ -608,8 +614,9 @@ router.post('/user-followed-topics/:userId', authenticateUser, async (req, res) 
 });
 
 // UPDATE /log Endpoint (for Frontend)
-router.post('/log', async (req, res) => {
-    const { level, action, message, details, userId, duration } = req.body;
+router.post('/log', optionalAuth, async (req, res) => {
+    const { level, action, message, details, duration } = req.body;
+    const userId = req.user?.id || null;
 
     await logEvent(
         level || 'info',
@@ -662,9 +669,11 @@ router.post('/marketing/unsubscribe', async (req, res) => {
 });
 
 // --- NEW: Create Stripe Checkout Session (Updated for Trials) ---
-router.post('/create-checkout-session', authenticateUser,async (req, res) => {
+router.post('/create-checkout-session', authenticateUser, ownAccount, async (req, res) => {
     if (!stripeLayperson) return res.status(503).json({ error: { code: 'INTEGRATION_UNAVAILABLE', message: 'Subscriptions are not configured.', requestId: req.requestId } });
-    const { userId, email, isTrial } = req.body; // Accept isTrial flag
+    const userId = req.user.id;
+    const email = req.user.email;
+    const isTrial = req.body.isTrial === true;
 
     try {
         const sessionConfig = {

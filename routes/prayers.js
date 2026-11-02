@@ -3,6 +3,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
+const prayerMembership = require('../middleware/prayerMembership');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getDailyPrayerPrompt } = require('../prompts');
 const { requireCapability } = require('../middleware/authorization');
@@ -168,7 +169,7 @@ router.post('/request', authenticateUser, async (req, res) => {
 });
 
 // GET: Fetch Prayer Feed for Mobile App (Respects Visibility Rules)
-router.get('/feed', authenticateUser, async (req, res) => {
+router.get('/feed', authenticateUser, prayerMembership, async (req, res) => {
     const { congregationId } = req.query; // Pass the user's congregation if they have one
 
     try {
@@ -178,7 +179,7 @@ router.get('/feed', authenticateUser, async (req, res) => {
             .order('created_at', { ascending: false })
             .limit(50);
 
-        if (congregationId) {
+        if (congregationId && !['null','undefined'].includes(congregationId)) {
             // User IS in a church: See Public + Their Congregation's prayers
             query = query.or(`visibility.eq.public_anonymous,and(visibility.eq.congregation,congregation_id.eq.${congregationId})`);
         } else {
@@ -205,7 +206,7 @@ router.get('/feed', authenticateUser, async (req, res) => {
 });
 
 // GET: Fetch a random prayer (Prioritizes local congregation, falls back to public)
-router.get('/random', authenticateUser, async (req, res) => {
+router.get('/random', authenticateUser, prayerMembership, async (req, res) => {
     const { congregationId } = req.query;
 
     try {

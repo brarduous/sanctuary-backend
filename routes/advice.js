@@ -3,6 +3,7 @@ const router = express.Router();
 const supabase = require('../config/supabase');
 const { aiLimiter } = require('../middleware/limiters');
 const authenticateUser = require('../middleware/auth');
+const ownAccount = require('../middleware/ownAccount');
 const { logEvent, callOpenAIAndProcessResult } = require('../utils/helpers');
 const { getAdviceGuidancePrompt } = require('../prompts');
 const rateLimit = require('express-rate-limit');
@@ -248,7 +249,7 @@ router.post('/generate-advice', authenticateUser, aiLimiter, async (req, res) =>
 });
 
 // New Fetching Endpoint: Get Advice/Guidance for a user
-router.get('/advice/:userId', authenticateUser, async (req, res) => {
+router.get('/advice/:userId', authenticateUser, ownAccount, async (req, res) => {
     const { userId } = req.params;
     const { data, error } = await supabase
         .from('advice_guidance')
@@ -264,7 +265,7 @@ router.get('/advice/:userId', authenticateUser, async (req, res) => {
 });
 
 //New Fetching Endpoint: Get Advice/Guidance by adviceId
-router.get('/advice/:userId/:adviceId', authenticateUser, async (req, res) => {
+router.get('/advice/:userId/:adviceId', authenticateUser, ownAccount, async (req, res) => {
 
     const { adviceId, userId } = req.params;
     const { data, error } = await supabase
