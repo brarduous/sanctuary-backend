@@ -111,11 +111,11 @@ grant execute on function public.discovery_validate_set_candidate(jsonb,jsonb,te
 do $m$
 declare d text:=pg_get_functiondef('public.discovery_daily_publish(date,uuid,jsonb)'::regprocedure);
 begin
- -- A v6 final editor uses the new general-audience standard. Older saved sets retain their own reviews.
+ -- A v7 final editor uses the new general-audience standard. Older saved sets retain their own reviews.
  if position('sanctuary-trivia-set-editor-v4' in d)=0 then raise exception 'Unexpected set editor function'; end if;
- d:=replace(d,'r->>''setEditorialVersion'' is distinct from ''sanctuary-trivia-set-editor-v4''','coalesce(r->>''setEditorialVersion'','''') not in (''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v6'')');
+ d:=replace(d,'r->>''setEditorialVersion'' is distinct from ''sanctuary-trivia-set-editor-v4''','coalesce(r->>''setEditorialVersion'','''') not in (''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v7'')');
  -- Handles the previous learning migration, when already installed.
- d:=replace(d,'''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'')','''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v6'')');
+ d:=replace(d,'''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'')','''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v7'')');
  d:=replace(d,'  week_context:=public.discovery_daily_week_context(p_date);',
  '  if p_date>=date ''2026-11-04'' and exists(select 1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status=''accepted'' and content->''difficulty''->>''rubricVersion'' is distinct from ''discovery-difficulty-v3'') then raise exception ''General audience difficulty v3 required for new daily sets''; end if;
   week_context:=public.discovery_daily_week_context(p_date);');

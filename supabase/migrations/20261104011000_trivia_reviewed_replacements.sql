@@ -54,7 +54,7 @@ begin
  if jsonb_typeof(reviews) is distinct from 'array' or jsonb_array_length(reviews)<>2 or (select count(distinct value->>'model') from jsonb_array_elements(reviews))<>2 then raise exception 'Two independent final editors required'; end if;
  for r in select value from jsonb_array_elements(reviews) loop
   if r->'questionContents' is distinct from manuscripts or r->'questionPromptHashes' is distinct from hashes or r->'weekContext' is distinct from context
-    or r->>'setEditorialVersion' is distinct from 'sanctuary-trivia-set-editor-v6' or r->>'weekReviewVersion' is distinct from 'sanctuary-trivia-rolling-week-v1'
+    or r->>'setEditorialVersion' is distinct from 'sanctuary-trivia-set-editor-v7' or r->>'weekReviewVersion' is distinct from 'sanctuary-trivia-rolling-week-v1'
     or coalesce(length(r->>'responseId'),0)<5 or (r->>'approved')::boolean is distinct from true or jsonb_typeof(r->'issues') is distinct from 'array' or jsonb_array_length(r->'issues')<>0 then raise exception 'Final review is stale, incomplete or not bound to this set'; end if;
  end loop;
  if (select count(distinct lower(btrim(choice->>'text'))) from jsonb_array_elements(manuscripts) manuscript cross join lateral jsonb_array_elements(manuscript->'choices') choice where choice->>'id'=manuscript->>'correctOptionId')<>3 then raise exception 'Daily answers must be distinct'; end if;
