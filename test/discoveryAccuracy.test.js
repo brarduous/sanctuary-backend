@@ -35,7 +35,7 @@ test('daily difficulty is a separate blinded closed-book task with independently
  const client={responses:{async create(request){
   const input=JSON.parse(request.input);assert.equal(input.candidate.correctOptionId,undefined);assert.equal(input.candidate.difficulty,undefined);assert.equal(input.targetDifficulty,undefined);
   calls.push(request.text.format.name);
-  const data=request.text.format.name==='discovery_closed_book_difficulty' ? {familiarity:0,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:1,rationale:'A familiar image; no additional knowledge connections are required.'}:modelReviewFor(content,evidence,request.model);
+  const data=request.text.format.name==='discovery_closed_book_difficulty' ? {familiarity:0,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:0,rationale:'A familiar image; no additional knowledge connections are required.'}:modelReviewFor(content,evidence,request.model);
   return {status:'completed',model:request.model,id:request.text.format.name+'-'+request.model,output_text:JSON.stringify(data),usage:{input_tokens:10,output_tokens:10,total_tokens:20}};
  }}};
  const adapter=createDiscoveryModels({generatorModel:'writer',reviewModels:['test-a','test-b'],client});

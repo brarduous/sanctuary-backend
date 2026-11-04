@@ -46,7 +46,7 @@ test('three accepted, distinct, independently rated questions publish atomically
   const response=await fetch(h.base+'/api/v1/discoveries/bundle?dailySet=1');assert.equal(response.status,200);
   const bundle=await response.json();assert.equal(bundle.items.length,3);assert.deepEqual(bundle.items.map(i=>i.setPosition),[1,2,3]);assert.deepEqual(bundle.items.map(i=>i.difficulty.level),levels);
   assert.deepEqual(bundle.items.map(i=>i.difficultyEstimate.score),[0,2,5]);
-  assert.ok(bundle.items.every(i=>i.difficultyEstimate.rubricVersion==='discovery-difficulty-v3' && i.difficultyEncoding==='legacy-tier-compatibility')); 
+  assert.ok(bundle.items.every(i=>i.difficultyEstimate.rubricVersion==='discovery-difficulty-v3' && i.difficultyEncoding==='legacy-tier-compatibility'));
   assert.equal((await (await fetch(h.base+'/api/v1/discoveries/bundle')).json()).items.length,1,'older clients automatically receive the reviewed Easy question');
   const compatible=(await (await fetch(h.base+'/api/v1/discoveries/bundle')).json()).items[0];
   assert.equal(compatible.id,bundle.items[0].id);assert.equal(compatible.difficulty,undefined,'legacy clients receive facts without an unsupported optional grading version');assert.equal(compatible.setPosition,undefined);
