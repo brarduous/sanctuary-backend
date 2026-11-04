@@ -18,10 +18,10 @@ Use the four dimensions below. Values of 2 describe an unsuitable question and M
 - evidenceNavigation: 0 one fact or association; 1 one clear relationship in a familiar scene; 2 multiple roles, stages or relationships to keep track of.
 - reasoningSteps: 0 direct recognition or recall; 1 one simple connection supported by the question's contextual clue; 2 two or more connections or unstated assumptions.
 - distractorSimilarity: 0 plainly distinct alternatives; 1 credible but clearly distinguishable alternatives of the same category; 2 fine distinctions among similar names, places, roles or wording.
-Score = 2*familiarity + evidenceNavigation + reasoningSteps + distractorSimilarity. In v3, accepted dimensions are all <=1 (maximum score 5). Easy 0-1: broad recognition, no connection or little-known detail. Medium 2-3: a familiar detail or a single helpful connection. Hard 4-5: one attainable connection about a recognizable story, helped by context. Hard never means specialist recall. Do not inflate dimensions to fill a slot; report the actual rating and let the writer choose another fact.
+Score = 2*familiarity + evidenceNavigation + reasoningSteps + distractorSimilarity. In v3, accepted dimensions are all <=1 (maximum score 5). Easy 0: broad recognition with plainly distinct alternatives, no connection or little-known detail. Medium 1-2: common Bible knowledge with credible distinguishable choices or a single helpful connection. Hard 3-5: an accessible detail or one attainable connection about a recognizable story, helped by context. Hard never means specialist recall. Do not inflate dimensions to fill a slot; report the actual rating and let the writer choose another fact.
 Examples of intended knowledge, not manuscripts to copy: Easy identifies Noah's ark or Daniel's lions; Medium connects Moses with removing sandals at the burning bush; Hard connects Joseph's robe with the evidence his brothers showed their father. Naaman's requested earth, Lydia's city, obscure hometowns and minor-name distinctions are unsuitable for EVERY tier. The question must be short and understandable on one reading; familiar direct recall can have excellent craft.
 Accuracy failures, ambiguity and misleading options always reject, independently of difficulty. Explain the rating briefly. These are editorial estimates, never measured audience success rates.`;
-function levelFor(score,version=VERSION) {return version===DAILY_VERSION ? score<=1 ? 'easy':score<=3 ? 'moderate':'challenging':version===LEGACY_DAILY_VERSION ? score<=3 ? 'easy':score<=6 ? 'moderate':'challenging':score<=2 ? 'easy':score<=5 ? 'moderate':'challenging';}
+function levelFor(score,version=VERSION) {return version===DAILY_VERSION ? score===0 ? 'easy':score<=2 ? 'moderate':'challenging':version===LEGACY_DAILY_VERSION ? score<=3 ? 'easy':score<=6 ? 'moderate':'challenging':score<=2 ? 'easy':score<=5 ? 'moderate':'challenging';}
 function validateDifficulty(raw,version=VERSION) {
   if(![VERSION,LEGACY_DAILY_VERSION,DAILY_VERSION].includes(version))throw new Error('Unknown difficulty rubric.');
   if(!raw || DIMENSIONS.some(key=>!Number.isInteger(raw[key]) || raw[key]<0 || raw[key]>(version===DAILY_VERSION ? 1:2)) || typeof raw.rationale!=='string' || raw.rationale.trim().length<15)throw new Error('Incomplete difficulty rubric.');
@@ -31,8 +31,8 @@ function validateDifficulty(raw,version=VERSION) {
 function consensusDifficulty(reviews,version=VERSION) {
   const ratings=reviews.map(review=>validateDifficulty(review.difficulty,version));
   if(ratings.length!==2)throw new Error('Two difficulty assessments are required.');
-  if((version===DAILY_VERSION && ratings[0].level!==ratings[1].level) || Math.abs(ratings[0].score-ratings[1].score)>2)throw new Error('Difficulty reviewers disagree; regenerate the question.');
-  const score=Math.round((ratings[0].score+ratings[1].score)/2);
+  if(Math.abs(ratings[0].score-ratings[1].score)>2)throw new Error('Difficulty reviewers disagree; regenerate the question.');
+  const score=(version===DAILY_VERSION ? Math.floor:Math.round)((ratings[0].score+ratings[1].score)/2);
   return {rubricVersion:version,level:levelFor(score,version),score};
 }
 module.exports={VERSION,LEGACY_DAILY_VERSION,DAILY_VERSION,DIMENSIONS,LABELS,RUBRIC,DAILY_RUBRIC,levelFor,validateDifficulty,consensusDifficulty};

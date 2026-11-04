@@ -23,7 +23,7 @@ function reviewed(content,evidence,level){
  return ['test-a','test-b'].map(model=>{
   const r=reviewFor(content,evidence,model,level);
   r.questionCraft={context:2,interest:2,fairChallenge:2,choiceQuality:2,rationale:'Synthetic complete editorial assessment for isolated database tests.'};
-  r.difficulty={familiarity:level==='easy' ? 0:1,evidenceNavigation:level==='challenging' ? 1:0,reasoningSteps:level==='challenging' ? 1:0,distractorSimilarity:1,rationale:'Synthetic general-audience rating for isolated regression tests.'};
+  r.difficulty={familiarity:level==='challenging' ? 1:0,evidenceNavigation:level==='easy' ? 0:1,reasoningSteps:level==='challenging' ? 1:0,distractorSimilarity:level==='easy' ? 0:1,rationale:'Synthetic general-audience rating for isolated regression tests.'};
   r.difficultyAssessment={rubricVersion:'discovery-difficulty-v3',model,responseId:randomUUID(),questionPromptSha256:sha(content.prompt)};
   return r;
  });
@@ -45,6 +45,8 @@ test('three accepted, distinct, independently rated questions publish atomically
   await h.db.exec('update discovery_runtime_settings set enabled=true,rollout_percentage=100');
   const response=await fetch(h.base+'/api/v1/discoveries/bundle?dailySet=1');assert.equal(response.status,200);
   const bundle=await response.json();assert.equal(bundle.items.length,3);assert.deepEqual(bundle.items.map(i=>i.setPosition),[1,2,3]);assert.deepEqual(bundle.items.map(i=>i.difficulty.level),levels);
+  assert.deepEqual(bundle.items.map(i=>i.difficultyEstimate.score),[0,2,5]);
+  assert.ok(bundle.items.every(i=>i.difficultyEstimate.rubricVersion==='discovery-difficulty-v3' && i.difficultyEncoding==='legacy-tier-compatibility')); 
   assert.equal((await (await fetch(h.base+'/api/v1/discoveries/bundle')).json()).items.length,1,'older clients automatically receive the reviewed Easy question');
   const compatible=(await (await fetch(h.base+'/api/v1/discoveries/bundle')).json()).items[0];
   assert.equal(compatible.id,bundle.items[0].id);assert.equal(compatible.difficulty,undefined,'legacy clients receive facts without an unsupported optional grading version');assert.equal(compatible.setPosition,undefined);
@@ -247,4 +249,52 @@ test('past daily sets require verified Pro; future sets never appear in bundles 
    if(offset<0)assert.equal((await get('/api/v1/discoveries/bundle?dailySet=1&date='+day+'&isPro=true',MEMBER)).status,403);
   }finally{await h.close();}
  }
+});
+
+test('general-audience difficulty rejects specialist recall at every tier in JavaScript and SQL',async()=>{
+ const h=await createHarness({curriculum:true,dailySets:true});try{
+  const evidence=scriptureEvidence(refs[0]),content=contentFor(evidence);
+  for(const level of levels){
+   const reviews=reviewed(content,evidence,level);
+   for(const r of reviews)r.difficulty.familiarity=2;
+   const v=assessCandidate(content,evidence,reviews,{dailySet:true,targetDifficulty:level});assert.equal(v.accepted,false);
+   const good=assessCandidate(content,evidence,reviewed(content,evidence,level),{dailySet:true,targetDifficulty:level});
+   const forged={...good,reviews,accepted:true,reasons:[]};
+   await assert.rejects(h.db.query('select discovery_validate_set_candidate($1,$2,$3,$4,$5,$6)',[{...content,difficulty:good.difficulty},forged,evidence.sourceSha256,refs[0],corpus.sha256,level]),/Difficulty dimension/);
+  }
+ }finally{await h.close();}
+});
+
+test('reviewed future replacement is atomic, preserves originals, checks context and blocks played sets',async()=>{
+ const h=await createHarness({curriculum:true,dailySets:true});try{
+  const date=shiftDate(localDate(new Date(),'America/New_York'),1);
+  const result=await ensureDailySets({db:h.client,models:adapter(h),config,now:new Date(date+'T12:00:00Z'),runwayDays:1,maxDaysPerRun:1,planForDate:plan,corpus});assert.equal(result.published,1);
+  const old=(await h.db.query('select * from discovery_daily_set_items order by position')).rows;
+  const items=[],verifications=[];
+  for(let i=0;i<3;i++){
+   const evidence=scriptureEvidence(refs[i]),content=contentFor(evidence);content.prompt=content.prompt.replace('In ', 'According to ');
+   const v=assessCandidate(content,evidence,reviewed(content,evidence,levels[i]),{dailySet:true,targetDifficulty:levels[i]});assert.equal(v.accepted,true);items.push({...content,difficulty:v.difficulty});verifications.push(v);
+  }
+  const runId=randomUUID(),reviews=pair(items,[]),summary={kind:'general-audience-replacement-v1',prepared:true,sets:[{date,items,verifications,reviews,approved:true}]};
+  await h.db.query('insert into discovery_generation_runs(id,policy_version,corpus_version,corpus_sha256,models,status,summary) values($1,$2,$3,$4,$5,$6,$7)',[runId,'discovery-evidence-v3',corpus.version,corpus.sha256,{},'completed',summary]);
+  const args={p_run:runId,p_date:date,p_operator:'test-editor',p_reason:'Owner requested all three tiers become accessible to ordinary players.'};
+  for(const role of ['anon','authenticated']){
+   await h.db.exec('set role '+role);await assert.rejects(h.db.query('select discovery_replace_prepared_audience_set($1,$2,$3,$4)',Object.values(args)));await h.db.exec('reset role');
+  }
+  const stale=structuredClone(summary);stale.sets[0].reviews[0].weekContext=[{date:'2000-01-01'}];await h.db.query('update discovery_generation_runs set summary=$1 where id=$2',[stale,runId]);assert.ok((await h.client.rpc('discovery_replace_prepared_audience_set',args)).error);
+  assert.deepEqual((await h.db.query('select * from discovery_daily_set_items order by position')).rows,old);
+  await h.db.query('update discovery_generation_runs set summary=$1 where id=$2',[summary,runId]);
+  // Existing play protects that version even when the editor wants a replacement.
+  await h.db.query("insert into discovery_completions(user_id,discovery_id,revision,mode,option_id,event_id,occurred_at,local_date,time_zone) values($1,$2,1,'answered','option-1',$3,now(),$4,'UTC')",[MEMBER,old[0].discovery_id,randomUUID(),date]);
+  assert.ok((await h.client.rpc('discovery_replace_prepared_audience_set',args)).error);
+  // Test-only fixture cleanup, before the real replacement under test.
+  await h.db.query('delete from discovery_completions where user_id=$1',[MEMBER]);
+  const replaced=await h.client.rpc('discovery_replace_prepared_audience_set',args);assert.equal(replaced.error,null);assert.equal(replaced.data.status,'replaced');
+  const current=(await h.db.query('select * from discovery_daily_set_items order by position')).rows;assert.equal(current.length,3);assert.ok(current.every((r,i)=>r.discovery_id!==old[i].discovery_id));
+  assert.equal((await h.db.query('select count(*)::int as n from discovery_revisions')).rows[0].n,6,'original manuscripts survive');
+  assert.equal((await h.db.query('select * from discovery_daily_replacement_audit')).rows.length,1);
+  assert.equal((await h.client.rpc('discovery_replace_prepared_audience_set',args)).data.status,'already_replaced');
+  await assert.rejects(h.db.query('update discovery_daily_set_items set discovery_id=$1 where position=1',[old[0].discovery_id]),/immutable/);
+  assert.ok((await h.client.rpc('discovery_replace_prepared_audience_set',{...args,p_date:localDate(new Date(),'America/New_York')})).error);
+ }finally{await h.close();}
 });

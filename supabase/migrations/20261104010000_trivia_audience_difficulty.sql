@@ -36,7 +36,7 @@ begin
   if p_content->>'scriptureReference' is distinct from expected_reference or p_content->'sources'->0->>'locator' is distinct from expected_reference then raise exception 'Source reference differs from the curriculum'; end if;
   if p_verification->>'corpusSha256' is distinct from p_corpus_sha256 then raise exception 'Corpus version differs from the run'; end if;
   minimum:=greatest(95,(p_verification->>'minimumScore')::integer);
-  if p_content->'difficulty' is distinct from p_verification->'difficulty' or coalesce(rubric,'') not in ('discovery-difficulty-v1','discovery-difficulty-v2','discovery-difficulty-v3') or (p_content->'difficulty'->>'score')::int not between 0 and (case when rubric='discovery-difficulty-v3' then 5 when rubric='discovery-difficulty-v2' then 10 else 8 end) or p_content->'difficulty'->>'level' is distinct from (case when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v3' then 1 when rubric='discovery-difficulty-v2' then 3 else 2 end) then 'easy' when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v3' then 3 when rubric='discovery-difficulty-v2' then 6 else 5 end) then 'moderate' else 'challenging' end) then raise exception 'Difficulty must match the independently assessed rubric'; end if;
+  if p_content->'difficulty' is distinct from p_verification->'difficulty' or coalesce(rubric,'') not in ('discovery-difficulty-v1','discovery-difficulty-v2','discovery-difficulty-v3') or (p_content->'difficulty'->>'score')::int not between 0 and (case when rubric='discovery-difficulty-v3' then 5 when rubric='discovery-difficulty-v2' then 10 else 8 end) or p_content->'difficulty'->>'level' is distinct from (case when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v3' then 0 when rubric='discovery-difficulty-v2' then 3 else 2 end) then 'easy' when (p_content->'difficulty'->>'score')::int<=(case when rubric='discovery-difficulty-v3' then 2 when rubric='discovery-difficulty-v2' then 6 else 5 end) then 'moderate' else 'challenging' end) then raise exception 'Difficulty must match the independently assessed rubric'; end if;
   if (select count(distinct r->>'model') from jsonb_array_elements(p_verification->'reviews') r)<>2
     or (select count(distinct r->>'requestedModel') from jsonb_array_elements(p_verification->'reviews') r)<>2 then raise exception 'Two distinct review models are required'; end if;
   for review in select value from jsonb_array_elements(p_verification->'reviews') loop
@@ -70,7 +70,6 @@ begin
       if coalesce((review->'difficulty'->>dimension)::int,-1) not between 0 and (case when rubric='discovery-difficulty-v3' then 1 else 2 end) then raise exception 'Difficulty dimension outside the rubric'; end if;
       rating:=rating+(review->'difficulty'->>dimension)::int*(case when rubric in ('discovery-difficulty-v2','discovery-difficulty-v3') and dimension='familiarity' then 2 else 1 end);
     end loop;
-    if (case when rating<=1 then 'easy' when rating<=3 then 'moderate' else 'challenging' end) is distinct from p_difficulty then raise exception 'Each audience difficulty reviewer must agree on the band'; end if;
     if first_rating is null then first_rating:=rating; else second_rating:=rating; end if;
     if (select count(distinct item->>'claimId') from jsonb_array_elements(review->'claims') item)<>jsonb_array_length(p_content->'claims')
       or exists(select 1 from jsonb_array_elements(p_content->'claims') claim where not exists(select 1 from jsonb_array_elements(review->'claims') item where item->>'claimId'=claim->>'id'))
@@ -95,7 +94,7 @@ begin
     end loop;
   end loop;
   if craft_minimum is distinct from (p_verification->'questionCraft'->>'score')::integer then raise exception 'Question craft summary disagrees with raw reviews'; end if;
-  if abs(first_rating-second_rating)>2 or (p_content->'difficulty'->>'score')::int<>round((first_rating+second_rating)/2.0)::int then raise exception 'Difficulty must reflect reviewer consensus'; end if;
+  if abs(first_rating-second_rating)>2 or (p_content->'difficulty'->>'score')::int<>floor((first_rating+second_rating)/2.0)::int then raise exception 'Difficulty must reflect reviewer consensus'; end if;
   if measured<>(p_verification->>'evidenceScore')::int then raise exception 'Evidence score must be the weakest assessed dimension'; end if;
   if p_content->'difficulty'->>'level' is distinct from p_difficulty then raise exception 'Daily set difficulty must match independent assessment'; end if;
   -- Editorial excellence is distinct from difficulty. A zero still fails;
@@ -117,6 +116,15 @@ begin
  d:=replace(d,'r->>''setEditorialVersion'' is distinct from ''sanctuary-trivia-set-editor-v4''','coalesce(r->>''setEditorialVersion'','''') not in (''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v6'')');
  -- Handles the previous learning migration, when already installed.
  d:=replace(d,'''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'')','''sanctuary-trivia-set-editor-v4'',''sanctuary-trivia-set-editor-v5'',''sanctuary-trivia-set-editor-v6'')');
+ d:=replace(d,'  week_context:=public.discovery_daily_week_context(p_date);',
+ '  if p_date>=date ''2026-11-04'' and exists(select 1 from public.discovery_daily_attempts where publication_date=p_date and epoch=job.epoch and status=''accepted'' and content->''difficulty''->>''rubricVersion'' is distinct from ''discovery-difficulty-v3'') then raise exception ''General audience difficulty v3 required for new daily sets''; end if;
+  week_context:=public.discovery_daily_week_context(p_date);');
+ execute d;
+ d:=pg_get_functiondef('public.discovery_daily_finish(date,integer,uuid,integer,jsonb,jsonb,jsonb)'::regprocedure);
+ if position('  perform public.discovery_validate_set_candidate(' in d)=0 then raise exception 'Unexpected daily finish function'; end if;
+ d:=replace(d,'  perform public.discovery_validate_set_candidate(',
+ '  if p_date>=date ''2026-11-04'' and p_content->''difficulty''->>''rubricVersion'' is distinct from ''discovery-difficulty-v3'' then raise exception ''General audience difficulty v3 required for new daily sets''; end if;
+  perform public.discovery_validate_set_candidate(');
  execute d;
 end $m$;
 commit;
