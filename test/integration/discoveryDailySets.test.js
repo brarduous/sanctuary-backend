@@ -23,11 +23,12 @@ function reviewed(content,evidence,level){
  return ['test-a','test-b'].map(model=>{
   const r=reviewFor(content,evidence,model,level);
   r.questionCraft={context:2,interest:2,fairChallenge:2,choiceQuality:2,rationale:'Synthetic complete editorial assessment for isolated database tests.'};
-  r.difficultyAssessment={rubricVersion:'discovery-difficulty-v2',model,responseId:randomUUID(),questionPromptSha256:sha(content.prompt)};
+  r.difficulty={familiarity:level==='easy' ? 0:1,evidenceNavigation:level==='challenging' ? 1:0,reasoningSteps:level==='challenging' ? 1:0,distractorSimilarity:1,rationale:'Synthetic general-audience rating for isolated regression tests.'};
+  r.difficultyAssessment={rubricVersion:'discovery-difficulty-v3',model,responseId:randomUUID(),questionPromptSha256:sha(content.prompt)};
   return r;
  });
 }
-function pair(items,weekContext=[]){return ['set-a','set-b'].map(model=>({model,responseId:randomUUID(),setEditorialVersion:'sanctuary-trivia-set-editor-v4',weekReviewVersion:'sanctuary-trivia-rolling-week-v1',weekContext,approved:true,issues:[],rationale:'Synthetic set review covering distinct knowledge targets and no answer leakage.',questionContents:items,questionPromptHashes:items.map(i=>sha(i.prompt))}));}
+function pair(items,weekContext=[]){return ['set-a','set-b'].map(model=>({model,responseId:randomUUID(),setEditorialVersion:'sanctuary-trivia-set-editor-v6',weekReviewVersion:'sanctuary-trivia-rolling-week-v1',weekContext,approved:true,issues:[],rationale:'Synthetic set review covering distinct knowledge targets and no answer leakage.',questionContents:items,questionPromptHashes:items.map(i=>sha(i.prompt))}));}
 function adapter(h,{rejectFirst=false,rejectSet=false}={}){
  let generated=0;
  return {get generated(){return generated;},async generate({evidence}){generated++;assert.equal((await h.db.query('select * from discovery_daily_set_items')).rows.length,0,'no partial public set');return {content:contentFor(evidence),usage:{totalTokens:10}};},async review({content,evidence}){const level=levels[refs.indexOf(evidence.source.locator)];const rows=reviewed(content,evidence,level);if(rejectFirst && generated===1)rows[0].questionCraft.fairChallenge=1;return rows.map(data=>({data,usage:{totalTokens:10}}));},async reviewSet(items,{weekContext}){assert.equal(items.length,3);assert.equal((await h.db.query('select * from discovery_daily_set_items')).rows.length,0);const rows=pair(items,weekContext);if(rejectSet){rows[1].approved=false;rows[1].issues=['Question two reveals question three.'];}return rows;}};
