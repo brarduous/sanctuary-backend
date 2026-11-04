@@ -35,14 +35,14 @@ test('daily difficulty is a separate blinded closed-book task with independently
  const client={responses:{async create(request){
   const input=JSON.parse(request.input);assert.equal(input.candidate.correctOptionId,undefined);assert.equal(input.candidate.difficulty,undefined);assert.equal(input.targetDifficulty,undefined);
   calls.push(request.text.format.name);
-  const data=request.text.format.name==='discovery_closed_book_difficulty' ? {familiarity:0,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:1,rationale:'A familiar image; no additional knowledge connections are required.'}:modelReviewFor(content,evidence,request.model);
+  const data=request.text.format.name==='discovery_closed_book_difficulty' ? {familiarity:0,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:0,rationale:'A familiar image; no additional knowledge connections are required.'}:modelReviewFor(content,evidence,request.model);
   return {status:'completed',model:request.model,id:request.text.format.name+'-'+request.model,output_text:JSON.stringify(data),usage:{input_tokens:10,output_tokens:10,total_tokens:20}};
  }}};
  const adapter=createDiscoveryModels({generatorModel:'writer',reviewModels:['test-a','test-b'],client});
  const result=await adapter.review({content,evidence,dailySet:true});
  assert.equal(calls.filter(name=>name==='discovery_verification').length,2);assert.equal(calls.filter(name=>name==='discovery_closed_book_difficulty').length,2);
  assert.equal(result[0].usage.totalTokens,40);assert.ok(result[0].data.verificationDifficulty);
- assert.equal(result[0].data.difficultyAssessment.rubricVersion,'discovery-difficulty-v2');
+ assert.equal(result[0].data.difficultyAssessment.rubricVersion,'discovery-difficulty-v3');
  assert.notEqual(result[0].data.responseId,result[0].data.difficultyAssessment.responseId);
  const assessed=assessCandidate(content,evidence,result.map(r=>r.data),{dailySet:true,targetDifficulty:'easy'});assert.equal(assessed.accepted,true);
  result[0].data.difficultyAssessment.questionPromptSha256='changed';assert.ok(assessCandidate(content,evidence,result.map(r=>r.data),{dailySet:true,targetDifficulty:'easy'}).reasons.includes('daily_difficulty_review_missing'));

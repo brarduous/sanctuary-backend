@@ -58,7 +58,11 @@ async function createHarness({listen=false,port=0,curriculum=false,dailySets=fal
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028220000_discovery_question_craft.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028234500_discovery_source_options.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8'));
-  if(dailySets)await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
+  if(dailySets){
+  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
+   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261104010000_trivia_audience_difficulty.sql'),'utf8'));
+   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261104011000_trivia_reviewed_replacements.sql'),'utf8'));
+  }
  }
  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261102120000_mobile_reading_time.sql'),'utf8'));
  await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261102130000_mobile_daily_loop.sql'),'utf8'));

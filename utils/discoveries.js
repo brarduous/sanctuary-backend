@@ -1,6 +1,6 @@
 const {hasBiblicalFrame}=require('./discoveryQuestionCraft');
 const { createHash } = require('node:crypto');
-const { VERSION: DIFFICULTY_VERSION, DAILY_VERSION, levelFor } = require('./discoveryDifficulty');
+const { VERSION: DIFFICULTY_VERSION, DAILY_VERSION, LEGACY_DAILY_VERSION, levelFor } = require('./discoveryDifficulty');
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const ID = /^[a-z][a-z0-9-]{0,79}$/;
@@ -68,7 +68,7 @@ function validateContent(input) {
   let difficulty;
   if (input.difficulty != null) {
     const d=input.difficulty;
-    if(![DIFFICULTY_VERSION,DAILY_VERSION].includes(d.rubricVersion) || !Number.isInteger(d.score) || d.score<0 || d.score>(d.rubricVersion===DAILY_VERSION ? 10:8) || d.level!==levelFor(d.score,d.rubricVersion)) invalid('Difficulty must match the versioned rubric and score.');
+    if(![DIFFICULTY_VERSION,LEGACY_DAILY_VERSION,DAILY_VERSION].includes(d.rubricVersion) || !Number.isInteger(d.score) || d.score<0 || d.score>(d.rubricVersion===DAILY_VERSION ? 5:d.rubricVersion===LEGACY_DAILY_VERSION ? 10:8) || d.level!==levelFor(d.score,d.rubricVersion)) invalid('Difficulty must match the versioned rubric and score.');
     difficulty={rubricVersion:d.rubricVersion,level:d.level,score:d.score};
   }
   return { kind, category: category.trim(), prompt: prompt.trim(), heading: heading.trim(), scopeNote: scopeNote.trim(), choices, correctOptionId: input.correctOptionId, sources, claims, answerClaimId: input.answerClaimId, explanationClaimIds: input.explanationClaimIds, ...(scriptureReference ? { scriptureReference: string(scriptureReference, 'Scripture reference', 3, 100), translation } : {}), ...(traditionLabel ? { traditionLabel: string(traditionLabel, 'tradition label', 3, 120) } : {}), ...(difficulty ? {difficulty}: {}) };
@@ -79,7 +79,9 @@ function validateReview(input) {
 }
 function publicDiscovery(row, publicationDate) {
   const content = validateContent(row.content);
-  return { id: row.discovery_id, revision: row.revision, publicationDate: publicationDate || null, ...content, explanation: content.explanationClaimIds.map(id => content.claims.find(claim => claim.id === id).text).join(' '), url: `https://sanctuaryapp.us/discoveries/${row.discovery_id}` };
+  const difficultyEstimate=content.difficulty?.rubricVersion===DAILY_VERSION ? content.difficulty:null;
+  if(difficultyEstimate)content.difficulty={rubricVersion:LEGACY_DAILY_VERSION,level:difficultyEstimate.level,score:{easy:1,moderate:4,challenging:7}[difficultyEstimate.level]};
+  return { ...(difficultyEstimate ? {difficultyEstimate,difficultyEncoding:'legacy-tier-compatibility'}:{}), id: row.discovery_id, revision: row.revision, publicationDate: publicationDate || null, ...content, explanation: content.explanationClaimIds.map(id => content.claims.find(claim => claim.id === id).text).join(' '), url: `https://sanctuaryapp.us/discoveries/${row.discovery_id}` };
 }
 function localDate(now = new Date(), timeZone = 'UTC') {
   try {
