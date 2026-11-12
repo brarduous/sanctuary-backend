@@ -9,6 +9,7 @@ const unwrap=r=>{if(r.error)throw r.error;return r.data;};
 const FIELDS={general_devotionals:['title','content','prayer','short_form'],devotionals:['title','content','short_form'],prayers:['generated_prayer'],guidance:['advice_points'],sermons:['title','sermon_body','sermon_outline','key_takeaways','illustration','actual_duration_min'],bible_studies:['title','commentary','reflection_questions','introduction','application_sidebar','key_verse','conclusion'],news:['tldr','newsSummary','outlook','reflectionQuestions','thoughtToRemember','citedPassages','faithfulResponse','closingPrayer'],daily_brief:['synopsis','details','stories','scripture','prayer']};
 function passes(grade){return Boolean(grade&&!grade.seriousConcern&&['helpfulness','accuracy','audience','freshness'].every(k=>Number.isInteger(grade[k])&&grade[k]>=0&&grade[k]<=100)&&grade.accuracy>=85&&grade.helpfulness>=75&&grade.audience>=75&&grade.freshness>=60&&['helpfulness','accuracy','audience','freshness'].reduce((n,k)=>n+grade[k],0)/4>=85);}
 async function enqueueFindings({db,config,rows,samples,grades}){
+ if(['news','daily_brief'].includes(config.key)&&process.env.NEWS_ARTICLE_AI_ENABLED!=='true')return {status:'daily_edition_budget',queued:0};
  const {SOURCES}=require('./contentQualityAudit');
  const target=config.key==='bible_studies'?{...config,table:'bible_study_lessons',fields:'lesson_id,study_id,title,scripture,key_verse,introduction,commentary,application_sidebar'}:config;
  const result={status:'automatic',threshold:85,queued:0,passed:0,changed:0};
@@ -74,12 +75,13 @@ async function queuePendingNews(db,now){
 }
 async function runReplacements({db,client=require('../config/openai'),limit=3,now=new Date(),writer='gpt-6.1-sol',reviewer='gpt-6-astra',scanPending=true}={}){
  const {auditSamples,assessSamples}=require('./contentQualityAudit');
- if(scanPending)await queuePendingNews(db,now);
+ if(scanPending&&process.env.NEWS_ARTICLE_AI_ENABLED==='true')await queuePendingNews(db,now);
  const summary={threshold:85,attempted:0,replaced:0,acceptedExisting:0,retrying:0,obsolete:0,protected:0,results:[]};
  for(let i=0;i<Math.min(6,Math.max(1,limit));i++){
   const token=randomUUID(),job=unwrap(await db.rpc('content_quality_claim',{p_token:token}));if(!job)break;summary.attempted++;
   const finish=async(action,patch=null,grade=null,evidence={})=>unwrap(await db.rpc('content_quality_finish',{p_id:job.id,p_token:token,p_action:action,p_patch:patch,p_grade:grade,p_evidence:evidence}));
   try{
+   if(['news','daily_brief'].includes(job.kind)&&process.env.NEWS_ARTICLE_AI_ENABLED!=='true'){const saved=await finish('protected',null,null,{reason:'News uses the budgeted daily edition pipeline; automatic article and brief rewrites are disabled.'});summary.protected++;summary.results.push(saved);continue;}
    const {config}=job.context,row=job.snapshot;
    if(job.kind==='sermons'&&(row.source_url||row.source_storage_path||row.transcript||row.source_type&&!['generated','ai','ai_generated'].includes(row.source_type))){const saved=await finish('protected',null,null,{reason:'Retained author-provided manuscript; no approval task created.'});summary.protected++;summary.results.push(saved);continue;}
    if(job.kind==='trivia'){

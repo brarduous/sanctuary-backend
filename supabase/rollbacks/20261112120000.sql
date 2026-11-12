@@ -1,0 +1,3 @@
+-- Roll back the application commit and restore the prior cron settings if needed.
+-- Retain this additive claim table and sources column so edition/source history survives.
+-- No data-removing SQL is needed for application compatibility.

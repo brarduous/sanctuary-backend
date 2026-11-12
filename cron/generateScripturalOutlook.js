@@ -161,17 +161,7 @@ function attachCorroboratingSources(articles) {
     }));
 }
 
-const NEWS_SOURCES = [
-    { publisher: 'NPR', kind: 'rss', url: 'https://feeds.npr.org/1001/rss.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'CBS News', kind: 'rss', url: 'https://www.cbsnews.com/latest/rss/main', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true, preferPublisherImage: true },
-    { publisher: 'CNN', kind: 'rss', url: 'http://rss.cnn.com/rss/cnn_topstories.rss', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'Fox News', kind: 'rss', url: 'https://moxie.foxnews.com/google-publisher/latest.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'PBS NewsHour', kind: 'rss', url: 'https://www.pbs.org/newshour/feeds/rss/headlines', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'UN News', kind: 'rss', url: 'https://news.un.org/feed/subscribe/en/news/all/rss.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'official_document', isIndependent: false },
-    { publisher: 'World Health Organization', kind: 'rss', url: 'https://www.who.int/rss-feeds/news-english.xml', fetchFullText: false, accessMode: 'discovery_only', analysisEligible: false, fullTextAuthorized: false, sourceType: 'official_document', isIndependent: false },
-    { publisher: 'BBC News', kind: 'rss', url: 'https://feeds.bbci.co.uk/news/rss.xml', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-    { publisher: 'The Guardian', kind: 'rss', url: 'https://www.theguardian.com/us-news/rss', fetchFullText: false, accessMode: 'publisher_feed_excerpt', publisherExcerpt: true, analysisEligible: true, fullTextAuthorized: false, sourceType: 'reporting', isIndependent: true },
-];
+const { NEWS_SOURCES } = require('../utils/newsSources');
 
 const NEWS_DISCOVERY_SOURCES = [
     { provider: 'Google News', kind: 'rss', url: 'https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en' },
@@ -950,6 +940,9 @@ async function saveDiscoveryCandidate(article, evidence, evidenceStatus = 'await
 }
 
 async function generateAndSaveScripturalOutlook(options = {}) {
+  if (process.env.NEWS_ARTICLE_AI_ENABLED !== 'true') {
+    return require('./dailyNewsSynopsis').generateDailyNewsSynopsisFromLast24h();
+  }
   const {reconcilePendingNews}=require('../services/newsPublication');
   const recovery=await reconcilePendingNews(supabase,{apply:true});
   console.log('Automated news publication recovery:',JSON.stringify(recovery));

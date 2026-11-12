@@ -10,7 +10,6 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "dev:staging": "node scripts/devStaging.js",
-    "precron-outlook": "npx puppeteer browsers install chrome",
     "cron-editorial-audit": "node cron/editorialReviewAudit.js",
     "cron-daily-briefing": "node cron/sendDailyBriefing.js",
     "cron-outlook": "node cron/generateScripturalOutlook.js",

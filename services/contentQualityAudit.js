@@ -20,8 +20,8 @@ function auditSamples(rows,config){return rows.map((row,index)=>{
 });}
 async function contentQualityAudit({db,now=new Date(),autoReplace=process.env.CONTENT_QUALITY_AUTOREPAIR_ENABLED==='true',client=require('../config/openai'),model=process.env.APP_QUALITY_REVIEW_MODEL || 'gpt-6-astra'}={}){
  const since=new Date(+now-14*86400000).toISOString();
- const sources=[...SOURCES];
- const results=await Promise.allSettled(SOURCES.map(async config=>{
+ const sources=SOURCES.filter(config=>process.env.NEWS_ARTICLE_AI_ENABLED==='true' || !['news','daily_brief'].includes(config.key));
+ const results=await Promise.allSettled(sources.map(async config=>{
   let q=db.from(config.table).select(config.fields).gte('created_at',since).order('created_at',{ascending:false}).limit(3);
   if(config.key==='general_devotionals')q=q.lte('date',now.toISOString().slice(0,10));
   if(config.completed)q=q.eq('status','completed');if(config.published)q=q.eq('publication_status','published');if(config.trivia)q=q.eq('status','accepted').lte('publication_date',now.toISOString().slice(0,10));
