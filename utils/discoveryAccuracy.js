@@ -83,6 +83,13 @@ function assessCandidate(content,evidence,reviews,options={}) {
   }
   let difficulty=null;
   try {difficulty=consensusDifficulty(reviews,options.dailySet ? DAILY_VERSION:undefined);}catch{reasons.push('difficulty_disagreement');}
+  if(options.dailySet && (reviews || []).some(review=>{
+    const d=review.difficulty;
+    if(!d)return false; // Malformed ratings already fail the rubric validation.
+    const score=2*d.familiarity+d.evidenceNavigation+d.reasoningSteps+d.distractorSimilarity;
+    return d.familiarity===2 || (d.evidenceNavigation===2 && d.reasoningSteps===2)
+      || (options.targetDifficulty==='moderate' && score>4) || (options.targetDifficulty==='challenging' && score>7);
+  }))reasons.push('daily_set_too_difficult_for_learning');
   if(options.dailySet && difficulty?.level!==options.targetDifficulty)reasons.push('daily_set_difficulty_mismatch');
   return {policyVersion:POLICY,copyPolicyVersion:COPY_POLICY,questionCraft:{policyVersion:CRAFT_POLICY,minimumScore:6,score:craft.length===2 ? Math.min(...craft.map(rating=>rating.score)):0,assessments:craft},accepted:reasons.length===0,minimumScore:threshold,evidenceScore:scores.length ? Math.min(...scores) : 0,candidateSha256:sha(content),sourceSha256:evidence.sourceSha256,corpusVersion:evidence.corpusVersion,corpusSha256:evidence.corpusSha256,questionFingerprint:fingerprint(content),difficulty,difficultyTargetMet:difficulty?.level===options.targetDifficulty,reasons:[...new Set(reasons)],reviews};
 }

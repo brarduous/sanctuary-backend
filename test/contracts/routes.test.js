@@ -220,9 +220,9 @@ test('news generation separates layperson outlook from clergy guidance', () => {
     'additionalSourcesNeeded',
   ]) assert.match(promptSource, new RegExp(`"${field}"`));
   assert.match(promptSource, /Never invent a URL, author, quotation, reviewer/);
-  assert.match(newsGeneratorSource, /status: 'pending_human_review'/);
+  assert.match(newsGeneratorSource, /status: 'awaiting_verification'/);
   assert.match(newsGeneratorSource, /allowedUrls\.has\(source\.url\)/);
-  assert.match(newsGeneratorSource, /contentSchemaVersion = 3/);
+  assert.match(newsGeneratorSource, /contentSchemaVersion = 4/);
   assert.match(newsSource, /publicNewsOutlook/);
   assert.match(newsSource, /requireCapability\('content\.read'\)/);
   assert.match(newsGeneratorSource, /publisherImageUrl/);
@@ -242,7 +242,7 @@ test('news verification separates public truthfulness from private editorial con
   assert.match(newsSource, /confidence_score.*>= 85/);
   assert.match(newsEditorialSource, /reviewAlert/);
   assert.match(newsEditorialSource, /confidenceScore < 60/);
-  assert.match(newsGeneratorSource, /news_low_confidence_review_required/);
+  assert.match(newsGeneratorSource, /news_awaiting_evidence/);
   assert.match(newsBackfillSource, /news_low_confidence_review_required/);
 });
 

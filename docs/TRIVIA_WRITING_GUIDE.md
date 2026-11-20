@@ -32,11 +32,11 @@ Youth appeal means understandable situations, vivid details, and satisfying disc
 
 [American College of Surgeons' multiple-choice guidance](https://www.facs.org/for-medical-professionals/education/cme-resources/test-writing/) supports one clear task, one defensible answer, and plausible choices consistent in content, grammar, and length, without answer cues. We use its option-construction principles; our product is a daily curiosity game, so engagement and a memorable reveal are additional requirements.
 
-[ACF's question-writing guidance](https://acf-quizbowl.com/guidelines/packet-sub/#question-writing-philosophy) emphasizes audience-appropriate topics and discourages questions likely to go unanswered. Its long, progressively clued tossup format should not be copied into our 20-second multiple-choice game.
+[ACF's question-writing guidance](https://acf-quizbowl.com/guidelines/packet-sub/#question-writing-philosophy) emphasizes audience-appropriate topics and discourages questions likely to go unanswered. Its long, progressively clued tossup format should not be copied into our multiple-choice game with 20 seconds to read before its 20-second countdown.
 
 ## Current versioned editorial gates
 
-Writer v9 uses the shared editorial guide. For daily-three content, two different models independently solve and verify every premise, claim and option at evidence confidence >=95. Craft requires >=7/8, full marks for fair challenge and no zero dimension. Two separate blinded calls then estimate closed-book difficulty; locating quotations during factual verification is not used as a player-difficulty proxy.
+Writer v10 uses the shared editorial guide. For daily-three content, two different models independently solve and verify every premise, claim and option at evidence confidence >=95. Craft requires >=7/8, full marks for fair challenge and no zero dimension. Two separate blinded calls then estimate closed-book difficulty; locating quotations during factual verification is not used as a player-difficulty proxy.
 
 Daily difficulty v2 weights familiarity twice: `2*familiarity + evidenceNavigation + reasoningSteps + distractorSimilarity`, each dimension 0–2. Easy is 0–3, Medium 4–6, Hard 7–10. The two models must agree on the band. These are estimates, not audience-measured success rates. Existing v1 content is neither relabeled nor silently regraded.
 
@@ -51,3 +51,17 @@ Both actual production reviewer models, using the revised instructions and solvi
 Two writer-v6 samples passed automated gates on their first attempts, but editorial inspection still found weaknesses: the Mark sample used vague visual alternatives, and the Acts sample assumed familiarity with Rhoda and used the fragment “ran in.” These samples are development drafts, not replacements ready for production. The 41 relevant accuracy, batch, and curriculum tests passed; syntax and whitespace checks passed.
 
 Further design work should examine whether the verbatim-answer rule is over-constraining action questions. It currently protects exact source support but can force awkward fragments into answer choices. Any future allowance for paraphrased answers needs explicit evidence checks and a versioned acceptance-policy change; it should not be smuggled into a prompt rewrite.
+
+
+## November 1 learning calibration
+
+The owner reported that Medium and Hard discourage learning. The goal is gaining biblical knowledge and confidence. Editorial v3 and writer v10 now prefer recognizable stories, helpful scene-setting and one memorable source-supported detail in the reveal. The daily source plan v3 replaces specialist final-slot role/geography recall with familiar scenes. Set editor v5 applies the same learning standard.
+
+Retain difficulty-v2 so historical content keeps its original relative label and assessment. Future daily candidates target the lower edge: Medium score 4 and Hard score 7. Both independent ratings must stay at or below those ceilings. Familiarity 2 (specialist/obscure recall) is rejected in every slot, as is a question requiring both evidenceNavigation 2 and reasoningSteps 2. JavaScript and SQL enforce these limits independently; factual thresholds and craft checks remain unchanged. These are editorial estimates, not measured audience success rates. Previously published and scheduled questions are not rewritten by a source-plan update; they need an explicit reviewed replacement if they are to change.
+
+New rounds allow 20 seconds of reading with all answers selectable, then a 20-second countdown. Wrong choices disappear at elapsed 27 and 34 seconds; timeout is at 40 seconds. Already-started legacy rounds retain their 20-second schedule. Response time records total time since the question opened, including reading.
+
+Release order: apply `20261101120000_discovery_reading_time.sql` and `20261101123000_discovery_learning_first.sql`, release backend, then the app and both web clients. The database/API continue accepting legacy 20-second timeouts and pending offline results. Rolling back client code can leave the additive database support in place; do not shrink the elapsed-time constraint after 40-second results exist. No live question generation, publication or production data change is part of local verification.
+
+
+Trivia uses tactile feedback rather than sound: a light selection tap and gentle success feedback for a correct answer. There are no countdown, elimination, wrong-answer, reveal or timeout vibrations. Native feedback uses the existing Expo haptics module. Both web clients use feature-detected browser vibration. Reduced-motion preferences and background visibility suppress optional feedback, and unavailable hardware must never block completing a question. Physical feel requires an on-device check; mocked dispatch tests cannot measure it.

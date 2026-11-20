@@ -1,6 +1,7 @@
 const { execFileSync } = require('node:child_process');
 const { createClient } = require('@supabase/supabase-js');
 const { DEVOTIONAL_PLAN_VERSION } = require('../utils/featuredScripture');
+const { loadRuntime } = require('../utils/devotionalQuality');
 
 const PROJECT_REF = process.env.SUPABASE_PROJECT_REF || 'cmakuvkjxknwhonfqbit';
 const START_DATE = process.env.DEVOTIONAL_REGEN_START_DATE || process.argv[2];
@@ -37,6 +38,7 @@ const db = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_R
 const { generateEntries, validateWeeklyEntries } = require('../cron/generateGeneralDevotionals');
 
 async function main() {
+  const runtime = await loadRuntime(db);
   const start = new Date(`${START_DATE}T00:00:00.000Z`);
   const end = addDays(start, WEEK_COUNT * 7 - 1);
   const themeWeeks = Array.from({ length: WEEK_COUNT }, (_, index) => START_THEME_WEEK + index);
@@ -44,7 +46,7 @@ async function main() {
 
   const [{ data: themes, error: themeError }, { data: recent, error: recentError }, { data: existing, error: existingError }] = await Promise.all([
     db.from('devotional_themes').select('*').in('week_number', themeWeeks).order('week_number'),
-    db.from('general_devotionals').select('date,title,scripture_reference').gte('date', toDateString(addDays(start, -90))).lt('date', START_DATE).order('date', { ascending: false }),
+    db.from('general_devotionals').select('date,title,scripture_reference,content').gte('date', toDateString(addDays(start, -90))).lt('date', START_DATE).order('date', { ascending: false }),
     db.from('general_devotionals').select('*').gte('date', START_DATE).lte('date', toDateString(end)).order('date'),
   ]);
   if (themeError || recentError || existingError) throw themeError || recentError || existingError;
@@ -58,13 +60,14 @@ async function main() {
     const weekStart = addDays(start, index * 7);
     const theme = themes[index];
     console.log(`[Devotional Regeneration] Planning theme ${theme.week_number}: ${theme.theme_title}`);
-    const generated = await generateEntries(theme, rollingRecent);
+    const generated = await generateEntries(theme, rollingRecent, { runtime });
     const entries = validateWeeklyEntries(generated.entries);
     preparedWeeks.push({ weekStart, theme, plan: generated.plan, entries, tokens: generated.tokens });
     rollingRecent.unshift(...entries.map((entry, dayOffset) => ({
       date: toDateString(addDays(weekStart, dayOffset)),
       title: entry.title,
       scripture_reference: entry.scripture_reference,
+      content: entry.content,
     })));
   }
 
@@ -86,7 +89,7 @@ async function main() {
     formation_goal: plan.formation_goal,
     plan,
     prompt_version: DEVOTIONAL_PLAN_VERSION,
-    model: process.env.GENERAL_DEVOTIONAL_MODEL || 'gpt-5-mini',
+    model: runtime.general_model,
     status: 'generated',
     updated_at: new Date().toISOString(),
   }));

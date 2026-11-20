@@ -6,8 +6,9 @@ const SENSITIVE_TERMS = [
   'shooting', 'suicide', 'terror', 'war', 'wounded',
 ];
 
+function httpUrl(value) { try { return ['http:','https:'].includes(new URL(value).protocol); } catch { return false; } }
 function normalizeSources(sources) {
-  return Array.isArray(sources) ? sources.filter((source) => source?.url && source?.title) : [];
+  return Array.isArray(sources) ? sources.filter((source) => httpUrl(source?.url) && String(source?.title || '').trim()) : [];
 }
 
 function isSensitiveStory(article = {}, generated = {}) {
@@ -21,23 +22,28 @@ function isSensitiveStory(article = {}, generated = {}) {
 function evaluatePublicationEligibility({ article = {}, generated = {}, verification = {} }) {
   const sources = normalizeSources(generated.sources);
   const independentPublishers = new Set(
-    sources.map((source) => String(source.publisher || '').trim().toLowerCase()).filter(Boolean),
+    sources.map((source) => { try { return new URL(source.url).hostname.toLowerCase().replace(/^www\./, ''); } catch { return ''; } }).filter(Boolean),
   );
   const reasons = [];
+  const notices = [];
   const slugSource = String(generated.title || article.title || '').trim();
 
   if (!slugSource) reasons.push('missing_headline');
-  if (!String(article.url || '').startsWith('http')) reasons.push('invalid_source_url');
+  if (!httpUrl(article.url)) reasons.push('invalid_source_url');
   if (!article.publish_date || Number.isNaN(new Date(article.publish_date).getTime())) reasons.push('invalid_publish_date');
   if (!String(generated.synopsis || '').trim()) reasons.push('missing_summary');
-  if (sources.length < 2 || independentPublishers.size < 2) reasons.push('insufficient_independent_sources');
-  if (Number(verification.confidenceScore || 0) < REVIEW_THRESHOLD) reasons.push('low_confidence');
-  if (Array.isArray(verification.unresolvedEvidenceGaps) && verification.unresolvedEvidenceGaps.length) reasons.push('unresolved_evidence_gaps');
-  if (isSensitiveStory(article, generated)) reasons.push('sensitive_subject');
+  if (!sources.length) reasons.push('missing_sources');
+  else if (independentPublishers.size < 2) notices.push('single_source_reporting');
+  if (Number(verification.confidenceScore || 0) < REVIEW_THRESHOLD) notices.push('limited_source_confidence');
+  if (Array.isArray(verification.unresolvedEvidenceGaps) && verification.unresolvedEvidenceGaps.length) notices.push('unresolved_evidence_gaps');
+  if (isSensitiveStory(article, generated)) notices.push('sensitive_subject');
+  if (!Array.isArray(verification.claims) || !verification.claims.length) reasons.push('missing_verification');
+  else if (verification.claims.some(claim => !['supported', 'partially_supported'].includes(claim.status))) reasons.push('unsupported_claims');
 
   return {
     eligible: reasons.length === 0,
     reasons,
+    notices,
     threshold: REVIEW_THRESHOLD,
     sourceCount: sources.length,
     independentSourceCount: independentPublishers.size,

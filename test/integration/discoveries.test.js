@@ -129,16 +129,19 @@ test('timed results are derived by SQL, first completion remains canonical, and 
    const r=await fetch(game.base+'/api/v1/discoveries/completions',{method:'POST',headers:{Authorization:`Bearer ${user}`,'Content-Type':'application/json'},body:JSON.stringify({events:[e]})});
    return {status:r.status,body:await r.json()};
   };
-  const first=event(candidates[0],{elapsedMs:1234,outcome:'incorrect',puzzleDate:'2000-01-01'});
+  const first=event(candidates[0],{elapsedMs:35000,outcome:'incorrect',puzzleDate:'2000-01-01'});
   let r=await send(MEMBER,first);assert.equal(r.status,200);
-  assert.equal(r.body.results[0].completion.outcome,'correct');assert.equal(r.body.results[0].completion.elapsed_ms,1234);assert.equal(r.body.results[0].completion.puzzle_date,today);
-  r=await send(MEMBER,event(candidates[0],{elapsedMs:9999}));assert.equal(r.body.results[0].completion.elapsed_ms,1234);
+  assert.equal(r.body.results[0].completion.outcome,'correct');assert.equal(r.body.results[0].completion.elapsed_ms,35000);assert.equal(r.body.results[0].completion.puzzle_date,today);
+  r=await send(MEMBER,event(candidates[0],{elapsedMs:9999}));assert.equal(r.body.results[0].completion.elapsed_ms,35000);
   r=await send(OTHER,event(candidates[0],{optionId:candidates[0].content.choices.find(c=>c.id!==candidates[0].content.correctOptionId).id,elapsedMs:3210,outcome:'correct'}));
   assert.equal(r.body.results[0].completion.outcome,'incorrect');
-  r=await send(ADMIN,event(candidates[0],{mode:'revealed',optionId:null,elapsedMs:20000,timedOut:true}));assert.equal(r.body.results[0].completion.outcome,'timeout');
-  for(const elapsedMs of [-1,20000,20001,1.5])assert.equal((await send(MEMBER,event(candidates[0],{elapsedMs}))).status,400);
+  r=await send(ADMIN,event(candidates[0],{mode:'revealed',optionId:null,elapsedMs:40000,timedOut:true}));assert.equal(r.body.results[0].completion.outcome,'timeout');assert.equal(r.body.results[0].completion.elapsed_ms,40000);
+  for(const elapsedMs of [-1,40000,40001,1.5])assert.equal((await send(MEMBER,event(candidates[0],{elapsedMs}))).status,400);
   assert.equal((await send(MEMBER,event(candidates[0],{elapsedMs:1000,timedOut:true}))).status,400);
-  const direct=await game.client.rpc('discovery_complete',{p_user:MEMBER,p_events:[event(candidates[0],{elapsedMs:20001})]});assert.ok(direct.error,'direct RPC cannot bypass the timer limit');
+  const direct=await game.client.rpc('discovery_complete',{p_user:MEMBER,p_events:[event(candidates[0],{elapsedMs:40001})]});assert.ok(direct.error,'direct RPC cannot bypass the timer limit');
+  r=await send(ADMIN,event(candidates[0],{mode:'revealed',optionId:null,elapsedMs:20000,timedOut:true}));assert.equal(r.status,200,'legacy timeout accepted alongside new timeout');
+  r=await send(MEMBER,event(candidates[0],{elapsedMs:35000}));assert.equal(r.status,200,'answers after the reading period sync');
+  assert.equal((await send(MEMBER,event(candidates[0],{mode:'revealed',optionId:null,elapsedMs:30000,timedOut:true}))).status,400);
   await game.db.exec(require('node:fs').readFileSync(require('node:path').join(__dirname,'../../supabase/rollbacks/20261028200000.sql'),'utf8'));
   const columns=await game.db.query("select column_name from information_schema.columns where table_name='discovery_completions' and column_name in ('elapsed_ms','outcome','puzzle_date')");assert.equal(columns.rows.length,0);
  } finally {await game.close();}

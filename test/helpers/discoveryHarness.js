@@ -58,8 +58,12 @@ async function createHarness({listen=false,port=0,curriculum=false,dailySets=fal
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028220000_discovery_question_craft.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261028234500_discovery_source_options.sql'),'utf8'));
   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030120000_discovery_audience_craft.sql'),'utf8'));
-  if(dailySets)await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
+  if(dailySets){
+   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261030150000_discovery_daily_sets.sql'),'utf8'));
+   await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261101123000_discovery_learning_first.sql'),'utf8'));
+  }
  }
+ await db.exec(fs.readFileSync(path.join(__dirname,'../../supabase/migrations/20261101120000_discovery_reading_time.sql'),'utf8'));
  for(const [id,role] of [[ADMIN,'admin'],[MEMBER,'member'],[OTHER,'member']]) {
   await db.query('insert into auth.users values($1)',[id]);await db.query('insert into user_profiles(user_id,role) values($1,$2)',[id,role]);
  }

@@ -23,11 +23,12 @@ function reviewed(content,evidence,level){
  return ['test-a','test-b'].map(model=>{
   const r=reviewFor(content,evidence,model,level);
   r.questionCraft={context:2,interest:2,fairChallenge:2,choiceQuality:2,rationale:'Synthetic complete editorial assessment for isolated database tests.'};
+  if(level==='challenging')Object.assign(r.difficulty,{familiarity:1,evidenceNavigation:2,reasoningSteps:1,distractorSimilarity:2});
   r.difficultyAssessment={rubricVersion:'discovery-difficulty-v2',model,responseId:randomUUID(),questionPromptSha256:sha(content.prompt)};
   return r;
  });
 }
-function pair(items,weekContext=[]){return ['set-a','set-b'].map(model=>({model,responseId:randomUUID(),setEditorialVersion:'sanctuary-trivia-set-editor-v4',weekReviewVersion:'sanctuary-trivia-rolling-week-v1',weekContext,approved:true,issues:[],rationale:'Synthetic set review covering distinct knowledge targets and no answer leakage.',questionContents:items,questionPromptHashes:items.map(i=>sha(i.prompt))}));}
+function pair(items,weekContext=[]){return ['set-a','set-b'].map(model=>({model,responseId:randomUUID(),setEditorialVersion:'sanctuary-trivia-set-editor-v5',weekReviewVersion:'sanctuary-trivia-rolling-week-v1',weekContext,approved:true,issues:[],rationale:'Synthetic set review covering distinct knowledge targets and no answer leakage.',questionContents:items,questionPromptHashes:items.map(i=>sha(i.prompt))}));}
 function adapter(h,{rejectFirst=false,rejectSet=false}={}){
  let generated=0;
  return {get generated(){return generated;},async generate({evidence}){generated++;assert.equal((await h.db.query('select * from discovery_daily_set_items')).rows.length,0,'no partial public set');return {content:contentFor(evidence),usage:{totalTokens:10}};},async review({content,evidence}){const level=levels[refs.indexOf(evidence.source.locator)];const rows=reviewed(content,evidence,level);if(rejectFirst && generated===1)rows[0].questionCraft.fairChallenge=1;return rows.map(data=>({data,usage:{totalTokens:10}}));},async reviewSet(items,{weekContext}){assert.equal(items.length,3);assert.equal((await h.db.query('select * from discovery_daily_set_items')).rows.length,0);const rows=pair(items,weekContext);if(rejectSet){rows[1].approved=false;rows[1].issues=['Question two reveals question three.'];}return rows;}};
@@ -246,4 +247,25 @@ test('past daily sets require verified Pro; future sets never appear in bundles 
    if(offset<0)assert.equal((await get('/api/v1/discoveries/bundle?dailySet=1&date='+day+'&isPro=true',MEMBER)).status,403);
   }finally{await h.close();}
  }
+});
+
+
+test('learning limits reject obscure recall and excessive challenge in both review and SQL publication gates',async()=>{
+ const h=await createHarness({curriculum:true,dailySets:true});
+ try{
+  const evidence=scriptureEvidence(refs[0]),content=contentFor(evidence);
+  for(const [level,dimensions] of [
+   ['moderate',{familiarity:2,evidenceNavigation:0,reasoningSteps:0,distractorSimilarity:0}],
+   ['moderate',{familiarity:1,evidenceNavigation:1,reasoningSteps:1,distractorSimilarity:1}],
+   ['challenging',{familiarity:1,evidenceNavigation:2,reasoningSteps:2,distractorSimilarity:2}],
+  ]){
+   const rows=reviewed(content,evidence,level);
+   rows.forEach(row=>Object.assign(row.difficulty,dimensions));
+   const v=assessCandidate(content,evidence,rows,{dailySet:true,targetDifficulty:level});
+   assert.ok(v.reasons.includes('daily_set_too_difficult_for_learning'));
+   // Forging the JS summary must not bypass the independently enforced SQL limit.
+   const forged={...v,accepted:true,reasons:[]},rated={...content,difficulty:v.difficulty};
+   await assert.rejects(h.db.query('select discovery_validate_set_candidate($1,$2,$3,$4,$5,$6)',[rated,forged,evidence.sourceSha256,refs[0],corpus.sha256,level]),/too difficult for learning/);
+  }
+ }finally{await h.close();}
 });

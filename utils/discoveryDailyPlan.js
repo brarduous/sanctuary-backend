@@ -1,7 +1,7 @@
 const {scriptureEvidence,loadCorpus}=require('./discoveryScripture');
 const {VERSION:editorialVersion}=require('./discoveryEditorial');
 const {VERSION:writerVersion}=require('./discoveryWriterPolicy');
-const VERSION='discovery-daily-set-plan-v2';
+const VERSION='discovery-daily-set-plan-v3';
 // Plans, not questions or approvals. Distinct images/choices matter more than
 // incidental numbers. Three trusted sources are frozen before each slot starts.
 const SOURCES={
@@ -24,28 +24,28 @@ const SOURCES={
   ['Acts 16:11-18','Connect Lydia with purple cloth; do not give away a different hospitality-city question.'],
   ['Acts 28:1-10','Connect the viper encounter and the island Malta; use credible comparable islands.'],
   ['2 Kings 5:9-19','Connect Naaman’s healing with his surprising request for earth; do not add an unstated trip home.'],
-  ['2 Samuel 23:8-23','Distinguish Shammah and Benaiah through specific feats; never quiz isolated counts.'],
+  ['Luke 5:1-11','Name Simon and the fishing scene; connect empty nets and Jesus’s instruction. No counts or specialist vocabulary.'],
   ['Luke 8:40-56','Connect Jairus’s interrupted journey with the woman’s encounter; keep the two people clear.'],
   ['Ruth 4:1-12','Connect transfer of rights with the stated sandal custom, without invented historical symbolism.'],
-  ['Acts 13:1-13','Use the Paphos encounter to distinguish city, magician or official through an explicit connection.'],
+  ['Matthew 2:1-12','Name the visitors following the star; use one familiar gift or action, never an assumed number of visitors.'],
   ['Acts 12:12-19','Connect Rhoda recognizing a voice to leaving the gate unopened; explain the situation clearly.'],
   ['Luke 24:28-35','Connect recognition with the explicitly described shared action, preserving the literary frame.'],
   ['Jonah 4:5-11','Connect the shade and its loss to the stated creature, without inventing a motive.'],
   ['1 Kings 19:9-18','Distinguish dramatic events from the stated quiet encounter; avoid disputed translation trivia.'],
  ],
  challenging:[
-  ['2 Samuel 15:22-37','Distinguish Hushai’s covert advisory role and Zadok’s reporting route. Ask one role, no answer giveaway.'],
-  ['Genesis 44:15-34','Connect Judah’s pledge and proposed substitution, distinguishing the brothers through explicit roles.'],
-  ['Acts 16:6-15','Distinguish Lydia’s home city from the city of this encounter and hospitality. Never imply a journey the passage does not state.'],
-  ['Acts 9:26-39','Connect Tabitha’s garment-making, her town Joppa and Peter departing Lydda; distinguish roles of nearby cities.'],
-  ['Acts 21:1-20','Distinguish Philip as host from Agabus’s belt prophecy through their stated actions.'],
-  ['Genesis 24:15-32','Follow Laban seeing Rebekah’s jewelry and greeting the visitor. Preserve chronology; never infer greed or motive.'],
-  ['Esther 6:1-14','Distinguish who proposes, receives and carries out the public honor; the reversal is the memorable discovery.'],
-  ['1 Samuel 25:18-35','Connect Abigail’s intervention and David’s response using explicit roles, not counted gifts.'],
-  ['Acts 18:24-28','Distinguish Apollos’s Alexandrian origin, instruction and destination. Do not invent a journey from Alexandria.'],
-  ['Romans 16:1-16','Distinguish Phoebe’s association with Cenchreae and the named helpers; avoid adjudicating disputed church offices.'],
-  ['1 Kings 22:13-28','Distinguish Micaiah’s warning and Ahab’s order. An order to jail him does not establish imprisonment already occurred.'],
-  ['Acts 19:23-41','Connect Demetrius’s trade and stated concern for Artemis’s honor; do not claim the temple was physically damaged.'],
+  ['1 Samuel 17:23-40','Use familiar David and Goliath context to connect David, the offered armor and his choice. No minor names or counts.'],
+  ['Genesis 37:18-36','Use Joseph and his brothers as the named familiar scene; connect the robe and its use as supposed evidence. No trader-name distinctions.'],
+  ['Matthew 14:22-33','Name the familiar boat-and-storm scene; connect Peter, walking on the water and his call for help. No expected rescue-outcome quiz.'],
+  ['Luke 10:25-37','Frame the Good Samaritan explicitly as a parable. Connect the traveler, the helper and the inn through concrete actions. No counts or monetary conversion.'],
+  ['John 13:1-17','Name Jesus washing the disciples’ feet; connect Peter’s response with the towel or basin. No specialist vocabulary.'],
+  ['Genesis 24:15-32','Name Rebekah and the well scene; connect water offered to the visitor and his camels. Do not infer motives or test Laban’s chronology.'],
+  ['Esther 6:1-14','Name Esther’s familiar story and clearly introduce Mordecai and Haman; use the surprising public honor, not a bare minor-name lookup.'],
+  ['Exodus 16:13-26','Name the manna story; connect daily gathering and the day of rest. No incidental quantities or verse-number recall.'],
+  ['Luke 15:16-32','Frame the returning son as a parable; connect the father’s welcome and a concrete object or action. No moralizing or inevitable forgiveness-outcome quiz.'],
+  ['John 11:17-35','Name Lazarus, Martha and Mary and the familiar setting clearly; use one modest connection and a concrete action. No ages or elapsed-day counts.'],
+  ['Mark 2:1-12','Name the crowded-house scene; connect the paralyzed man’s friends, the roof and the mat. Avoid generic successful healing outcomes.'],
+  ['Acts 9:1-19','Name Saul’s Damascus encounter; connect the road, the light and Ananias’s help with clear context. No minor street-name recall.'],
  ]
 };
 function buildDailySetPlan(date,corpus=loadCorpus()) {
@@ -64,6 +64,6 @@ function buildDailySetPlan(date,corpus=loadCorpus()) {
   if(sourceOptions.length!==3)throw new Error('Three distinct precommitted sources per difficulty are required.');
   return {position:index+1,targetDifficulty,sourceOptions};
  });
- return {version:VERSION,date,editorialVersion,writerVersion,corpusVersion:corpus.version,corpusSha256:corpus.sha256,theme:'Three discoveries worth sharing',learningGoal:'Enjoy one accessible fact, one grounded connection and one fair closer-reading challenge.',slots};
+ return {version:VERSION,date,editorialVersion,writerVersion,corpusVersion:corpus.version,corpusSha256:corpus.sha256,theme:'Three discoveries worth sharing',learningGoal:'Gain biblical knowledge and confidence through familiar stories, helpful context and one memorable discovery per answer.',slots};
 }
 module.exports={VERSION,SOURCES,buildDailySetPlan};
